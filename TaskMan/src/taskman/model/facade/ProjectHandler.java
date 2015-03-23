@@ -5,20 +5,31 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import taskman.exceptions.IllegalDateException;
 import taskman.model.project.Project;
 
 public class ProjectHandler {
-	
+
 	/**
 	 * Return a copy of the list of projects.
 	 * 
-	 * @return	Returns a copy of projects.
+	 * @return Returns a copy of projects.
 	 */
 	public List<Project> getProjects() {
-		// TODO: implement
-		return null;
+		return new ArrayList<Project>(projects);
 	}
-	
+
+	/**
+	 * Adds the given project to the list of projects.
+	 * 
+	 * @param project
+	 * 
+	 * @post The new list of projects contains the given project.
+	 */
+	private void addProject(Project project) {
+		projects.add(project);
+	}
+
 	/**
 	 * Make a new project and store it to the list of projects.
 	 * 
@@ -26,9 +37,22 @@ public class ProjectHandler {
 	 * @param description
 	 * @param creationTime
 	 * @param dueTime
+	 * 
+	 * @effect Adds the project to the list of projects.
 	 */
-	public void makeProject(String name, String description, DateTime creationTime, DateTime dueTime) {
-		// TODO: implement
+	public void makeProject(String name, String description,
+			DateTime creationTime, DateTime dueTime) throws IllegalArgumentException, IllegalDateException {
+		Project projectToAdd = new Project(name, description, creationTime, dueTime);
+		addProject(projectToAdd);
+	}
+	
+	/**
+	 * Asks every project to run an update of its state.
+	 */
+	public void updateProjects() {
+		for(Project project : projects) {
+			project.updateProject();
+		}
 	}
 
 	private ArrayList<Project> projects = new ArrayList<Project>();
