@@ -10,7 +10,7 @@ import taskman.exceptions.IllegalDateException;
 public class Project {
 	
 	/**
-	 * Creates a new project object.
+	 * Creates a new project.
 	 * 
 	 * @param name
 	 * @param description
@@ -27,11 +27,13 @@ public class Project {
 		this.description = description;
 		this.creationTime = creationTime;
 		this.dueTime = dueTime;
+		this.finished = false;
 		this.tasks = new ArrayList<Task>();
 	}
 	
 	private final String name, description;
 	private final DateTime creationTime, dueTime;
+	private boolean finished;
 	private ArrayList<Task> tasks;
 	
 	/**
@@ -70,13 +72,32 @@ public class Project {
 		return this.dueTime;
 	}
 	
+	
+	/**
+	 * Returns the status of the project.
+	 * 
+	 * @return
+	 */
+	public boolean isFinished(){
+		return this.finished;
+	}
+	
+	/**
+	 * Sets the status of the project to the given status.
+	 * 
+	 * @param finished
+	 */
+	private void setFinished(boolean finished){
+		this.finished = finished;
+	}
+	
 	/**
 	 * Returns the list of tasks of the project.
 	 * 
 	 * @return Returns the list of tasks of the project.
 	 */
 	public List<Task> getTasks(){
-		return new ArrayList<Task>(tasks);
+		return new ArrayList<Task>(this.tasks);
 	}
 	
 	/**
@@ -88,7 +109,7 @@ public class Project {
 	 */
 	public void makeTask(String description, int estimatedDuration, int acceptableDeviation){
 		Task task = new Task(description, estimatedDuration, acceptableDeviation);
-		tasks.add(task);
+		this.tasks.add(task);
 	}
 	
 	/**
@@ -101,7 +122,32 @@ public class Project {
 	 */
 	public void makeTask(String description, int estimatedDuration, int acceptableDeviation, ArrayList<Task> dependencies){
 		Task task = new Task(description, estimatedDuration, acceptableDeviation, dependencies);
-		tasks.add(task);
+		this.tasks.add(task);
 	}
-	
+
+	/**
+	 * Updates the status of all tasks and the status of the project.
+	 * The project is finished if it contains at least one task and all of its tasks, or their alternatives, are finished.
+	 */
+	public void updateProject() {
+		boolean finished = true;
+		updateAllTasks();
+		if (this.tasks.size() < 1);
+			finished = false;
+		for (Task t : this.tasks){
+			if (t.isFinished() == false);
+			finished = false;
+		}
+		setFinished(finished);
+	}
+
+	/**
+	 * Updates the status of all tasks.
+	 * Unavailable tasks are set to available if all their dependencies, or their alternatives, are finished.
+	 */
+	private void updateAllTasks() {
+		for (Task t : this.tasks){
+			t.update();
+		}
+	}
 }

@@ -1,7 +1,6 @@
 package taskman.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,7 @@ public class ProjectTest {
 		assertEquals(creation, project.getCreationTime());
 		assertEquals(due, project.getDueTime());
 		assertEquals(0, project.getTasks().size());
+		assertFalse(project.isFinished());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -106,6 +106,18 @@ public class ProjectTest {
 				.getEstimatedDuration());
 		assertEquals(acceptableDeviation, project.getTasks().get(0)
 				.getAcceptableDeviation());
+		assertFalse(project.isFinished());
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void testMakeTaskStringIntIntFinishedProject(){
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		project.getTasks().get(0).updateStatusAndTimeSpan(Status.FINISHED, new DateTime(), new DateTime());
+		project.updateProject();
+		assertTrue(project.isFinished());
+		project.makeTask(desc, estimatedDuration, acceptableDeviation);
 	}
 
 	@Test
@@ -131,6 +143,22 @@ public class ProjectTest {
 				.getEstimatedDuration());
 		assertEquals(acceptableDeviation2, project.getTasks().get(1)
 				.getAcceptableDeviation());
+		assertFalse(project.isFinished());
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void testMakeTaskStringIntIntArrayListOfTaskFinishedProject(){
+		String desc = "desc", desc2 = "desc2";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
+		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		project.getTasks().get(0).updateStatusAndTimeSpan(Status.FINISHED, new DateTime(), new DateTime());
+		project.updateProject();
+		assertTrue(project.isFinished());
+		List<Task> dependencies = new ArrayList<Task>();
+		dependencies.add(project.getTasks().get(0));
+		project.makeTask(desc2, estimatedDuration2, acceptableDeviation2,
+				dependencies);
 	}
 
 }
