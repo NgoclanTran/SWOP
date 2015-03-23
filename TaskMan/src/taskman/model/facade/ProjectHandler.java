@@ -45,6 +45,15 @@ public class ProjectHandler {
 		Project projectToAdd = new Project(name, description, creationTime, dueTime);
 		addProject(projectToAdd);
 	}
+	
+	/**
+	 * Asks every project to run an update of its state.
+	 */
+	public void updateProjects() {
+		for(Project project : projects) {
+			project.updateProject();
+		}
+	}
 
 	private ArrayList<Project> projects = new ArrayList<Project>();
 }
