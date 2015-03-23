@@ -7,9 +7,21 @@ package taskman.exceptions;
  */
 public class IllegalDateException extends RuntimeException {
 	
-	/**
-	 * 
-	 */
+	private String message;
+	
 	private static final long serialVersionUID = 1L;
+	
+	public IllegalDateException(){
+		this("Illegal date.");
+	}
+	
+	public IllegalDateException(String s){
+		this.message = s;
+	}
+	
+	@Override
+	public String getMessage(){
+		return message;
+	}
 	
 }

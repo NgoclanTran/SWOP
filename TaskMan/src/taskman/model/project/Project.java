@@ -1,8 +1,11 @@
 package taskman.model.project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.DateTime;
+
+import taskman.exceptions.IllegalDateException;
 
 public class Project {
 	
@@ -15,11 +18,20 @@ public class Project {
 	 * @param dueTime
 	 */
 	public Project(String name, String description, DateTime creationTime, DateTime dueTime) {
-		
+		if (name == null) throw new IllegalArgumentException("Null not allowed as name.");
+		if (description == null) throw new IllegalArgumentException("Null not allowed as description.");
+		if (creationTime == null) throw new IllegalArgumentException("Null not allowed as creation time.");
+		if (dueTime == null) throw new IllegalArgumentException("Null not allowed as due time.");
+		if (dueTime.isBefore(creationTime)) throw new IllegalDateException("Due time cannot be before creation time.");
+		this.name = name;
+		this.description = description;
+		this.creationTime = creationTime;
+		this.dueTime = dueTime;
+		this.tasks = new ArrayList<Task>();
 	}
 	
-	private String name, description;
-	private DateTime creationTime, dueTime;
+	private final String name, description;
+	private final DateTime creationTime, dueTime;
 	private ArrayList<Task> tasks;
 	
 	/**
@@ -28,7 +40,7 @@ public class Project {
 	 * @return Returns the name of the project.
 	 */
 	public String getName(){
-		
+		return this.name;
 	}
 	
 	/**
@@ -37,7 +49,7 @@ public class Project {
 	 * @return Returns the description of the project.
 	 */
 	public String getDescription(){
-		
+		return this.description;
 	}
 	
 	/**
@@ -46,7 +58,7 @@ public class Project {
 	 * @return Returns the creation time of the project.
 	 */
 	public DateTime getCreationTime(){
-		
+		return this.creationTime;
 	}
 	
 	/**
@@ -55,7 +67,7 @@ public class Project {
 	 * @return Returns the due time of the project.
 	 */
 	public DateTime getDueTime(){
-		
+		return this.dueTime;
 	}
 	
 	/**
@@ -64,7 +76,7 @@ public class Project {
 	 * @return Returns the list of tasks of the project.
 	 */
 	public List<Task> getTasks(){
-		
+		return new ArrayList<Task>(tasks);
 	}
 	
 	/**
@@ -75,7 +87,8 @@ public class Project {
 	 * @param acceptableDeviation
 	 */
 	public void makeTask(String description, int estimatedDuration, int acceptableDeviation){
-		
+		Task task = new Task(description, estimatedDuration, acceptableDeviation);
+		tasks.add(task);
 	}
 	
 	/**
@@ -87,7 +100,8 @@ public class Project {
 	 * @param dependencies
 	 */
 	public void makeTask(String description, int estimatedDuration, int acceptableDeviation, ArrayList<Task> dependencies){
-		
+		Task task = new Task(description, estimatedDuration, acceptableDeviation, dependencies);
+		tasks.add(task);
 	}
 	
 }
