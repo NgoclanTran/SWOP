@@ -63,7 +63,7 @@ public class Project {
 	 * 
 	 * @return Returns the list of tasks of the project.
 	 */
-	public ArrayList<Task> getTasks(){
+	public List<Task> getTasks(){
 		
 	}
 	
