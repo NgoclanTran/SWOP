@@ -160,5 +160,32 @@ public class ProjectTest {
 		project.makeTask(desc2, estimatedDuration2, acceptableDeviation2,
 				dependencies);
 	}
+	
+	@Test
+	public void testUpdateProjectEmptyTasks(){
+		assertFalse(project.isFinished());
+		assertEquals(0, project.getTasks().size());
+		project.updateProject();
+		assertFalse(project.isFinished());
+	}
+	
+	@Test
+	public void testUpdateProjectFinishedTask(){
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		project.getTasks().get(0).updateStatusAndTimeSpan(Status.FINISHED, new DateTime(), new DateTime());
+		assertTrue(project.isFinished());
+	}
+	
+	@Test
+	public void testUpdateProjectAvailableTask(){
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		assertFalse(project.isFinished());
+	}
 
 }
