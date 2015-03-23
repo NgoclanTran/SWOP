@@ -31,12 +31,6 @@ public class Project {
 		this.tasks = new ArrayList<Task>();
 	}
 	
-
-	private final String name, description;
-	private final DateTime creationTime, dueTime;
-	private boolean finished;
-	private ArrayList<Task> tasks;
-	
 	/**
 	 * Returns the name of the project.
 	 * 
@@ -81,6 +75,8 @@ public class Project {
 	
 
 	
+	private final DateTime dueTime;
+
 	/**
 	 * Returns the status of the project.
 	 * 
@@ -99,6 +95,8 @@ public class Project {
 		this.finished = finished;
 	}
 	
+
+	private boolean finished;
 
 	/**
 	 * Returns the list of tasks of the project.
@@ -133,6 +131,8 @@ public class Project {
 		Task task = new Task(description, estimatedDuration, acceptableDeviation, dependencies);
 		this.tasks.add(task);
 	}
+
+	private ArrayList<Task> tasks;
 
 	/**
 	 * Updates the status of all tasks and the status of the project.
