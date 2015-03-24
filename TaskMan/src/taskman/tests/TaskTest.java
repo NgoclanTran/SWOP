@@ -1,4 +1,4 @@
-package taskman.model.project.task;
+package taskman.tests;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,10 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+
+import taskman.model.project.task.Status;
+import taskman.model.project.task.Task;
+import taskman.model.project.task.TimeSpan;
 
 public class TaskTest {
 	private String description;
