@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import taskman.exceptions.IllegalDateException;
 import taskman.model.project.task.Task;
 
 public class Project {
@@ -19,6 +20,11 @@ public class Project {
 	 */
 	public Project(String name, String description, DateTime creationTime,
 			DateTime dueTime) {
+		if (name == null) throw new IllegalArgumentException("Name can not be null.");
+		if (description == null) throw new IllegalArgumentException("Description can not be null.");
+		if (creationTime == null) throw new IllegalArgumentException("Creation time can not be null.");
+		if (dueTime == null) throw new IllegalArgumentException("Due time can not be null.");
+		if (dueTime.isBefore(creationTime)) throw new IllegalDateException("Due time has to be after creation time.");
 		this.name = name;
 		this.description = description;
 		this.creationTime = creationTime;
@@ -54,7 +60,7 @@ public class Project {
 	 * @return Returns the creation time of the project.
 	 */
 	public DateTime getCreationTime() {
-		return this.creationTime
+		return this.creationTime;
 	}
 
 	private final DateTime creationTime;

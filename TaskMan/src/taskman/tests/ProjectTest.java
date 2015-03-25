@@ -228,6 +228,12 @@ public class ProjectTest {
 
 	@Test
 	public void testGetStateNameFinished() {
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.getTasks().get(0)
+				.addTimeSpan(false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
 		assertEquals("Finished", project.getStateName());
 	}

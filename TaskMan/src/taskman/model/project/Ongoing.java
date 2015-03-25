@@ -23,23 +23,23 @@ class Ongoing implements State {
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
 			int acceptableDeviation) {
-		project.addTask(description, estimatedDuration, acceptableDeviation);
+		project.performAddTask(description, estimatedDuration, acceptableDeviation);
 	}
 
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies) {
-		project.addTask(description, estimatedDuration, acceptableDeviation, dependencies);
+		project.performAddTask(description, estimatedDuration, acceptableDeviation, dependencies);
 	}
 
 	@Override
 	public void updateProjectState(Project project) {
-		project.updateProjectState();
+		project.performUpdateProjectState();
 	}
 
 	@Override
 	public DateTime getEstimatedFinishTime(Project project) {
-		return project.getEstimatedFinishTime();
+		return project.performGetEstimatedFinishTime();
 	}
 
 	@Override

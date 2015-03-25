@@ -45,7 +45,7 @@ public class Finished implements State {
 
 	@Override
 	public int getTotalDelay(Project project) {
-		return project.getTotalDelay();
+		return project.performGetTotalDelay();
 	}
 
 }
