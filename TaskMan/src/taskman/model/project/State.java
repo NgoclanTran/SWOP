@@ -13,7 +13,14 @@ interface State {
 	 * 
 	 * @return Returns the name of the state.
 	 */
-	abstract String getName(Project project);
+	abstract String getName();
+	
+	/**
+	 * Returns whether or not the state is finished.
+	 * 
+	 * @return Returns whether or not the state is finished.
+	 */
+	abstract boolean isFinished();
 		
 	/**
 	 * Adds a new task without dependencies.

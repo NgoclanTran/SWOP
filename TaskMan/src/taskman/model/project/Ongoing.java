@@ -11,41 +11,40 @@ class Ongoing implements State {
 	private final String name = "Ongoing";
 
 	@Override
-	public String getName(Project project) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public boolean isFinished() {
+		return false;
 	}
 
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
 			int acceptableDeviation) {
-		// TODO Auto-generated method stub
-
+		project.addTask(description, estimatedDuration, acceptableDeviation);
 	}
 
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies) {
-		// TODO Auto-generated method stub
-
+		project.addTask(description, estimatedDuration, acceptableDeviation, dependencies);
 	}
 
 	@Override
 	public void updateProjectState(Project project) {
-		// TODO Auto-generated method stub
-
+		project.updateProjectState();
 	}
 
 	@Override
 	public DateTime getEstimatedFinishTime(Project project) {
-		// TODO Auto-generated method stub
-		return null;
+		return project.getEstimatedFinishTime();
 	}
 
 	@Override
 	public int getTotalDelay(Project project) {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new IllegalStateException("Project not finished.");
 	}
 
 }
