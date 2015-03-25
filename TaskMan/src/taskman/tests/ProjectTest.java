@@ -18,8 +18,8 @@ public class ProjectTest {
 	Project project;
 	String name = "Name";
 	String description = "Description";
-	DateTime creation = new DateTime();
-	DateTime due = new DateTime();
+	DateTime creation = new DateTime(2014, 1, 1, 0, 0);
+	DateTime due = new DateTime(2014, 1, 2, 9, 0);
 
 	@Before
 	public void setUp() throws Exception {
@@ -114,7 +114,14 @@ public class ProjectTest {
 
 	@Test
 	public void testChangeGetTasks() {
-		
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		assertEquals(0, project.getTasks().size());
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		assertEquals(1, project.getTasks().size());
+		List<Task> tasks = project.getTasks();
+		tasks.add(new Task(desc, estimatedDuration, acceptableDeviation));
+		assertEquals(1, project.getTasks().size());
 	}
 
 	@Test
@@ -170,7 +177,7 @@ public class ProjectTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAddTaskStringIntIntArrayListOfTaskFinishedProject() {
+	public void testAddTaskDependenciesFinishedProject() {
 		String desc = "desc", desc2 = "desc2";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
@@ -226,8 +233,28 @@ public class ProjectTest {
 	}
 
 	@Test
-	public void testUpdateProjectState() {
-
+	public void testGetEstimatedFinishTime() {
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		project.addTask(desc, 120, 0);
+		assertEquals(new DateTime(2014,1,1,10,0), project.getEstimatedFinishTime());
+		project.addTask(desc, 420, 0);
+		assertEquals(new DateTime(2014,1,2,9,0), project.getEstimatedFinishTime());
+		assertEquals(due, project.getEstimatedFinishTime());
+		project.addTask(desc, 60, 0);
+		assertEquals(new DateTime(2014,1,2,10,0), project.getEstimatedFinishTime());
+	}
+	
+	@Test
+	public void testGetTotalDelay() {
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		project.addTask(desc, 600, 0);
+		project.getTasks().get(0)
+				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0), new DateTime(2014, 1, 2, 10, 0));
+		project.updateProjectState();
+		assertTrue(project.isFinished());
+		assertEquals(60, project.getTotalDelay());
 	}
 
 }
