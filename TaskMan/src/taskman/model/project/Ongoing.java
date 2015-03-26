@@ -22,28 +22,28 @@ class Ongoing implements State {
 
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
-			int acceptableDeviation) {
+			int acceptableDeviation) throws IllegalStateException {
 		project.performAddTask(description, estimatedDuration, acceptableDeviation);
 	}
 
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies) {
+			int acceptableDeviation, List<Task> dependencies) throws IllegalStateException {
 		project.performAddTask(description, estimatedDuration, acceptableDeviation, dependencies);
 	}
 
 	@Override
-	public void updateProjectState(Project project) {
+	public void updateProjectState(Project project) throws IllegalStateException {
 		project.performUpdateProjectState();
 	}
 
 	@Override
-	public DateTime getEstimatedFinishTime(Project project) {
+	public DateTime getEstimatedFinishTime(Project project) throws IllegalStateException {
 		return project.performGetEstimatedFinishTime();
 	}
 
 	@Override
-	public int getTotalDelay(Project project) {
+	public int getTotalDelay(Project project) throws IllegalStateException {
 		throw new IllegalStateException("Project not finished.");
 	}
 

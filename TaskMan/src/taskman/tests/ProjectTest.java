@@ -143,9 +143,7 @@ public class ProjectTest {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.getTasks().get(0)
-				.addTimeSpan(false, new DateTime(), new DateTime());
-		project.updateProjectState();
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
 		project.addTask(desc, estimatedDuration, acceptableDeviation);
 	}
@@ -182,9 +180,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
 		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.getTasks().get(0)
-				.addTimeSpan(false, new DateTime(), new DateTime());
-		project.updateProjectState();
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
 		List<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(project.getTasks().get(0));
@@ -196,7 +192,6 @@ public class ProjectTest {
 	public void testUpdateProjectStateEmptyTasks() {
 		assertFalse(project.isFinished());
 		assertEquals(0, project.getTasks().size());
-		project.updateProjectState();
 		assertFalse(project.isFinished());
 	}
 
@@ -206,8 +201,7 @@ public class ProjectTest {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.getTasks().get(0)
-				.addTimeSpan(false, new DateTime(), new DateTime());
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
 	}
 
@@ -232,8 +226,7 @@ public class ProjectTest {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.getTasks().get(0)
-				.addTimeSpan(false, new DateTime(), new DateTime());
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
 		assertEquals("Finished", project.getStateName());
 	}
@@ -256,9 +249,7 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		project.addTask(desc, 600, 0);
-		project.getTasks().get(0)
-				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0), new DateTime(2014, 1, 2, 10, 0));
-		project.updateProjectState();
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(2014, 1, 1, 8, 0), new DateTime(2014, 1, 2, 10, 0));
 		assertTrue(project.isFinished());
 		assertEquals(60, project.getTotalDelay());
 	}

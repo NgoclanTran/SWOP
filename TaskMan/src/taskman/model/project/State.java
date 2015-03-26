@@ -28,8 +28,10 @@ interface State {
 	 * @param description
 	 * @param estimatedDuration
 	 * @param acceptableDeviation
+	 * 
+	 * @throws IllegalStateException
 	 */
-	abstract void addTask(Project project, String description, int estimatedDuration, int acceptableDeviation);
+	abstract void addTask(Project project, String description, int estimatedDuration, int acceptableDeviation) throws IllegalStateException;
 	
 	/**
 	 * Adds a new task with dependencies.
@@ -38,26 +40,34 @@ interface State {
 	 * @param estimatedDuration
 	 * @param acceptableDeviation
 	 * @param dependencies
+	 * 
+	 * @throws IllegalStateException
 	 */
-	abstract void addTask(Project project, String description, int estimatedDuration, int acceptableDeviation, List<Task> dependencies);
+	abstract void addTask(Project project, String description, int estimatedDuration, int acceptableDeviation, List<Task> dependencies) throws IllegalStateException;
 	
 	/**
 	 * Updates the state.
+	 * 
+	 * @throws IllegalStateException
 	 */
-	abstract void updateProjectState(Project project);
+	abstract void updateProjectState(Project project) throws IllegalStateException;
 	
 	/**
 	 * Returns the estimated finish time of the project.
 	 * 
 	 * @return Returns the estimated finish time of the project.
+	 * 
+	 * @throws IllegalStateException
 	 */
-	abstract DateTime getEstimatedFinishTime(Project project);
+	abstract DateTime getEstimatedFinishTime(Project project) throws IllegalStateException;
 	
 	/**
 	 * Returns the total delay of the project in minutes.
 	 * 
 	 * @return Returns the total delay of the project in minutes.
+	 * 
+	 * @throws IllegalStateException
 	 */
-	abstract int getTotalDelay(Project project);
+	abstract int getTotalDelay(Project project) throws IllegalStateException;
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import be.kuleuven.cs.som.taglet.ThrowsTaglet;
 import taskman.exceptions.IllegalDateException;
 import taskman.model.project.task.Task;
 
@@ -17,14 +18,24 @@ public class Project {
 	 * @param description
 	 * @param creationTime
 	 * @param dueTime
+	 * 
+	 * @throws IllegalArgumentException
+	 * @throws IllegalDateException
 	 */
 	public Project(String name, String description, DateTime creationTime,
-			DateTime dueTime) {
-		if (name == null) throw new IllegalArgumentException("Name can not be null.");
-		if (description == null) throw new IllegalArgumentException("Description can not be null.");
-		if (creationTime == null) throw new IllegalArgumentException("Creation time can not be null.");
-		if (dueTime == null) throw new IllegalArgumentException("Due time can not be null.");
-		if (dueTime.isBefore(creationTime)) throw new IllegalDateException("Due time has to be after creation time.");
+			DateTime dueTime) throws IllegalArgumentException,
+			IllegalDateException {
+		if (name == null)
+			throw new IllegalArgumentException("Name can not be null.");
+		if (description == null)
+			throw new IllegalArgumentException("Description can not be null.");
+		if (creationTime == null)
+			throw new IllegalArgumentException("Creation time can not be null.");
+		if (dueTime == null)
+			throw new IllegalArgumentException("Due time can not be null.");
+		if (dueTime.isBefore(creationTime))
+			throw new IllegalDateException(
+					"Due time has to be after creation time.");
 		this.name = name;
 		this.description = description;
 		this.creationTime = creationTime;
@@ -91,9 +102,11 @@ public class Project {
 	 * @param description
 	 * @param estimatedDuration
 	 * @param acceptableDeviation
+	 * 
+	 * @throws IllegalStateException
 	 */
 	public void addTask(String description, int estimatedDuration,
-			int acceptableDeviation) {
+			int acceptableDeviation) throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
 				acceptableDeviation);
 	}
@@ -112,9 +125,12 @@ public class Project {
 	 * @param estimatedDuration
 	 * @param acceptableDeviation
 	 * @param dependencies
+	 * 
+	 * @throws IllegalStateException
 	 */
 	public void addTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies) {
+			int acceptableDeviation, List<Task> dependencies)
+			throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
 				acceptableDeviation, dependencies);
 	}
@@ -129,6 +145,23 @@ public class Project {
 	private ArrayList<Task> tasks;
 
 	/**
+	 * Call the addTimeSpan function of the specified task.
+	 * 
+	 * @param task
+	 * @param failed
+	 * @param startTime
+	 * @param endTime
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
+			DateTime endTime) throws IllegalArgumentException {
+		if(task == null) throw new IllegalArgumentException("Cannot be called without a task.");
+		task.addTimeSpan(failed, startTime, endTime);
+		updateProjectState();
+	}
+
+	/**
 	 * Returns the name of the state of the project.
 	 * 
 	 * @return Returns the name of the state of the project.
@@ -139,8 +172,10 @@ public class Project {
 
 	/**
 	 * Updates the state of the project in accordance with the tasks.
+	 * 
+	 * @throws IllegalStateException
 	 */
-	public void updateProjectState() {
+	private void updateProjectState() throws IllegalStateException {
 		this.state.updateProjectState(this);
 	}
 
@@ -171,8 +206,10 @@ public class Project {
 	 * Returns the time the project is estimated to finish.
 	 * 
 	 * @return Returns the time the project is estimated to finish.
+	 * 
+	 * @throws IllegalStateException
 	 */
-	public DateTime getEstimatedFinishTime() {
+	public DateTime getEstimatedFinishTime() throws IllegalStateException {
 		return this.state.getEstimatedFinishTime(this);
 	}
 
@@ -207,8 +244,10 @@ public class Project {
 	 * 
 	 * @return Returns the total delay of the tasks belonging to the project in
 	 *         minutes.
+	 * 
+	 * @throws IllegalStateException
 	 */
-	public int getTotalDelay() {
+	public int getTotalDelay() throws IllegalStateException {
 		return this.state.getTotalDelay(this);
 	}
 
@@ -221,7 +260,7 @@ public class Project {
 			}
 		}
 		long delay = lastEndTime.getMillis() - dueTime.getMillis();
-		if (delay > 0){
+		if (delay > 0) {
 			totalDelay = (int) delay;
 		}
 		return totalDelay;

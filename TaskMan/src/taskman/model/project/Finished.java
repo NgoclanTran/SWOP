@@ -22,29 +22,29 @@ public class Finished implements State {
 
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
-			int acceptableDeviation) {
+			int acceptableDeviation) throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 
 	}
 
 	@Override
 	public void addTask(Project project, String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies) {
+			int acceptableDeviation, List<Task> dependencies) throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 	}
 
 	@Override
-	public void updateProjectState(Project project) {
+	public void updateProjectState(Project project) throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 	}
 
 	@Override
-	public DateTime getEstimatedFinishTime(Project project) {
+	public DateTime getEstimatedFinishTime(Project project) throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 	}
 
 	@Override
-	public int getTotalDelay(Project project) {
+	public int getTotalDelay(Project project) throws IllegalStateException {
 		return project.performGetTotalDelay();
 	}
 
