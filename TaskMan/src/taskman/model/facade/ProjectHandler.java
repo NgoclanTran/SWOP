@@ -39,20 +39,14 @@ public class ProjectHandler {
 	 * @param dueTime
 	 * 
 	 * @effect Adds the project to the list of projects.
+	 * 
+	 * @throws IllegalArgumentException
+	 * @throws IllegalDateException
 	 */
 	public void makeProject(String name, String description,
 			DateTime creationTime, DateTime dueTime) throws IllegalArgumentException, IllegalDateException {
 		Project projectToAdd = new Project(name, description, creationTime, dueTime);
 		addProject(projectToAdd);
-	}
-	
-	/**
-	 * Asks every project to run an update of its state.
-	 */
-	public void updateProjects() {
-		for(Project project : projects) {
-			project.updateProject();
-		}
 	}
 
 	private ArrayList<Project> projects = new ArrayList<Project>();

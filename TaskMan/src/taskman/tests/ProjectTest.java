@@ -11,14 +11,15 @@ import org.junit.Test;
 
 import taskman.exceptions.IllegalDateException;
 import taskman.model.project.Project;
+import taskman.model.project.task.Task;
 
 public class ProjectTest {
 
 	Project project;
 	String name = "Name";
 	String description = "Description";
-	DateTime creation = new DateTime();
-	DateTime due = new DateTime();
+	DateTime creation = new DateTime(2014, 1, 1, 0, 0);
+	DateTime due = new DateTime(2014, 1, 2, 9, 0);
 
 	@Before
 	public void setUp() throws Exception {
@@ -77,7 +78,23 @@ public class ProjectTest {
 	}
 
 	@Test
+	public void testChangeGetCreationTime() {
+		DateTime time = project.getCreationTime();
+		assertEquals(creation, time);
+		time = time.plusMillis(10000);
+		assertEquals(creation, project.getCreationTime());
+	}
+
+	@Test
 	public void testGetDueTime() {
+		assertEquals(due, project.getDueTime());
+	}
+
+	@Test
+	public void testChangeGetDueTime() {
+		DateTime time = project.getDueTime();
+		assertEquals(due, time);
+		time = time.plusMillis(10000);
 		assertEquals(due, project.getDueTime());
 	}
 
@@ -86,7 +103,7 @@ public class ProjectTest {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		assertEquals(0, project.getTasks().size());
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
 		assertEquals(1, project.getTasks().size());
 		assertEquals(desc, project.getTasks().get(0).getDescription());
 		assertEquals(estimatedDuration, project.getTasks().get(0)
@@ -96,10 +113,22 @@ public class ProjectTest {
 	}
 
 	@Test
-	public void testMakeTaskStringIntInt() {
+	public void testChangeGetTasks() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		assertEquals(0, project.getTasks().size());
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		assertEquals(1, project.getTasks().size());
+		List<Task> tasks = project.getTasks();
+		tasks.add(new Task(desc, estimatedDuration, acceptableDeviation));
+		assertEquals(1, project.getTasks().size());
+	}
+
+	@Test
+	public void testAddTask() {
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
 		assertEquals(1, project.getTasks().size());
 		assertEquals(desc, project.getTasks().get(0).getDescription());
 		assertEquals(estimatedDuration, project.getTasks().get(0)
@@ -108,27 +137,26 @@ public class ProjectTest {
 				.getAcceptableDeviation());
 		assertFalse(project.isFinished());
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
-	public void testMakeTaskStringIntIntFinishedProject(){
+	public void testAddTaskFinishedProject() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
-		project.getTasks().get(0).updateStatusAndTimeSpan(Status.FINISHED, new DateTime(), new DateTime());
-		project.updateProject();
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
 	}
 
 	@Test
-	public void testMakeTaskStringIntIntArrayListOfTask() {
+	public void testAddTaskDependencies() {
 		String desc = "desc", desc2 = "desc2";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
 		List<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(project.getTasks().get(0));
-		project.makeTask(desc2, estimatedDuration2, acceptableDeviation2,
+		project.addTask(desc2, estimatedDuration2, acceptableDeviation2,
 				dependencies);
 		assertEquals(2, project.getTasks().size());
 		assertTrue(project.getTasks().get(1).getDependencies()
@@ -145,47 +173,85 @@ public class ProjectTest {
 				.getAcceptableDeviation());
 		assertFalse(project.isFinished());
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
-	public void testMakeTaskStringIntIntArrayListOfTaskFinishedProject(){
+	public void testAddTaskDependenciesFinishedProject() {
 		String desc = "desc", desc2 = "desc2";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
-		project.getTasks().get(0).updateStatusAndTimeSpan(Status.FINISHED, new DateTime(), new DateTime());
-		project.updateProject();
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
 		List<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(project.getTasks().get(0));
-		project.makeTask(desc2, estimatedDuration2, acceptableDeviation2,
+		project.addTask(desc2, estimatedDuration2, acceptableDeviation2,
 				dependencies);
 	}
-	
+
 	@Test
-	public void testUpdateProjectEmptyTasks(){
+	public void testUpdateProjectStateEmptyTasks() {
 		assertFalse(project.isFinished());
 		assertEquals(0, project.getTasks().size());
-		project.updateProject();
 		assertFalse(project.isFinished());
 	}
-	
+
 	@Test
-	public void testUpdateProjectFinishedTask(){
+	public void testUpdateProjectStateFinishedTask() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
-		project.getTasks().get(0).updateStatusAndTimeSpan(Status.FINISHED, new DateTime(), new DateTime());
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
 		assertTrue(project.isFinished());
 	}
-	
+
 	@Test
-	public void testUpdateProjectAvailableTask(){
+	public void testUpdateProjectStateAvailableTask() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.makeTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
 		assertFalse(project.isFinished());
+	}
+
+	@Test
+	public void testGetStateNameOngoing() {
+		assertFalse(project.isFinished());
+		assertEquals("Ongoing", project.getStateName());
+	}
+
+	@Test
+	public void testGetStateNameFinished() {
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
+		assertTrue(project.isFinished());
+		assertEquals("Finished", project.getStateName());
+	}
+
+	@Test
+	public void testGetEstimatedFinishTime() {
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		project.addTask(desc, 120, 0);
+		assertEquals(new DateTime(2014,1,1,10,0), project.getEstimatedFinishTime());
+		project.addTask(desc, 420, 0);
+		assertEquals(new DateTime(2014,1,2,9,0), project.getEstimatedFinishTime());
+		assertEquals(due, project.getEstimatedFinishTime());
+		project.addTask(desc, 60, 0);
+		assertEquals(new DateTime(2014,1,2,10,0), project.getEstimatedFinishTime());
+	}
+	
+	@Test
+	public void testGetTotalDelay() {
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		project.addTask(desc, 600, 0);
+		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(2014, 1, 1, 8, 0), new DateTime(2014, 1, 2, 10, 0));
+		assertTrue(project.isFinished());
+		assertEquals(60, project.getTotalDelay());
 	}
 
 }
