@@ -1,12 +1,13 @@
- package taskman.model.project.task;
+package taskman.model.project.task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 
+import taskman.exceptions.IllegalDateException;
+
 public class Task {
-
-
 
 	/**
 	 * The first constructor of task. This will create a task with the given parameters without dependencies
@@ -17,14 +18,27 @@ public class Task {
 	 * 			The estimated duration of the task
 	 * @param acceptableDeviation
 	 * 			The acceptable deviation of the task
+	 * @throws	NullPointerException
+	 * 			The description cannot be null		
+	 * @throws	IllegalArgumentException
+	 * 			The estimatedDuration cannot be negatif
+	 * @throws	IllegalArgumentException
+	 * 			The acceptableDeviation cannot be negatif
+	 * @post	The new description is equal to the given descrription
+	 * @post	The new estimatedDuration is equal to the given estimatedDuration
+	 * @post 	The new acceptableDeviation is equal to the given acceptableDevaition
+	 * @post	The status of this task is Unavailable
 	 */
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation) {
-		super();
+		if(description == null) throw new NullPointerException("Description is null");
+		if(estimatedDuration <= 0) throw new IllegalArgumentException("The estimated duration cannot be negatif.");
+		if(acceptableDeviation < 0) throw new IllegalArgumentException("The deviation cannot be negatif.");
+
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
 		this.acceptableDeviation = acceptableDeviation;
-		this.status = Status.UNAVAILABLE;
+		this.status = new Unavailable();
 	}
 	/**
 	 * The second constructor of task. This will create a task with the given parameters with a list of dependencies
@@ -37,18 +51,27 @@ public class Task {
 	 * 			The acceptable deviation of the task
 	 * @param dependencies
 	 * 			The list of dependencies of the task
+	 * @throws	NullPointerException
+	 * 			The description cannot be null		
+	 * @throws	IllegalArgumentException
+	 * 			The estimatedDuration is negatif
+	 * @throws	IllegalArgumentException
+	 * 			The acceptableDeviation is negatif
+	 * @throws	NullPointerException
+	 * 			The dependencies is equal to null
+	 * @post	The new description is equal to the given descrription
+	 * @post	The new estimatedDuration is equal to the given estimatedDuration
+	 * @post 	The new acceptableDeviation is equal to the given acceptableDevaition
+	 * @post	The status of this task is Unavailable
+	 * @post 	The new dependencies is equal to the given dependencies
 	 */
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies) {
-		super();
-		this.description = description;
-		this.estimatedDuration = estimatedDuration;
-		this.acceptableDeviation = acceptableDeviation;
-		for(Task task: dependencies){
-			if(!task.getTimeSpan().isBefore(this.timeSpan)) throw new IllegalArgumentException("The given denpendent task cannot start later");	
-		}
-		this.dependencies = dependencies;
-		this.status = Status.UNAVAILABLE;
+		this(description, estimatedDuration, acceptableDeviation);
+		if(dependencies == null) throw new IllegalArgumentException("The dependencies are null.");
+
+		this.dependencies = new ArrayList<Task>();
+		this.dependencies.addAll(dependencies);
 	}
 
 	private final String description;
@@ -58,7 +81,7 @@ public class Task {
 	private Status status;
 	private TimeSpan timeSpan;
 	private Task alternative = null;
-	
+
 	/**
 	 * Returns the description of the task
 	 * 
@@ -96,12 +119,9 @@ public class Task {
 	 * 
 	 * @return The status of the task
 	 */
-	public Status getStatus() {
-		return status;
+	public String getStatusName() {
+		return this.status.getName();
 	}
-//	public void setStatus(Status status) {
-//		this.status = status;
-//	}
 	/**
 	 * Returns the timespan of the task
 	 * 
@@ -117,50 +137,24 @@ public class Task {
 	 * 			The start time of the timespan
 	 * @param endTime
 	 * 			The end time of the timespan
-	 * @throws IllegalArgumentException
+	 * @throws	NullPointerException
+	 * 			The startTime cannot be equal to null
+	 * @throws	NullPointerException
+	 * 			The endTime is equal to null
+	 * @throws 	IllegalArgumentException
 	 * 			Exception will be thrown if the end time is earlier than the start time
 	 */
-	public void setTimeSpan(DateTime startTime, DateTime endTime) throws IllegalArgumentException {
-		this.timeSpan = new TimeSpan(startTime, endTime);
-		
+	public void addTimeSpan(boolean failed, DateTime startTime, DateTime endTime) throws IllegalArgumentException {
+		if(startTime == null) throw new NullPointerException("The startTime is null.");
+		if(endTime == null) throw new NullPointerException("The endTime is null.");
+		if(startTime.compareTo(endTime) > 0) throw new IllegalDateException("The startTime must start before endTime.");
+		this.status.addTimeSpan(this, failed, startTime, endTime);
+
 	}
-	/**
-	 * This will update the status of the task to the correct value
-	 */
-	public void updateStatus(){
-		if(this.status == Status.UNAVAILABLE){
-			for(Task task : this.dependencies){
-				if(!task.isFullfilled()) return;
-			}
-			this.setStatus(Status.AVAILABLE);
-		}
-		
-	}
-	/**
-	 * Returns a true or false depending on whether the task is finished or it's alternative is finished, or not
-	 * 
-	 * @return True or false depending on whether the task is finished or it's alternative, or not
-	 */
-	private boolean isFullfilled(){
-		if(this.alternative  == null && this.status == Status.FINISHED)
-			return true;
-		if(this.alternative != null) return this.alternative.isFullfilled();
-		return false;
-	}
-	/**
-	 * This will update the status and timespan to the given parameters
-	 * 
-	 * @param status
-	 * 			The new status for the task
-	 * @param startTime
-	 * 			The start time for the new timespan of the task
-	 * @param endTime
-	 * 			The end time for the new timespan of the task
-	 */
-	public void updateStatusAndTimeSpan(Status status, DateTime startTime, DateTime endTime){
-		this.setStatus(status);
+	protected void addTimeSpan(DateTime startTime, DateTime endTime){
 		this.timeSpan = new TimeSpan(startTime, endTime);
 	}
+
 	/**
 	 * Returns the alternative task for the task
 	 * 
@@ -169,29 +163,92 @@ public class Task {
 	public Task getAlternative(){
 		return alternative;
 	}
-	
-	//naam veranderd, add lijkt alsof het meerdere kan hebben
+
 	/**
-	 * Sets an alternative task for this task
+	 * Add the alternatif task for the task
+	 *
+	 * @param 	task
+	 * 			The new alternative task for this task
+	 * @throws	NullPointerException
+	 * 			The alternative task is equal to null
 	 * 
-	 * @param task
-	 * 			The task that will be set as an alternative for the task
 	 */
-	public void setAlternative(Task task){
-		if(this.status != Status.FAILED) throw new IllegalArgumentException("Task is not failed.");
-		this.alternative = task;
-		
+	public void addAlternative(Task task){
+		if(task == null) throw new NullPointerException("The alternative is null.");
+		this.status.addAlternative(this, task);
 	}
+	protected void setAlternative(Task task){
+		this.alternative = task;
+	}
+
+	/**
+	 * Check if this task is available
+	 * 
+	 * @return
+	 * 			True if the task has status available
+	 */
+	public boolean isAvailable(){
+		return this.status.isAvailable();
+	}
+
+	/**
+	 * Check if this task is failed
+	 * 
+	 * @return
+	 * 			True if the task has status failed
+	 */
+	public boolean isFailed(){
+		return this.status.isFailed();
+	}
+
+	/**
+	 * Check if this task is finished
+	 * 
+	 * @return
+	 * 			True if the task has status finished
+	 */
+	public boolean isFinished(){
+		return this.status.isFinished();
+	}	
+	/**
+	 * Set to status available
+	 */
+	public void updateTaskAvaibality(){
+		this.status.updateTaskAvailability(this);
+	}
+	protected void updateStatus(Status status){
+		this.status = status;
+	}
+
 	/**
 	 * Returns the total execution time for the task
 	 * 
 	 * @return The total execution time for the task
 	 */
-	public int calculateTotalExecutionTime(){
+	
+	//TODO
+	public int getTotalExecutionTime(){
+		return this.status.calculateTotalExecutedTime(this);
+	}
+	protected int calculateTotalExecutionTime(){
 		int time = this.timeSpan.calculatePerformedTime();
 		if(this.alternative != null)
-			time = time + this.alternative.calculateTotalExecutionTime();
+			time = time + this.alternative.getTotalExecutionTime();
 		return time;
-		
+	}
+	/**
+	 * Calculate de overdue percentage
+	 * 
+	 * @return	Calculate de overdue percentage
+	 */
+	public int getOverduePercentage(){
+		return this.status.calculateOverDuePercentage(this);
+
+	}
+	protected int calculateOverduePercentage(){
+		int totalExecutedTime = this.calculateTotalExecutionTime();
+
+		return (totalExecutedTime - this.estimatedDuration)/this.estimatedDuration;
 	}
 }
+

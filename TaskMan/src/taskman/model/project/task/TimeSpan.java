@@ -2,11 +2,15 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
+import taskman.exceptions.IllegalDateException;
+
 public class TimeSpan {
 
 public TimeSpan(DateTime startTime, DateTime endTime){
-	if(startTime.compareTo(endTime) < 0) throw new IllegalArgumentException("The end time cannot be alter than de start time.");
-	
+	//TODO MOETEN BINNEN EEN WERKDAG
+	if(startTime.compareTo(endTime) > 0) throw new IllegalArgumentException("The end time cannot be later than de start time.");
+	if(startTime.getHourOfDay() < 8) throw new IllegalDateException("The day starts at 8:00");
+if(endTime.getMinuteOfDay() > 1020) throw new IllegalDateException("The day ends at 17:00");
 	this.startTime = startTime;
 	this.endTime = endTime;	
 }
@@ -20,14 +24,11 @@ public DateTime getEndTime(){
 	return this.endTime;
 }
 public int calculatePerformedTime(){
-	return 0;
-}
-public int calculateDelay(int estimatedDuration){
-	return 0;
+	int hoursStart = this.startTime.getMinuteOfDay();
+	int hoursEnd = this.endTime.getMinuteOfDay();
+	
+	
+	return hoursEnd - hoursStart;
 }
 
-public boolean isBefore(TimeSpan timeSpan) {
-	// TODO Auto-generated method stub
-	return false;
-}
 }
