@@ -55,11 +55,11 @@ public class UI {
 			for (int i = 1; i <= list.size(); i++) {
 				Object item = list.get(i - 1);
 				if (item instanceof List) {
-					display(tab + prefix + i + ")");
+					display(tab + prefix + i + ".");
 					displayList((List<?>) item, tab + "\t", prefix + i + ".");
 				}
 				else {
-					String string = item.toString();
+					String string = i + ". " + item.toString();
 					string = indentStringWithNewLines(string, tab + "\t");
 					string = tab + prefix + string;
 					display(string);
