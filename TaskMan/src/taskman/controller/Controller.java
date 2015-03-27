@@ -34,14 +34,14 @@ public class Controller {
 			return false;
 	}
 	
-	public ProjectHandler getFacade() {
+	public ProjectHandler getProjectHandler() {
 		return ph;
 	}
 	
 	protected ProjectHandler ph;
 	
 	public void run() {
-		// TODO
+		getUI().printWelcome();
 	}
 
 }
