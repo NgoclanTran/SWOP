@@ -39,6 +39,7 @@ public class Task {
 		this.estimatedDuration = estimatedDuration;
 		this.acceptableDeviation = acceptableDeviation;
 		this.status = new Unavailable();
+		this.dependants = new ArrayList<Task>();
 	}
 	/**
 	 * The second constructor of task. This will create a task with the given parameters with a list of dependencies
@@ -72,12 +73,19 @@ public class Task {
 
 		this.dependencies = new ArrayList<Task>();
 		this.dependencies.addAll(dependencies);
+		for(Task subject: this.dependencies){
+			subject.attachDependant(this);
+		}
+		
+		
 	}
 
 	private final String description;
 	private final int estimatedDuration;
 	private int acceptableDeviation;
 	private List<Task> dependencies;
+	//Tasks that are looking to me (obsevers)
+	private List<Task> dependants;
 	private Status status;
 	private TimeSpan timeSpan;
 	private Task alternative = null;
@@ -114,6 +122,30 @@ public class Task {
 	public List<Task> getDependencies() {
 		return dependencies;
 	}
+	
+	/**
+	 * Add dependant task
+	 * @param dependant
+	 * @throws	NullPointerException
+	 * 			The dependant task is null
+	 * @post 	The list of depandants contains the given dependant task
+	 */
+	public void attachDependant(Task dependant){
+		if(dependant == null) throw new NullPointerException("the dependant observer is null.");
+		this.dependants.add(dependant);
+	}
+	
+	/**
+	 * When this task changed his status to Finished or failed, notify his dependants
+	 * 
+	 */
+	
+	//moet public?
+	public void notifyAllDependants(){
+		for(Task observer: this.dependants){
+			observer.updateTaskAvaibality();
+		}
+	}
 	/**
 	 * Returns the status of the task
 	 * 
@@ -149,6 +181,7 @@ public class Task {
 		if(endTime == null) throw new NullPointerException("The endTime is null.");
 		if(startTime.compareTo(endTime) > 0) throw new IllegalDateException("The startTime must start before endTime.");
 		this.status.addTimeSpan(this, failed, startTime, endTime);
+		this.notifyAllDependants();
 
 	}
 	protected void addTimeSpan(DateTime startTime, DateTime endTime){
