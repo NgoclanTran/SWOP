@@ -47,13 +47,13 @@ public class Unavailable implements Status {
 	}
 
 	@Override
-	public int calculateTotalExecutedTime(Task task) throws IllegalStateException{
-		throw new IllegalStateException("This task is unavailable");
+	public int calculateTotalExecutedTime(Task task){
+		return 0;
 	}
 
 	@Override
-	public int calculateOverDuePercentage(Task task) throws IllegalStateException{
-		throw new IllegalStateException("This task is unavailable");
+	public int calculateOverDuePercentage(Task task){
+		return 0;
 	}
 
 }

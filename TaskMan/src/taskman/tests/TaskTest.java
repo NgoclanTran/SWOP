@@ -109,13 +109,12 @@ public void addTimeSpanTest_FalseCase_Date(){
 	t.addTimeSpan(true, endTime, startTime);
 }
 
-@Test
+@Test (expected = IllegalStateException.class)
 public void addTimeSpanTest_TrueCase_StatusUNAVAILABLE(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	DateTime startTime = new DateTime(2015,1,1,1,1);
 	DateTime endTime = new DateTime(2016,1,1,1,1);
 	t.addTimeSpan(true, startTime, endTime);
-	assertNull(t.getTimeSpan());
 }
 
 @Test
@@ -159,7 +158,7 @@ public void addAlternativeTest_FalseCase_AlternativeNull(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	t.addAlternative(null);
 }
-@Test
+@Test (expected = IllegalStateException.class)
 public void addAlternativeTest_TrueCase_StatusNotFAILED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	Task t2 = new Task(description, estimatedDuration, acceptableDeviation);
@@ -172,8 +171,9 @@ public void addAlternativeTest_TrueCase_StatusNotFAILED(){
 public void addAlternativeTest_TrueCase_StatusFAILED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	Task t2 = new Task(description, estimatedDuration, acceptableDeviation);
-	DateTime startTime = new DateTime(2015,1,1,1,1);
-	DateTime endTime = new DateTime(2016,1,1,1,1);
+	t.updateTaskAvaibality();
+	DateTime startTime = new DateTime(2015,1,1,10,1);
+	DateTime endTime = new DateTime(2016,1,1,11,1);
 	t.addTimeSpan(true, startTime, endTime);
 	t.addAlternative(t2);
 }
@@ -351,11 +351,11 @@ public void calculateTotalExecutionTimeTest_TrueCase(){
 	assertEquals(t.getTotalExecutionTime(),6*60);
 }
 
-@Test
+@Test (expected = NullPointerException.class)
 public void calculateTotalExecutionTimeTest_TrueCase_NoTimeSpan(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	
-	assertEquals(t.getTotalExecutionTime(),0);
+	t.updateTaskAvaibality();
+	int exeTime = t.getTotalExecutionTime();
 }
 
 @Test
@@ -366,13 +366,13 @@ public void calculateTotalExecutionTimeTest_TrueCase_Alternative(){
 	DateTime startTime = new DateTime(2015,1,1,10,0);
 	DateTime endTime = new DateTime(2015,1,1,11,0);
 	t.updateTaskAvaibality();
+	assertEquals(t.getStatusName(), "AVAILABLE");
 	t.addTimeSpan(true, startTime, endTime);
 	t.addAlternative(t2);
 	assertEquals(t.getTotalExecutionTime(),60);
 	t2.updateTaskAvaibality();
 	t2.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getTotalExecutionTime(),120);
-	t2.addTimeSpan(true, startTime, endTime);
 	t2.addAlternative(t3);
 	t3.updateTaskAvaibality();
 	t3.addTimeSpan(false, startTime, endTime);
@@ -380,10 +380,11 @@ public void calculateTotalExecutionTimeTest_TrueCase_Alternative(){
 	assertEquals(t3.getTotalExecutionTime(),60);
 	
 }
-@Test
+@Test (expected = NullPointerException.class)
 public void calculateOverduePercentageTest_TrueCase_NoTimeSpan(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	assertEquals(t.getOverduePercentage(),0);
+	t.updateTaskAvaibality();
+	int overduePerc = t.getOverduePercentage();
 }
 
 @Test

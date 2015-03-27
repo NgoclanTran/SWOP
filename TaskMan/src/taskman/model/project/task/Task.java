@@ -82,7 +82,7 @@ public class Task {
 
 	private final String description;
 	private final int estimatedDuration;
-	private int acceptableDeviation;
+	private final int acceptableDeviation;
 	private List<Task> dependencies;
 	//Tasks that are looking to me (obsevers)
 	private List<Task> dependants;
@@ -120,7 +120,7 @@ public class Task {
 	 * @return The list of dependencies of the task
 	 */
 	public List<Task> getDependencies() {
-		return dependencies;
+		return new ArrayList<Task>(dependencies);
 	}
 	
 	/**
@@ -160,7 +160,7 @@ public class Task {
 	 * @return The timespan of the task
 	 */
 	public TimeSpan getTimeSpan() {
-		return timeSpan;
+		return new TimeSpan(this.timeSpan.getStartTime(),this.timeSpan.getEndTime());
 	}
 	/**
 	 * This will create a new timespan for the task
