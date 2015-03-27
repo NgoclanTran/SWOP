@@ -143,7 +143,11 @@ public class Task {
 	//moet public?
 	public void notifyAllDependants(){
 		for(Task observer: this.dependants){
-			observer.updateTaskAvaibality();
+			try{
+				observer.updateTaskAvailability();
+			}
+			catch(IllegalStateException e){
+			}
 		}
 	}
 	/**
@@ -198,7 +202,7 @@ public class Task {
 	}
 
 	/**
-	 * Add the alternatif task for the task
+	 * Add the alternative task for the task
 	 *
 	 * @param 	task
 	 * 			The new alternative task for this task
@@ -246,23 +250,13 @@ public class Task {
 	/**
 	 * Set to status available
 	 */
-	public void updateTaskAvaibality() throws IllegalStateException{
+	public void updateTaskAvailability() throws IllegalStateException{
 		this.status.updateTaskAvailability(this);
 	}
 	protected void performUpdateTaskAvailability(Status status){
 		this.status = status;
 	}
-	/**
-	 * Will set the status of this task to the given parameter
-	 * 
-	 * @param status
-	 * 			The status to be used
-	 */
-	public void updateStatus(Status status){
-		this.status = status;
-	}
 	
-
 	/**
 	 * Returns the total execution time for the task
 	 * 
@@ -275,7 +269,11 @@ public class Task {
 	protected int performGetTotalExecutionTime(){
 		int time = this.timeSpan.calculatePerformedTime();
 		if(this.alternative != null)
-			time = time + this.alternative.getTotalExecutionTime();
+			try{
+				time = time + this.alternative.getTotalExecutionTime();
+			}
+			catch(IllegalStateException e){
+			}
 		return time;
 	}
 	/**

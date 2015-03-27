@@ -52,7 +52,6 @@ public class Finished implements Status{
 
 	@Override
 	public int calculateOverDuePercentage(Task task) {
-		
 		return task.performGetOverduePercentage();
 	}
 
