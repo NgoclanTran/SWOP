@@ -252,6 +252,12 @@ public class Task {
 	protected void performUpdateTaskAvailability(Status status){
 		this.status = status;
 	}
+	/**
+	 * Will set the status of this task to the given parameter
+	 * 
+	 * @param status
+	 * 			The status to be used
+	 */
 	public void updateStatus(Status status){
 		this.status = status;
 	}
@@ -263,7 +269,6 @@ public class Task {
 	 * @return The total execution time for the task
 	 */
 	
-	//TODO
 	public int getTotalExecutionTime() throws IllegalStateException{
 		return this.status.calculateTotalExecutedTime(this);
 	}
