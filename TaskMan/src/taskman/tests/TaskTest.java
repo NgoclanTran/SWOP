@@ -123,7 +123,7 @@ public void addTimeSpanTest_TrueCase_StatusAVAILABLE(){
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,12,1);
 	assertEquals(t.getStatusName(),"UNAVAILABLE");
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertEquals(t.getStatusName(),"AVAILABLE");
 	t.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getStatusName(), "FAILED");
@@ -135,7 +135,7 @@ public void addTimeSpanTest_FalseCase_StartTime(){
 	DateTime startTime = new DateTime(2015,1,1,6,1);
 	DateTime endTime = new DateTime(2016,1,1,12,1);
 	assertEquals(t.getStatusName(),"UNAVAILABLE");
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertEquals(t.getStatusName(),"AVAILABLE");
 	t.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getStatusName(), "FAILED");
@@ -147,7 +147,7 @@ public void addTimeSpanTest_FalseCase_EndTime(){
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,18,1);
 	assertEquals(t.getStatusName(),"UNAVAILABLE");
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertEquals(t.getStatusName(),"AVAILABLE");
 	t.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getStatusName(), "FAILED");
@@ -171,7 +171,7 @@ public void addAlternativeTest_TrueCase_StatusNotFAILED(){
 public void addAlternativeTest_TrueCase_StatusFAILED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	Task t2 = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,11,1);
 	t.addTimeSpan(true, startTime, endTime);
@@ -183,7 +183,7 @@ public void addAlternativeTest_TrueCase_StatusFAILED(){
 @Test
 public void isAvailableTest_StatusAVAILABLE(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertTrue(t.isAvailable());
 	assertEquals(t.getStatusName(),"AVAILABLE");
 	
@@ -197,7 +197,7 @@ public void isAvailableTest_StatusUNAVAILABLE(){
 @Test
 public void isAvailableTest_StatusFINISHED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
 	t.addTimeSpan(false, startTime, endTime);
@@ -207,7 +207,7 @@ public void isAvailableTest_StatusFINISHED(){
 @Test
 public void isAvailableTest_StatusFAILED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
 	t.addTimeSpan(true, startTime, endTime);
@@ -217,7 +217,7 @@ public void isAvailableTest_StatusFAILED(){
 @Test
 public void isFinishedTest_StatusAVAILABLE(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertFalse(t.isFinished());
 	assertEquals(t.getStatusName(),"AVAILABLE");
 	
@@ -231,7 +231,7 @@ public void isFinishedTest_StatusUNAVAILABLE(){
 @Test
 public void isFinishedTest_StatusFINISHED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
 	t.addTimeSpan(false, startTime, endTime);
@@ -241,7 +241,7 @@ public void isFinishedTest_StatusFINISHED(){
 @Test
 public void isFinishedTest_StatusFAILED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
 	t.addTimeSpan(true, startTime, endTime);
@@ -252,7 +252,7 @@ public void isFinishedTest_StatusFAILED(){
 @Test
 public void isFailedTest_StatusAVAILABLE(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertFalse(t.isFailed());
 	assertEquals(t.getStatusName(),"AVAILABLE");
 	
@@ -266,7 +266,7 @@ public void isFailedTest_StatusUNAVAILABLE(){
 @Test
 public void isFailedTest_StatusFINISHED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
 	t.addTimeSpan(false, startTime, endTime);
@@ -276,7 +276,7 @@ public void isFailedTest_StatusFINISHED(){
 @Test
 public void isFailedTest_StatusFAILED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
 	t.addTimeSpan(true, startTime, endTime);
@@ -307,18 +307,17 @@ public void isFinishedTest_FalseCase(){
 public void updateTaskAvailabilityTest_TrueCase(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	assertEquals(t.getStatusName(),"UNAVAILABLE");
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertEquals(t.getStatusName(),"AVAILABLE");
 	
 }
 
-@Test
+@Test (expected = IllegalStateException.class)
 public void updateTaskAvailabilityTest_TrueCase_StatusAVAILABLE(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertEquals(t.getStatusName(),"AVAILABLE");	
-	t.updateTaskAvaibality();
-	assertEquals(t.getStatusName(),"AVAILABLE");	
+	t.updateTaskAvailability();
 }
 
 @Test
@@ -326,7 +325,7 @@ public void updateTaskAvailabilityTest_TrueCase_StatusFINISHED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	t.addTimeSpan(false, startTime, endTime);
 	assertEquals(t.getStatusName(),"FINISHED");	
 }
@@ -336,7 +335,7 @@ public void updateTaskAvailabilityTest_TrueCase_StatusFAILED(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	DateTime startTime = new DateTime(2015,1,1,10,1);
 	DateTime endTime = new DateTime(2016,1,1,10,1);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	t.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getStatusName(),"FAILED");	
 }
@@ -346,7 +345,7 @@ public void calculateTotalExecutionTimeTest_TrueCase(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	DateTime startTime = new DateTime(2015,1,1,10,0);
 	DateTime endTime = new DateTime(2015,1,1,16,0);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	t.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getTotalExecutionTime(),6*60);
 }
@@ -354,7 +353,7 @@ public void calculateTotalExecutionTimeTest_TrueCase(){
 @Test (expected = NullPointerException.class)
 public void calculateTotalExecutionTimeTest_TrueCase_NoTimeSpan(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	int exeTime = t.getTotalExecutionTime();
 }
 
@@ -365,16 +364,16 @@ public void calculateTotalExecutionTimeTest_TrueCase_Alternative(){
 	Task t3 = new Task(description, estimatedDuration, acceptableDeviation);
 	DateTime startTime = new DateTime(2015,1,1,10,0);
 	DateTime endTime = new DateTime(2015,1,1,11,0);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	assertEquals(t.getStatusName(), "AVAILABLE");
 	t.addTimeSpan(true, startTime, endTime);
 	t.addAlternative(t2);
 	assertEquals(t.getTotalExecutionTime(),60);
-	t2.updateTaskAvaibality();
+	t2.updateTaskAvailability();
 	t2.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getTotalExecutionTime(),120);
 	t2.addAlternative(t3);
-	t3.updateTaskAvaibality();
+	t3.updateTaskAvailability();
 	t3.addTimeSpan(false, startTime, endTime);
 	assertEquals(t.getTotalExecutionTime(),180);
 	assertEquals(t3.getTotalExecutionTime(),60);
@@ -383,7 +382,7 @@ public void calculateTotalExecutionTimeTest_TrueCase_Alternative(){
 @Test (expected = NullPointerException.class)
 public void calculateOverduePercentageTest_TrueCase_NoTimeSpan(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	int overduePerc = t.getOverduePercentage();
 }
 
@@ -392,7 +391,7 @@ public void calculateOverduePercentageTest_TrueCase(){
 	Task t = new Task(description, estimatedDuration, acceptableDeviation);
 	DateTime startTime = new DateTime(2015,1,1,10,0);
 	DateTime endTime = new DateTime(2015,1,1,11,0);
-	t.updateTaskAvaibality();
+	t.updateTaskAvailability();
 	t.addTimeSpan(true, startTime, endTime);
 	assertEquals(t.getOverduePercentage(),(60-this.estimatedDuration)/this.estimatedDuration);
 

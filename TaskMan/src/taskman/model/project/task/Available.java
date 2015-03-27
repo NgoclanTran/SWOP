@@ -21,7 +21,7 @@ public class Available  implements Status {
 
 	@Override
 	public void updateTaskAvailability(Task task) throws IllegalStateException{
-//		throw new IllegalStateException("This task is already available");		
+		throw new IllegalStateException("This task is already available");		
 	}
 
 	@Override
