@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 import taskman.model.project.task.Task;
 
 public class Finished implements State {
-	
+
 	private final String name = "Finished";
 
 	@Override
@@ -21,25 +21,22 @@ public class Finished implements State {
 	}
 
 	@Override
-	public void addTask(Project project, String description, int estimatedDuration,
-			int acceptableDeviation) throws IllegalStateException {
-		throw new IllegalStateException("Project already finished.");
-
-	}
-
-	@Override
-	public void addTask(Project project, String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies) throws IllegalStateException {
+	public void addTask(Project project, String description,
+			int estimatedDuration, int acceptableDeviation,
+			List<Task> dependencies, Task alternativeFor)
+			throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 	}
 
 	@Override
-	public void updateProjectState(Project project) throws IllegalStateException {
+	public void updateProjectState(Project project)
+			throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 	}
 
 	@Override
-	public DateTime getEstimatedFinishTime(Project project) throws IllegalStateException {
+	public DateTime getEstimatedFinishTime(Project project)
+			throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 	}
 

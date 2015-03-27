@@ -3,11 +3,13 @@ package taskman.controller;
 import task.UI.UI;
 import taskman.model.facade.ProjectHandler;
 
-public abstract class Controller {
+public class Controller {
 
 	public Controller(UI cli, ProjectHandler ph) {
-		if(cli == null) throw new NullPointerException("The UI is is null.");
-		if( ph == null) throw new NullPointerException("The projecthandler is null.");
+		if(!isValidUI(cli)) 
+			throw new IllegalArgumentException("The controller needs a UI.");
+		if(!isValidProjectHandler(ph))
+			throw new IllegalArgumentException("The controller needs a ProjectHandler");
 		this.cli = cli;
 		this.ph = ph;
 	}
@@ -25,19 +27,21 @@ public abstract class Controller {
 	
 	protected UI cli;
 	
-	private boolean isValidFacade(IFacade facade) {
-		if(facade != null)
+	private boolean isValidProjectHandler(ProjectHandler ph) {
+		if(ph != null)
 			return true;
 		else
 			return false;
 	}
 	
-	public IFacade getFacade() {
-		return facade;
+	public ProjectHandler getFacade() {
+		return ph;
 	}
 	
-	protected IFacade facade;
+	protected ProjectHandler ph;
 	
-	public abstract void run();
+	public void run() {
+		// TODO
+	}
 
 }

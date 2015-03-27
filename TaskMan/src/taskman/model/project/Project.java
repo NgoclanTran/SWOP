@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
-import be.kuleuven.cs.som.taglet.ThrowsTaglet;
 import taskman.exceptions.IllegalDateException;
 import taskman.model.project.task.Task;
 
-public class Project {
+public class Project implements Observer {
 
 	/**
 	 * Creates a new project.
@@ -97,28 +97,6 @@ public class Project {
 	}
 
 	/**
-	 * Creates a task without dependencies and adds it to the project.
-	 * 
-	 * @param description
-	 * @param estimatedDuration
-	 * @param acceptableDeviation
-	 * 
-	 * @throws IllegalStateException
-	 */
-	public void addTask(String description, int estimatedDuration,
-			int acceptableDeviation) throws IllegalStateException {
-		this.state.addTask(this, description, estimatedDuration,
-				acceptableDeviation);
-	}
-
-	protected void performAddTask(String description, int estimatedDuration,
-			int acceptableDeviation) {
-		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation);
-		this.tasks.add(task);
-	}
-
-	/**
 	 * Creates a task with dependencies and adds it to the project.
 	 * 
 	 * @param description
@@ -129,37 +107,21 @@ public class Project {
 	 * @throws IllegalStateException
 	 */
 	public void addTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies)
+			int acceptableDeviation, List<Task> dependencies, Task alternativeFor)
 			throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
-				acceptableDeviation, dependencies);
+				acceptableDeviation, dependencies, alternativeFor);
 	}
 
 	protected void performAddTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies) {
+			int acceptableDeviation, List<Task> dependencies, Task alternativeFor) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, dependencies);
+				acceptableDeviation, dependencies, alternativeFor);
 		this.tasks.add(task);
+		task.attachObserver(this);
 	}
 
 	private ArrayList<Task> tasks;
-
-	/**
-	 * Call the addTimeSpan function of the specified task.
-	 * 
-	 * @param task
-	 * @param failed
-	 * @param startTime
-	 * @param endTime
-	 * 
-	 * @throws IllegalArgumentException
-	 */
-	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) throws IllegalArgumentException {
-		if(task == null) throw new IllegalArgumentException("Cannot be called without a task.");
-		task.addTimeSpan(failed, startTime, endTime);
-		updateProjectState();
-	}
 
 	/**
 	 * Returns the name of the state of the project.
@@ -213,28 +175,49 @@ public class Project {
 		return this.state.getEstimatedFinishTime(this);
 	}
 
+	// TODO: Documentation + testing
 	protected DateTime performGetEstimatedFinishTime() {
-		DateTime lastEndTime = this.creationTime;
-		int timeToGo = 0;
+		DateTime lastEndTime = getFirstStartTime();
+		int minutesToAdd = 0;
 		for (Task t : this.tasks) {
-			// TODO if statement??
-			if (t.isFinished() || t.isFailed()) {
+			if (t.isCompleted()) {
 				if (t.getTimeSpan().getEndTime().isAfter(lastEndTime)) {
 					lastEndTime = t.getTimeSpan().getEndTime();
 				}
 			} else {
-				timeToGo += t.getEstimatedDuration();
+				minutesToAdd += t.getEstimatedDuration();
 			}
 		}
-		while (timeToGo > 0) {
+		return calculateEstimatedFinishTime(lastEndTime, minutesToAdd);
+	}
+	
+	private DateTime getFirstStartTime() {
+		DateTime firstStartTime = this.creationTime;
+		if (firstStartTime.getHourOfDay() < 8) {
+			firstStartTime = firstStartTime.plusMinutes((60 - firstStartTime
+					.getMinuteOfHour()) % 60);
+			firstStartTime = firstStartTime.plusHours(8 - firstStartTime.getHourOfDay());
+		} else if (firstStartTime.getHourOfDay() >= 17) {
+			firstStartTime = firstStartTime.plusMinutes((60 - firstStartTime
+					.getMinuteOfHour()) % 60);
+			firstStartTime = firstStartTime.plusHours((24 - firstStartTime
+					.getHourOfDay()) % 24);
+			firstStartTime = firstStartTime.plusHours(8);
+		}
+		return firstStartTime;
+	}
+	
+	private DateTime calculateEstimatedFinishTime(DateTime lastEndTime, int minutesToAdd) {
+		while (minutesToAdd > 0) {
 			lastEndTime = lastEndTime.plusMinutes(1);
 			if (lastEndTime.getDayOfWeek() > 5) {
 				lastEndTime = lastEndTime.plusDays(2);
 			}
-			if (lastEndTime.getHourOfDay() == 17) {
+			if (lastEndTime.getHourOfDay() == 17
+					&& lastEndTime.getMinuteOfHour() > 0) {
 				lastEndTime = lastEndTime.plusHours(15);
 			}
-			timeToGo -= 1;
+			minutesToAdd -= 1;
 		}
 		return lastEndTime;
 	}
@@ -259,10 +242,16 @@ public class Project {
 				lastEndTime = t.getTimeSpan().getEndTime();
 			}
 		}
-		long delay = lastEndTime.getMillis() - dueTime.getMillis();
+		Duration dur = new Duration(dueTime, lastEndTime);
+		int delay = dur.toStandardMinutes().getMinutes();
 		if (delay > 0) {
-			totalDelay = (int) delay;
+			totalDelay = delay;
 		}
 		return totalDelay;
+	}
+
+	@Override
+	public void update() {
+		updateProjectState();
 	}
 }

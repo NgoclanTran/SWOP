@@ -1,6 +1,8 @@
 package taskman.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,8 +104,10 @@ public class ProjectTest {
 	public void testGetTasks() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
+		List<Task> dependencies = new ArrayList<Task>();
 		assertEquals(0, project.getTasks().size());
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
 		assertEquals(1, project.getTasks().size());
 		assertEquals(desc, project.getTasks().get(0).getDescription());
 		assertEquals(estimatedDuration, project.getTasks().get(0)
@@ -116,11 +120,14 @@ public class ProjectTest {
 	public void testChangeGetTasks() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
+		List<Task> dependencies = new ArrayList<Task>();
 		assertEquals(0, project.getTasks().size());
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
 		assertEquals(1, project.getTasks().size());
 		List<Task> tasks = project.getTasks();
-		tasks.add(new Task(desc, estimatedDuration, acceptableDeviation));
+		tasks.add(new Task(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null));
 		assertEquals(1, project.getTasks().size());
 	}
 
@@ -128,7 +135,9 @@ public class ProjectTest {
 	public void testAddTask() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
 		assertEquals(1, project.getTasks().size());
 		assertEquals(desc, project.getTasks().get(0).getDescription());
 		assertEquals(estimatedDuration, project.getTasks().get(0)
@@ -142,10 +151,16 @@ public class ProjectTest {
 	public void testAddTaskFinishedProject() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		project.getTasks()
+				.get(0)
+				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
+						new DateTime(2014, 1, 1, 9, 0));
 		assertTrue(project.isFinished());
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
 	}
 
 	@Test
@@ -153,11 +168,12 @@ public class ProjectTest {
 		String desc = "desc", desc2 = "desc2";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
 		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
 		dependencies.add(project.getTasks().get(0));
 		project.addTask(desc2, estimatedDuration2, acceptableDeviation2,
-				dependencies);
+				dependencies, null);
 		assertEquals(2, project.getTasks().size());
 		assertTrue(project.getTasks().get(1).getDependencies()
 				.contains(project.getTasks().get(0)));
@@ -179,13 +195,17 @@ public class ProjectTest {
 		String desc = "desc", desc2 = "desc2";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
-		assertTrue(project.isFinished());
 		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		project.getTasks()
+				.get(0)
+				.addTimeSpan(false, new DateTime(2013, 1, 1, 8, 0),
+						new DateTime(2013, 1, 1, 9, 0));
+		assertTrue(project.isFinished());
 		dependencies.add(project.getTasks().get(0));
 		project.addTask(desc2, estimatedDuration2, acceptableDeviation2,
-				dependencies);
+				dependencies, null);
 	}
 
 	@Test
@@ -200,8 +220,13 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		project.getTasks()
+				.get(0)
+				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
+						new DateTime(2014, 1, 1, 9, 0));
 		assertTrue(project.isFinished());
 	}
 
@@ -210,7 +235,26 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		assertFalse(project.isFinished());
+	}
+
+	@Test
+	public void testUpdateProjectStateAvailableTasks() {
+		assertFalse(project.isFinished());
+		String desc = "desc";
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		project.getTasks()
+				.get(0)
+				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
+						new DateTime(2014, 1, 1, 9, 0));
 		assertFalse(project.isFinished());
 	}
 
@@ -225,8 +269,13 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		project.addTask(desc, estimatedDuration, acceptableDeviation);
-		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(), new DateTime());
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		project.getTasks()
+				.get(0)
+				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
+						new DateTime(2014, 1, 1, 9, 0));
 		assertTrue(project.isFinished());
 		assertEquals("Finished", project.getStateName());
 	}
@@ -235,21 +284,29 @@ public class ProjectTest {
 	public void testGetEstimatedFinishTime() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
-		project.addTask(desc, 120, 0);
-		assertEquals(new DateTime(2014,1,1,10,0), project.getEstimatedFinishTime());
-		project.addTask(desc, 420, 0);
-		assertEquals(new DateTime(2014,1,2,9,0), project.getEstimatedFinishTime());
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, 120, 0, dependencies, null);
+		assertEquals(new DateTime(2014, 1, 1, 10, 0),
+				project.getEstimatedFinishTime());
+		project.addTask(desc, 480, 0, dependencies, null);
+		assertEquals(new DateTime(2014, 1, 2, 9, 0),
+				project.getEstimatedFinishTime());
 		assertEquals(due, project.getEstimatedFinishTime());
-		project.addTask(desc, 60, 0);
-		assertEquals(new DateTime(2014,1,2,10,0), project.getEstimatedFinishTime());
+		project.addTask(desc, 60, 0, dependencies, null);
+		assertEquals(new DateTime(2014, 1, 2, 10, 0),
+				project.getEstimatedFinishTime());
 	}
-	
+
 	@Test
 	public void testGetTotalDelay() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
-		project.addTask(desc, 600, 0);
-		project.addTimeSpan(project.getTasks().get(0), false, new DateTime(2014, 1, 1, 8, 0), new DateTime(2014, 1, 2, 10, 0));
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, 600, 0, dependencies, null);
+		project.getTasks()
+				.get(0)
+				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
+						new DateTime(2014, 1, 2, 10, 0));
 		assertTrue(project.isFinished());
 		assertEquals(60, project.getTotalDelay());
 	}
