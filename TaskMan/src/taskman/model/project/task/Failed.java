@@ -7,13 +7,12 @@ public class Failed implements Status{
 	private final String name = "FAILED";
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return name;
 	}
 
 	@Override
 	public void addAlternative(Task task, Task alternative) {
-		task.setAlternative(alternative);
+		task.performAddAlternative(alternative);
 		
 	}
 
@@ -33,26 +32,26 @@ public class Failed implements Status{
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) {
-		// TODO Auto-generated method stub
+	public void updateTaskAvailability(Task task) throws IllegalStateException{
+		throw new IllegalStateException("This task is failed");
 		
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) {
-		// TODO Auto-generated method stub
+			DateTime endTime) throws IllegalStateException{
+		throw new IllegalStateException("This task is failed");
 		
 	}
 
 	@Override
 	public int calculateTotalExecutedTime(Task task) {
-		return task.calculateTotalExecutionTime();
+		return task.performGetTotalExecutionTime();
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task) {
-		return task.calculateOverduePercentage();
+		return task.performGetOverduePercentage();
 	}
 
 }

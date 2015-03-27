@@ -13,21 +13,20 @@ public class Finished implements Status{
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) {
-		// TODO Auto-generated method stub
+	public void addAlternative(Task task, Task alternative) throws IllegalStateException{
+		throw new IllegalStateException("This task is already finished");
 		
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) {
-		// TODO Auto-generated method stub
-		
+	public void updateTaskAvailability(Task task) throws IllegalStateException{
+		throw new IllegalStateException("This task is already finished");		
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) {
-		// TODO Auto-generated method stub
+			DateTime endTime) throws IllegalStateException{
+		throw new IllegalStateException("This task is already finished");
 		
 	}
 
@@ -48,13 +47,13 @@ public class Finished implements Status{
 
 	@Override
 	public int calculateTotalExecutedTime(Task task) {
-		return task.calculateTotalExecutionTime();
+		return task.performGetTotalExecutionTime();
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task) {
 		
-		return task.calculateOverduePercentage();
+		return task.performGetOverduePercentage();
 	}
 
 }

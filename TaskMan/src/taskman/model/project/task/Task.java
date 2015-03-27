@@ -184,7 +184,7 @@ public class Task {
 		this.notifyAllDependants();
 
 	}
-	protected void addTimeSpan(DateTime startTime, DateTime endTime){
+	protected void performAddTimeSpan(DateTime startTime, DateTime endTime){
 		this.timeSpan = new TimeSpan(startTime, endTime);
 	}
 
@@ -210,7 +210,7 @@ public class Task {
 		if(task == null) throw new NullPointerException("The alternative is null.");
 		this.status.addAlternative(this, task);
 	}
-	protected void setAlternative(Task task){
+	protected void performAddAlternative(Task task){
 		this.alternative = task;
 	}
 
@@ -246,12 +246,16 @@ public class Task {
 	/**
 	 * Set to status available
 	 */
-	public void updateTaskAvaibality(){
+	public void updateTaskAvaibality() throws IllegalStateException{
 		this.status.updateTaskAvailability(this);
 	}
-	protected void updateStatus(Status status){
+	protected void performUpdateTaskAvailability(Status status){
 		this.status = status;
 	}
+	public void updateStatus(Status status){
+		this.status = status;
+	}
+	
 
 	/**
 	 * Returns the total execution time for the task
@@ -260,10 +264,10 @@ public class Task {
 	 */
 	
 	//TODO
-	public int getTotalExecutionTime(){
+	public int getTotalExecutionTime() throws IllegalStateException{
 		return this.status.calculateTotalExecutedTime(this);
 	}
-	protected int calculateTotalExecutionTime(){
+	protected int performGetTotalExecutionTime(){
 		int time = this.timeSpan.calculatePerformedTime();
 		if(this.alternative != null)
 			time = time + this.alternative.getTotalExecutionTime();
@@ -278,8 +282,8 @@ public class Task {
 		return this.status.calculateOverDuePercentage(this);
 
 	}
-	protected int calculateOverduePercentage(){
-		int totalExecutedTime = this.calculateTotalExecutionTime();
+	protected int performGetOverduePercentage(){
+		int totalExecutedTime = this.performGetTotalExecutionTime();
 
 		return (totalExecutedTime - this.estimatedDuration)/this.estimatedDuration;
 	}

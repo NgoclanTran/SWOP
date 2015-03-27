@@ -14,20 +14,20 @@ public class Unavailable implements Status {
 	@Override
 	public void updateTaskAvailability(Task task) {
 		if(task == null) throw new NullPointerException("The task is null.");
-		task.updateStatus(new Available());
+		task.performUpdateTaskAvailability(new Available());
 		
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) {
-		// TODO Auto-generated method stub
+			DateTime endTime) throws IllegalStateException{
+		throw new IllegalStateException("This task is unavailable");
 		
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) {
-		// TODO Auto-generated method stub
+	public void addAlternative(Task task, Task alternative) throws IllegalStateException{
+		throw new IllegalStateException("This task is unavailable");
 		
 	}
 
@@ -47,14 +47,13 @@ public class Unavailable implements Status {
 	}
 
 	@Override
-	public int calculateTotalExecutedTime(Task task) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int calculateTotalExecutedTime(Task task) throws IllegalStateException{
+		throw new IllegalStateException("This task is unavailable");
 	}
 
 	@Override
-	public int calculateOverDuePercentage(Task task) {
-		return 0;
+	public int calculateOverDuePercentage(Task task) throws IllegalStateException{
+		throw new IllegalStateException("This task is unavailable");
 	}
 
 }

@@ -15,14 +15,13 @@ public class Available  implements Status {
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) {
-		
+	public void addAlternative(Task task, Task alternative) throws IllegalStateException{
+		throw new IllegalStateException("Task is not failed");
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) {
-		// TODO Auto-generated method stub
-		
+	public void updateTaskAvailability(Task task) throws IllegalStateException{
+		throw new IllegalStateException("This task is already available");		
 	}
 
 	@Override
@@ -33,12 +32,12 @@ public class Available  implements Status {
 		if(endTime == null) throw new NullPointerException("The endTime is null.");
 		if(startTime.compareTo(endTime) > 0) throw new IllegalDateException("The startTime must start before endTime.");
 		if(failed){
-			task.updateStatus(new Failed());
+			task.performUpdateTaskAvailability(new Failed());
 		}
 		else{
-			task.updateStatus(new Finished());
+			task.performUpdateTaskAvailability(new Finished());
 		}
-		task.addTimeSpan(startTime, endTime);
+		task.performAddTimeSpan(startTime, endTime);
 	}
 
 	@Override
@@ -58,13 +57,12 @@ public class Available  implements Status {
 
 	@Override
 	public int calculateTotalExecutedTime(Task task) {
-		// TODO Auto-generated method stub
-		return 0;
+		return task.performGetTotalExecutionTime();
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task) {
-		return 0;
+		return task.performGetOverduePercentage();
 	}
 
 
