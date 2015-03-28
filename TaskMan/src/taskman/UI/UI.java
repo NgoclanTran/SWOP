@@ -45,17 +45,17 @@ public class UI {
 		}
 
 		if (list.size() == 0) {
-			if(printReturn)
+			if (printReturn)
 				display(tabString + "0. Return");
 			else
 				display(tabString + "Nothing to display.");
 		} else {
-			if(printReturn)
+			if (printReturn)
 				display(tabString + "0. Return");
 			for (int i = 1; i <= list.size(); i++) {
 				Object item = i + ". " + list.get(i - 1);
 				String string = item.toString();
-				string = indentStringWithNewLines(string, tabString + "\t");
+				string = indentStringWithNewLines(string, tab + 1);
 				string = tabString + string;
 				display(string);
 			}
@@ -72,26 +72,70 @@ public class UI {
 		return true;
 	}
 
-	private String indentStringWithNewLines(String string, String prefix) {
-		return string.replaceAll("\n", "\n" + prefix);
+	private String indentStringWithNewLines(String string, int tab) {
+		String tabString = "";
+		for (int i = 0; i < tab; i++) {
+			tabString += "\t";
+		}
+		return string.replaceAll("\n", "\n" + tabString);
 	}
 
-	private String getString(DateTime time) {
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm");
+	private String getStringDate(DateTime time) {
+		DateTimeFormatter formatter = DateTimeFormat
+				.forPattern("dd-MM-yyyy HH:mm");
 		return formatter.print(time);
 	}
-
-	private List<String> getString(List<Task> tasks) {
-		ArrayList<String> tasksInfo = new ArrayList<String>();
-		for(int i = 1; i <= tasks.size(); i++) {
-			StringBuilder taskInfo = new StringBuilder();
-			taskInfo.append("Task ");
-			taskInfo.append(i);
-			taskInfo.append(": ");
-			taskInfo.append(tasks.get(i-1).getStatusName());
-			tasksInfo.add(taskInfo.toString());
+	
+	private String getStringProjectDetails(Project project) {
+		StringBuilder projectDetails = new StringBuilder();
+		projectDetails.append(project.getName());
+		projectDetails.append(":\n");
+		projectDetails.append(project.getDescription());
+		projectDetails.append("\n");
+		projectDetails.append(getStringDate(project.getCreationTime()));
+		projectDetails.append(" - ");
+		projectDetails.append(getStringDate(project.getDueTime()));
+		projectDetails.append("\n");
+		if (project.isFinished()) {
+			projectDetails.append("Status: Finished");
+		} else {
+			projectDetails.append("Status: Ongoing");
+			projectDetails.append("\n");
+			projectDetails.append("Estimated end time: ");
+			projectDetails.append(getStringDate(project.getEstimatedFinishTime()));
 		}
-		return tasksInfo;
+		return projectDetails.toString();
+	}
+
+	private String getStringTask(Task task, int index) {
+		StringBuilder taskInfo = new StringBuilder();
+		taskInfo.append("Task ");
+		taskInfo.append(index);
+		taskInfo.append(": ");
+		taskInfo.append(task.getStatusName());
+		return taskInfo.toString();
+	}
+	
+	private String getStringTaskDetails(Task task, int index) {
+		StringBuilder taskInfo = new StringBuilder();
+		taskInfo.append("Task ");
+		taskInfo.append(index);
+		taskInfo.append(":");
+		taskInfo.append("\n");
+		taskInfo.append(task.getDescription());
+		taskInfo.append("\n");
+		taskInfo.append("Status: ");
+		taskInfo.append(task.getStatusName());
+		taskInfo.append("\n");
+		if(task.isCompleted()) {
+			taskInfo.append("Start time: ");
+			taskInfo.append(getStringDate(task.getTimeSpan().getStartTime()));
+			taskInfo.append("\n");
+			taskInfo.append("End time: ");
+			taskInfo.append(getStringDate(task.getTimeSpan().getEndTime()));
+			taskInfo.append("\n");
+		}
+		return taskInfo.toString();
 	}
 
 	public int getNumberInput(String message) throws IllegalArgumentException {
@@ -138,28 +182,27 @@ public class UI {
 		displayEmptyLine();
 	}
 
-	public void displayProjectList(List<?> projects) {
+	public void displayProjectList(List<Project> projects) {
 		displayList(projects, 0, true);
 		displayEmptyLine();
 	}
 
-	public void displayProjectDetails(Project project, List<Task> tasks) {
-		StringBuilder projectDetails = new StringBuilder();
-		projectDetails.append(project.getName());
-		projectDetails.append(":\n");
-		projectDetails.append(project.getDescription());
-		projectDetails.append("\n");
-		projectDetails.append(getString(project.getCreationTime()));
-		projectDetails.append(" - ");
-		projectDetails.append(getString(project.getDueTime()));
-		projectDetails.append("\n");
-		if(project.isFinished())
-			projectDetails.append("Status: Finished");
-		else
-			projectDetails.append("Status: Ongoing");
-		display(indentStringWithNewLines(projectDetails.toString(), "\t"));
+	public void displayProjectDetails(Project project) {
+		display(indentStringWithNewLines(getStringProjectDetails(project), 1));
 		displayEmptyLine();
-		displayList(getString(tasks), 1, true);
+	}
+
+	public void displayTaskList(List<Task> tasks) {
+		ArrayList<String> tasksInfo = new ArrayList<String>();
+		for (int i = 1; i <= tasks.size(); i++) {
+			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
+		}
+		displayList(tasksInfo, 1, true);
+		displayEmptyLine();
+	}
+
+	public void displayTaskDetails(Task task, int index) {
+		display(indentStringWithNewLines(getStringTaskDetails(task, index), 1));
 		displayEmptyLine();
 	}
 }

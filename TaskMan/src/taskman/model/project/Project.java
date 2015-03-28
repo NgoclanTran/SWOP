@@ -107,14 +107,15 @@ public class Project implements Observer {
 	 * @throws IllegalStateException
 	 */
 	public void addTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies, Task alternativeFor)
-			throws IllegalStateException {
+			int acceptableDeviation, List<Task> dependencies,
+			Task alternativeFor) throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor);
 	}
 
 	protected void performAddTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies, Task alternativeFor) {
+			int acceptableDeviation, List<Task> dependencies,
+			Task alternativeFor) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor);
 		this.tasks.add(task);
@@ -190,13 +191,14 @@ public class Project implements Observer {
 		}
 		return calculateEstimatedFinishTime(lastEndTime, minutesToAdd);
 	}
-	
+
 	private DateTime getFirstStartTime() {
 		DateTime firstStartTime = this.creationTime;
 		if (firstStartTime.getHourOfDay() < 8) {
 			firstStartTime = firstStartTime.plusMinutes((60 - firstStartTime
 					.getMinuteOfHour()) % 60);
-			firstStartTime = firstStartTime.plusHours(8 - firstStartTime.getHourOfDay());
+			firstStartTime = firstStartTime.plusHours(8 - firstStartTime
+					.getHourOfDay());
 		} else if (firstStartTime.getHourOfDay() >= 17) {
 			firstStartTime = firstStartTime.plusMinutes((60 - firstStartTime
 					.getMinuteOfHour()) % 60);
@@ -204,10 +206,15 @@ public class Project implements Observer {
 					.getHourOfDay()) % 24);
 			firstStartTime = firstStartTime.plusHours(8);
 		}
+		if (firstStartTime.getDayOfWeek() == 6)
+			firstStartTime = firstStartTime.plusDays(2);
+		else if(firstStartTime.getDayOfWeek() == 7)
+			firstStartTime = firstStartTime.plusDays(1);
 		return firstStartTime;
 	}
-	
-	private DateTime calculateEstimatedFinishTime(DateTime lastEndTime, int minutesToAdd) {
+
+	private DateTime calculateEstimatedFinishTime(DateTime lastEndTime,
+			int minutesToAdd) {
 		while (minutesToAdd > 0) {
 			lastEndTime = lastEndTime.plusMinutes(1);
 			if (lastEndTime.getDayOfWeek() > 5) {
@@ -254,7 +261,7 @@ public class Project implements Observer {
 	public void update() {
 		updateProjectState();
 	}
-	
+
 	@Override
 	public String toString() {
 		return name + ": " + (isFinished() ? "Finished" : "Ongoing");

@@ -37,7 +37,8 @@ public class ShowProjectController extends Controller {
 	
 	private void showProjectDetails(Project project) {
 		List<Task> tasks = project.getTasks();
-		getUI().displayProjectDetails(project, tasks);
+		getUI().displayProjectDetails(project);
+		getUI().displayTaskList(tasks);
 		
 		int taskId;	
 		try {
@@ -47,7 +48,11 @@ public class ShowProjectController extends Controller {
 			return;
 		}
 		
-		getUI().display("Selected task " + taskId);
+		showTaskDetails(tasks.get(taskId - 1), taskId);
+	}
+	
+	private void showTaskDetails(Task task, int index) {
+		getUI().displayTaskDetails(task, index);
 	}
 
 }
