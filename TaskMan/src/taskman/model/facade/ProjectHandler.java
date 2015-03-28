@@ -43,7 +43,7 @@ public class ProjectHandler {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalDateException
 	 */
-	public void makeProject(String name, String description,
+	public void addProject(String name, String description,
 			DateTime creationTime, DateTime dueTime) throws IllegalArgumentException, IllegalDateException {
 		Project projectToAdd = new Project(name, description, creationTime, dueTime);
 		addProject(projectToAdd);

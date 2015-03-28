@@ -254,4 +254,9 @@ public class Project implements Observer {
 	public void update() {
 		updateProjectState();
 	}
+	
+	@Override
+	public String toString() {
+		return name + ": " + (isFinished() ? "Finished" : "Ongoing");
+	}
 }

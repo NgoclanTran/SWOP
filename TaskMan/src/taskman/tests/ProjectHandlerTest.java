@@ -28,7 +28,7 @@ public class ProjectHandlerTest {
 		String name = "name", description = "description";
 		DateTime creation = new DateTime(), due = new DateTime();
 		assertEquals(0, ph.getProjects().size());
-		ph.makeProject(name, description, creation, due);
+		ph.addProject(name, description, creation, due);
 		assertEquals(1, ph.getProjects().size());
 		assertEquals(name, ph.getProjects().get(0).getName());
 		assertEquals(description, ph.getProjects().get(0).getDescription());
@@ -49,7 +49,7 @@ public class ProjectHandlerTest {
 		String name = "name", description = "description";
 		DateTime creation = new DateTime(), due = new DateTime();
 		assertEquals(0, ph.getProjects().size());
-		ph.makeProject(name, description, creation, due);
+		ph.addProject(name, description, creation, due);
 		assertEquals(1, ph.getProjects().size());
 		assertEquals(name, ph.getProjects().get(0).getName());
 		assertEquals(description, ph.getProjects().get(0).getDescription());
