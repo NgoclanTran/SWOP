@@ -119,7 +119,7 @@ public class Project implements Observer {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor);
 		this.tasks.add(task);
-		task.attachObserver(this);
+		task.attach(this);
 	}
 
 	private ArrayList<Task> tasks;

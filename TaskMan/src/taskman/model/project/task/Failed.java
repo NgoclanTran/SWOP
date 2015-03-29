@@ -2,7 +2,7 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
-public class Failed implements Status{
+class Failed implements Status{
 
 	private final String name = "FAILED";
 	@Override

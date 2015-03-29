@@ -2,7 +2,7 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
-public class Finished implements Status{
+class Finished implements Status{
 
 	private final String name = "FINISHED";
 

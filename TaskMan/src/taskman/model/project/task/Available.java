@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
 
-public class Available  implements Status {
+class Available  implements Status {
 
 
 	private final String name = "AVAILABLE";

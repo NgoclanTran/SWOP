@@ -2,7 +2,7 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
-public interface Status{
+interface Status{
 /**
  * Returns the name of the status
  * 

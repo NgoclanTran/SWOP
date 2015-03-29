@@ -2,7 +2,7 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
-public class Unavailable implements Status {
+class Unavailable implements Status {
 
 	private final String name = "UNAVAILABLE";
 

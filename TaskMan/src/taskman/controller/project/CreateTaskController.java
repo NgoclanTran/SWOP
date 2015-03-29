@@ -1,6 +1,6 @@
 package taskman.controller.project;
 
-import taskman.controller.Controller;
+import taskman.controller.MainSession;
 import taskman.model.facade.ProjectHandler;
 import taskman.model.project.Project;
 

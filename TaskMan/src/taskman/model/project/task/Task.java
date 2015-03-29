@@ -6,9 +6,8 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
-import taskman.model.project.Observer;
 
-public class Task {
+public class Task extends Subject {
 
 	/**
 	 * The first constructor of task. This will create a task with the given
@@ -73,7 +72,6 @@ public class Task {
 	private Status status;
 	private TimeSpan timeSpan;
 	private Task alternative = null;
-	private List<Observer> observers = new ArrayList<Observer>();
 
 	/**
 	 * Returns the description of the task
@@ -308,13 +306,4 @@ public class Task {
 				/ this.estimatedDuration;
 	}
 	
-	public void attachObserver(Observer observer) {
-		observers.add(observer);
-	}
-	
-	private void notifyAllObservers() {
-		for(Observer o : observers) {
-			o.update();
-		}
-	}
 }
