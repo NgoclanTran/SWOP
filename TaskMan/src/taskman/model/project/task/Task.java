@@ -131,9 +131,9 @@ public class Task extends Subject {
 
 	// moet public?
 	public void notifyAllDependants() {
-		for (Task observer : this.dependants) {
+		for (Task dependant : this.dependants) {
 			try {
-				observer.updateTaskAvailability();
+				dependant.updateTaskAvailability();
 			} catch (IllegalStateException e) {
 			}
 		}
@@ -187,8 +187,9 @@ public class Task extends Subject {
 
 	protected void performAddTimeSpan(DateTime startTime, DateTime endTime) {
 		this.timeSpan = new TimeSpan(startTime, endTime);
-		this.notifyAllDependants();
-		this.notifyAllObservers();
+
+		this.notifyAllDependants(); //notify dependant task
+		this.notifyAllObservers(); //observer pattern for project
 	}
 
 	/**
@@ -266,9 +267,22 @@ public class Task extends Subject {
 	}
 
 	protected void performUpdateTaskAvailability(Status status) {
+		for( Task task : this.dependencies){
+			if(task.isFailed()){
+				if(!task.isAlternativeCompleted()) return;
+			}
+			if(!task.isCompleted()) return;			
+		}
 		this.status = status;
 	}
-
+	
+	private boolean isAlternativeCompleted(){
+		if(this.alternative == null) return true;
+		if(this.alternative.isFinished()) return true;
+		if(this.alternative.isFailed()) return this.alternative.isAlternativeCompleted();
+		return false;
+		
+	}
 	/**
 	 * Returns the total execution time for the task
 	 * 

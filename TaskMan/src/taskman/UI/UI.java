@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -18,6 +22,7 @@ public class UI {
 
 	private final BufferedReader reader;
 	private final PrintWriter writer;
+	static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public UI() {
 		InputStreamReader readin = new InputStreamReader(System.in);
@@ -160,6 +165,13 @@ public class UI {
 		} catch (IOException e) {
 			return "";
 		}
+	}
+	
+	public DateTime getDateTimeInput(String message) throws IllegalArgumentException, ParseException, IOException{
+		display(message);
+			return new DateTime(format.parse(reader.readLine()));
+		
+		
 	}
 
 	public void display(String message) throws IllegalArgumentException {
