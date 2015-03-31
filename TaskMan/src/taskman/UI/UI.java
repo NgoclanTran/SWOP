@@ -8,7 +8,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -138,14 +137,13 @@ public class UI {
 		taskInfo.append("\n");
 		taskInfo.append("Status: ");
 		taskInfo.append(task.getStatusName());
-		taskInfo.append("\n");
 		if (task.isCompleted()) {
+			taskInfo.append("\n");
 			taskInfo.append("Start time: ");
 			taskInfo.append(getStringDate(task.getTimeSpan().getStartTime()));
 			taskInfo.append("\n");
 			taskInfo.append("End time: ");
 			taskInfo.append(getStringDate(task.getTimeSpan().getEndTime()));
-			taskInfo.append("\n");
 		}
 		return taskInfo.toString();
 	}
@@ -178,7 +176,6 @@ public class UI {
 			throws IllegalArgumentException, ParseException, IOException {
 		display(message);
 		return new DateTime(format.parse(reader.readLine()));
-
 	}
 
 	public void display(String message) throws IllegalArgumentException {

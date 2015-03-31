@@ -62,8 +62,6 @@ public class MainSession extends Session {
 			default:
 				getUI().display("Option available.");
 			}
-
-			getUI().displayEmptyLine();
 		}
 	}
 
