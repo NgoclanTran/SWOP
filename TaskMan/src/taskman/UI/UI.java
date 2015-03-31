@@ -90,7 +90,7 @@ public class UI {
 				.forPattern("dd-MM-yyyy HH:mm");
 		return formatter.print(time);
 	}
-	
+
 	private String getStringProjectDetails(Project project) {
 		StringBuilder projectDetails = new StringBuilder();
 		projectDetails.append(project.getName());
@@ -107,7 +107,8 @@ public class UI {
 			projectDetails.append("Status: Ongoing");
 			projectDetails.append("\n");
 			projectDetails.append("Estimated end time: ");
-			projectDetails.append(getStringDate(project.getEstimatedFinishTime()));
+			projectDetails.append(getStringDate(project
+					.getEstimatedFinishTime()));
 		}
 		return projectDetails.toString();
 	}
@@ -120,7 +121,7 @@ public class UI {
 		taskInfo.append(task.getStatusName());
 		return taskInfo.toString();
 	}
-	
+
 	private String getStringTaskDetails(Task task, int index) {
 		StringBuilder taskInfo = new StringBuilder();
 		taskInfo.append("Task ");
@@ -132,7 +133,7 @@ public class UI {
 		taskInfo.append("Status: ");
 		taskInfo.append(task.getStatusName());
 		taskInfo.append("\n");
-		if(task.isCompleted()) {
+		if (task.isCompleted()) {
 			taskInfo.append("Start time: ");
 			taskInfo.append(getStringDate(task.getTimeSpan().getStartTime()));
 			taskInfo.append("\n");
@@ -166,12 +167,12 @@ public class UI {
 			return "";
 		}
 	}
-	
-	public DateTime getDateTimeInput(String message) throws IllegalArgumentException, ParseException, IOException{
+
+	public DateTime getDateTimeInput(String message)
+			throws IllegalArgumentException, ParseException, IOException {
 		display(message);
-			return new DateTime(format.parse(reader.readLine()));
-		
-		
+		return new DateTime(format.parse(reader.readLine()));
+
 	}
 
 	public void display(String message) throws IllegalArgumentException {
@@ -202,6 +203,12 @@ public class UI {
 	public void displayProjectDetails(Project project) {
 		display(indentStringWithNewLines(getStringProjectDetails(project), 1));
 		displayEmptyLine();
+	}
+	
+	public void displayProjectsWithAvailableTasks(List<Project> projects, List<List<Task>> tasks){
+		for (Project p : projects){
+			
+		}
 	}
 
 	public void displayTaskList(List<Task> tasks) {

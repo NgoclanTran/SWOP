@@ -106,7 +106,6 @@ public abstract class Session {
 		}
 		return input;
 	}
-	
 
 	/**
 	 * Checks if the user requested to exit.

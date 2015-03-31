@@ -5,6 +5,7 @@ import java.util.List;
 
 import taskman.UI.UI;
 import taskman.controller.project.ShowProjectSession;
+import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.facade.ProjectHandler;
 
 public class MainSession extends Session {
@@ -32,7 +33,7 @@ public class MainSession extends Session {
 
 		while (true) {
 			List<String> menu = Arrays.asList("Show projects",
-					"Create project", "Create task", "Quit");
+					"Create project", "Create task", "Update task", "Quit");
 			getUI().displayList(menu);
 
 			int menuId = getUI().getNumberInput("Select an option: ");
@@ -52,6 +53,9 @@ public class MainSession extends Session {
 				getUI().display("Create task");
 				break;
 			case 4:
+				new UpdateTaskStatusSession(getUI(), getPH()).run();
+				break;
+			case 5:
 				return;
 			default:
 				getUI().display("Option available.");
