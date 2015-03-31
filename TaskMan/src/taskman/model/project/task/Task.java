@@ -59,7 +59,7 @@ public class Task extends Subject {
 		}
 		if(alternativeFor != null)
 			alternativeFor.addAlternative(this);
-		
+
 		updateTaskAvailability();
 	}
 
@@ -268,20 +268,24 @@ public class Task extends Subject {
 
 	protected void performUpdateTaskAvailability(Status status) {
 		for( Task task : this.dependencies){
-			if(task.isFailed()){
-				if(!task.isAlternativeCompleted()) return;
+			try{
+				if(!task.status.isAlternativeCompleted(task)) return;
+
+			} catch(IllegalStateException e){
+				if(!task.isFinished()) return;
 			}
-			if(!task.isCompleted()) return;			
+
 		}
 		this.status = status;
+
 	}
-	
-	private boolean isAlternativeCompleted(){
-		if(this.alternative == null) return true;
+
+	protected boolean isAlternativeCompleted(){
+		if(this.alternative == null) return false;
 		if(this.alternative.isFinished()) return true;
-		if(this.alternative.isFailed()) return this.alternative.isAlternativeCompleted();
+		if(this.alternative.isFailed()) return this.alternative.status.isAlternativeCompleted(alternative);
 		return false;
-		
+
 	}
 	/**
 	 * Returns the total execution time for the task
@@ -319,5 +323,5 @@ public class Task extends Subject {
 		return (totalExecutedTime - this.estimatedDuration)
 				/ this.estimatedDuration;
 	}
-	
+
 }

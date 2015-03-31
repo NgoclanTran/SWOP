@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import taskman.UI.UI;
+import taskman.controller.project.CreateProjectSession;
+import taskman.controller.project.CreateTaskSession;
 import taskman.controller.project.ShowProjectSession;
 import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.facade.ProjectHandler;
@@ -47,10 +49,10 @@ public class MainSession extends Session {
 				new ShowProjectSession(getUI(), getPH()).run();
 				break;
 			case 2:
-				getUI().display("Create project");
+				new CreateProjectSession(getUI(),getPH()).run();
 				break;
 			case 3:
-				getUI().display("Create task");
+				new CreateTaskSession(getUI(), getPH()).run();
 				break;
 			case 4:
 				new UpdateTaskStatusSession(getUI(), getPH()).run();
