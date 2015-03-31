@@ -57,12 +57,20 @@ class Available  implements Status {
 
 	@Override
 	public int calculateTotalExecutedTime(Task task) {
-		return task.performGetTotalExecutionTime();
+		//return task.performGetTotalExecutionTime();
+		throw new IllegalStateException("The available task doesn't have a timespan.");
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task) {
-		return task.performGetOverduePercentage();
+		//return task.performGetOverduePercentage();
+		throw new IllegalStateException("The available task doesn't have a timespan.");
+	}
+
+	@Override
+	public boolean isAlternativeCompleted(Task task) {
+		//throw new IllegalStateException("The available task doesn't have alternative.");
+		throw new IllegalStateException("The available task doesn't have a timespan.");
 	}
 
 

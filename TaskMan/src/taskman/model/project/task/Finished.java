@@ -55,4 +55,9 @@ class Finished implements Status{
 		return task.performGetOverduePercentage();
 	}
 
+	@Override
+	public boolean isAlternativeCompleted(Task task) {
+		throw new IllegalStateException("The available task doesn't have alternative.");
+	}
+
 }

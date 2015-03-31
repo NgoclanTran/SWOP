@@ -9,9 +9,9 @@ import taskman.UI.UI;
 import taskman.controller.Session;
 import taskman.model.facade.ProjectHandler;
 
-public class CreateProjectController extends Session{
+public class CreateProjectSession extends Session{
 
-	public CreateProjectController(UI cli, ProjectHandler ph){
+	public CreateProjectSession(UI cli, ProjectHandler ph){
 		super(cli, ph);
 	}
 
@@ -32,13 +32,22 @@ public class CreateProjectController extends Session{
 		catch(Exception e){
 			createProject();
 		}
-		String text = getUI().getTextInput("Confirm by typing ok, to create task: ");
+		String text = getUI().getTextInput("Confirm by typing ok, to create project: ");
 		if(!text.equalsIgnoreCase("ok")){
 			getUI().display("Stop system");
 		
 			return;
+		
 		}
-		super.getPH().addProject(name, description, creationTime, dueTime);
+		
+		try{
+			super.getPH().addProject(name, description, creationTime, dueTime);
+			getUI().display("Project created.");
+		}catch(Exception e){
+			getUI().display(e.getMessage());
+			createProject();
+		}
+		
 		
 		
 		

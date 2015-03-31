@@ -11,9 +11,9 @@ import taskman.model.facade.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 
-public class CreateTaskController extends Session{
+public class CreateTaskSession extends Session{
 
-	public CreateTaskController(UI cli, ProjectHandler ph) {
+	public CreateTaskSession(UI cli, ProjectHandler ph) {
 		super(cli, ph);
 	}
 	
@@ -26,7 +26,14 @@ public class CreateTaskController extends Session{
 		String description = super.getUI().getTextInput("Enter the description of the task: ");
 		int estimatedDuration = super.getUI().getNumberInput("Enter the estimated duration of the task: ");
 		int acceptableDeviation = super.getUI().getNumberInput("Enter an acceptable deviation of the task: ");
-		ArrayList<Task> dependencies = getDependencies(project);
+		String hasDependencies = getUI().getTextInput("Does task have dependencies? Enter yes or no");
+		ArrayList<Task> dependencies;
+		if(hasDependencies.equalsIgnoreCase("yes")){
+			dependencies = getDependencies(project);
+		}else{
+			dependencies = new ArrayList<Task>();
+		}
+		
 		Task alternativeFor;
 		
 		
@@ -44,8 +51,10 @@ public class CreateTaskController extends Session{
 		}
 		try{
 			project.addTask(description, estimatedDuration, acceptableDeviation, dependencies, alternativeFor);
+			getUI().display("Task created.");
 		}
 		catch(Exception e){
+			getUI().display(e.getMessage());
 			createTask();
 		}
 		

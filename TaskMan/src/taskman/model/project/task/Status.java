@@ -85,5 +85,7 @@ public int calculateOverDuePercentage(Task task) throws IllegalStateException;
  * @throws IllegalStateException
  */
 public void addTimeSpan(Task task, boolean failed, DateTime startTime, DateTime endTime) throws IllegalStateException;
-
+public boolean isAlternativeCompleted(Task task);
 }
+
+

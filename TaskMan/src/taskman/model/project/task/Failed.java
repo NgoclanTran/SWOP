@@ -54,4 +54,9 @@ class Failed implements Status{
 		return task.performGetOverduePercentage();
 	}
 
+	@Override
+	public boolean isAlternativeCompleted(Task task) {
+		return task.isAlternativeCompleted();
+	}
+
 }
