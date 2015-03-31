@@ -113,6 +113,12 @@ public class UI {
 		return projectDetails.toString();
 	}
 
+	private String getStringAvailableTaskDescription(Task task) {
+		StringBuilder availableTask = new StringBuilder();
+		availableTask.append(task.getDescription());
+		return availableTask.toString();
+	}
+
 	private String getStringTask(Task task, int index) {
 		StringBuilder taskInfo = new StringBuilder();
 		taskInfo.append("Task ");
@@ -204,10 +210,18 @@ public class UI {
 		display(indentStringWithNewLines(getStringProjectDetails(project), 1));
 		displayEmptyLine();
 	}
-	
-	public void displayProjectsWithAvailableTasks(List<Project> projects, List<List<Task>> tasks){
-		for (Project p : projects){
-			
+
+	public void displayProjectsWithAvailableTasks(List<Project> projects,
+			List<List<Task>> tasks) {
+		for (int i = 1; i <= projects.size(); i++) {
+			Object item = i + ". " + projects.get(i - 1).getName();
+			String string = item.toString();
+			display(string);
+			for (int j = 1; j <= tasks.get(i - 1).size(); j++) {
+				item = "		" + tasks.get(i - 1).get(j - 1).getDescription();
+				string = item.toString();
+				display(string);
+			}
 		}
 	}
 
@@ -215,6 +229,15 @@ public class UI {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
 			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
+		}
+		displayList(tasksInfo, 1, true);
+		displayEmptyLine();
+	}
+
+	public void displayAvailableTaskList(List<Task> tasks) {
+		ArrayList<String> tasksInfo = new ArrayList<String>();
+		for (int i = 1; i <= tasks.size(); i++) {
+			tasksInfo.add(getStringAvailableTaskDescription(tasks.get(i - 1)));
 		}
 		displayList(tasksInfo, 1, true);
 		displayEmptyLine();
