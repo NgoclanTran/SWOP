@@ -66,7 +66,7 @@ public class ShowProjectSession extends Session {
 	private void showProjectDetails(Project project) {
 		List<Task> tasks = project.getTasks();
 		getUI().displayProjectDetails(project);
-		getUI().displayTaskList(tasks);
+		getUI().displayTaskList(tasks, 1);
 
 		int taskId;
 		try {

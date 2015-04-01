@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import taskman.UI.UI;
-import taskman.controller.MainSession;
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.facade.ProjectHandler;
@@ -104,7 +103,7 @@ public class CreateTaskSession extends Session{
 	private ArrayList<Task> getDependencies(Project project){
 		List<Task> tasks = project.getTasks();
 		ArrayList<Task> dependencies = new ArrayList<Task>();
-		getUI().displayTaskList(tasks);
+		getUI().displayTaskList(tasks, 1);
 		int taskId = 0;
 			try {
 				taskId = getListChoice(tasks,"Select a task: ");

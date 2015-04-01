@@ -38,18 +38,23 @@ public class UpdateTaskStatusSession extends Session {
 	public void run() {
 		showProjectsAndAvailableTasks();
 	}
+	
+	private List<Task> getAvailableTasks(Project project) {
+		List<Task> availableTasks = new ArrayList<Task>();
+		List<Task> tasks = project.getTasks();
+		for (Task t : tasks) {
+			if (t.isAvailable())
+				availableTasks.add(t);
+		}
+		return availableTasks;
+	}
 
 	private void showProjectsAndAvailableTasks() {
 		List<Project> projects = getPH().getProjects();
 		List<List<Task>> availableTasksList = new ArrayList<>();
 		List<Task> availableTasks = null;
 		for (Project p : projects) {
-			availableTasks = new ArrayList<Task>();
-			List<Task> tasks = p.getTasks();
-			for (Task t : tasks) {
-				if (t.isAvailable())
-					availableTasks.add(t);
-			}
+			availableTasks = getAvailableTasks(p);
 			availableTasksList.add(availableTasks);
 		}
 
@@ -65,12 +70,7 @@ public class UpdateTaskStatusSession extends Session {
 	}
 
 	private void showAvailableTasks(Project project) {
-		List<Task> availableTasks = new ArrayList<Task>();
-		List<Task> tasks = project.getTasks();
-		for (Task t : tasks) {
-			if (t.isAvailable())
-				availableTasks.add(t);
-		}
+		List<Task> availableTasks = getAvailableTasks(project);
 
 		if (availableTasks.isEmpty()) {
 			getUI().display(
@@ -78,7 +78,7 @@ public class UpdateTaskStatusSession extends Session {
 			showProjectsAndAvailableTasks();
 		}
 
-		getUI().displayAvailableTaskList(availableTasks);
+		getUI().displayTaskList(availableTasks, 0);
 
 		int taskId;
 		try {
