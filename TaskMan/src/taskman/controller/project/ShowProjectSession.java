@@ -42,6 +42,13 @@ public class ShowProjectSession extends Session {
 	 */
 	private void showProjects() {
 		List<Project> projects = getPH().getProjects();
+		
+		if(projects.size() == 0){
+			getUI().display("No projects.");
+			getUI().displayEmptyLine();
+			return;
+		}
+		
 		getUI().displayProjectList(projects);
 
 		int projectId;
@@ -66,6 +73,10 @@ public class ShowProjectSession extends Session {
 	private void showProjectDetails(Project project) {
 		List<Task> tasks = project.getTasks();
 		getUI().displayProjectDetails(project);
+		
+		if(tasks.size() == 0)
+			return;
+		
 		getUI().displayTaskList(tasks, 1);
 
 		int taskId;

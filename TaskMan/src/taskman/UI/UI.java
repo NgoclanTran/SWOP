@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +18,8 @@ public class UI {
 
 	private final BufferedReader reader;
 	private final PrintWriter writer;
-	static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private final DateTimeFormatter formatter = DateTimeFormat
+			.forPattern("dd-MM-yyyy HH:mm");
 
 	public UI() {
 		InputStreamReader readin = new InputStreamReader(System.in);
@@ -85,8 +83,6 @@ public class UI {
 	}
 
 	private String getStringDate(DateTime time) {
-		DateTimeFormatter formatter = DateTimeFormat
-				.forPattern("dd-MM-yyyy HH:mm");
 		return formatter.print(time);
 	}
 
@@ -166,12 +162,6 @@ public class UI {
 		}
 	}
 
-	public DateTime getDateTimeInput(String message)
-			throws IllegalArgumentException, ParseException, IOException {
-		display(message);
-		return new DateTime(format.parse(reader.readLine()));
-	}
-
 	public void display(String message) throws IllegalArgumentException {
 		if (!isValidMessage(message))
 			throw new IllegalArgumentException("Invalid message.");
@@ -187,25 +177,25 @@ public class UI {
 		displayEmptyLine();
 	}
 
-	public void displayList(List<?> list) {
+	public void displayList(List<?> list) throws IllegalArgumentException {
 		displayList(list, 0, false);
 		displayEmptyLine();
 	}
 
-	public void displayProjectList(List<Project> projects) {
+	public void displayProjectList(List<Project> projects) throws IllegalArgumentException {
 		displayList(projects, 0, true);
 		displayEmptyLine();
 	}
 
-	public void displayProjectDetails(Project project) {
+	public void displayProjectDetails(Project project) throws IllegalArgumentException {
 		display(indentStringWithNewLines(getStringProjectDetails(project), 1));
 		displayEmptyLine();
 	}
 
 	public void displayProjectsWithAvailableTasks(List<Project> projects,
-			List<List<Task>> tasks) {
+			List<List<Task>> tasks) throws IllegalArgumentException {
 		for (int i = 1; i <= projects.size(); i++) {
-			if(tasks.get(i-1).size() == 0)
+			if (tasks.get(i - 1).size() == 0)
 				continue;
 			Object item = i + ". " + projects.get(i - 1).getName();
 			String project = item.toString();
@@ -219,7 +209,7 @@ public class UI {
 		}
 	}
 
-	public void displayTaskList(List<Task> tasks, int tab) {
+	public void displayTaskList(List<Task> tasks, int tab) throws IllegalArgumentException {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
 			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
@@ -228,7 +218,7 @@ public class UI {
 		displayEmptyLine();
 	}
 
-	public void displayTaskDetails(Task task, int index) {
+	public void displayTaskDetails(Task task, int index) throws IllegalArgumentException {
 		display(indentStringWithNewLines(getStringTaskDetails(task, index), 1));
 		displayEmptyLine();
 	}

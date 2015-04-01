@@ -99,7 +99,7 @@ public abstract class Session {
 			throws ShouldExitException {
 		int input = getUI().getNumberInput(question);
 		while (!shouldExit(input) && !(input > 0 && input <= list.size())) {
-			input = getUI().getNumberInput("Invalid selection. " + question);
+			input = getUI().getNumberInput("Invalid selection!\n" + question);
 		}
 		if (shouldExit(input)) {
 			throw new ShouldExitException();

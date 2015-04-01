@@ -41,7 +41,7 @@ public class MainSession extends Session {
 			int menuId = getUI().getNumberInput("Select an option: ");
 			while (menuId <= 0 || menuId > menu.size()) {
 				menuId = getUI().getNumberInput(
-						"Invalid selection! Select an option: ");
+						"Invalid selection!\nSelect an option: ");
 			}
 
 			switch (menuId) {
