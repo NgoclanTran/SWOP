@@ -10,16 +10,31 @@ import taskman.controller.Session;
 import taskman.model.facade.ProjectHandler;
 
 public class CreateProjectSession extends Session{
-
+	/**
+	 * Creates the create project session using the given UI and ProjectHandler.
+	 * 
+	 * @param cli
+	 *            The command line interface.
+	 * @param ph
+	 *            The project handler.
+	 * 
+	 * @throws IllegalArgumentException
+	 */
 	public CreateProjectSession(UI cli, ProjectHandler ph){
 		super(cli, ph);
 	}
 
 	@Override
+	/**
+	 * starts the use case by calling the create project method
+	 */
 	public void run() {
 		createProject();
 	}
-	
+	/**
+	 * This is the main method for the use case, it will ask for user input for the details of the project
+	 * 
+	 */
 	private void createProject(){
 		
 		String name = cli.getTextInput("Enter the name of the project: ");

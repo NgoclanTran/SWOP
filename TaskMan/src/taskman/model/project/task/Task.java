@@ -21,6 +21,12 @@ public class Task extends Subject {
 	 *            The acceptable deviation of the task
 	 * @param dependencies
 	 *            The list of dependencies of the task
+	 * @post The new description is equal to the given descrription
+	 * @post The new estimatedDuration is equal to the given estimatedDuration
+	 * @post The new acceptableDeviation is equal to the given
+	 *       acceptableDevaition
+	 * @post The status of this task is Unavailable
+	 * @post The new dependencies is equal to the given dependencies
 	 * @throws NullPointerException
 	 *             The description cannot be null
 	 * @throws IllegalArgumentException
@@ -29,12 +35,7 @@ public class Task extends Subject {
 	 *             The acceptableDeviation is negatif
 	 * @throws NullPointerException
 	 *             The dependencies is equal to null
-	 * @post The new description is equal to the given descrription
-	 * @post The new estimatedDuration is equal to the given estimatedDuration
-	 * @post The new acceptableDeviation is equal to the given
-	 *       acceptableDevaition
-	 * @post The status of this task is Unavailable
-	 * @post The new dependencies is equal to the given dependencies
+
 	 */
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies, Task alternativeFor) {
@@ -117,7 +118,7 @@ public class Task extends Subject {
 	 *             The dependant task is null
 	 * @post The list of depandants contains the given dependant task
 	 */
-	public void attachDependant(Task dependant) {
+	public void attachDependant(Task dependant){
 		if (dependant == null)
 			throw new NullPointerException("the dependant observer is null.");
 		this.dependants.add(dependant);
