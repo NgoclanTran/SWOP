@@ -309,9 +309,9 @@ public class Task extends Subject {
 	}
 
 	/**
-	 * Calculate de overdue percentage
+	 * Calculate the overdue percentage
 	 * 
-	 * @return Calculate de overdue percentage
+	 * @return Calculate the overdue percentage
 	 */
 	public int getOverduePercentage() {
 		return this.status.calculateOverDuePercentage(this);
