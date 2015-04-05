@@ -129,9 +129,7 @@ public class Task extends Subject {
 	 * dependants
 	 * 
 	 */
-
-	// moet public?
-	public void notifyAllDependants() {
+	private void notifyAllDependants() {
 		for (Task dependant : this.dependants) {
 			try {
 				dependant.updateTaskAvailability();
