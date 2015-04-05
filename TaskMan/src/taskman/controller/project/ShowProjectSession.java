@@ -1,4 +1,3 @@
-
 package taskman.controller.project;
 
 import java.util.List;
@@ -42,19 +41,15 @@ public class ShowProjectSession extends Session {
 	 */
 	private void showProjects() {
 		List<Project> projects = getPH().getProjects();
-		
-		if(projects.size() == 0){
-			getUI().display("No projects.");
-			getUI().displayEmptyLine();
+
+		if (projects.size() == 0) {
+			getUI().displayError("No projects.");
 			return;
 		}
-		
-		getUI().displayProjectList(projects);
 
 		int projectId;
 		try {
-			projectId = getListChoice(projects,
-					"Select a project to view the details: ");
+			projectId = getUI().getProjectID(projects);
 		} catch (ShouldExitException e) {
 			return;
 		}
@@ -73,20 +68,19 @@ public class ShowProjectSession extends Session {
 	private void showProjectDetails(Project project) {
 		List<Task> tasks = project.getTasks();
 		getUI().displayProjectDetails(project);
-		
-		if(tasks.size() == 0)
+
+		if (tasks.size() == 0)
 			return;
-		
-		getUI().displayTaskList(tasks, 1);
+
 
 		int taskId;
 		try {
-			taskId = getListChoice(tasks, "Select a task to view the details: ");
+			taskId = getUI().getTaskID(tasks);
 		} catch (ShouldExitException e) {
 			return;
 		}
 
-		showTaskDetails(tasks.get(taskId - 1), taskId);
+		showTaskDetails(tasks.get(taskId - 1));
 	}
 
 	/**
@@ -97,8 +91,8 @@ public class ShowProjectSession extends Session {
 	 * @param index
 	 *            The index of the task.
 	 */
-	private void showTaskDetails(Task task, int index) {
-		getUI().displayTaskDetails(task, index);
+	private void showTaskDetails(Task task) {
+		getUI().displayTaskDetails(task);
 	}
 
 }

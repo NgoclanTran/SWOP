@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.UI.UI;
+import taskman.UI.UI2;
 import taskman.controller.MainSession;
 import taskman.controller.Session;
 import taskman.controller.project.CreateProjectSession;
@@ -23,7 +23,7 @@ public class CreateProjectSessionTest {
 
 	@Before
 	public void setup() {
-		UI cli = new UI();
+		UI2 cli = new UI2();
 		ph = new ProjectHandler();
 		MainSession controller = new MainSession(cli, ph);
 		createProject = new CreateProjectSession(cli, ph);
