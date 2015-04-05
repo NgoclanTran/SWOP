@@ -1,11 +1,11 @@
 package taskman.controller;
 
-import taskman.UI.UI;
 import taskman.controller.project.CreateProjectSession;
 import taskman.controller.project.CreateTaskSession;
 import taskman.controller.project.ShowProjectSession;
 import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.facade.ProjectHandler;
+import taskman.view.IView;
 
 public class MainSession extends Session {
 
@@ -20,7 +20,7 @@ public class MainSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public MainSession(UI cli, ProjectHandler ph) throws IllegalArgumentException {
+	public MainSession(IView cli, ProjectHandler ph) throws IllegalArgumentException {
 		super(cli, ph);
 	}
 

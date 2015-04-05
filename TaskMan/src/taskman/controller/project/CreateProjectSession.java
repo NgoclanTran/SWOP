@@ -1,20 +1,14 @@
 package taskman.controller.project;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import taskman.UI.UI;
 import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.facade.ProjectHandler;
+import taskman.view.IView;
 
 public class CreateProjectSession extends Session {
-
-	private final String stop = "cancel";
-	private final DateTimeFormatter formatter = DateTimeFormat
-			.forPattern("dd-MM-yyyy HH:mm");
 
 	/**
 	 * Creates the create project session using the given UI and ProjectHandler.
@@ -26,7 +20,7 @@ public class CreateProjectSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public CreateProjectSession(UI cli, ProjectHandler ph) {
+	public CreateProjectSession(IView cli, ProjectHandler ph) {
 		super(cli, ph);
 	}
 
@@ -49,13 +43,11 @@ public class CreateProjectSession extends Session {
 				String description = getDescription();
 				DateTime creationTime = new DateTime();
 				DateTime dueTime = getDueTime();
-				getUI().displayEmptyLine();
 
 				if (isValidProject(name, description, creationTime, dueTime))
 					break;
 
 			} catch (ShouldExitException e) {
-				getUI().displayEmptyLine();
 				return;
 			}
 		}
@@ -70,13 +62,7 @@ public class CreateProjectSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private String getName() throws ShouldExitException {
-		String name = getUI().getTextInput(
-				"Enter the name of the project (or cancel):");
-
-		if (name.toLowerCase().equals(stop))
-			throw new ShouldExitException();
-
-		return name;
+		return getUI().getNewProjectName();
 	}
 
 	/**
@@ -88,13 +74,7 @@ public class CreateProjectSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private String getDescription() throws ShouldExitException {
-		String description = getUI().getTextInput(
-				"Enter the description of the project (or cancel):");
-
-		if (description.toLowerCase().equals(stop))
-			throw new ShouldExitException();
-
-		return description;
+		return getUI().getNewProjectDescription();
 	}
 
 	/**
@@ -107,44 +87,7 @@ public class CreateProjectSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private DateTime getDueTime() throws ShouldExitException {
-		String date = getUI()
-				.getTextInput(
-						"Enter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):");
-
-		if (date.toLowerCase().equals(stop))
-			throw new ShouldExitException();
-
-		while (!isValidDateTime(date)) {
-			getUI().display("Invalid date format!");
-			date = getUI()
-					.getTextInput(
-							"Enter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):");
-
-			if (date.toLowerCase().equals(stop))
-				throw new ShouldExitException();
-		}
-
-		DateTime dueTime = formatter.parseDateTime(date);
-
-		return dueTime;
-	}
-
-	/**
-	 * This method will check whether the given date string can be parsed or not
-	 * to a DateTime.
-	 * 
-	 * @param date
-	 * 
-	 * @return Returns true if it is a correctly spelled date, else it returns
-	 *         false.
-	 */
-	private boolean isValidDateTime(String date) {
-		try {
-			formatter.parseDateTime(date);
-			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
+		return getUI().getNewProjectDueTime();
 	}
 
 	/**
@@ -156,21 +99,20 @@ public class CreateProjectSession extends Session {
 	 * @param creationTime
 	 * @param dueTime
 	 * 
-	 * @return Returns true if the creation of the project is succesful and
+	 * @return Returns true if the creation of the project is successful and
 	 *         false if there was an error.
 	 */
 	private boolean isValidProject(String name, String description,
 			DateTime creationTime, DateTime dueTime) {
 		try {
 			getPH().addProject(name, description, creationTime, dueTime);
-			getUI().display("Project created");
-			getUI().displayEmptyLine();
+			getUI().displayInfo("Project created");
 			return true;
 		} catch (IllegalDateException dateEx) {
-			getUI().display(dateEx.getMessage());
+			getUI().displayError(dateEx.getMessage());
 			return false;
 		} catch (IllegalArgumentException argEx) {
-			getUI().display(argEx.getMessage());
+			getUI().displayError(argEx.getMessage());
 			return false;
 		}
 	}

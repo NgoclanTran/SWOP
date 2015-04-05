@@ -2,12 +2,12 @@ package taskman.controller.project;
 
 import java.util.List;
 
-import taskman.UI.UI;
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.facade.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.view.IView;
 
 public class ShowProjectSession extends Session {
 
@@ -21,7 +21,7 @@ public class ShowProjectSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public ShowProjectSession(UI cli, ProjectHandler ph)
+	public ShowProjectSession(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {
 		super(cli, ph);
 	}
@@ -72,7 +72,6 @@ public class ShowProjectSession extends Session {
 		if (tasks.size() == 0)
 			return;
 
-
 		int taskId;
 		try {
 			taskId = getUI().getTaskID(tasks);
@@ -88,8 +87,6 @@ public class ShowProjectSession extends Session {
 	 * 
 	 * @param task
 	 *            The task to show the details of.
-	 * @param index
-	 *            The index of the task.
 	 */
 	private void showTaskDetails(Task task) {
 		getUI().displayTaskDetails(task);

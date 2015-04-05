@@ -1,16 +1,15 @@
 package taskman.controller.project;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import taskman.UI.UI;
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.facade.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.view.IView;
 
-public class CreateTaskSession extends Session{
+public class CreateTaskSession extends Session {
 	/**
 	 * Creates the create task session using the given UI and ProjectHandler.
 	 * 
@@ -21,99 +20,163 @@ public class CreateTaskSession extends Session{
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public CreateTaskSession(UI cli, ProjectHandler ph) {
+	public CreateTaskSession(IView cli, ProjectHandler ph) {
 		super(cli, ph);
 	}
+
 	/**
-	 * starts the use case by calling the create task method
+	 * starts the use case by calling the create task method.
 	 */
 	public void run() {
 		createTask();
 	}
-	/**
-	 * This method will ask the ui to get user input to create the task with this given input
-	 * This is the main method for the execution of this particular use case
-	 */
-	private void createTask(){	
-		Project project = this.getProject();
-		String description = super.getUI().getTextInput("Enter the description of the task: ");
-		int estimatedDuration = super.getUI().getNumberInput("Enter the estimated duration of the task: ");
-		int acceptableDeviation = super.getUI().getNumberInput("Enter an acceptable deviation of the task: ");
-		String hasDependencies = getUI().getTextInput("Does task have dependencies? Enter yes or no");
-		ArrayList<Task> dependencies;
-		if(hasDependencies.equalsIgnoreCase("yes")){
-			dependencies = getDependencies(project);
-		}else{
-			dependencies = new ArrayList<Task>();
-		}
-		
-		Task alternativeFor;
-		
-		
-		try{
-			int alternativeIndex = this.getListChoice(project.getTasks(), "Select alternative: ");
-			alternativeFor = project.getTasks().get(alternativeIndex - 1);
-		}catch (ShouldExitException e){
-			alternativeFor = null;
-		}
-		String text = getUI().getTextInput("Confirm by typing ok, to create task: ");
-		if(!text.equalsIgnoreCase("ok")){
-			getUI().display("Stop system");
-		
-			return;
-		}
-		try{
-			project.addTask(description, estimatedDuration, acceptableDeviation, dependencies, alternativeFor);
-			getUI().display("Task created.");
-		}
-		catch(Exception e){
-			getUI().display(e.getMessage());
-			createTask();
-		}
-		
-		
-		
-	}
-	/**
-	 * This method will ask the ui to display a list of projects and lets the user choose one of them
-	 * @return
-	 * 			The project as chosen by the user in the UI
-	 */
-	private Project getProject(){
-		List<Project> projects = getPH().getProjects();
-		getUI().displayProjectList(projects);
 
-		int projectId;
-		try {
-			projectId = getListChoice(projects,
-					"Select a project: ");
-			return projects.get(projectId-1);
-		} catch (ShouldExitException e) {
-			return null;
+	/**
+	 * This method will ask the ui to get user input to create the task with
+	 * this given input. This is the main method for the execution of this
+	 * particular use case.
+	 */
+	private void createTask() {
+		while (true) {
+			try {
+				Project project = getProject();
+
+				String description = getDescription();
+				int estimatedDuration = getEstimatedDuration();
+				int acceptableDeviation = getAcceptableDeviation();
+				// TODO: Enkel vragen als er taken zijn.
+				List<Task> dependencies = getDependencies(project.getTasks());
+				// TODO: Enkel een lijst meegeven van de gefaalde taken en enkel
+				// vragen als er gefaalde taken zijn.
+				Task alternativeFor = getAlternativeFor(project.getTasks());
+
+				if (isValidTask(project, description, estimatedDuration,
+						acceptableDeviation, dependencies, alternativeFor))
+					break;
+
+			} catch (ShouldExitException e) {
+				return;
+			}
 		}
 	}
+
 	/**
-	 * This method will ask the UI to display a list of the task of the project followed by a user input to chose one of these
-	 * to act as a depency for the task that is being created
-	 * @param project
-	 * 			The project of which the tasks will be displayed, previously chosen by the user in the main method for the use case
-	 * @return
-	 * 			The list of dependencies as chosen by the user
+	 * This method will ask the ui to display a list of projects and lets the
+	 * user choose one of them.
+	 * 
+	 * @return The project as chosen by the user in the UI.
 	 */
-	private ArrayList<Task> getDependencies(Project project){
-		List<Task> tasks = project.getTasks();
-		ArrayList<Task> dependencies = new ArrayList<Task>();
-		getUI().displayTaskList(tasks, 1);
-		int taskId = 0;
-			try {
-				taskId = getListChoice(tasks,"Select a task: ");
-				dependencies.add(tasks.get(taskId-1));
-			} catch (ShouldExitException e) {
-				return dependencies;
-			}
-			return dependencies;
-		
-		
+	private Project getProject() throws ShouldExitException {
+		List<Project> projects = getPH().getProjects();
+
+		if (projects.size() == 0) {
+			getUI().displayError("No projects.");
+			throw new ShouldExitException();
+		}
+
+		int projectId = getUI().getProjectID(projects);
+		return projects.get(projectId - 1);
+	}
+
+	/**
+	 * This method asks the user to enter the description of the task and
+	 * returns it.
+	 * 
+	 * @return Returns the description of the task that is to be entered.
+	 * 
+	 * @throws ShouldExitException
+	 */
+	private String getDescription() throws ShouldExitException {
+		return getUI().getNewTaskDescription();
+	}
+
+	/**
+	 * This method asks the user to enter the estimated duration of the task and
+	 * returns it.
+	 * 
+	 * @return Returns the estimated duration of the task that is to be entered.
+	 * 
+	 * @throws ShouldExitException
+	 */
+	private int getEstimatedDuration() throws ShouldExitException {
+		return getUI().getNewTaskEstimatedDuration();
+	}
+
+	/**
+	 * This method asks the user to enter the acceptable deviation of the task
+	 * and returns it.
+	 * 
+	 * @return Returns the acceptable deviation of the task that is to be
+	 *         entered.
+	 * 
+	 * @throws ShouldExitException
+	 */
+	private int getAcceptableDeviation() throws ShouldExitException {
+		return getUI().getNewTaskAcceptableDeviation();
+	}
+
+	/**
+	 * This method asks the user to select the dependencies and returns it.
+	 * 
+	 * @param tasks
+	 *            The list of all tasks
+	 * 
+	 * @return Returns a list of dependencies.
+	 * 
+	 * @throws ShouldExitException
+	 */
+	private List<Task> getDependencies(List<Task> tasks)
+			throws ShouldExitException {
+		return getUI().getNewTaskDependencies(tasks);
+	}
+
+	/**
+	 * This method asks the user to select the task for which this task will be
+	 * the alternative and returns it.
+	 * 
+	 * @param tasks
+	 *            The list of all tasks.
+	 * 
+	 * @return Returns the task for which this task will be the alternative.
+	 * 
+	 * @throws ShouldExitException
+	 */
+	private Task getAlternativeFor(List<Task> tasks) throws ShouldExitException {
+		return getUI().getNewTaskAlternativeFor(tasks);
+	}
+
+	/**
+	 * This method will try to make a new task with the given parameters. If the
+	 * creation fails it will print the error message and return false.
+	 * 
+	 * @param project
+	 * @param description
+	 * @param estimatedDuration
+	 * @param acceptableDeviation
+	 * @param dependencies
+	 * @param alternativeFor
+	 * 
+	 * @return Returns true if the creation of the task is successful and false
+	 *         if there was an error.
+	 */
+	private boolean isValidTask(Project project, String description,
+			int estimatedDuration, int acceptableDeviation,
+			List<Task> dependencies, Task alternativeFor) {
+		try {
+			project.addTask(description, estimatedDuration,
+					acceptableDeviation, dependencies, alternativeFor);
+			getUI().displayInfo("Task created");
+			return true;
+		} catch (NullPointerException nullEx) {
+			getUI().displayError(nullEx.getMessage());
+			return false;
+		} catch (IllegalArgumentException argEx) {
+			getUI().displayError(argEx.getMessage());
+			return false;
+		} catch (IllegalStateException stateEx) {
+			getUI().displayError(stateEx.getMessage());
+			return false;
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 package taskman.controller;
 
-import taskman.UI.UI;
 import taskman.model.facade.ProjectHandler;
+import taskman.view.IView;
 
 public abstract class Session {
 
@@ -18,7 +18,7 @@ public abstract class Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public Session(UI cli, ProjectHandler ph) throws IllegalArgumentException {
+	public Session(IView cli, ProjectHandler ph) throws IllegalArgumentException {
 		if (!isValidUI(cli))
 			throw new IllegalArgumentException("The controller needs a UI.");
 		if (!isValidProjectHandler(ph))
@@ -36,7 +36,7 @@ public abstract class Session {
 	 * @return Returns true if the command line interface is different from
 	 *         null.
 	 */
-	private boolean isValidUI(UI cli) {
+	private boolean isValidUI(IView cli) {
 		if (cli != null)
 			return true;
 		else
@@ -48,11 +48,11 @@ public abstract class Session {
 	 * 
 	 * @return Returns the command line interface.
 	 */
-	public UI getUI() {
+	public IView getUI() {
 		return cli;
 	}
 
-	protected UI cli;
+	protected IView cli;
 
 	/**
 	 * Checks if the given project handler is valid.

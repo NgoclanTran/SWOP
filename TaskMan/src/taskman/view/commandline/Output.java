@@ -1,13 +1,13 @@
-package taskman.UI;
+package taskman.view.commandline;
 
 import java.io.PrintWriter;
 import java.util.List;
 
-class Output {
+public class Output {
 
 	private final PrintWriter writer;
 
-	protected Output() {
+	public Output() {
 		writer = new PrintWriter(System.out);
 	}
 
@@ -16,7 +16,7 @@ class Output {
 		writer.flush();
 	}
 
-	protected void display(String message) throws IllegalArgumentException {
+	public void display(String message) throws IllegalArgumentException {
 		if (!isValidMessage(message))
 			throw new IllegalArgumentException("Invalid message.");
 		print(message);
@@ -26,11 +26,11 @@ class Output {
 		return message != null;
 	}
 	
-	protected void displayEmptyLine() throws IllegalArgumentException {
+	public void displayEmptyLine() throws IllegalArgumentException {
 		display("");
 	}
 	
-	protected void displayList(List<?> list, int tabs, boolean printReturn)
+	public void displayList(List<?> list, int tabs, boolean printReturn)
 			throws IllegalArgumentException {
 		if (!isValidList(list))
 			throw new IllegalArgumentException("Invalid list");
@@ -64,7 +64,7 @@ class Output {
 		return true;
 	}
 	
-	protected String indentStringWithNewLines(String string, int tabs) {
+	public String indentStringWithNewLines(String string, int tabs) {
 		return string.replaceAll("\n", "\n" + getTabsString(tabs));
 	}
 	

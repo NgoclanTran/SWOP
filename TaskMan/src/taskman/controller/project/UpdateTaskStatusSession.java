@@ -7,12 +7,12 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import taskman.UI.UI;
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.facade.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.view.IView;
 
 public class UpdateTaskStatusSession extends Session {
 
@@ -26,7 +26,7 @@ public class UpdateTaskStatusSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public UpdateTaskStatusSession(UI cli, ProjectHandler ph)
+	public UpdateTaskStatusSession(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {
 		super(cli, ph);
 	}

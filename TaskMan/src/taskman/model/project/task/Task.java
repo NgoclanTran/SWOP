@@ -21,7 +21,7 @@ public class Task extends Subject {
 	 *            The acceptable deviation of the task
 	 * @param dependencies
 	 *            The list of dependencies of the task
-	 * @post The new description is equal to the given descrription
+	 * @post The new description is equal to the given description
 	 * @post The new estimatedDuration is equal to the given estimatedDuration
 	 * @post The new acceptableDeviation is equal to the given
 	 *       acceptableDevaition
@@ -30,23 +30,24 @@ public class Task extends Subject {
 	 * @throws NullPointerException
 	 *             The description cannot be null
 	 * @throws IllegalArgumentException
-	 *             The estimatedDuration is negatif
+	 *             The estimatedDuration is negative
 	 * @throws IllegalArgumentException
-	 *             The acceptableDeviation is negatif
+	 *             The acceptableDeviation is negative
 	 * @throws NullPointerException
 	 *             The dependencies is equal to null
 
 	 */
 	public Task(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies, Task alternativeFor) {
+			int acceptableDeviation, List<Task> dependencies,
+			Task alternativeFor) throws IllegalStateException {
 		if (description == null)
 			throw new NullPointerException("Description is null");
 		if (estimatedDuration <= 0)
 			throw new IllegalArgumentException(
-					"The estimated duration cannot be negatif.");
+					"The estimated duration cannot be negative.");
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
-					"The deviation cannot be negatif.");
+					"The deviation cannot be negative.");
 		if (dependencies == null)
 			throw new IllegalArgumentException("The dependencies are null.");
 

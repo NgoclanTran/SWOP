@@ -8,13 +8,13 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.UI.UI2;
 import taskman.controller.MainSession;
 import taskman.controller.Session;
 import taskman.controller.project.CreateProjectSession;
 import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.facade.ProjectHandler;
 import taskman.model.project.task.Task;
+import taskman.view.UI2;
 
 public class CreateProjectSessionTest {
 
