@@ -74,6 +74,18 @@ public class TaskTest {
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				null, null);
 	}
+	
+	@Test
+	public void constructorTest_WithAlternative(){
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015,1,1,10,1);
+		DateTime endTime = new DateTime(2015,2,1,11,1);
+		t1.addTimeSpan(true, startTime, endTime);
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, t1);
+		assertEquals(t1.getAlternative(),t2);
+	}
 
 	@Test
 	public void constructorTest_TrueCase() {
@@ -103,6 +115,14 @@ public class TaskTest {
 		// test if the dependencies of our task didn't changed
 		assertNotEquals(t.getDependencies(), dependencies);
 	}
+	
+	@Test (expected = NullPointerException.class)
+	public void attachDependantTest_FalseCase_Null(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		t.attachDependant(null);
+	}
+
 
 	@Test(expected = NullPointerException.class)
 	public void addTimeSpanTest_FalseCase_StartNull() {
@@ -130,7 +150,7 @@ public class TaskTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void addTimeSpanTest_TrueCase_StatusUNAVAILABLE() {
+	public void addTimeSpanTest_StatusUNAVAILABLE() {
 
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
@@ -143,12 +163,14 @@ public class TaskTest {
 		dep.add(t);
 		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
 				dep, null);
-
-		t.addTimeSpan(true, startTime, endTime);
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+		assertFalse(t2.isAvailable());
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+		t2.addTimeSpan(false, startTime, endTime);
 	}
 
 	@Test
-	public void addTimeSpanTest_TrueCase_StatusAVAILABLE() {
+	public void addTimeSpanTest_StatusAVAILABLE() {
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
@@ -156,6 +178,30 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void addTimeSpanTest_StatusFAILED(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
+		t.addTimeSpan(true, startTime, endTime);
+		assertEquals(t.getStatusName(),"FAILED");
+		assertEquals(t.getTimeSpan().getStartTime(), startTime);
+		assertEquals(t.getTimeSpan().getEndTime(), endTime);
+		
+		t.addTimeSpan(false, startTime, endTime);
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void addTimeSpanTest_StatusFINISHED(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
+		t.addTimeSpan(false, startTime, endTime);
+		t.addTimeSpan(false, startTime, endTime);
 	}
 
 	@Test(expected = IllegalDateException.class)
@@ -178,6 +224,18 @@ public class TaskTest {
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
 	}
+	
+	@Test
+	public void getTimeSpanTest_TrueCase(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 11, 1);
+		t.addTimeSpan(true, startTime, endTime);
+		
+		assertEquals(t.getTimeSpan().getStartTime(), startTime);
+		assertEquals(t.getTimeSpan().getEndTime(), endTime);
+	}
 
 	@Test(expected = NullPointerException.class)
 	public void addAlternativeTest_FalseCase_AlternativeNull() {
@@ -185,20 +243,36 @@ public class TaskTest {
 				dependencies, null);
 		t.addAlternative(null);
 	}
-
-	@Test(expected = IllegalStateException.class)
-	public void addAlternativeTest_TrueCase_StatusNotFAILED() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+	@Test (expected = IllegalStateException.class)
+	public void addAlternativeTest_StatusAVAILABLE(){
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
 		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
-		t.addAlternative(t2);
-		assertEquals(t.getStatusName(), "UNAVAILABLE");
-		assertNull(t.getAlternative());
+		t1.addAlternative(t2);
+		
+	}
+	@Test(expected = IllegalStateException.class)
+	public void addAlternativeTest_StatusUNAVAILABLE() {
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
+
+		t.addTimeSpan(true, startTime, endTime);
+		assertEquals(t.getStatusName(), "FAILED");
+		ArrayList<Task> dep = new ArrayList<Task>();
+		dep.add(t);
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dep, null);
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+		assertFalse(t2.isAvailable());
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+		t2.addAlternative(t);
 	}
 
 	@Test
-	public void addAlternativeTest_TrueCase_StatusFAILED() {
+	public void addAlternativeTest_StatusFAILED() {
 
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
@@ -214,12 +288,26 @@ public class TaskTest {
 		assertEquals(t.getAlternative(), t2);
 		assertEquals(t.getStatusName(), "FAILED");
 	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void addAlternativeTest_StatusFINISHED(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
 
-	@Test(expected = IllegalStateException.class)
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(), "FINISHED");
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+
+		t.addAlternative(t2);
+	}
+
+	@Test
 	public void isAvailableTest_StatusAVAILABLE() {
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
-		t.updateTaskAvailability();
 		assertTrue(t.isAvailable());
 		assertEquals(t.getStatusName(), "AVAILABLE");
 
@@ -377,24 +465,50 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "FAILED");
 	}
 
-	@Test
-	public void isFailedTest_TrueCase() {
 
+	@Test 
+	public void isCompletedTest_StatusAVAILABLE(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		assertFalse(t.isCompleted());
 	}
-
+	
 	@Test
-	public void isFailedTest_FalseCase() {
+	public void isCompletedTest_StatusUNAVAILABLE(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
 
+		t.addTimeSpan(true, startTime, endTime);
+		assertEquals(t.getStatusName(), "FAILED");
+		ArrayList<Task> dep = new ArrayList<Task>();
+		dep.add(t);
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dep, null);
+		assertFalse(t2.isCompleted());
 	}
-
+	
 	@Test
-	public void isFinishedTest_TrueCase() {
+	public void isCompletedTest_StatusFAILED(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
 
+		t.addTimeSpan(true, startTime, endTime);
+		assertTrue(t.isCompleted());
 	}
-
+	
 	@Test
-	public void isFinishedTest_FalseCase() {
+	public void isCompletedTest_StatusFINISHED(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
 
+		t.addTimeSpan(false, startTime, endTime);
+		assertTrue(t.isCompleted());
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -439,6 +553,46 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2015, 1, 1, 16, 0);
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getTotalExecutionTime(), 6 * 60);
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void calculateTotalExecutionTimeTest_StatusUNAVAILABLE(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
+
+		t.addTimeSpan(true, startTime, endTime);
+		assertEquals(t.getStatusName(), "FAILED");
+		ArrayList<Task> dep = new ArrayList<Task>();
+		dep.add(t);
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dep, null);
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+		assertFalse(t2.isAvailable());
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+		int time = t2.getTotalExecutionTime();
+	}
+	@Test
+	public void calculateTotalExecutionTimeTest_StatusFAILED(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 16, 0);
+		t.addTimeSpan(true, startTime, endTime);
+		assertEquals(t.getTotalExecutionTime(), 6 * 60);
+	}
+	
+	@Test
+	public void calculateTotalExecutionTimeTest_StatusFINISHEED(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null);
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 16, 0);
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(),"FINISHED");
+		int time = t.getTotalExecutionTime();
+		assertEquals(time, 6 * 60);
 	}
 
 	@Test(expected = IllegalStateException.class)
