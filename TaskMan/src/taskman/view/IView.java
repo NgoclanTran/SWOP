@@ -41,4 +41,6 @@ public interface IView {
 
 	public Task getNewTaskAlternativeFor(List<Task> tasks);
 	
+	
+	
 }
