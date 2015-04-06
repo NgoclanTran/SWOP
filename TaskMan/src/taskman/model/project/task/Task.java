@@ -56,12 +56,27 @@ public class Task extends Subject {
 		this.acceptableDeviation = acceptableDeviation;
 		this.status = new Unavailable();
 		this.dependencies.addAll(dependencies);
+		
 		for (Task subject : this.dependencies) {
-			subject.attachDependant(this);
+			try{
+				subject.attachDependant(this);
+			}
+			catch(NullPointerException e){
+				// hier doe niets
+			}
+			
 		}
+		
 		if(alternativeFor != null)
-			alternativeFor.addAlternative(this);
-
+			try{
+				alternativeFor.addAlternative(this);
+			}
+			catch (IllegalStateException e){
+				// dit moet verder doorgegeven worden -> nodig in UI
+				throw e;
+			}
+			
+		
 		updateTaskAvailability();
 	}
 
@@ -182,12 +197,22 @@ public class Task extends Subject {
 		if (startTime.compareTo(endTime) > 0)
 			throw new IllegalDateException(
 					"The startTime must start before endTime.");
-		this.status.addTimeSpan(this, failed, startTime, endTime);
+		try{
+			this.status.addTimeSpan(this, failed, startTime, endTime);
+		}
+		catch(IllegalStateException e){
+			throw e;
+		}
+		
 	}
 
 	protected void performAddTimeSpan(DateTime startTime, DateTime endTime) {
+		try{
 		this.timeSpan = new TimeSpan(startTime, endTime);
-
+		}
+		catch(Exception e){
+			throw e;
+		}
 		this.notifyAllDependants(); //notify dependant task
 		this.notifyAllObservers(); //observer pattern for project
 	}
@@ -213,7 +238,15 @@ public class Task extends Subject {
 	public void addAlternative(Task task) {
 		if (task == null)
 			throw new NullPointerException("The alternative is null.");
-		this.status.addAlternative(this, task);
+		try{
+			this.status.addAlternative(this, task);
+		}
+		catch(IllegalStateException e){
+			throw e;
+		}
+		catch(Exception e){
+			
+		}
 	}
 
 	protected void performAddAlternative(Task task) {
@@ -263,8 +296,13 @@ public class Task extends Subject {
 	 * Set to status available
 	 */
 	public void updateTaskAvailability() throws IllegalStateException {
-		this.status.updateTaskAvailability(this);
-	}
+		try{
+			this.status.updateTaskAvailability(this);
+		}
+		catch(IllegalStateException e){
+			throw e;
+		}
+	}	
 
 	protected void performUpdateTaskAvailability(Status status) {
 		for( Task task : this.dependencies){
@@ -294,11 +332,26 @@ public class Task extends Subject {
 	 */
 
 	public int getTotalExecutionTime() throws IllegalStateException {
-		return this.status.calculateTotalExecutedTime(this);
+		int time;
+		try{
+			time = this.status.calculateTotalExecutedTime(this);
+			
+		}
+		catch(IllegalStateException e){
+			throw e;
+		}
+		return time;
+		 
 	}
 
 	protected int performGetTotalExecutionTime() {
-		int time = this.timeSpan.calculatePerformedTime();
+		int time;
+		try{
+		 time = this.timeSpan.calculatePerformedTime();
+		} 
+		catch( IllegalStateException e){
+			throw e;
+		}
 		if (this.alternative != null)
 			try {
 				time = time + this.alternative.getTotalExecutionTime();
@@ -318,7 +371,13 @@ public class Task extends Subject {
 	}
 
 	protected int performGetOverduePercentage() {
-		int totalExecutedTime = this.performGetTotalExecutionTime();
+		int totalExecutedTime;
+		try{
+			totalExecutedTime = this.performGetTotalExecutionTime();
+		}
+		catch (IllegalStateException e){
+			throw e;
+		}
 
 		return (totalExecutedTime - this.estimatedDuration)
 				/ this.estimatedDuration;
