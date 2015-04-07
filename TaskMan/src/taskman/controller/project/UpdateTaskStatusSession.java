@@ -1,7 +1,5 @@
 package taskman.controller.project;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,28 +36,47 @@ public class UpdateTaskStatusSession extends Session {
 	public void run() {
 		showProjectsAndAvailableTasks();
 	}
-	
+
 	private void showProjectsAndAvailableTasks() {
 		List<Project> projects = getPH().getProjects();
-		List<List<Task>> availableTasksList = new ArrayList<>();
-		List<Task> availableTasks = null;
-		for (Project p : projects) {
-			availableTasks = getAvailableTasks(p);
-			availableTasksList.add(availableTasks);
+		List<List<Task>> availableTasksList = getAvailableTasksAllProjects(projects);
+
+		if (availableTasksList.size() == 0) {
+			getUI().displayError("No available tasks.");
+			return;
 		}
 		
-		getUI().displayProjectsWithAvailableTasks(projects, availableTasksList);
-		
-		int projectId;
+		Project project;
 		try {
-			projectId = getListChoice(projects, "Select a project: ");
+			project = getUI().getProjectIDWithAvailableTasks(projects, availableTasksList);
 		} catch (ShouldExitException e) {
 			return;
 		}
-		showAvailableTasks(projects.get(projectId - 1));
+		
+		showAvailableTasks(project);
 	}
-	
-	private List<Task> getAvailableTasks(Project project) {
+
+	private List<List<Task>> getAvailableTasksAllProjects(List<Project> projects) {
+		List<List<Task>> availableTasksList = new ArrayList<>();
+		List<Task> availableTasks = null;
+
+		boolean noAvailableTasks = true;
+
+		for (Project p : projects) {
+			availableTasks = getAvailableTasksProject(p);
+			availableTasksList.add(availableTasks);
+
+			if (noAvailableTasks && availableTasks.size() > 0)
+				noAvailableTasks = false;
+		}
+
+		if (noAvailableTasks)
+			return new ArrayList<>();
+		else
+			return availableTasksList;
+	}
+
+	private List<Task> getAvailableTasksProject(Project project) {
 		List<Task> availableTasks = new ArrayList<Task>();
 		List<Task> tasks = project.getTasks();
 		for (Task t : tasks) {
@@ -68,74 +85,63 @@ public class UpdateTaskStatusSession extends Session {
 		}
 		return availableTasks;
 	}
-
+	
 	private void showAvailableTasks(Project project) {
-		List<Task> availableTasks = getAvailableTasks(project);
+		List<Task> tasks = project.getTasks();
+		getUI().displayProjectDetails(project);
 
-		if (availableTasks.isEmpty()) {
-			getUI().display(
-					"This project has no available tasks. Please select another project.\n");
-			showProjectsAndAvailableTasks();
-		}
+		if (tasks.size() == 0)
+			return;
 
-		getUI().displayTaskList(availableTasks, 0);
-
-		int taskId;
+		Task task;
 		try {
-			taskId = getListChoice(availableTasks,
-					"Select a task to update it's status: ");
+			task = getUI().getTask(tasks);
 		} catch (ShouldExitException e) {
 			return;
 		}
-		updateTask(availableTasks.get(taskId - 1));
+		
+		updateTask(task);
 	}
-
+	
 	private void updateTask(Task task) {
-		DateTime startTime = null, endTime = null;
-		String failedString = null;
-		boolean failed = false;
-		while (failedString == null) {
+		while (true) {
 			try {
-				failedString = getUI().getTextInput(
-						"Did the task fail? (yes/no)");
-				if (!failedString.toLowerCase().equals("yes")
-						&& !failedString.toLowerCase().equals("no")) {
-					failedString = null;
-					getUI().display("Please enter 'yes' or 'no'.\n");
-					continue;
-				}
-			} catch (Exception e) {
-			}
-			if (failedString.toLowerCase().equals("yes")) {
-				failed = true;
-			} else {
-				failed = false;
+				boolean isFailed = getFailed();
+				DateTime startTime = getStartTime();
+				DateTime endTime = getEndTime();
+
+				if (isValidUpdateTask(task, isFailed, startTime, endTime))
+					break;
+
+			} catch (ShouldExitException e) {
+				return;
 			}
 		}
-		DateTime start = null;
-		while (startTime == null) {
-			try {
-				start = getUI()
-						.getDateTimeInput(
-								"Please enter the start time using the following format: yyyy-MM-dd HH:mm.\n");
-			} catch (IllegalArgumentException | IOException | ParseException e) {
-				getUI().display(
-						"The given start time did not follow the specified format.");
-			}
-			startTime = start;
+	}
+	
+	private boolean getFailed() {
+		return getUI().getUpdateTaskFailed();
+	}
+	
+	private DateTime getStartTime() {
+		return getUI().getUpdateTaskStartTime();
+	}
+	
+	private DateTime getEndTime() {
+		return getUI().getUpdateTaskStopTime();
+	}
+	
+	private boolean isValidUpdateTask(Task task, boolean isFailed, DateTime startTime, DateTime endTime) {
+		try {
+			task.addTimeSpan(isFailed, startTime, endTime);;
+			getUI().displayInfo("Task updated");
+			return true;
+		} catch (IllegalArgumentException argEx) {
+			getUI().displayError(argEx.getMessage());
+			return false;
+		} catch (NullPointerException nullEx) {
+			getUI().displayError(nullEx.getMessage());
+			return false;
 		}
-		DateTime end = null;
-		while (endTime == null) {
-			try {
-				end = getUI()
-						.getDateTimeInput(
-								"Please enter the end time using the following format: yyyy-MM-dd HH:mm.\n");
-			} catch (IllegalArgumentException | IOException | ParseException e) {
-				getUI().display(
-						"The given end time did not follow the specified format.");
-			}
-			endTime = end;
-		}
-		task.addTimeSpan(failed, startTime, endTime);
 	}
 }

@@ -47,14 +47,14 @@ public class ShowProjectSession extends Session {
 			return;
 		}
 
-		int projectId;
+		Project project;
 		try {
-			projectId = getUI().getProjectID(projects);
+			project = getUI().getProject(projects);
 		} catch (ShouldExitException e) {
 			return;
 		}
 
-		showProjectDetails(projects.get(projectId - 1));
+		showProjectDetails(project);
 	}
 
 	/**
@@ -72,14 +72,14 @@ public class ShowProjectSession extends Session {
 		if (tasks.size() == 0)
 			return;
 
-		int taskId;
+		Task task;
 		try {
-			taskId = getUI().getTaskID(tasks);
+			task = getUI().getTask(tasks);
 		} catch (ShouldExitException e) {
 			return;
 		}
 
-		showTaskDetails(tasks.get(taskId - 1));
+		showTaskDetails(task);
 	}
 
 	/**

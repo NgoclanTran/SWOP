@@ -210,35 +210,38 @@ public class View implements IView {
 		output.displayEmptyLine();
 	}
 
-	private void displayProjectList(List<Project> projects) {
-		output.displayList(projects, 0, true);
+	private void displayProjectList(List<Project> projects, int tabs,
+			boolean printReturn) {
+		output.displayList(projects, tabs, printReturn);
 		output.displayEmptyLine();
 	}
 
-	public int getProjectID(List<Project> projects) throws ShouldExitException {
-		displayProjectList(projects);
-		return getListChoice(projects,
-				"Select a project:");
+	public Project getProject(List<Project> projects)
+			throws ShouldExitException {
+		displayProjectList(projects, 0, true);
+		int projectId = getListChoice(projects, "Select a project:");
+		return projects.get(projectId - 1);
 	}
 
 	public void displayTaskDetails(Task task) {
-		displayInfo(output.indentStringWithNewLines(
-				getStringTaskDetails(task), 1));
+		displayInfo(output.indentStringWithNewLines(getStringTaskDetails(task),
+				1));
 		output.displayEmptyLine();
 	}
 
-	private void displayTaskList(List<Task> tasks, int tabs) {
+	private void displayTaskList(List<Task> tasks, int tabs, boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
 			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
 		}
-		output.displayList(tasksInfo, tabs, true);
+		output.displayList(tasksInfo, tabs, printReturn);
 		output.displayEmptyLine();
 	}
 
-	public int getTaskID(List<Task> tasks) throws ShouldExitException {
-		displayTaskList(tasks, 1);
-		return getListChoice(tasks, "Select a task:");
+	public Task getTask(List<Task> tasks) throws ShouldExitException {
+		displayTaskList(tasks, 1, true);
+		int taskId = getListChoice(tasks, "Select a task:");
+		return tasks.get(taskId - 1);
 	}
 
 	public String getNewProjectName() throws ShouldExitException {
@@ -334,7 +337,8 @@ public class View implements IView {
 		}
 	}
 
-	public List<Task> getNewTaskDependencies(List<Task> tasks) throws ShouldExitException {
+	public List<Task> getNewTaskDependencies(List<Task> tasks)
+			throws ShouldExitException {
 		try {
 			displayInfo("Does this task have dependencies? (Y/N or cancel):");
 			String hasDependencies = input.getInput();
@@ -348,7 +352,7 @@ public class View implements IView {
 
 			if (isValidYesAnswer(hasDependencies)) {
 				List<Task> list = parseDependecies(tasks);
-				while(list == null) {
+				while (list == null) {
 					displayError("Incorrect input.");
 					list = parseDependecies(tasks);
 				}
@@ -362,21 +366,22 @@ public class View implements IView {
 		}
 	}
 
-	private List<Task> parseDependecies(List<Task> tasks) throws ShouldExitException {
+	private List<Task> parseDependecies(List<Task> tasks)
+			throws ShouldExitException {
 		ArrayList<Task> list = new ArrayList<Task>();
 		output.displayEmptyLine();
-		displayTaskList(tasks, 0);
+		displayTaskList(tasks, 0, true);
 		displayInfo("Select the dependencies seperated by a comma (e.g. 1,2,3 and 'cancel' or 0 to return):");
 		String dependencies = input.getInput();
 		output.displayEmptyLine();
 
 		String dependencie[] = dependencies.split(",");
-		for(String i : dependencie) {
+		for (String i : dependencie) {
 			try {
 				int j = Integer.parseInt(i);
-				if(j > 0 && j <= tasks.size())
+				if (j > 0 && j <= tasks.size())
 					list.add(tasks.get(j - 1));
-				else if(j == 0)
+				else if (j == 0)
 					throw new ShouldExitException();
 				else
 					return null;
@@ -390,7 +395,7 @@ public class View implements IView {
 
 	public Task getNewTaskAlternativeFor(List<Task> tasks)
 			throws ShouldExitException {
-		try{
+		try {
 			displayInfo("Is this task an alternative for a failed task? (Y/N or cancel):");
 			String hasAlternativeFor = input.getInput();
 			output.displayEmptyLine();
@@ -402,14 +407,108 @@ public class View implements IView {
 			}
 
 			if (isValidYesAnswer(hasAlternativeFor)) {
-				output.displayEmptyLine();
-				displayTaskList(tasks, 0);
+				displayTaskList(tasks, 0, true);
 				int taskId = getListChoice(tasks,
 						"Select a task for which this task will be the alternative (or cancel):");
 				return tasks.get(taskId - 1);
 			} else {
 				return null;
 			}
+		} catch (ShouldExitException e) {
+			output.displayEmptyLine();
+			throw new ShouldExitException();
+		}
+	}
+
+	public boolean getUpdateTaskFailed() throws ShouldExitException {
+		try {
+			displayInfo("Did the selected task fail? (Y/N or cancel):");
+			String didFail = input.getInput();
+			output.displayEmptyLine();
+
+			while (!(isValidYesAnswer(didFail) || isValidNoAnswer(didFail))) {
+				displayInfo("Did the selected task fail? (Y/N or cancel):");
+				didFail = input.getInput();
+				output.displayEmptyLine();
+			}
+
+			if (isValidYesAnswer(didFail)) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (ShouldExitException e) {
+			output.displayEmptyLine();
+			throw new ShouldExitException();
+		}
+	}
+
+	public DateTime getUpdateTaskStartTime() throws ShouldExitException {
+		try {
+			displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
+			String date = input.getInput();
+			output.displayEmptyLine();
+
+			while (!isValidDateTime(date)) {
+				displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
+				date = input.getInput();
+				output.displayEmptyLine();
+			}
+
+			DateTime startTime = formatter.parseDateTime(date);
+
+			return startTime;
+		} catch (ShouldExitException e) {
+			output.displayEmptyLine();
+			throw new ShouldExitException();
+		}
+	}
+
+	public DateTime getUpdateTaskStopTime() throws ShouldExitException {
+		try {
+			displayInfo("Enter the stop time of the task with format dd-MM-yyyy HH:mm (or cancel):");
+			String date = input.getInput();
+			output.displayEmptyLine();
+
+			while (!isValidDateTime(date)) {
+				displayInfo("Enter the stop time of the task with format dd-MM-yyyy HH:mm (or cancel):");
+				date = input.getInput();
+				output.displayEmptyLine();
+			}
+
+			DateTime stopTime = formatter.parseDateTime(date);
+
+			return stopTime;
+		} catch (ShouldExitException e) {
+			output.displayEmptyLine();
+			throw new ShouldExitException();
+		}
+	}
+
+	private void displayProjectsWithAvailableTasksList(List<Project> projects,
+			List<List<Task>> availableTasks) throws ShouldExitException {
+		if (projects.size() != availableTasks.size()) {
+			displayError("Error occured while creating the available tasks list.");
+			throw new ShouldExitException();
+		}
+
+		displayInfo("0. Return");
+		for (int i = 1; i <= availableTasks.size(); i++) {
+			if (availableTasks.get(i - 1).size() == 0)
+				continue;
+			String project = i + ". "
+					+ projects.get(i - 1).getName().toString();
+			displayInfo(project);
+			displayTaskList(availableTasks.get(i - 1), 1, false);
+		}
+	}
+
+	public Project getProjectIDWithAvailableTasks(List<Project> projects,
+			List<List<Task>> availableTasks) throws ShouldExitException {
+		try {
+			displayProjectsWithAvailableTasksList(projects, availableTasks);
+			int projectId = getListChoice(projects, "Select a project:");
+			return projects.get(projectId - 1);
 		} catch (ShouldExitException e) {
 			output.displayEmptyLine();
 			throw new ShouldExitException();

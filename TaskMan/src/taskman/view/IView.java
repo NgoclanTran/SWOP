@@ -19,11 +19,11 @@ public interface IView {
 	
 	public void displayProjectDetails(Project project);
 	
-	public int getProjectID(List<Project> projects);
+	public Project getProject(List<Project> projects);
 	
 	public void displayTaskDetails(Task task);
 	
-	public int getTaskID(List<Task> tasks);
+	public Task getTask(List<Task> tasks);
 	
 	public String getNewProjectName();
 	
@@ -41,6 +41,12 @@ public interface IView {
 
 	public Task getNewTaskAlternativeFor(List<Task> tasks);
 	
+	public boolean getUpdateTaskFailed();
 	
+	public DateTime getUpdateTaskStartTime();
+	
+	public DateTime getUpdateTaskStopTime();
+	
+	public Project getProjectIDWithAvailableTasks(List<Project> projects, List<List<Task>> availableTasks);
 	
 }

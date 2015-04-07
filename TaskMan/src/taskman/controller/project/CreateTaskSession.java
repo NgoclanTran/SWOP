@@ -73,9 +73,8 @@ public class CreateTaskSession extends Session {
 			getUI().displayError("No projects.");
 			throw new ShouldExitException();
 		}
-
-		int projectId = getUI().getProjectID(projects);
-		return projects.get(projectId - 1);
+		
+		return getUI().getProject(projects);
 	}
 
 	/**
