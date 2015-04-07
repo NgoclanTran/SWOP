@@ -56,28 +56,24 @@ public class Task extends Subject {
 		this.acceptableDeviation = acceptableDeviation;
 		this.status = new Unavailable();
 		this.dependencies.addAll(dependencies);
-		
+
 		for (Task subject : this.dependencies) {
-			try{
+	
 				subject.attachDependant(this);
-			}
-			catch(NullPointerException e){
-				// hier doe niets
-			}
-			
+	
 		}
-		
+
 		if(alternativeFor != null)
-			try{
-				alternativeFor.addAlternative(this);
-			}
-			catch (IllegalStateException e){
-				// dit moet verder doorgegeven worden -> nodig in UI
-				throw e;
-			}
-			
-		
-		updateTaskAvailability();
+			alternativeFor.addAlternative(this);
+
+
+		try{
+			updateTaskAvailability();
+		}
+		catch (IllegalStateException e){
+
+		}
+
 	}
 
 	private final String description;
@@ -189,30 +185,21 @@ public class Task extends Subject {
 	 *             start time
 	 */
 	public void addTimeSpan(boolean failed, DateTime startTime, DateTime endTime)
-			throws IllegalArgumentException {
+			throws IllegalArgumentException, IllegalDateException, NullPointerException {
 		if (startTime == null)
 			throw new NullPointerException("The startTime is null.");
 		if (endTime == null)
 			throw new NullPointerException("The endTime is null.");
-		if (startTime.compareTo(endTime) > 0)
-			throw new IllegalDateException(
-					"The startTime must start before endTime.");
-		try{
-			this.status.addTimeSpan(this, failed, startTime, endTime);
-		}
-		catch(IllegalStateException e){
-			throw e;
-		}
-		
+
+		this.status.addTimeSpan(this, failed, startTime, endTime);
+
+
 	}
 
-	protected void performAddTimeSpan(DateTime startTime, DateTime endTime) {
-		try{
+	protected void performAddTimeSpan(DateTime startTime, DateTime endTime) throws IllegalDateException{
+
 		this.timeSpan = new TimeSpan(startTime, endTime);
-		}
-		catch(Exception e){
-			throw e;
-		}
+
 		this.notifyAllDependants(); //notify dependant task
 		this.notifyAllObservers(); //observer pattern for project
 	}
@@ -235,18 +222,13 @@ public class Task extends Subject {
 	 *             The alternative task is equal to null
 	 * 
 	 */
-	public void addAlternative(Task task) {
+	public void addAlternative(Task task) throws IllegalStateException {
 		if (task == null)
 			throw new NullPointerException("The alternative is null.");
-		try{
-			this.status.addAlternative(this, task);
-		}
-		catch(IllegalStateException e){
-			throw e;
-		}
-		catch(Exception e){
-			
-		}
+
+		this.status.addAlternative(this, task);
+
+
 	}
 
 	protected void performAddAlternative(Task task) {
@@ -296,12 +278,9 @@ public class Task extends Subject {
 	 * Set to status available
 	 */
 	public void updateTaskAvailability() throws IllegalStateException {
-		try{
-			this.status.updateTaskAvailability(this);
-		}
-		catch(IllegalStateException e){
-			throw e;
-		}
+
+		this.status.updateTaskAvailability(this);
+
 	}	
 
 	protected void performUpdateTaskAvailability(Status status) {
@@ -332,26 +311,17 @@ public class Task extends Subject {
 	 */
 
 	public int getTotalExecutionTime() throws IllegalStateException {
-		int time;
-		try{
-			time = this.status.calculateTotalExecutedTime(this);
-			
-		}
-		catch(IllegalStateException e){
-			throw e;
-		}
+
+		int time = this.status.calculateTotalExecutedTime(this);
+
 		return time;
-		 
+
 	}
 
-	protected int performGetTotalExecutionTime() {
-		int time;
-		try{
-		 time = this.timeSpan.calculatePerformedTime();
-		} 
-		catch( IllegalStateException e){
-			throw e;
-		}
+	protected int performGetTotalExecutionTime() throws IllegalStateException {
+
+		int time = this.timeSpan.calculatePerformedTime();
+
 		if (this.alternative != null)
 			try {
 				time = time + this.alternative.getTotalExecutionTime();
@@ -365,19 +335,15 @@ public class Task extends Subject {
 	 * 
 	 * @return Calculate the overdue percentage
 	 */
-	public int getOverduePercentage() {
+	public int getOverduePercentage() throws IllegalStateException {
 		return this.status.calculateOverDuePercentage(this);
 
 	}
 
-	protected int performGetOverduePercentage() {
-		int totalExecutedTime;
-		try{
-			totalExecutedTime = this.performGetTotalExecutionTime();
-		}
-		catch (IllegalStateException e){
-			throw e;
-		}
+	protected int performGetOverduePercentage() throws IllegalStateException {
+
+		int totalExecutedTime = this.performGetTotalExecutionTime();
+
 
 		return (totalExecutedTime - this.estimatedDuration)
 				/ this.estimatedDuration;

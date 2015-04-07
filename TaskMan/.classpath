@@ -14,5 +14,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/TaskMan/lib/system-rules-1.8.0-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/ngoclan/Downloads/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
