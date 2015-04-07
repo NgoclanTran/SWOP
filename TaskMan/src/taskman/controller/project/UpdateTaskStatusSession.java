@@ -37,6 +37,11 @@ public class UpdateTaskStatusSession extends Session {
 		showProjectsAndAvailableTasks();
 	}
 
+	/**
+	 * This method asks the UI to render the list of all projects and the
+	 * available tasks per project. Also it will ask to make a choice from the
+	 * projects to select a task to update.
+	 */
 	private void showProjectsAndAvailableTasks() {
 		List<Project> projects = getPH().getProjects();
 		List<List<Task>> availableTasksList = getAvailableTasksAllProjects(projects);
@@ -45,17 +50,27 @@ public class UpdateTaskStatusSession extends Session {
 			getUI().displayError("No available tasks.");
 			return;
 		}
-		
+
 		Project project;
 		try {
-			project = getUI().getProjectIDWithAvailableTasks(projects, availableTasksList);
+			project = getUI().getProjectIDWithAvailableTasks(projects,
+					availableTasksList);
 		} catch (ShouldExitException e) {
 			return;
 		}
-		
+
 		showAvailableTasks(project);
 	}
 
+	/**
+	 * This method returns a list of a list of all available tasks of all
+	 * projects. Per project there will be a list of available tasks that will
+	 * be added to the main list.
+	 * 
+	 * @param projects
+	 * 
+	 * @return Returns a list of a list of all available tasks.
+	 */
 	private List<List<Task>> getAvailableTasksAllProjects(List<Project> projects) {
 		List<List<Task>> availableTasksList = new ArrayList<>();
 		List<Task> availableTasks = null;
@@ -76,6 +91,13 @@ public class UpdateTaskStatusSession extends Session {
 			return availableTasksList;
 	}
 
+	/**
+	 * This method returns a list of all available tasks within a given project.
+	 * 
+	 * @param project
+	 * 
+	 * @return Returns a list of all available tasks within a given project.
+	 */
 	private List<Task> getAvailableTasksProject(Project project) {
 		List<Task> availableTasks = new ArrayList<Task>();
 		List<Task> tasks = project.getTasks();
@@ -85,9 +107,16 @@ public class UpdateTaskStatusSession extends Session {
 		}
 		return availableTasks;
 	}
-	
+
+	/**
+	 * This method asks the UI to render a list of all the available tasks of a
+	 * given project. Also it will ask to make a choice from the list to update
+	 * the details of the selected task.
+	 * 
+	 * @param project
+	 */
 	private void showAvailableTasks(Project project) {
-		List<Task> tasks = project.getTasks();
+		List<Task> tasks = getAvailableTasksProject(project);
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
@@ -99,10 +128,16 @@ public class UpdateTaskStatusSession extends Session {
 		} catch (ShouldExitException e) {
 			return;
 		}
-		
+
 		updateTask(task);
 	}
-	
+
+	/**
+	 * This method loops over the update form of a task until the user neters
+	 * all details correctly or decides to cancel the update process.
+	 * 
+	 * @param task
+	 */
 	private void updateTask(Task task) {
 		while (true) {
 			try {
@@ -118,22 +153,59 @@ public class UpdateTaskStatusSession extends Session {
 			}
 		}
 	}
-	
+
+	/**
+	 * This method asks the user to enter whether or not the specified task has
+	 * failed and returns it as a boolean.
+	 * 
+	 * @return Returns true if the user enters 'yes' and false if the user
+	 *         enters 'no'.
+	 */
 	private boolean getFailed() {
 		return getUI().getUpdateTaskFailed();
 	}
-	
+
+	/**
+	 * This method asks the user to enter the start time of the specified task
+	 * and returns it. It will loop over the question until the date is
+	 * correctly given or the user decides to cancel.
+	 * 
+	 * @return Returns the start time of the specified task that is to be
+	 *         entered.
+	 */
 	private DateTime getStartTime() {
 		return getUI().getUpdateTaskStartTime();
 	}
-	
+
+	/**
+	 * This method asks the user to enter the end time of the specified task and
+	 * returns it. It will loop over the question until the date is correctly
+	 * given or the user decides to cancel.
+	 * 
+	 * @return Returns the end time of the specified task that is to be entered.
+	 */
 	private DateTime getEndTime() {
 		return getUI().getUpdateTaskStopTime();
 	}
-	
-	private boolean isValidUpdateTask(Task task, boolean isFailed, DateTime startTime, DateTime endTime) {
+
+	/**
+	 * This method will try to update the given task with the given parameters.
+	 * If the update process fails it will print the error message and return
+	 * false.
+	 * 
+	 * @param task
+	 * @param isFailed
+	 * @param startTime
+	 * @param endTime
+	 * 
+	 * @return Returns true if the update process of the task is successful and
+	 *         false if there was an error.
+	 */
+	private boolean isValidUpdateTask(Task task, boolean isFailed,
+			DateTime startTime, DateTime endTime) {
 		try {
-			task.addTimeSpan(isFailed, startTime, endTime);;
+			task.addTimeSpan(isFailed, startTime, endTime);
+			;
 			getUI().displayInfo("Task updated");
 			return true;
 		} catch (IllegalArgumentException argEx) {
