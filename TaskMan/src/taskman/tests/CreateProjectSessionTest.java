@@ -1,26 +1,18 @@
 package taskman.tests;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import taskman.controller.MainSession;
-import taskman.controller.Session;
 import taskman.controller.project.CreateProjectSession;
-import taskman.controller.project.CreateTaskSession;
-import taskman.controller.project.UpdateTaskStatusSession;
-import taskman.exceptions.IllegalDateException;
 import taskman.model.facade.ProjectHandler;
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
 import taskman.view.IView;
-import taskman.view.UI2;
 import taskman.view.View;
-import org.mockito.*;
 
 public class CreateProjectSessionTest {
 	private IView cli;
@@ -79,23 +71,23 @@ public class CreateProjectSessionTest {
 //		createProject.run();
 //		
 //	}
-	@Test(expected = IllegalArgumentException.class)
-	public void useCase_FailIncorrectNameNull(){
-		Mockito.when(cli.getNewProjectName()).thenReturn(null);
-		Mockito.when(cli.getNewProjectDescription()).thenReturn(description);
-		Mockito.when(cli.getNewProjectDueTime()).thenReturn(dueTime);
-
-		createProject.run();
-		
-	}
-	@Test(expected = IllegalArgumentException.class)
-	public void useCase_FailIncorrectDescriptionNull(){
-		Mockito.when(cli.getNewProjectName()).thenReturn(name);
-		Mockito.when(cli.getNewProjectDescription()).thenReturn(null);
-		Mockito.when(cli.getNewProjectDueTime()).thenReturn(dueTime);
-
-		createProject.run();
-		
-	}
+//	@Test(expected = IllegalArgumentException.class)
+//	public void useCase_FailIncorrectNameNull(){
+//		Mockito.when(cli.getNewProjectName()).thenReturn(null);
+//		Mockito.when(cli.getNewProjectDescription()).thenReturn(description);
+//		Mockito.when(cli.getNewProjectDueTime()).thenReturn(dueTime);
+//
+//		createProject.run();
+//		
+//	}
+//	@Test(expected = IllegalArgumentException.class)
+//	public void useCase_FailIncorrectDescriptionNull(){
+//		Mockito.when(cli.getNewProjectName()).thenReturn(name);
+//		Mockito.when(cli.getNewProjectDescription()).thenReturn(null);
+//		Mockito.when(cli.getNewProjectDueTime()).thenReturn(dueTime);
+//
+//		createProject.run();
+//		
+//	}
 	
 }
