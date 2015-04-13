@@ -15,10 +15,10 @@ import taskman.view.commandline.Input;
 import taskman.view.commandline.Output;
 
 public class View implements IView {
-
-	private final Input input;
-	private final Output output;
-	private final DateTimeFormatter formatter = DateTimeFormat
+	
+	protected final Input input;
+	protected final Output output;
+	protected final DateTimeFormatter formatter = DateTimeFormat
 			.forPattern("dd-MM-yyyy HH:mm");
 
 	private final List<String> menu = Arrays.asList("Show projects",
@@ -38,7 +38,7 @@ public class View implements IView {
 	 * @return Returns true if it is a correctly spelled date, else it returns
 	 *         false.
 	 */
-	private boolean isValidDateTime(String date) {
+	protected boolean isValidDateTime(String date) {
 		try {
 			formatter.parseDateTime(date);
 			return true;
@@ -47,14 +47,14 @@ public class View implements IView {
 		}
 	}
 
-	private boolean isValidInteger(int integer) {
+	protected boolean isValidInteger(int integer) {
 		if (integer == Integer.MIN_VALUE)
 			return false;
 		else
 			return true;
 	}
 
-	private boolean isValidYesAnswer(String answer) {
+	protected boolean isValidYesAnswer(String answer) {
 		if (answer.toLowerCase().equals("y")
 				|| answer.toLowerCase().equals("yes"))
 			return true;
@@ -62,7 +62,7 @@ public class View implements IView {
 			return false;
 	}
 
-	private boolean isValidNoAnswer(String answer) {
+	protected boolean isValidNoAnswer(String answer) {
 		if (answer.toLowerCase().equals("n")
 				|| answer.toLowerCase().equals("no"))
 			return true;
@@ -174,7 +174,7 @@ public class View implements IView {
 	 * 
 	 * @throws ShouldExitException
 	 */
-	private int getListChoice(List<?> list, String question)
+	protected int getListChoice(List<?> list, String question)
 			throws ShouldExitException {
 		displayInfo(question);
 		int choice = input.getNumberInput();
@@ -229,7 +229,7 @@ public class View implements IView {
 		output.displayEmptyLine();
 	}
 
-	private void displayTaskList(List<Task> tasks, int tabs, boolean printReturn) {
+	protected void displayTaskList(List<Task> tasks, int tabs, boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
 			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
@@ -244,275 +244,16 @@ public class View implements IView {
 		return tasks.get(taskId - 1);
 	}
 
-	public String getNewProjectName() throws ShouldExitException {
-		try {
-			displayInfo("Enter the name of the project (or cancel):");
-			String name = input.getInput();
-			output.displayEmptyLine();
-			return name;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
+	public ICreateProjectForm getNewProjectForm() {
+		return new CreateProjectForm();
 	}
 
-	public String getNewProjectDescription() throws ShouldExitException {
-		try {
-			displayInfo("Enter the description of the project (or cancel):");
-			String description = input.getInput();
-			output.displayEmptyLine();
-			return description;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
+	public ICreateTaskForm getNewTaskForm() {
+		return new CreateTaskForm();
 	}
 
-	public DateTime getNewProjectDueTime() throws ShouldExitException {
-		try {
-			displayInfo("Enter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):");
-			String date = input.getInput();
-			output.displayEmptyLine();
-
-			while (!isValidDateTime(date)) {
-				displayError("Enter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):");
-				date = input.getInput();
-				output.displayEmptyLine();
-			}
-
-			DateTime dueTime = formatter.parseDateTime(date);
-
-			return dueTime;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public String getNewTaskDescription() throws ShouldExitException {
-		try {
-			displayInfo("Enter the description of the task (or cancel):");
-			String description = input.getInput();
-			output.displayEmptyLine();
-			return description;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public int getNewTaskEstimatedDuration() throws ShouldExitException {
-		try {
-			displayInfo("Enter the estimated duration of the task (or cancel):");
-			int estimatedDuration = input.getNumberInput();
-			output.displayEmptyLine();
-
-			while (!isValidInteger(estimatedDuration)) {
-				displayError("You need to enter an integer.\nEnter the estimated duration of the task (or cancel):");
-				estimatedDuration = input.getNumberInput();
-				output.displayEmptyLine();
-			}
-			return estimatedDuration;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public int getNewTaskAcceptableDeviation() throws ShouldExitException {
-		try {
-			displayInfo("Enter the acceptable deviation of the task (or cancel):");
-			int acceptableDeviation = input.getNumberInput();
-			output.displayEmptyLine();
-
-			while (!isValidInteger(acceptableDeviation)) {
-				displayError("You need to enter an integer.\nEnter the acceptable deviation of the task (or cancel):");
-				acceptableDeviation = input.getNumberInput();
-				output.displayEmptyLine();
-			}
-			return acceptableDeviation;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public List<Task> getNewTaskDependencies(List<Task> tasks)
-			throws ShouldExitException {
-		try {
-			displayInfo("Does this task have dependencies? (Y/N or cancel):");
-			String hasDependencies = input.getInput();
-			output.displayEmptyLine();
-
-			while (!(isValidYesAnswer(hasDependencies) || isValidNoAnswer(hasDependencies))) {
-				displayError("Does this task have dependencies? (Y/N or cancel):");
-				hasDependencies = input.getInput();
-				output.displayEmptyLine();
-			}
-
-			if (isValidYesAnswer(hasDependencies)) {
-				List<Task> list = parseDependecies(tasks);
-				while (list == null) {
-					displayError("Incorrect input.");
-					list = parseDependecies(tasks);
-				}
-				return list;
-			} else {
-				return new ArrayList<Task>();
-			}
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	private List<Task> parseDependecies(List<Task> tasks)
-			throws ShouldExitException {
-		ArrayList<Task> list = new ArrayList<Task>();
-		output.displayEmptyLine();
-		displayTaskList(tasks, 0, true);
-		displayInfo("Select the dependencies seperated by a comma (e.g. 1,2,3 and 'cancel' or 0 to return):");
-		String dependencies = input.getInput();
-		output.displayEmptyLine();
-
-		String dependencie[] = dependencies.split(",");
-		for (String i : dependencie) {
-			try {
-				int j = Integer.parseInt(i);
-				if (j > 0 && j <= tasks.size())
-					list.add(tasks.get(j - 1));
-				else if (j == 0)
-					throw new ShouldExitException();
-				else
-					return null;
-				return list;
-			} catch (NumberFormatException e2) {
-				return null;
-			}
-		}
-		return null;
-	}
-
-	public Task getNewTaskAlternativeFor(List<Task> tasks)
-			throws ShouldExitException {
-		try {
-			displayInfo("Is this task an alternative for a failed task? (Y/N or cancel):");
-			String hasAlternativeFor = input.getInput();
-			output.displayEmptyLine();
-
-			while (!(isValidYesAnswer(hasAlternativeFor) || isValidNoAnswer(hasAlternativeFor))) {
-				displayError("Is this task an alternative for a failed task? (Y/N or cancel):");
-				hasAlternativeFor = input.getInput();
-				output.displayEmptyLine();
-			}
-
-			if (isValidYesAnswer(hasAlternativeFor)) {
-				displayTaskList(tasks, 0, true);
-				int taskId = getListChoice(tasks,
-						"Select a task for which this task will be the alternative (or cancel):");
-				return tasks.get(taskId - 1);
-			} else {
-				return null;
-			}
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public boolean getUpdateTaskFailed() throws ShouldExitException {
-		try {
-			displayInfo("Did the selected task fail? (Y/N or cancel):");
-			String didFail = input.getInput();
-			output.displayEmptyLine();
-
-			while (!(isValidYesAnswer(didFail) || isValidNoAnswer(didFail))) {
-				displayInfo("Did the selected task fail? (Y/N or cancel):");
-				didFail = input.getInput();
-				output.displayEmptyLine();
-			}
-
-			if (isValidYesAnswer(didFail)) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public DateTime getUpdateTaskStartTime() throws ShouldExitException {
-		try {
-			displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
-			String date = input.getInput();
-			output.displayEmptyLine();
-
-			while (!isValidDateTime(date)) {
-				displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
-				date = input.getInput();
-				output.displayEmptyLine();
-			}
-
-			DateTime startTime = formatter.parseDateTime(date);
-
-			return startTime;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public DateTime getUpdateTaskStopTime() throws ShouldExitException {
-		try {
-			displayInfo("Enter the stop time of the task with format dd-MM-yyyy HH:mm (or cancel):");
-			String date = input.getInput();
-			output.displayEmptyLine();
-
-			while (!isValidDateTime(date)) {
-				displayInfo("Enter the stop time of the task with format dd-MM-yyyy HH:mm (or cancel):");
-				date = input.getInput();
-				output.displayEmptyLine();
-			}
-
-			DateTime stopTime = formatter.parseDateTime(date);
-
-			return stopTime;
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	private void displayProjectsWithAvailableTasksList(List<Project> projects,
-			List<List<Task>> availableTasks) throws ShouldExitException {
-		if (projects.size() != availableTasks.size()) {
-			displayError("Error occured while creating the available tasks list.");
-			throw new ShouldExitException();
-		}
-
-		displayInfo("0. Return");
-		for (int i = 1; i <= availableTasks.size(); i++) {
-			if (availableTasks.get(i - 1).size() == 0)
-				continue;
-			String project = i + ". "
-					+ projects.get(i - 1).getName().toString();
-			displayInfo(project);
-			displayTaskList(availableTasks.get(i - 1), 1, false);
-		}
-	}
-
-	public Project getProjectIDWithAvailableTasks(List<Project> projects,
-			List<List<Task>> availableTasks) throws ShouldExitException {
-		try {
-			displayProjectsWithAvailableTasksList(projects, availableTasks);
-			int projectId = getListChoice(projects, "Select a project:");
-			return projects.get(projectId - 1);
-		} catch (ShouldExitException e) {
-			output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
+	public IUpdateTaskForm getUpdateTaskForm() {
+		return new UpdateTaskForm();
 	}
 
 }

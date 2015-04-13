@@ -62,7 +62,7 @@ public class CreateProjectSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private String getName() throws ShouldExitException {
-		return getUI().getNewProjectName();
+		return getUI().getNewProjectForm().getNewProjectName();
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class CreateProjectSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private String getDescription() throws ShouldExitException {
-		return getUI().getNewProjectDescription();
+		return getUI().getNewProjectForm().getNewProjectDescription();
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class CreateProjectSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private DateTime getDueTime() throws ShouldExitException {
-		return getUI().getNewProjectDueTime();
+		return getUI().getNewProjectForm().getNewProjectDueTime();
 	}
 
 	/**

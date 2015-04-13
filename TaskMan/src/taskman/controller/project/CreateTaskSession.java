@@ -86,7 +86,7 @@ public class CreateTaskSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private String getDescription() throws ShouldExitException {
-		return getUI().getNewTaskDescription();
+		return getUI().getNewTaskForm().getNewTaskDescription();
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class CreateTaskSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private int getEstimatedDuration() throws ShouldExitException {
-		return getUI().getNewTaskEstimatedDuration();
+		return getUI().getNewTaskForm().getNewTaskEstimatedDuration();
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class CreateTaskSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private int getAcceptableDeviation() throws ShouldExitException {
-		return getUI().getNewTaskAcceptableDeviation();
+		return getUI().getNewTaskForm().getNewTaskAcceptableDeviation();
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class CreateTaskSession extends Session {
 	 */
 	private List<Task> getDependencies(List<Task> tasks)
 			throws ShouldExitException {
-		return getUI().getNewTaskDependencies(tasks);
+		return getUI().getNewTaskForm().getNewTaskDependencies(tasks);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class CreateTaskSession extends Session {
 	 * @throws ShouldExitException
 	 */
 	private Task getAlternativeFor(List<Task> tasks) throws ShouldExitException {
-		return getUI().getNewTaskAlternativeFor(tasks);
+		return getUI().getNewTaskForm().getNewTaskAlternativeFor(tasks);
 	}
 
 	/**

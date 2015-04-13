@@ -53,7 +53,7 @@ public class UpdateTaskStatusSession extends Session {
 
 		Project project;
 		try {
-			project = getUI().getProjectIDWithAvailableTasks(projects,
+			project = getUI().getUpdateTaskForm().getProjectWithAvailableTasks(projects,
 					availableTasksList);
 		} catch (ShouldExitException e) {
 			return;
@@ -162,7 +162,7 @@ public class UpdateTaskStatusSession extends Session {
 	 *         enters 'no'.
 	 */
 	private boolean getFailed() {
-		return getUI().getUpdateTaskFailed();
+		return getUI().getUpdateTaskForm().getUpdateTaskFailed();
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class UpdateTaskStatusSession extends Session {
 	 *         entered.
 	 */
 	private DateTime getStartTime() {
-		return getUI().getUpdateTaskStartTime();
+		return getUI().getUpdateTaskForm().getUpdateTaskStartTime();
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class UpdateTaskStatusSession extends Session {
 	 * @return Returns the end time of the specified task that is to be entered.
 	 */
 	private DateTime getEndTime() {
-		return getUI().getUpdateTaskStopTime();
+		return getUI().getUpdateTaskForm().getUpdateTaskStopTime();
 	}
 
 	/**

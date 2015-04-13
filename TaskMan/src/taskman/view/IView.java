@@ -2,8 +2,6 @@ package taskman.view;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
-
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 
@@ -25,28 +23,10 @@ public interface IView {
 	
 	public Task getTask(List<Task> tasks);
 	
-	public String getNewProjectName();
+	public ICreateProjectForm getNewProjectForm();
 	
-	public String getNewProjectDescription();
+	public ICreateTaskForm getNewTaskForm();
 	
-	public DateTime getNewProjectDueTime();
-	
-	public String getNewTaskDescription();
-	
-	public int getNewTaskEstimatedDuration();
-	
-	public int getNewTaskAcceptableDeviation();
-	
-	public List<Task> getNewTaskDependencies(List<Task> tasks);
-
-	public Task getNewTaskAlternativeFor(List<Task> tasks);
-	
-	public boolean getUpdateTaskFailed();
-	
-	public DateTime getUpdateTaskStartTime();
-	
-	public DateTime getUpdateTaskStopTime();
-	
-	public Project getProjectIDWithAvailableTasks(List<Project> projects, List<List<Task>> availableTasks);
+	public IUpdateTaskForm getUpdateTaskForm();
 	
 }
