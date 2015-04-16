@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 
-public interface IUpdateTaskForm extends IView {
+public interface IUpdateTaskForm {
 
 	public boolean getUpdateTaskFailed();
 

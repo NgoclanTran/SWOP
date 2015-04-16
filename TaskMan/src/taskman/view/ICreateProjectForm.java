@@ -2,7 +2,7 @@ package taskman.view;
 
 import org.joda.time.DateTime;
 
-public interface ICreateProjectForm extends IView {
+public interface ICreateProjectForm {
 
 	public String getNewProjectName();
 

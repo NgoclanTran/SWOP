@@ -245,15 +245,15 @@ public class View implements IView {
 	}
 
 	public ICreateProjectForm getNewProjectForm() {
-		return new CreateProjectForm();
+		return new CreateProjectForm(this);
 	}
 
 	public ICreateTaskForm getNewTaskForm() {
-		return new CreateTaskForm();
+		return new CreateTaskForm(this);
 	}
 
 	public IUpdateTaskForm getUpdateTaskForm() {
-		return new UpdateTaskForm();
+		return new UpdateTaskForm(this);
 	}
 
 }

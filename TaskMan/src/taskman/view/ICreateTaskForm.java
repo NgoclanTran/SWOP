@@ -4,7 +4,7 @@ import java.util.List;
 
 import taskman.model.project.task.Task;
 
-public interface ICreateTaskForm extends IView {
+public interface ICreateTaskForm {
 
 	public String getNewTaskDescription();
 
