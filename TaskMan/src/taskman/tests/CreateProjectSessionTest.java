@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 
 import taskman.controller.MainSession;
 import taskman.controller.project.CreateProjectSession;
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.view.IView;
 import taskman.view.View;

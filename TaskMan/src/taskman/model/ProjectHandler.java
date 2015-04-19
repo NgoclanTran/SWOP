@@ -1,4 +1,4 @@
-package taskman.model.facade;
+package taskman.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,10 @@ public class ProjectHandler {
 	 * @throws IllegalDateException
 	 */
 	public void addProject(String name, String description,
-			DateTime creationTime, DateTime dueTime) throws IllegalArgumentException, IllegalDateException {
-		Project projectToAdd = new Project(name, description, creationTime, dueTime);
+			DateTime creationTime, DateTime dueTime)
+			throws IllegalArgumentException, IllegalDateException {
+		Project projectToAdd = new Project(name, description, creationTime,
+				dueTime);
 		addProject(projectToAdd);
 	}
 

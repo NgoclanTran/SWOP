@@ -14,7 +14,7 @@ import taskman.UI.UI;
 import taskman.controller.MainSession;
 import taskman.controller.Session;
 import taskman.controller.project.UpdateTaskStatusSession;
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.model.project.task.Task;
 
 public class UpdateTaskStatusSessionTest {

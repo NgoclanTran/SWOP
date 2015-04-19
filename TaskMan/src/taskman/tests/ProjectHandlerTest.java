@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
 
 public class ProjectHandlerTest {

@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.view.IView;
 
 public class CreateProjectSession extends Session {

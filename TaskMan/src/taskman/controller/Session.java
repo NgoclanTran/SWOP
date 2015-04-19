@@ -1,6 +1,6 @@
 package taskman.controller;
 
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.view.IView;
 
 public abstract class Session {

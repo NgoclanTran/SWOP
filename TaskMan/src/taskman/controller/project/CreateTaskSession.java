@@ -4,7 +4,7 @@ import java.util.List;
 
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.view.IView;

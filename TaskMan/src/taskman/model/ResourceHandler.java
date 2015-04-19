@@ -1,4 +1,4 @@
-package taskman.model.facade;
+package taskman.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,7 @@ import taskman.controller.project.CreateProjectSession;
 import taskman.controller.project.CreateTaskSession;
 import taskman.controller.project.ShowProjectSession;
 import taskman.controller.project.UpdateTaskStatusSession;
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.view.IView;
 
 public class MainSession extends Session {

@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 
-
 import taskman.controller.project.CreateTaskSession;
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.view.IView;

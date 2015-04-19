@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 
 import taskman.controller.MainSession;
-import taskman.model.facade.ProjectHandler;
+import taskman.model.ProjectHandler;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
 import taskman.view.View;
