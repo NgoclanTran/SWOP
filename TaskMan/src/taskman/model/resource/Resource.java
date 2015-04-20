@@ -3,8 +3,10 @@ package taskman.model.resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import taskman.model.project.task.Task;
-import taskman.model.project.task.TimeSpan;
+import taskman.model.time.TimeSpan;
 
 public class Resource {
 
@@ -33,12 +35,24 @@ public class Resource {
 	}
 
 	public boolean isAvailableAt(TimeSpan timeSpan) {
-		// TODO
-		return false;
+		for (Reservation reservation : reservations) {
+			DateTime reservationStart = reservation.getTimeSpan()
+					.getStartTime();
+			DateTime reservationEnd = reservation.getTimeSpan().getEndTime();
+			boolean before = timeSpan.getStartTime().isBefore(reservationStart)
+					&& timeSpan.getEndTime().isBefore(reservationStart);
+			boolean after = timeSpan.getStartTime().isAfter(reservationEnd)
+					&& timeSpan.getEndTime().isAfter(reservationEnd);
+			if (!(before || after)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void addReservation(Task task, TimeSpan timeSpan) {
-		// TODO
+		Reservation reservation = new Reservation(task, timeSpan);
+		reservations.add(reservation);
 	}
 
 	public List<Reservation> getReservations() {

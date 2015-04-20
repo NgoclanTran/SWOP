@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.joda.time.LocalTime;
 
-import taskman.model.project.task.TimeSpan;
+import taskman.model.time.TimeSpan;
 
 public class ResourceType {
 
@@ -88,13 +88,18 @@ public class ResourceType {
 	}
 
 	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
-		// TODO
-		return null;
+		ArrayList<Resource> suggestedResources = new ArrayList<Resource>();
+		return suggestedResources;
 	}
 
 	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
-		// TODO
-		return null;
+		ArrayList<Resource> availableResources = new ArrayList<Resource>();
+		for (Resource resource : resources) {
+			if (resource.isAvailableAt(timeSpan)) {
+				availableResources.add(resource);
+			}
+		}
+		return availableResources;
 	}
 
 }

@@ -1,7 +1,7 @@
 package taskman.model.resource;
 
 import taskman.model.project.task.Task;
-import taskman.model.project.task.TimeSpan;
+import taskman.model.time.TimeSpan;
 
 public class Reservation {
 

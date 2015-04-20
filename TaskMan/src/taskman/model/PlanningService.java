@@ -5,7 +5,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import taskman.model.project.task.Task;
-import taskman.model.project.task.TimeSpan;
+import taskman.model.time.TimeSpan;
 
 public class PlanningService {
 

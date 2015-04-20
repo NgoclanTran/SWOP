@@ -6,6 +6,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.time.TimeSpan;
 
 public class Task extends Subject {
 
