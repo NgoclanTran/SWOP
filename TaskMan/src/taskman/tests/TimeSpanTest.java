@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.exceptions.IllegalDateException;
-import taskman.model.project.task.TimeSpan;
+import taskman.model.time.TimeSpan;
 
 public class TimeSpanTest {
 	private DateTime start;

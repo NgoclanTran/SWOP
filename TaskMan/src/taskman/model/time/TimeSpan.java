@@ -1,4 +1,4 @@
-package taskman.model.project.task;
+package taskman.model.time;
 
 import org.joda.time.DateTime;
 

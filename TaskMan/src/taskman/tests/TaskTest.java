@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.project.task.Task;
-import taskman.model.project.task.TimeSpan;
+import taskman.model.time.TimeSpan;
 
 public class TaskTest {
 	private String description;
