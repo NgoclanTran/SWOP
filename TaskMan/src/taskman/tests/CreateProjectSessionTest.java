@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.*;
+import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import org.mockito.Mockito;
 
 import taskman.controller.MainSession;
@@ -15,6 +18,9 @@ import taskman.view.IView;
 import taskman.view.View;
 
 public class CreateProjectSessionTest {
+	@Rule
+	public TextFromStandardInputStream systemInMock = emptyStandardInputStream();
+
 	private IView cli;
 	private CreateProjectSession createProject;
 	private ProjectHandler ph;

@@ -21,6 +21,13 @@ import taskman.model.project.task.Task;
 import taskman.view.IView;
 import taskman.view.View;
 
+import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
+import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
+
 public class CreateTaskSessionTest {
 	private IView cli;
 	private ProjectHandler ph;
@@ -31,9 +38,16 @@ public class CreateTaskSessionTest {
 	private ArrayList<Task> dependencies;
 	private Project p;
 
+	@Rule
+	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
+
+	@Rule
+	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+
 	@Before
 	public void setup(){
-		cli = Mockito.mock(View.class);
+		//cli = Mockito.mock(View.class);
+		cli = new View();
 		ph = new ProjectHandler();
 		session = new CreateTaskSession(cli, ph);
 		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
@@ -47,179 +61,293 @@ public class CreateTaskSessionTest {
 		p = ph.getProjects().get(0);
 
 	}
-	// Test without Session, with ProjectHandler
+
+	//	@Test 
+	//	public void useCaseTest_NoProject(){
+	//		IView cli = new View();
+	//		ProjectHandler ph = new ProjectHandler();
+	//		CreateTaskSession session = new CreateTaskSession(cli, ph);
+	//
+	//		session.run();
+	//		String output ="No projects.\r\n\r\n";
+	//		assertEquals(output,log.getLog());
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_WithProjects_WrongInput_Exit_CancelCreation(){
+	//
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		systemInMock.provideText("-1\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_WithProjects_InputExit_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		systemInMock.provideText("0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_WithProjects_InputOutOfBound_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		systemInMock.provideText("3\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_NoDescription_Stop_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		systemInMock.provideText("1\ncancel\n");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//
+	//	}
+	//	@Test
+	//	public void useCaseTest_Description_Stop_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		systemInMock.provideText("1\ndescription\ncancel\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_EnterEstimatedDurationUntilCorrectInput_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		systemInMock.provideText("1\ndescription\n-1\n0\n10\ncancel\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_EnterAcceptableDeviationUntilCorrectInput_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		systemInMock.provideText("1\ndescription\n10\n-1\na\n10\ncancel\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_InputDependenciesYes_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		// select project 1
+	//		// enter description "description"
+	//		// enter estimated duration: 10
+	//		// enter acceptable devation: 10
+	//		// enter wrong input for dependencies: a
+	//		// enter task has dependency: Y
+	//		// select first task in given list
+	//		// cancel creation
+	//
+	//		systemInMock.provideText("1\ndescription\n10\n10\na\nY\n1\ncancel\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_InputDependenciesNo_CancelCreation(){
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		// select project 1
+	//		// enter description "description"
+	//		// enter estimated duration: 10
+	//		// enter acceptable devation: 10
+	//		// enter wrong input for dependencies: a
+	//		// enter task has dependency: N
+	//		// cancel creation
+	//
+	//		systemInMock.provideText("1\ndescription\n10\n10\na\nN\ncancel\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_InputAlterativeForYes_CancelCreation(){
+	//
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		// select project 1
+	//		// enter description "description"
+	//		// enter estimated duration: 10
+	//		// enter acceptable devation: 10
+	//		// enter task has dependency: N
+	//		// cancel creation
+	//
+	//		systemInMock.provideText("1\ndescription\n10\n10\nN\nY\n1\ncancel\n0");
+	//		session.run();
+	//
+	//		//-------- Check if nothing has been changed -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	//	}
+	//
+	//	@Test
+	//	public void useCaseTest_InputAlterativeForNo_CancelCreation(){
+	//
+	//		//---------- Before running ----------
+	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	//
+	//		// select project 1
+	//		// enter description "description"
+	//		// enter estimated duration: 10
+	//		// enter acceptable devation: 10
+	//		// enter task has dependency: N
+	//		// cancel creation
+	//
+	//		systemInMock.provideText("1\ndescription\n10\n10\nN\nN\ncancel\n0");
+	//		session.run();
+	//
+	//		//-------- Check if task was created -------
+	//		assertEquals(ph.getProjects(), projects);
+	//		Task lastAddedTask = ph.getProjects().get(0).getTasks().get(tasksOfProject1.size());
+	//		assertEquals(lastAddedTask.getDescription(),"description");
+	//		assertNull(lastAddedTask.getAlternative());
+	//		assertEquals(lastAddedTask.getEstimatedDuration(),10);
+	//		assertEquals(lastAddedTask.getAcceptableDeviation(),10);
+	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);		
+	//	}
+
 	@Test
-	public void useCase_Succes(){
+	public void useCaseTest_SuccesScenario_WithDependencies_WithAlternative_NoCreation_ErrorState(){
+		//---------- Before running ----------
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
 
-		// 1. User chose to create a task
-		// 2. Show creation form
-		// 3. User give all required informations
-		// 4. User select a project and create the task- for this use case, select the first one
-		Project p = ph.getProjects().get(0); // this should be project x
-		assertEquals(p.getName(), "Project x");
-		//Examples as information for task - valid information
-		String description = "description";
-		int estimatedDuration = 10;
-		int acceptableDeviation = 11;
-		ArrayList<Task> dependencies = new ArrayList<Task>();
+		// select project 1
+		// enter description "description"
+		// enter estimated duration: 10
+		// enter acceptable devation: 10
+		// enter wrong input for dependencies: a
+		// enter task has dependency: Y
+		// select first task in given list
+		// cancel creation
 
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null);
-
-		// Task is created and should be part of the choosen project
-		// The new Task is added at the end of the list - we work with arraylist
-		// The new Task have the same informations as given
-		assertEquals(p.getTasks().get(2).getDescription(), description);
-		assertEquals(p.getTasks().get(2).getEstimatedDuration(), estimatedDuration);
-		assertEquals(p.getTasks().get(2).getAcceptableDeviation(), acceptableDeviation);
-		assertEquals(p.getTasks().get(2).getDependencies(),dependencies);
-		assertNull(p.getTasks().get(2).getAlternative());
-
-	}
-
-	@Test
-	public void useCaseTest_SuccesScenario(){
-
-	}
-
-	@Test
-	public void useCase_SuccesScenario(){
-		// Use Case 4.3
-		// 1. User chose to create a task
-		// 2. Show creation form
-		// 3. User give all required informations
-		// 4. User select a project and create the task- for this use case, select the first one
-		Mockito.when(cli.getProject(ph.getProjects())).thenReturn(p);
-		Mockito.when(cli.getNewTaskDescription()).thenReturn(description);
-		Mockito.when(cli.getNewTaskEstimatedDuration()).thenReturn(estimatedDuration);
-		Mockito.when(cli.getNewTaskAcceptableDeviation()).thenReturn(acceptableDeviation);
-		Mockito.when(cli.getNewTaskDependencies(p.getTasks())).thenReturn(dependencies);
-
+		systemInMock.provideText("1\ndescription\n10\n10\na\nY\n1\nY\n1\nN\ncancel\n0");
 		session.run();
 
-		// Last task in project is the new task
-		Task t = p.getTasks().get(p.getTasks().size()-1);
-		assertEquals(t.getDescription(),description);
-		assertEquals(t.getEstimatedDuration(),estimatedDuration);
-		assertEquals(t.getAcceptableDeviation(), acceptableDeviation);
-		assertEquals(t.getDependencies(), dependencies);
-		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		//-------- Check if nothing has been changed -------
+		assertEquals(ph.getProjects(), projects);
+		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
 
-
+		// We chose project 1. His status is available and we wanted to add a new task which is alternative for
+		// Not possible to create, so nothing was created
 	}
+
 	@Test
-	public void useCase_SuccesScenario_WithDependencies(){
-		//Use Case 4.3
-		// Use Case 4.3
-		// 1. User chose to create a task
-		// 2. Show creation form
-		// 3. User give all required informations
-		// 4. User select a project and create the task- for this use case, select the first one
-		// The new task is not avaible due to his dependencies
-		Mockito.when(cli.getNewTaskDescription()).thenReturn(description);
-		Mockito.when(cli.getNewTaskEstimatedDuration()).thenReturn(estimatedDuration);
-		Mockito.when(cli.getNewTaskAcceptableDeviation()).thenReturn(acceptableDeviation);
-		ArrayList<Task> tasks = new ArrayList<Task>();
-		tasks.add(p.getTasks().get(0));
-		Mockito.when(cli.getNewTaskDependencies(p.getTasks())).thenReturn(tasks);
-		Mockito.when(cli.getProject(ph.getProjects())).thenReturn(p);
+	public void useCaseTest_SuccesScenario_WithoutDependencies_WithoutAlternative(){
+		//---------- Before running ----------
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+
+		// select project 1
+		// enter description "description"
+		// enter estimated duration: 10
+		// enter acceptable devation: 10
+		// enter wrong input for dependencies: a
+		// enter task has dependency: Y
+		// select first task in given list
+		// cancel creation
+
+		systemInMock.provideText("1\ndescription\n10\n10\na\nY\n1\nN\ncancel\n0");
 		session.run();
 
-		// Last task in project is the new task
-		Task t = p.getTasks().get(p.getTasks().size()-1);
-		assertEquals(t.getDescription(),description);
-		assertEquals(t.getEstimatedDuration(),estimatedDuration);
-		assertEquals(t.getAcceptableDeviation(), acceptableDeviation);
-		assertEquals(t.getDependencies(), tasks);
-		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(), "UNAVAILABLE");
-
-
+		//-------- Check if nothing has been changed -------
+		assertEquals(ph.getProjects(), projects);
+		// New task was created
+		assertNotEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+		
+		Task newTask = ph.getProjects().get(0).getTasks().get(tasksOfProject1.size());
+		assertEquals(newTask.getDescription(), "description");
+		assertEquals(newTask.getAcceptableDeviation(),10);
+		assertEquals(newTask.getEstimatedDuration(),10);
+		assertEquals(newTask.getDependencies().get(0),tasksOfProject1.get(0));
 	}
-	// ---------------------------------USE CASE STOP 4a ------------------------------------------ 
-	// ---------------------------------CANNOT TEST CORRECTLY -------------------------------------
-	// this tests never ends - what is normal in the createTask() method
-
-	//	@Test
-	//	public void useCase_Failed_DescriptionNull(){
-	//		Mockito.when(cli.getNewTaskDescription()).thenReturn(null);
-	//		Mockito.when(cli.getNewTaskEstimatedDuration()).thenReturn(estimatedDuration);
-	//		Mockito.when(cli.getNewTaskAcceptableDeviation()).thenReturn(acceptableDeviation);
-	//		Mockito.when(cli.getNewTaskDependencies(p.getTasks())).thenReturn(dependencies);
-	//		Mockito.when(cli.getProject(ph.getProjects())).thenReturn(p);
-	//		session.run();
-	//
-	//
-	//		// Last task in project is not a new task
-	//		Task t = p.getTasks().get(p.getTasks().size()-1);
-	//		assertNotEquals(t.getDescription(),description);
-	//		System.out.println("1");
-	//		assertNotEquals(t.getEstimatedDuration(),estimatedDuration);
-	//		System.out.println("2");
-	//		assertNotEquals(t.getAcceptableDeviation(), acceptableDeviation);
-	//		System.out.println("3");
-	//		assertNotEquals(t.getDependencies(), dependencies);
-	//		System.out.println("4");
-	//		assertNotNull(t.getAlternative());
-	//
-	//	}
-	//	
-	//	@Test
-	//	public void useCase_Failed_EstimatedDurationNotPos(){
-	//		Mockito.when(cli.getNewTaskDescription()).thenReturn(description);
-	//		Mockito.when(cli.getNewTaskEstimatedDuration()).thenReturn(0);
-	//		Mockito.when(cli.getNewTaskAcceptableDeviation()).thenReturn(acceptableDeviation);
-	//		Mockito.when(cli.getNewTaskDependencies(p.getTasks())).thenReturn(dependencies);
-	//		Mockito.when(cli.getProject(ph.getProjects())).thenReturn(p);
-	//		session.run();
-	//
-	//
-	//		// Last task in project is not a new task
-	//		Task t = p.getTasks().get(p.getTasks().size()-1);
-	//		assertNotEquals(t.getDescription(),description);
-	//		assertNotEquals(t.getEstimatedDuration(),-1);
-	//		assertNotEquals(t.getAcceptableDeviation(), acceptableDeviation);
-	//		assertNotEquals(t.getDependencies(), dependencies);
-	//		assertNotNull(t.getAlternative());
-	//
-	//	}
-	//	@Test
-	//	public void useCase_Failed_AcceptableDeviationNotPos(){
-	//		Mockito.when(cli.getNewTaskDescription()).thenReturn(description);
-	//		Mockito.when(cli.getNewTaskEstimatedDuration()).thenReturn(estimatedDuration);
-	//		Mockito.when(cli.getNewTaskAcceptableDeviation()).thenReturn(-1);
-	//		Mockito.when(cli.getNewTaskDependencies(p.getTasks())).thenReturn(dependencies);
-	//		Mockito.when(cli.getProject(ph.getProjects())).thenReturn(p);
-	//		session.run();
-	//
-	//
-	//		// Last task in project is not a new task
-	//		Task t = p.getTasks().get(p.getTasks().size()-1);
-	//		assertNotEquals(t.getDescription(),description);
-	//		assertNotEquals(t.getEstimatedDuration(),estimatedDuration);
-	//		assertNotEquals(t.getAcceptableDeviation(), -1);
-	//		assertNotEquals(t.getDependencies(), dependencies);
-	//		assertNotNull(t.getAlternative());
-	//
-	//	}
-	//	@Test
-	//	public void useCase_Failed_DependenciesNull(){
-	//	Mockito.when(cli.getNewTaskDescription()).thenReturn(description);
-	//	Mockito.when(cli.getNewTaskEstimatedDuration()).thenReturn(estimatedDuration);
-	//	Mockito.when(cli.getNewTaskAcceptableDeviation()).thenReturn(-1);
-	//	Mockito.when(cli.getNewTaskDependencies(p.getTasks())).thenReturn(null);
-	//	Mockito.when(cli.getProject(ph.getProjects())).thenReturn(p);
-	//	session.run();
-	//
-	//
-	//	// Last task in project is not a new task
-	//	Task t = p.getTasks().get(p.getTasks().size()-1);
-	//	assertNotEquals(t.getDescription(),description);
-	//	assertNotEquals(t.getEstimatedDuration(),estimatedDuration);
-	//	assertNotEquals(t.getAcceptableDeviation(), -1);
-	//	assertNotEquals(t.getDependencies(), null);
-	//	assertNotNull(t.getAlternative());
-	//
-	//}
-
 }
