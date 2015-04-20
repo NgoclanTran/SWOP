@@ -62,234 +62,234 @@ public class CreateTaskSessionTest {
 
 	}
 
-	//	@Test 
-	//	public void useCaseTest_NoProject(){
-	//		IView cli = new View();
-	//		ProjectHandler ph = new ProjectHandler();
-	//		CreateTaskSession session = new CreateTaskSession(cli, ph);
-	//
-	//		session.run();
-	//		String output ="No projects.\r\n\r\n";
-	//		assertEquals(output,log.getLog());
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_WithProjects_WrongInput_Exit_CancelCreation(){
-	//
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		systemInMock.provideText("-1\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_WithProjects_InputExit_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		systemInMock.provideText("0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_WithProjects_InputOutOfBound_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		systemInMock.provideText("3\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_NoDescription_Stop_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		systemInMock.provideText("1\ncancel\n");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//
-	//	}
-	//	@Test
-	//	public void useCaseTest_Description_Stop_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		systemInMock.provideText("1\ndescription\ncancel\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_EnterEstimatedDurationUntilCorrectInput_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		systemInMock.provideText("1\ndescription\n-1\n0\n10\ncancel\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_EnterAcceptableDeviationUntilCorrectInput_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		systemInMock.provideText("1\ndescription\n10\n-1\na\n10\ncancel\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_InputDependenciesYes_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		// select project 1
-	//		// enter description "description"
-	//		// enter estimated duration: 10
-	//		// enter acceptable devation: 10
-	//		// enter wrong input for dependencies: a
-	//		// enter task has dependency: Y
-	//		// select first task in given list
-	//		// cancel creation
-	//
-	//		systemInMock.provideText("1\ndescription\n10\n10\na\nY\n1\ncancel\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_InputDependenciesNo_CancelCreation(){
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		// select project 1
-	//		// enter description "description"
-	//		// enter estimated duration: 10
-	//		// enter acceptable devation: 10
-	//		// enter wrong input for dependencies: a
-	//		// enter task has dependency: N
-	//		// cancel creation
-	//
-	//		systemInMock.provideText("1\ndescription\n10\n10\na\nN\ncancel\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_InputAlterativeForYes_CancelCreation(){
-	//
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		// select project 1
-	//		// enter description "description"
-	//		// enter estimated duration: 10
-	//		// enter acceptable devation: 10
-	//		// enter task has dependency: N
-	//		// cancel creation
-	//
-	//		systemInMock.provideText("1\ndescription\n10\n10\nN\nY\n1\ncancel\n0");
-	//		session.run();
-	//
-	//		//-------- Check if nothing has been changed -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-	//	}
-	//
-	//	@Test
-	//	public void useCaseTest_InputAlterativeForNo_CancelCreation(){
-	//
-	//		//---------- Before running ----------
-	//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-	//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-	//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	//
-	//		// select project 1
-	//		// enter description "description"
-	//		// enter estimated duration: 10
-	//		// enter acceptable devation: 10
-	//		// enter task has dependency: N
-	//		// cancel creation
-	//
-	//		systemInMock.provideText("1\ndescription\n10\n10\nN\nN\ncancel\n0");
-	//		session.run();
-	//
-	//		//-------- Check if task was created -------
-	//		assertEquals(ph.getProjects(), projects);
-	//		Task lastAddedTask = ph.getProjects().get(0).getTasks().get(tasksOfProject1.size());
-	//		assertEquals(lastAddedTask.getDescription(),"description");
-	//		assertNull(lastAddedTask.getAlternative());
-	//		assertEquals(lastAddedTask.getEstimatedDuration(),10);
-	//		assertEquals(lastAddedTask.getAcceptableDeviation(),10);
-	//		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);		
-	//	}
+		@Test 
+		public void useCaseTest_NoProject(){
+			IView cli = new View();
+			ProjectHandler ph = new ProjectHandler();
+			CreateTaskSession session = new CreateTaskSession(cli, ph);
+	
+			session.run();
+			String output ="No projects.\r\n\r\n";
+			assertEquals(output,log.getLog());
+		}
+	
+		@Test
+		public void useCaseTest_WithProjects_WrongInput_Exit_CancelCreation(){
+	
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			systemInMock.provideText("-1\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	
+		}
+	
+		@Test
+		public void useCaseTest_WithProjects_InputExit_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			systemInMock.provideText("0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	
+		}
+	
+		@Test
+		public void useCaseTest_WithProjects_InputOutOfBound_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			systemInMock.provideText("3\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	
+		}
+	
+		@Test
+		public void useCaseTest_NoDescription_Stop_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			systemInMock.provideText("1\ncancel\n");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	
+		}
+		@Test
+		public void useCaseTest_Description_Stop_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			systemInMock.provideText("1\ndescription\ncancel\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+	
+		}
+	
+		@Test
+		public void useCaseTest_EnterEstimatedDurationUntilCorrectInput_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			systemInMock.provideText("1\ndescription\n-1\n0\n10\ncancel\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+		}
+	
+		@Test
+		public void useCaseTest_EnterAcceptableDeviationUntilCorrectInput_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			systemInMock.provideText("1\ndescription\n10\n-1\na\n10\ncancel\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+		}
+	
+		@Test
+		public void useCaseTest_InputDependenciesYes_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			// select project 1
+			// enter description "description"
+			// enter estimated duration: 10
+			// enter acceptable devation: 10
+			// enter wrong input for dependencies: a
+			// enter task has dependency: Y
+			// select first task in given list
+			// cancel creation
+	
+			systemInMock.provideText("1\ndescription\n10\n10\na\nY\n1\ncancel\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+		}
+	
+		@Test
+		public void useCaseTest_InputDependenciesNo_CancelCreation(){
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			// select project 1
+			// enter description "description"
+			// enter estimated duration: 10
+			// enter acceptable devation: 10
+			// enter wrong input for dependencies: a
+			// enter task has dependency: N
+			// cancel creation
+	
+			systemInMock.provideText("1\ndescription\n10\n10\na\nN\ncancel\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+		}
+	
+		@Test
+		public void useCaseTest_InputAlterativeForYes_CancelCreation(){
+	
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			// select project 1
+			// enter description "description"
+			// enter estimated duration: 10
+			// enter acceptable devation: 10
+			// enter task has dependency: N
+			// cancel creation
+	
+			systemInMock.provideText("1\ndescription\n10\n10\nN\nY\n1\ncancel\n0");
+			session.run();
+	
+			//-------- Check if nothing has been changed -------
+			assertEquals(ph.getProjects(), projects);
+			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+		}
+	
+		@Test
+		public void useCaseTest_InputAlterativeForNo_CancelCreation(){
+	
+			//---------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
+			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
+	
+			// select project 1
+			// enter description "description"
+			// enter estimated duration: 10
+			// enter acceptable devation: 10
+			// enter task has dependency: N
+			// cancel creation
+	
+			systemInMock.provideText("1\ndescription\n10\n10\nN\nN\ncancel\n0");
+			session.run();
+	
+			//-------- Check if task was created -------
+			assertEquals(ph.getProjects(), projects);
+			Task lastAddedTask = ph.getProjects().get(0).getTasks().get(tasksOfProject1.size());
+			assertEquals(lastAddedTask.getDescription(),"description");
+			assertNull(lastAddedTask.getAlternative());
+			assertEquals(lastAddedTask.getEstimatedDuration(),10);
+			assertEquals(lastAddedTask.getAcceptableDeviation(),10);
+			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);		
+		}
 
 	@Test
 	public void useCaseTest_SuccesScenario_WithDependencies_WithAlternative_NoCreation_ErrorState(){
