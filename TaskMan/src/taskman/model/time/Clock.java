@@ -2,12 +2,17 @@ package taskman.model.time;
 
 import org.joda.time.DateTime;
 
-public class Clock {
+public class Clock implements IClock {
 
 	private DateTime systemTime;
 
-	public Clock(DateTime systemTime) {
-		this.systemTime = new DateTime(systemTime);
+	private static Clock systemClock = new Clock();
+
+	public Clock() {
+	}
+
+	public static Clock getInstance() {
+		return systemClock;
 	}
 
 	public void setSystemTime(DateTime systemTime) {
