@@ -1,6 +1,6 @@
 package taskman.model;
 
-import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -19,7 +19,7 @@ public class PlanningService {
 		this.rh = rh;
 	}
 
-	public List<DateTime> getPossibleStartTimes(Task task, int amount,
+	public Set<DateTime> getPossibleStartTimes(Task task, int amount,
 			DateTime earliestPossibleStartTime) {
 		// TODO
 		return null;

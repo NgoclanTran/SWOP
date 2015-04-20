@@ -34,8 +34,6 @@ public class Task extends Subject {
 	 *             The estimatedDuration is negative
 	 * @throws IllegalArgumentException
 	 *             The acceptableDeviation is negative
-	 * @throws NullPointerException
-	 *             The dependencies is equal to null
 	 */
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
@@ -48,14 +46,13 @@ public class Task extends Subject {
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
 					"The deviation cannot be negative.");
-		if (dependencies == null)
-			throw new IllegalArgumentException("The dependencies are null.");
 
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
 		this.acceptableDeviation = acceptableDeviation;
 		this.status = new Unavailable();
-		this.dependencies.addAll(dependencies);
+		if (dependencies != null)
+			this.dependencies.addAll(dependencies);
 
 		for (Task subject : this.dependencies) {
 
