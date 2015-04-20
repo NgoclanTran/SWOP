@@ -35,7 +35,6 @@ public class Task extends Subject {
 	 *             The acceptableDeviation is negative
 	 * @throws NullPointerException
 	 *             The dependencies is equal to null
-
 	 */
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
@@ -58,19 +57,17 @@ public class Task extends Subject {
 		this.dependencies.addAll(dependencies);
 
 		for (Task subject : this.dependencies) {
-	
-				subject.attachDependant(this);
-	
+
+			subject.attachDependant(this);
+
 		}
 
-		if(alternativeFor != null)
+		if (alternativeFor != null)
 			alternativeFor.addAlternative(this);
 
-
-		try{
+		try {
 			updateTaskAvailability();
-		}
-		catch (IllegalStateException e){
+		} catch (IllegalStateException e) {
 
 		}
 
@@ -130,7 +127,7 @@ public class Task extends Subject {
 	 *             The dependant task is null
 	 * @post The list of depandants contains the given dependant task
 	 */
-	public void attachDependant(Task dependant){
+	public void attachDependant(Task dependant) {
 		if (dependant == null)
 			throw new NullPointerException("the dependant observer is null.");
 		this.dependants.add(dependant);
@@ -185,7 +182,8 @@ public class Task extends Subject {
 	 *             start time
 	 */
 	public void addTimeSpan(boolean failed, DateTime startTime, DateTime endTime)
-			throws IllegalArgumentException, IllegalDateException, NullPointerException {
+			throws IllegalArgumentException, IllegalDateException,
+			NullPointerException {
 		if (startTime == null)
 			throw new NullPointerException("The startTime is null.");
 		if (endTime == null)
@@ -193,15 +191,15 @@ public class Task extends Subject {
 
 		this.status.addTimeSpan(this, failed, startTime, endTime);
 
-
 	}
 
-	protected void performAddTimeSpan(DateTime startTime, DateTime endTime) throws IllegalDateException{
+	protected void performAddTimeSpan(DateTime startTime, DateTime endTime)
+			throws IllegalDateException {
 
 		this.timeSpan = new TimeSpan(startTime, endTime);
 
-		this.notifyAllDependants(); //notify dependant task
-		this.notifyAllObservers(); //observer pattern for project
+		this.notifyAllDependants(); // notify dependant task
+		this.notifyAllObservers(); // observer pattern for project
 	}
 
 	/**
@@ -227,7 +225,6 @@ public class Task extends Subject {
 			throw new NullPointerException("The alternative is null.");
 
 		this.status.addAlternative(this, task);
-
 
 	}
 
@@ -281,15 +278,17 @@ public class Task extends Subject {
 
 		this.status.updateTaskAvailability(this);
 
-	}	
+	}
 
 	protected void performUpdateTaskAvailability(Status status) {
-		for( Task task : this.dependencies){
-			try{
-				if(!task.status.isAlternativeCompleted(task)) return;
+		for (Task task : this.dependencies) {
+			try {
+				if (!task.status.isAlternativeCompleted(task))
+					return;
 
-			} catch(IllegalStateException e){
-				if(!task.isFinished()) return;
+			} catch (IllegalStateException e) {
+				if (!task.isFinished())
+					return;
 			}
 
 		}
@@ -297,13 +296,17 @@ public class Task extends Subject {
 
 	}
 
-	protected boolean isAlternativeCompleted(){
-		if(this.alternative == null) return false;
-		if(this.alternative.isFinished()) return true;
-		if(this.alternative.isFailed()) return this.alternative.status.isAlternativeCompleted(alternative);
+	protected boolean isAlternativeCompleted() {
+		if (this.alternative == null)
+			return false;
+		if (this.alternative.isFinished())
+			return true;
+		if (this.alternative.isFailed())
+			return this.alternative.status.isAlternativeCompleted(alternative);
 		return false;
 
 	}
+
 	/**
 	 * Returns the total execution time for the task
 	 * 
@@ -343,7 +346,6 @@ public class Task extends Subject {
 	protected int performGetOverduePercentage() throws IllegalStateException {
 
 		int totalExecutedTime = this.performGetTotalExecutionTime();
-
 
 		return (totalExecutedTime - this.estimatedDuration)
 				/ this.estimatedDuration;
