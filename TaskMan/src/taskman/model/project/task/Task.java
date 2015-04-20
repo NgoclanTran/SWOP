@@ -1,11 +1,14 @@
 package taskman.model.project.task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.resource.ResourceType;
 import taskman.model.time.TimeSpan;
 
 public class Task extends Subject {
@@ -80,6 +83,7 @@ public class Task extends Subject {
 	private Status status;
 	private TimeSpan timeSpan;
 	private Task alternative = null;
+	private HashMap<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType, Integer>();
 
 	/**
 	 * Returns the description of the task
@@ -228,6 +232,16 @@ public class Task extends Subject {
 
 	protected void performAddAlternative(Task task) {
 		this.alternative = task;
+	}
+
+	// TODO Documentation
+	public Map<ResourceType, Integer> getRequiredResourceTypes() {
+		return new HashMap<ResourceType, Integer>(requiredResourceTypes);
+	}
+
+	// TODO Documentation
+	public void addRequiredResourceType(ResourceType resourceType, int amount) {
+		requiredResourceTypes.put(resourceType, amount);
 	}
 
 	/**
