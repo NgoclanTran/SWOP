@@ -3,7 +3,9 @@ package taskman.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeveloperHandler {
+import taskman.model.user.Developer;
+
+public class UserHandler {
 
 	public List<Developer> getDevelopers() {
 		return new ArrayList<Developer>(developers);

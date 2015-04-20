@@ -1,19 +1,24 @@
 package taskman.model.resource;
 
-import org.joda.time.DateTime;
-
+import taskman.model.project.task.Task;
 import taskman.model.project.task.TimeSpan;
 
 public class Reservation {
 
+	Task task;
 	TimeSpan timeSpan;
 
-	public Reservation(DateTime startTime, DateTime endTime) {
-		timeSpan = new TimeSpan(startTime, endTime);
+	public Reservation(Task task, TimeSpan timeSpan) {
+		this.task = task;
+		this.timeSpan = timeSpan;
 	}
 
 	public TimeSpan getTimeSpan() {
 		return timeSpan;
+	}
+
+	public Task getTask() {
+		return task;
 	}
 
 }

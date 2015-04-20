@@ -2,8 +2,11 @@ package taskman.model.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.LocalTime;
+
+import taskman.model.project.task.TimeSpan;
 
 public class ResourceType {
 
@@ -82,6 +85,16 @@ public class ResourceType {
 	public void addResource(String name) throws IllegalArgumentException {
 		Resource resource = new Resource(name);
 		resources.add(resource);
+	}
+
+	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
+		// TODO
+		return null;
+	}
+
+	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
+		// TODO
+		return null;
 	}
 
 }

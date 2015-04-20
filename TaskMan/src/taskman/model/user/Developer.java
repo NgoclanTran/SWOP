@@ -1,4 +1,4 @@
-package taskman.model;
+package taskman.model.user;
 
 public class Developer {
 

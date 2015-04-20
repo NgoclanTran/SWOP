@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 public class Clock {
 
-	DateTime systemTime;
+	private DateTime systemTime;
 
 	public Clock(DateTime systemTime) {
 		this.systemTime = new DateTime(systemTime);

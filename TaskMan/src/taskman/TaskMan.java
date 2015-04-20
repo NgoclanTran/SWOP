@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 
 import taskman.controller.MainSession;
-import taskman.model.DeveloperHandler;
+import taskman.model.UserHandler;
+import taskman.model.PlanningService;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
-import taskman.model.project.task.planning.PlanningService;
 import taskman.view.IView;
 import taskman.view.View;
 
 public class TaskMan {
 
 	public static IView commandLineInterface;
-	public static DeveloperHandler developerHandler;
+	public static UserHandler userHandler;
 	public static ResourceHandler resourceHandler;
 	public static ProjectHandler projectHandler;
 	public static PlanningService planningService;
@@ -25,10 +25,10 @@ public class TaskMan {
 	public static void main(String[] args) {
 		try {
 			commandLineInterface = new View();
-			developerHandler = new DeveloperHandler();
+			userHandler = new UserHandler();
 			projectHandler = new ProjectHandler();
 			resourceHandler = new ResourceHandler();
-			planningService = new PlanningService(developerHandler,
+			planningService = new PlanningService(userHandler,
 					projectHandler, resourceHandler);
 			controller = new MainSession(commandLineInterface, projectHandler);
 
@@ -53,5 +53,7 @@ public class TaskMan {
 		}
 
 	}
+	
+	//TODO getters for handlers and service
 
 }

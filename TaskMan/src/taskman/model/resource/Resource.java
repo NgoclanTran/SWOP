@@ -1,5 +1,11 @@
 package taskman.model.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import taskman.model.project.task.Task;
+import taskman.model.project.task.TimeSpan;
+
 public class Resource {
 
 	String name;
@@ -25,5 +31,20 @@ public class Resource {
 	public String getName() {
 		return this.name;
 	}
+
+	public boolean isAvailableAt(TimeSpan timeSpan) {
+		// TODO
+		return false;
+	}
+
+	public void addReservation(Task task, TimeSpan timeSpan) {
+		// TODO
+	}
+
+	public List<Reservation> getReservations() {
+		return new ArrayList<Reservation>(reservations);
+	}
+
+	private List<Reservation> reservations = new ArrayList<Reservation>();
 
 }
