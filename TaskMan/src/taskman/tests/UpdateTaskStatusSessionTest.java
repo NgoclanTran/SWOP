@@ -54,117 +54,117 @@ public class UpdateTaskStatusSessionTest {
 		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null);
 	}
 
-//	@Test
-//	public void useCase_NoTask(){
-//		IView cli = new View();
-//		ProjectHandler ph = new ProjectHandler();
-//		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph);
-//		session.run();
-//		String output ="No available tasks.\r\n\r\n";
-//		assertEquals(output,log.getLog());
-//
-//	}
-//
-//	@Test
-//	public void useCase_SelectTask_CancelCreation(){
-//		// ------------- Before running ---------------
-//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
-//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
-//
-//		// System has one task
-//		// Selection task
-//		// Enter incorrect input: a
-//		// Enter incorrect input : -1 
-//		// Enter incorrect input: 2 (system has only on task)
-//		// Cancel creation
-//
-//		systemInMock.provideText("a\n2\n-1\ncancel\n0");
-//		session.run();
-//
-//		//-------------- Check if nothing has changed or created ---------
-//		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
-//		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
-//	}
-//
-//	@Test
-//	public void useCase_FailedTask_Creation(){
-//		// ------------- Before running ---------------
-//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
-//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
-//
-//		// System has one task
-//		// Selection task
-//		// Select first task: 1
-//		// Enter task has failed: Y
-//		// Enter incorrect startTime: 14-10-205510:10
-//		// Enter incorrect startTime: 30-02-2015 10:10
-//		// Enter correct startTime: 21-04-2015 10:10
-//		// Enter correct endTime: 21-04-2015 12:10
-//
-//		systemInMock.provideText("1\n1\nY\n14-10-2055-10:10\n30-02-2015 10:10\n21-04-2015 10:10\n21-04-2015 12:10");
-//		session.run();
-//
-//		//-------------- Check if task has been updated ---------
-//		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
-//		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
-//		String lastMessage = log.getLog().substring(log.getLog().length()-17);
-//		assertEquals("Task updated.\r\n\r\n", lastMessage);
-//		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
-//		assertEquals(updatedTask.getStatusName(),"FAILED");
-//		assertEquals(updatedTask.getTimeSpan().getStartTime().getMinuteOfDay(),610);
-//		assertEquals(updatedTask.getTimeSpan().getEndTime().getMinuteOfDay(),730); //(12:10 -> 730 min)
-//
-//	}
-//	@Test
-//	public void useCase_FinishedTask_Creation(){
-//		// ------------- Before running ---------------
-//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
-//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
-//
-//		// System has one task
-//		// Selection task
-//		// Select first task: 1
-//		// Enter task has failed: N
-//		// Enter correct startTime: 21-04-2015 10:10
-//		// Enter incorrect endTime: 14-10-205510:10
-//		// Enter incorrect endTime: 30-02-2015 10:10
-//		// Enter correct endTime: 21-04-2015 12:10
-//
-//		systemInMock.provideText("1\n1\nN\n21-04-2015 10:10\n14-10-2055-10:10\n30-02-2015 10:10\n21-04-2015 12:10");
-//		session.run();
-//
-//		//-------------- Check if task has been updated  ---------
-//		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
-//		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
-//		String lastMessage = log.getLog().substring(log.getLog().length()-17);
-//		assertEquals("Task updated.\r\n\r\n", lastMessage);
-//		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
-//		assertEquals(updatedTask.getStatusName(),"FINISHED");
-//		assertEquals(updatedTask.getTimeSpan().getStartTime().getMinuteOfDay(),610);
-//		assertEquals(updatedTask.getTimeSpan().getEndTime().getMinuteOfDay(),730); //(12:10 -> 730 min)
-//	}
-//	@Test
-//	public void useCase_SelectStatus_Cancel(){
-//		// ------------- Before running ---------------
-//		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
-//		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
-//
-//		// System has one task
-//		// Selection task
-//		// Select first task: 1
-//		// Cancel creation when selecting status
-//
-//
-//		systemInMock.provideText("1\n1\ncancel\n0");
-//		session.run();
-//
-//		//-------------- Check if task has been updated ---------
-//		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
-//		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
-//		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
-//		assertEquals(updatedTask.getStatusName(),"AVAILABLE");
-//
-//	}
+	@Test
+	public void useCase_NoTask(){
+		IView cli = new View();
+		ProjectHandler ph = new ProjectHandler();
+		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph);
+		session.run();
+		String output ="No available tasks.\r\n\r\n";
+		assertEquals(output,log.getLog());
+
+	}
+
+	@Test
+	public void useCase_SelectTask_CancelCreation(){
+		// ------------- Before running ---------------
+		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
+		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
+
+		// System has one task
+		// Selection task
+		// Enter incorrect input: a
+		// Enter incorrect input : -1 
+		// Enter incorrect input: 2 (system has only on task)
+		// Cancel creation
+
+		systemInMock.provideText("a\n2\n-1\ncancel\n0");
+		session.run();
+
+		//-------------- Check if nothing has changed or created ---------
+		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
+		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
+	}
+
+	@Test
+	public void useCase_FailedTask_Creation(){
+		// ------------- Before running ---------------
+		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
+		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
+
+		// System has one task
+		// Selection task
+		// Select first task: 1
+		// Enter task has failed: Y
+		// Enter incorrect startTime: 14-10-205510:10
+		// Enter incorrect startTime: 30-02-2015 10:10
+		// Enter correct startTime: 21-04-2015 10:10
+		// Enter correct endTime: 21-04-2015 12:10
+
+		systemInMock.provideText("1\n1\nY\n14-10-2055-10:10\n30-02-2015 10:10\n21-04-2015 10:10\n21-04-2015 12:10");
+		session.run();
+
+		//-------------- Check if task has been updated ---------
+		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
+		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
+		String lastMessage = log.getLog().substring(log.getLog().length()-17);
+		assertEquals("Task updated.\r\n\r\n", lastMessage);
+		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
+		assertEquals(updatedTask.getStatusName(),"FAILED");
+		assertEquals(updatedTask.getTimeSpan().getStartTime().getMinuteOfDay(),610);
+		assertEquals(updatedTask.getTimeSpan().getEndTime().getMinuteOfDay(),730); //(12:10 -> 730 min)
+
+	}
+	@Test
+	public void useCase_FinishedTask_Creation(){
+		// ------------- Before running ---------------
+		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
+		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
+
+		// System has one task
+		// Selection task
+		// Select first task: 1
+		// Enter task has failed: N
+		// Enter correct startTime: 21-04-2015 10:10
+		// Enter incorrect endTime: 14-10-205510:10
+		// Enter incorrect endTime: 30-02-2015 10:10
+		// Enter correct endTime: 21-04-2015 12:10
+
+		systemInMock.provideText("1\n1\nN\n21-04-2015 10:10\n14-10-2055-10:10\n30-02-2015 10:10\n21-04-2015 12:10");
+		session.run();
+
+		//-------------- Check if task has been updated  ---------
+		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
+		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
+		String lastMessage = log.getLog().substring(log.getLog().length()-17);
+		assertEquals("Task updated.\r\n\r\n", lastMessage);
+		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
+		assertEquals(updatedTask.getStatusName(),"FINISHED");
+		assertEquals(updatedTask.getTimeSpan().getStartTime().getMinuteOfDay(),610);
+		assertEquals(updatedTask.getTimeSpan().getEndTime().getMinuteOfDay(),730); //(12:10 -> 730 min)
+	}
+	@Test
+	public void useCase_SelectStatus_Cancel(){
+		// ------------- Before running ---------------
+		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects().get(0).getTasks();
+		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects().get(1).getTasks();
+
+		// System has one task
+		// Selection task
+		// Select first task: 1
+		// Cancel creation when selecting status
+
+
+		systemInMock.provideText("1\n1\ncancel\n0");
+		session.run();
+
+		//-------------- Check if task has been updated ---------
+		assertEquals(session.getPH().getProjects().get(0).getTasks(), tasksOfProject1);
+		assertEquals(session.getPH().getProjects().get(1).getTasks(), tasksOfProject2);
+		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
+		assertEquals(updatedTask.getStatusName(),"AVAILABLE");
+
+	}
 
 	// TODO TASK
 	// Task update his status before checking his timespan
