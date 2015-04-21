@@ -12,7 +12,6 @@ import java.util.Scanner;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
 
 import taskman.controller.project.CreateTaskSession;
 import taskman.model.ProjectHandler;
