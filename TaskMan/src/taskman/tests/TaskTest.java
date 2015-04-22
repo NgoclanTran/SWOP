@@ -68,12 +68,6 @@ public class TaskTest {
 		Task t = new Task(description, estimatedDuration, -10, dependencies,
 				null);
 	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor2Test_FalseCase_dependencies() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
-				null, null);
-	}
 	
 	@Test
 	public void constructorTest_WithAlternative(){

@@ -2,6 +2,7 @@ package taskman.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -13,19 +14,14 @@ import taskman.model.time.TimeSpan;
 
 public class PlanningService {
 
-	UserHandler uh;
-	ProjectHandler ph;
 	ResourceHandler rh;
 	IClock clock = Clock.getInstance();
 
-	public PlanningService(UserHandler uh, ProjectHandler ph, ResourceHandler rh) {
-		this.uh = uh;
-		this.ph = ph;
+	public PlanningService(ResourceHandler rh) {
 		this.rh = rh;
 	}
 
-	// TODO Documentation
-	public List<DateTime> getPossibleStartTimes(Task task, int amount,
+	public Set<DateTime> getPossibleStartTimes(Task task, int amount,
 			DateTime earliestPossibleStartTime) {
 		// TODO
 		return null;

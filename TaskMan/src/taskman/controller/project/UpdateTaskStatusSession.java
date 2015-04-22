@@ -6,6 +6,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import taskman.controller.Session;
+import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
@@ -206,13 +207,16 @@ public class UpdateTaskStatusSession extends Session {
 		try {
 			task.addTimeSpan(isFailed, startTime, endTime);
 			;
-			getUI().displayInfo("Task updated");
+			getUI().displayInfo("Task updated.");
 			return true;
 		} catch (IllegalArgumentException argEx) {
 			getUI().displayError(argEx.getMessage());
 			return false;
 		} catch (NullPointerException nullEx) {
 			getUI().displayError(nullEx.getMessage());
+			return false;
+		} catch( IllegalDateException DateEx){
+			getUI().displayError(DateEx.getMessage());
 			return false;
 		}
 	}

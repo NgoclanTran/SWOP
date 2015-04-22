@@ -9,6 +9,7 @@ public class Clock implements IClock {
 	private static Clock systemClock = new Clock();
 
 	public Clock() {
+		systemTime = new DateTime(0);
 	}
 
 	public static Clock getInstance() {
