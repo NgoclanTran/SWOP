@@ -1,16 +1,22 @@
 package taskman.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
+import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import org.mockito.Mockito;
 
+import taskman.controller.project.CreateProjectSession;
 import taskman.controller.project.ShowProjectSession;
 import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
@@ -19,53 +25,46 @@ import taskman.view.IView;
 import taskman.view.View;
 
 public class ShowProjectSessionTest {
-	private IView cli;
-	private ProjectHandler ph;
-	private ShowProjectSession session;
-	private String description;
-	private int estimatedDuration ;
-	private int acceptableDeviation ;
-	private ArrayList<Task> dependencies;
-	private Project p;
-	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private IView cli,cli1;
+	private ProjectHandler ph, ph1;
+	private ShowProjectSession session, session1;
 
-	// This use case cannot be tested. It's working with output, but the outputs buffers are flushed everytime.
-	
+	@Rule
+	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
+
+	@Rule
+	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+
 	@Before
-	public void setUp() throws Exception {
-		cli = Mockito.mock(View.class);
+	public void setup() {
+		
+		// Session with projects
+		cli = new View();
 		ph = new ProjectHandler();
 		session = new ShowProjectSession(cli, ph);
-		description = "description";
-		estimatedDuration = 10;
-		acceptableDeviation = 11;
-		dependencies = new ArrayList<Task>();
-		System.setOut(new PrintStream(outContent));
-	}
-
-	@Test
-	public void showProjectTest_NoProjects(){
-		session.run();
-		assertEquals(outContent.toString(),"Select an option:");
+		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
+		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
+		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null);
+		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null);
+		 
+		// Session without projects
+		cli1 = new View();
+		ph1 = new ProjectHandler();
+		session1 = new ShowProjectSession(cli1, ph1);
+		
 	}
 	
-	@Test
-	public void showProjectTest_OngoingProjects(){
-//		System.out.print("test");
-//		assertEquals(outContent.toString(),"test");
+	@Test public void useCaseTest_NoProjects(){
+		session1.run();
+		assertEquals("No projects.\r\n\r\n", log.getLog());
 	}
 	
 	@Test 
-	public void showProjectTest_DifferentTasks(){
-		
+	public void useCaseTest_WithProjects(){
+		systemInMock.provideText("1\n1");
+		session.run();
+		assertEquals(log.getLog().substring(286),"Task:\r\n\tTask description\r\n\tStatus: AVAILABLE\r\n\r\n\r\n");
 	}
 
-	
-	
-	
-	@After
-	public void cleanUpStreams() {
-	    System.setOut(null);
-	}
 
 }

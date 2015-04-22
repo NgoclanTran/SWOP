@@ -1,6 +1,7 @@
 package taskman.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.util.ArrayList;
@@ -40,18 +41,18 @@ public class CreateProjectSessionTest {
 
 	}
 
-//	@Test
-//	public void useCaseTest_Name_Cancelcreation(){
-//		// -------- Before running ----------
-//		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-//
-//		systemInMock.provideText("cancel");
-//		session.run();
-//		assertEquals(ph.getProjects(), projects);
-//		String lastMessage = log.getLog().substring(0, 42);
-//		assertEquals("Enter the name of the project (or cancel):", lastMessage);
-//
-//	}
+		@Test
+		public void useCaseTest_Name_Cancelcreation(){
+			// -------- Before running ----------
+			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+	
+			systemInMock.provideText("cancel");
+			session.run();
+			assertEquals(ph.getProjects(), projects);
+			String lastMessage = log.getLog().substring(0, 42);
+			assertEquals("Enter the name of the project (or cancel):", lastMessage);
+	
+		}
 
 	@Test
 	public void useCaseTest_Description_Cancelcreation(){
@@ -60,13 +61,13 @@ public class CreateProjectSessionTest {
 
 		systemInMock.provideText("name\ncancel");
 		session.run();
-		
+
 		// --------- Check if nothing has changed or created --------------
 		assertEquals(ph.getProjects(), projects);
 		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\n", log.getLog());
 
 	}
-	
+
 	@Test 
 	public void useCaseTest_DueTime_CancelCreation(){
 		// -------- Before running ----------
@@ -74,15 +75,32 @@ public class CreateProjectSessionTest {
 
 		systemInMock.provideText("name\n21-04-201511:11\n21-04-2015 10:10\ncancel");
 		session.run();
-		
+
 		// --------- Check if nothing has changed or created --------------
 		assertEquals(ph.getProjects(), projects);
 		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nDue time has to be after creation time.\r\n\r\nEnter the name of the project (or cancel):\r\n\r\n\r\n", log.getLog());
 	}
-	
+
 	@Test
 	public void useCaseTest_SuccesScenario(){
+		// -------- Before running ----------
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+
+		systemInMock.provideText("name\ndescription\n21-04-2016 12:10\ncancel");
+		session.run();
+
+		// --------- Check if project is created --------------
 		
+		assertNotEquals(ph.getProjects(), projects);
+		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nProject created\r\n\r\n", log.getLog());
+		
+		Project p = (ph.getProjects().get(ph.getProjects().size()-1)); //Last created project
+		assertEquals(p.getDescription(), "description");
+		assertEquals(p.getDueTime().getDayOfMonth(),21);
+		assertEquals(p.getDueTime().getMonthOfYear(), 04);
+		assertEquals(p.getDueTime().getYear(),2016);
+		assertEquals(p.getDueTime().getMinuteOfDay(),730);
+
 	}
 
 }
