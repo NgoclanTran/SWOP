@@ -25,7 +25,17 @@ public class PlanningService {
 		this.rh = rh;
 	}
 
-	// TODO Documentation
+	/**
+	 * Returns a set of possible starting times for the task. These are the
+	 * (amount) first times that the required resources for the task are
+	 * available starting from the earliest possible starting time.
+	 * 
+	 * @param task
+	 * @param amount
+	 * @param earliestPossibleStartTime
+	 * 
+	 * @return Returns a set of possible starting times for the task.
+	 */
 	public Set<DateTime> getPossibleStartTimes(Task task, int amount,
 			DateTime earliestPossibleStartTime) {
 		if (task == null)
@@ -52,7 +62,17 @@ public class PlanningService {
 		return possibleStartTimes;
 	}
 
-	// TODO Documentation
+	/**
+	 * Checks if the timespan is valid for the task. It is valid if it is after
+	 * the earliest possible starting time and all the required resources are
+	 * available for the entire duration.
+	 * 
+	 * @param task
+	 * @param timeSpan
+	 * @param earliestPossibleStartTime
+	 * 
+	 * @return Returns whether or not the timespan is valid for the task.
+	 */
 	public boolean isValidTimeSpan(Task task, TimeSpan timeSpan,
 			DateTime earliestPossibleStartTime) {
 		if (task == null)

@@ -234,14 +234,54 @@ public class Task extends Subject {
 		this.alternative = task;
 	}
 
-	// TODO Documentation
+	/**
+	 * Returns the map of required resource types for the task.
+	 * 
+	 * @return Returns the map of required resource types for the task.
+	 */
 	public Map<ResourceType, Integer> getRequiredResourceTypes() {
 		return new HashMap<ResourceType, Integer>(requiredResourceTypes);
 	}
 
-	// TODO Documentation
+	/**
+	 * Adds the resource type if the required resource types are already added
+	 * and no conflicting resource type has been added.
+	 * 
+	 * @param resourceType
+	 * @param amount
+	 */
 	public void addRequiredResourceType(ResourceType resourceType, int amount) {
+		if (checkResourceTypeConflicts(resourceType))
+			throw new IllegalArgumentException(
+					"Conflicting resource already added.");
+		if (!checkResourceTypeRequirements(resourceType))
+			throw new IllegalArgumentException(
+					"Required resource has to be added first.");
 		requiredResourceTypes.put(resourceType, amount);
+	}
+
+	private boolean checkResourceTypeConflicts(ResourceType resourceType) {
+		List<ResourceType> conflicts = resourceType.getConflictsWith();
+		if (conflicts != null) {
+			for (ResourceType conflictingResourceType : conflicts) {
+				if (requiredResourceTypes.containsKey(conflictingResourceType)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean checkResourceTypeRequirements(ResourceType resourceType) {
+		List<ResourceType> requirements = resourceType.getRequires();
+		if (requirements != null) {
+			for (ResourceType requiredResourceType : requirements) {
+				if (!requiredResourceTypes.containsKey(requiredResourceType)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

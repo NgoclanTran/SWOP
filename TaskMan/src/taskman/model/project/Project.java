@@ -176,7 +176,7 @@ public class Project implements Observer {
 		return this.state.getEstimatedFinishTime(this);
 	}
 
-	// TODO: Documentation + testing
+	// TODO Testing
 	protected DateTime performGetEstimatedFinishTime() {
 		DateTime lastEndTime = getFirstStartTime();
 		int minutesToAdd = 0;
@@ -208,7 +208,7 @@ public class Project implements Observer {
 		}
 		if (firstStartTime.getDayOfWeek() == 6)
 			firstStartTime = firstStartTime.plusDays(2);
-		else if(firstStartTime.getDayOfWeek() == 7)
+		else if (firstStartTime.getDayOfWeek() == 7)
 			firstStartTime = firstStartTime.plusDays(1);
 		return firstStartTime;
 	}

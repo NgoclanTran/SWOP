@@ -86,7 +86,16 @@ public class ResourceType {
 		resources.add(resource);
 	}
 
-	// TODO Documentation
+	/**
+	 * Returns a list of resources that are suggested by the system to perform
+	 * the task in the given timespan.
+	 * 
+	 * @param timeSpan
+	 * @param amount
+	 * 
+	 * @return Returns a list of resources that are suggested by the system to
+	 *         perform the task in the given timespan.
+	 */
 	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
 		ArrayList<Resource> suggestedResources = new ArrayList<Resource>();
 		for (int i = 0; i < amount; i++) {
@@ -95,7 +104,15 @@ public class ResourceType {
 		return suggestedResources;
 	}
 
-	// TODO Documentation
+	/**
+	 * Returns a list of all resources of this resource type that are available
+	 * in the given timespan.
+	 * 
+	 * @param timeSpan
+	 * 
+	 * @return Returns a list of all resources of this resource type that are
+	 *         available in the given timespan.
+	 */
 	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
 		ArrayList<Resource> availableResources = new ArrayList<Resource>();
 		for (Resource resource : resources) {
@@ -111,11 +128,6 @@ public class ResourceType {
 		return availableResources;
 	}
 
-	/**
-	 * @param timeSpan
-	 * @param conflicts
-	 * @return
-	 */
 	private boolean checkRequiredResourceTypes(TimeSpan timeSpan) {
 		for (ResourceType resourceType : requires) {
 			if (resourceType.getAvailableResources(timeSpan).size() > 0) {
