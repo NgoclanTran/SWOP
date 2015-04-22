@@ -10,10 +10,10 @@ import taskman.model.time.TimeSpan;
 public class ResourceType {
 
 	String name;
-	List<ResourceType> requires;
-	List<ResourceType> conflictsWith;
+	List<ResourceType> requires = new ArrayList<ResourceType>();
+	List<ResourceType> conflictsWith = new ArrayList<ResourceType>();
 	DailyAvailability dailyAvailability;
-	List<Resource> resources;
+	List<Resource> resources = new ArrayList<Resource>();
 
 	/**
 	 * Creates a new resource type with the given name, and optionally other
@@ -33,9 +33,16 @@ public class ResourceType {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		this.name = name;
-		this.requires = requires;
-		this.conflictsWith = conflictsWith;
-		this.dailyAvailability = new DailyAvailability(startTime, endTime);
+		if (requires != null)
+			this.requires.addAll(requires);
+		if (conflictsWith != null)
+			this.conflictsWith.addAll(conflictsWith);
+		if (startTime == null && endTime == null)
+			this.dailyAvailability = new DailyAvailability(new LocalTime(0, 0), new LocalTime(0, 0));
+		else if (startTime != null && endTime != null)
+			this.dailyAvailability = new DailyAvailability(startTime, endTime);
+		else
+			throw new IllegalArgumentException("Both the start time and end time need to be a localtime or null.");
 	}
 
 	/**

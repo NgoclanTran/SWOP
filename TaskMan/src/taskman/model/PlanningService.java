@@ -51,6 +51,7 @@ public class PlanningService {
 		while (possibleStartTimes.size() < amount) {
 			possibleStartTimes.add(startTime);
 			startTime = startTime.plusHours(1);
+			//TODO: De vaste uren laten vragen aan de daily availability van developer
 			if (startTime.getHourOfDay() == 17) {
 				startTime = startTime.plusHours(15);
 			}
