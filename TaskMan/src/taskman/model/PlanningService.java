@@ -23,7 +23,7 @@ public class PlanningService {
 
 	public Set<DateTime> getPossibleStartTimes(Task task, int amount,
 			DateTime earliestPossibleStartTime) {
-		// TODO
+		// TODO First check if there are enough resources before getting their reservations
 		return null;
 	}
 

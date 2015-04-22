@@ -15,6 +15,7 @@ import taskman.model.PlanningService;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
+import taskman.model.resource.Resource;
 import taskman.model.time.TimeSpan;
 
 public class PlanningServiceTest {
@@ -22,6 +23,8 @@ public class PlanningServiceTest {
 	ProjectHandler ph;
 	ResourceHandler rh;
 	PlanningService planning;
+	DateTime startTime;
+	TimeSpan firstTimeSpan;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -29,8 +32,32 @@ public class PlanningServiceTest {
 		rh = new ResourceHandler();
 		planning = new PlanningService(rh);
 		
-		ph.addProject("PlanningService", "Test", new DateTime(2015,1,1,8,0), new DateTime(2015,2,1,17,0));
-		ph.getProjects().get(0).addTask("PlanningServiceTest", 60, 0, null, null);
+		startTime = new DateTime(2015,1,1,8,0);
+		
+		ph.addProject("PlanningService", "Test", startTime, new DateTime(2015,2,1,17,0));
+		
+		ph.getProjects().get(0).addTask("PlanningServiceTest no requirements", 60, 0, null, null);
+		
+		rh.addResourceType("Car", null, null, null, null);
+		rh.getResourceTypes().get(0).addResource("Car 1");
+		
+		rh.addResourceType("Server", null, null, null, null);
+		rh.getResourceTypes().get(1).addResource("Server 1");
+		rh.getResourceTypes().get(1).addResource("Server 2");
+		
+		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 1", 60, 0, null, null);
+		ph.getProjects().get(0).getTasks().get(1).addRequiredResourceType(rh.getResourceTypes().get(0), 2);
+		
+		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 2", 60, 0, null, null);
+		ph.getProjects().get(0).getTasks().get(2).addRequiredResourceType(rh.getResourceTypes().get(1), 2);
+		
+		firstTimeSpan = new TimeSpan(startTime, startTime.plusMinutes(ph.getProjects().get(0).getTasks().get(2).getEstimatedDuration()));
+		for (Resource resource : rh.getResourceTypes().get(1).getSuggestedResources(firstTimeSpan, 2)) {
+			resource.addReservation(ph.getProjects().get(0).getTasks().get(2), firstTimeSpan);
+		}
+		
+		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 3", 60, 0, null, null);
+		ph.getProjects().get(0).getTasks().get(3).addRequiredResourceType(rh.getResourceTypes().get(1), 2);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -66,11 +93,17 @@ public class PlanningServiceTest {
 		Set<DateTime> startTimes = planning.getPossibleStartTimes(task, amount, new DateTime(2015,1,15,10,0));
 		assertEquals(expectedStartTimes, startTimes);
 	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void testGetPossibleStartTimesNotEnoughResources() {
+		int amount = 3;
+		Task task = ph.getProjects().get(0).getTasks().get(1);
+		planning.getPossibleStartTimes(task, amount, null);
+	}
 
 	@Test
 	public void testIsValidTimeSpan() {
 		Task task = ph.getProjects().get(0).getTasks().get(0);
-		DateTime startTime = new DateTime(2015,1,1,8,0);
 		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
 		assertTrue(planning.isValidTimeSpan(task, timeSpan, null));
 	}
@@ -78,12 +111,35 @@ public class PlanningServiceTest {
 	@Test
 	public void testIsValidTimeSpanAfter20150115() {
 		Task task = ph.getProjects().get(0).getTasks().get(0);
-		DateTime startTime = new DateTime(2015,1,1,8,0);
 		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
 		assertFalse(planning.isValidTimeSpan(task, timeSpan, new DateTime(2015,1,15,10,0)));
 		startTime = new DateTime(2015,1,15,16,0);
 		timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
 		assertTrue(planning.isValidTimeSpan(task, timeSpan, new DateTime(2015,1,15,10,0)));
 	}
-
+	
+	
+	@Test
+	public void testIsValidTimeSpanNotEnoughResources() {
+		Task task = ph.getProjects().get(0).getTasks().get(1);
+		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
+		assertFalse(planning.isValidTimeSpan(task, timeSpan, null));
+	}
+	
+	@Test
+	public void testIsValidTimeSpanResourceReserverd() {
+		Task task3 = ph.getProjects().get(0).getTasks().get(2);
+		Task task4 = ph.getProjects().get(0).getTasks().get(3);
+		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task4.getEstimatedDuration()));
+		assertFalse(planning.isValidTimeSpan(task4, timeSpan, null));
+	}
+	
+	@Test
+	public void testIsValidTimeSpanResourceFree() {
+		Task task3 = ph.getProjects().get(0).getTasks().get(2);
+		Task task4 = ph.getProjects().get(0).getTasks().get(3);
+		DateTime newStartTime = startTime.plusMinutes(task3.getEstimatedDuration());
+		TimeSpan timeSpan = new TimeSpan(newStartTime, newStartTime.plusMinutes(task4.getEstimatedDuration()));
+		assertTrue(planning.isValidTimeSpan(task4, timeSpan, null));
+	}
 }
