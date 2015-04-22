@@ -2,7 +2,6 @@ package taskman.model.resource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.joda.time.LocalTime;
 
@@ -90,6 +89,9 @@ public class ResourceType {
 	// TODO Documentation
 	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
 		ArrayList<Resource> suggestedResources = new ArrayList<Resource>();
+		for (int i = 0; i < amount; i++) {
+			suggestedResources.add(getAvailableResources(timeSpan).get(i));
+		}
 		return suggestedResources;
 	}
 
@@ -97,11 +99,29 @@ public class ResourceType {
 	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
 		ArrayList<Resource> availableResources = new ArrayList<Resource>();
 		for (Resource resource : resources) {
-			if (resource.isAvailableAt(timeSpan)) {
+			boolean available = resource.isAvailableAt(timeSpan);
+			boolean requirements = false;
+			if (requires != null) {
+				requirements = checkRequiredResourceTypes(timeSpan);
+			}
+			if (available && requirements) {
 				availableResources.add(resource);
 			}
 		}
 		return availableResources;
 	}
 
+	/**
+	 * @param timeSpan
+	 * @param conflicts
+	 * @return
+	 */
+	private boolean checkRequiredResourceTypes(TimeSpan timeSpan) {
+		for (ResourceType resourceType : requires) {
+			if (resourceType.getAvailableResources(timeSpan).size() > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

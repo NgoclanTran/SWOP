@@ -1,33 +1,22 @@
 package taskman.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Scanner;
-
-
-
-
 
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Test;
-
-import taskman.controller.project.CreateTaskSession;
-import taskman.controller.project.UpdateTaskStatusSession;
-import taskman.model.ProjectHandler;
-import taskman.model.project.Project;
-import taskman.model.project.task.Task;
-import taskman.view.IView;
-import taskman.view.View;
-import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
+
+import taskman.controller.project.UpdateTaskStatusSession;
+import taskman.model.ProjectHandler;
+import taskman.model.project.task.Task;
+import taskman.view.IView;
+import taskman.view.View;
 
 public class UpdateTaskStatusSessionTest {
 

@@ -28,8 +28,7 @@ public class TaskMan {
 			userHandler = new UserHandler();
 			projectHandler = new ProjectHandler();
 			resourceHandler = new ResourceHandler();
-			planningService = new PlanningService(userHandler, projectHandler,
-					resourceHandler);
+			planningService = new PlanningService(resourceHandler);
 			controller = new MainSession(commandLineInterface, projectHandler);
 
 			projectHandler.addProject("Project x", "Test project 1",
