@@ -93,19 +93,42 @@ public class ResourceType {
 		resources.add(resource);
 	}
 
+	// TODO Documentation
 	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
 		ArrayList<Resource> suggestedResources = new ArrayList<Resource>();
+		for (int i = 0; i < amount; i++) {
+			suggestedResources.add(getAvailableResources(timeSpan).get(i));
+		}
 		return suggestedResources;
 	}
 
+	// TODO Documentation
 	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
 		ArrayList<Resource> availableResources = new ArrayList<Resource>();
 		for (Resource resource : resources) {
-			if (resource.isAvailableAt(timeSpan)) {
+			boolean available = resource.isAvailableAt(timeSpan);
+			boolean requirements = false;
+			if (requires != null) {
+				requirements = checkRequiredResourceTypes(timeSpan);
+			}
+			if (available && requirements) {
 				availableResources.add(resource);
 			}
 		}
 		return availableResources;
 	}
 
+	/**
+	 * @param timeSpan
+	 * @param conflicts
+	 * @return
+	 */
+	private boolean checkRequiredResourceTypes(TimeSpan timeSpan) {
+		for (ResourceType resourceType : requires) {
+			if (resourceType.getAvailableResources(timeSpan).size() > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

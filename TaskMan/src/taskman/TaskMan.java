@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 
 import taskman.controller.MainSession;
-import taskman.model.PlanningService;
 import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
 import taskman.view.View;
@@ -18,7 +16,7 @@ public class TaskMan {
 		try {
 			IView commandLineInterface = new View();
 			ProjectHandler projectHandler = new ProjectHandler();
-			ResourceHandler resourceHandler = new ResourceHandler();
+			// ResourceHandler resourceHandler = new ResourceHandler();
 			MainSession controller = new MainSession(commandLineInterface, projectHandler);
 
 			projectHandler.addProject("Project x", "Test project 1",
