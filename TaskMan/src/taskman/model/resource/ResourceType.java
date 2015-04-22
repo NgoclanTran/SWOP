@@ -87,11 +87,13 @@ public class ResourceType {
 		resources.add(resource);
 	}
 
+	// TODO Documentation
 	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
 		ArrayList<Resource> suggestedResources = new ArrayList<Resource>();
 		return suggestedResources;
 	}
 
+	// TODO Documentation
 	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
 		ArrayList<Resource> availableResources = new ArrayList<Resource>();
 		for (Resource resource : resources) {
