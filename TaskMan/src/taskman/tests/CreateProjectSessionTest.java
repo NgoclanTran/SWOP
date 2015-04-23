@@ -95,6 +95,7 @@ public class CreateProjectSessionTest {
 		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nProject created\r\n\r\n", log.getLog());
 		
 		Project p = (ph.getProjects().get(ph.getProjects().size()-1)); //Last created project
+		assertEquals(p.getName(), "name");
 		assertEquals(p.getDescription(), "description");
 		assertEquals(p.getDueTime().getDayOfMonth(),21);
 		assertEquals(p.getDueTime().getMonthOfYear(), 04);
@@ -102,5 +103,104 @@ public class CreateProjectSessionTest {
 		assertEquals(p.getDueTime().getMinuteOfDay(),730);
 
 	}
+	@Test
+	public void useCaseTest_DueTime_WrongInputLoopTest(){
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+
+		systemInMock.provideText("name\ndescription\nfoutedatum\n21-04-2016 12:10\ncancel");
+		session.run();
+
+		// --------- Check if project is created --------------
+	
+		assertNotEquals(ph.getProjects(), projects);
+		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nProject created\r\n\r\n", log.getLog());
+	
+		Project p = (ph.getProjects().get(ph.getProjects().size()-1)); //Last created project
+		assertEquals(p.getName(), "name");
+		assertEquals(p.getDescription(), "description");
+		assertEquals(p.getDueTime().getDayOfMonth(),21);
+		assertEquals(p.getDueTime().getMonthOfYear(), 04);
+		assertEquals(p.getDueTime().getYear(),2016);
+		assertEquals(p.getDueTime().getMinuteOfDay(),730);
+	}
+	@Test
+	public void useCaseTest_SuccesScenario_BlankName(){
+		// -------- Before running ----------
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+
+		systemInMock.provideText("\ndescription\n21-04-2016 12:10\ncancel");
+		session.run();
+
+		// --------- Check if project is created --------------
+		
+		assertNotEquals(ph.getProjects(), projects);
+		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nProject created\r\n\r\n", log.getLog());
+		
+		Project p = (ph.getProjects().get(ph.getProjects().size()-1)); //Last created project
+		assertEquals(p.getName(), "");
+		assertEquals(p.getDescription(), "description");
+		assertEquals(p.getDueTime().getDayOfMonth(),21);
+		assertEquals(p.getDueTime().getMonthOfYear(), 04);
+		assertEquals(p.getDueTime().getYear(),2016);
+		assertEquals(p.getDueTime().getMinuteOfDay(),730);
+
+	}
+	@Test
+	public void useCaseTest_SuccesScenario_BlankDescription(){
+		// -------- Before running ----------
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+
+		systemInMock.provideText("name\n\n21-04-2016 12:10\ncancel");
+		session.run();
+
+		// --------- Check if project is created --------------
+		
+		assertNotEquals(ph.getProjects(), projects);
+		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nProject created\r\n\r\n", log.getLog());
+		
+		Project p = (ph.getProjects().get(ph.getProjects().size()-1)); //Last created project
+		assertEquals(p.getName(), "name");
+		assertEquals(p.getDescription(), "");
+		assertEquals(p.getDueTime().getDayOfMonth(),21);
+		assertEquals(p.getDueTime().getMonthOfYear(), 04);
+		assertEquals(p.getDueTime().getYear(),2016);
+		assertEquals(p.getDueTime().getMinuteOfDay(),730);
+
+	}
+	@Test
+	public void useCaseTest_SuccesScenario_BlankDueTimeRepeatUntilProperInput(){
+		// -------- Before running ----------
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+
+		systemInMock.provideText("name\ndescription\n\n\n21-04-2016 12:10\ncancel");
+		session.run();
+
+		// --------- Check if project is created --------------
+		
+		assertNotEquals(ph.getProjects(), projects);
+		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nProject created\r\n\r\n", log.getLog());
+		
+		Project p = (ph.getProjects().get(ph.getProjects().size()-1)); //Last created project
+		assertEquals(p.getName(), "name");
+		assertEquals(p.getDescription(), "description");
+		assertEquals(p.getDueTime().getDayOfMonth(),21);
+		assertEquals(p.getDueTime().getMonthOfYear(), 04);
+		assertEquals(p.getDueTime().getYear(),2016);
+		assertEquals(p.getDueTime().getMinuteOfDay(),730);
+
+	}
+	@Test
+	public void useCaseTest_DueTimeBeforeStartTime_NoCreation(){
+		// -------- Before running ----------
+		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
+
+		systemInMock.provideText("name\ndescription\n20-10-2000 12:10\ncancel");
+		session.run();
+
+		// --------- Check if nothing has changed or created --------------
+		assertEquals(ph.getProjects(), projects);
+
+	}
+
 
 }
