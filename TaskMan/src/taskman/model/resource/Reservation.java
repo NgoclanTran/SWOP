@@ -9,6 +9,8 @@ public class Reservation {
 	TimeSpan timeSpan;
 
 	public Reservation(Task task, TimeSpan timeSpan) {
+		if(task == null) throw new NullPointerException("The given task is null.");
+		if(timeSpan == null) throw new NullPointerException("The given timeSpan is null.");
 		this.task = task;
 		this.timeSpan = timeSpan;
 	}

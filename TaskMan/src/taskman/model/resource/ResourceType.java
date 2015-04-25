@@ -12,7 +12,6 @@ public class ResourceType {
 	String name;
 	List<ResourceType> requires = new ArrayList<ResourceType>();
 	List<ResourceType> conflictsWith = new ArrayList<ResourceType>();
-	DailyAvailability dailyAvailability;
 	List<Resource> resources = new ArrayList<Resource>();
 
 	/**
@@ -28,8 +27,7 @@ public class ResourceType {
 	 * @throws IllegalArgumentException
 	 */
 	public ResourceType(String name, List<ResourceType> requires,
-			List<ResourceType> conflictsWith, LocalTime startTime,
-			LocalTime endTime) throws IllegalArgumentException {
+			List<ResourceType> conflictsWith) throws IllegalArgumentException {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		this.name = name;
@@ -37,12 +35,7 @@ public class ResourceType {
 			this.requires.addAll(requires);
 		if (conflictsWith != null)
 			this.conflictsWith.addAll(conflictsWith);
-		if (startTime == null && endTime == null)
-			this.dailyAvailability = new DailyAvailability(new LocalTime(0, 0), new LocalTime(0, 0));
-		else if (startTime != null && endTime != null)
-			this.dailyAvailability = new DailyAvailability(startTime, endTime);
-		else
-			throw new IllegalArgumentException("Both the start time and end time need to be a localtime or null.");
+		
 	}
 
 	/**
@@ -73,23 +66,14 @@ public class ResourceType {
 	}
 
 	/**
-	 * Returns the daily availability of the resource type.
-	 * 
-	 * @return Returns the daily availability of the resource type.
-	 */
-	public DailyAvailability getDailyAvailability() {
-		return this.dailyAvailability;
-	}
-
-	/**
 	 * Creates a new resource with the given name and adds it to the list.
 	 * 
 	 * @param name
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public void addResource(String name) throws IllegalArgumentException {
-		Resource resource = new Resource(name);
+	public void addResource(String name, LocalTime startTime, LocalTime endTime) throws IllegalArgumentException {
+		Resource resource = new Resource(name,startTime, endTime);
 		resources.add(resource);
 	}
 
