@@ -81,6 +81,9 @@ public class PlanningService {
 		if (earliestPossibleStartTime == null) {
 			earliestPossibleStartTime = clock.getSystemTime();
 		}
+		if (timeSpan == null){
+			throw new IllegalArgumentException("TimeSpan can not be null");
+		}
 		if (timeSpan.getStartTime().isBefore(earliestPossibleStartTime)) {
 			return false;
 		} else {

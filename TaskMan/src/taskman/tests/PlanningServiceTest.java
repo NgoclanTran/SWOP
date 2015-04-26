@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
 import taskman.model.resource.Resource;
+import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
@@ -26,6 +29,8 @@ public class PlanningServiceTest {
 	PlanningService planning;
 	DateTime startTime;
 	TimeSpan firstTimeSpan;
+	List<ResourceType> requires = new ArrayList<ResourceType>();
+	List<ResourceType> conflictsWith = new ArrayList<ResourceType>();
 	
 	@Before
 	public void setUp() throws Exception {
@@ -39,12 +44,12 @@ public class PlanningServiceTest {
 		
 		ph.getProjects().get(0).addTask("PlanningServiceTest no requirements", 60, 0, null, null);
 		
-		rh.addResourceType("Car", null, null, null, null);
-		rh.getResourceTypes().get(0).addResource("Car 1");
+		rh.addResourceType("Car", requires, conflictsWith);
+		rh.getResourceTypes().get(0).addResource("Car 1", null, null);
 		
-		rh.addResourceType("Server", null, null, null, null);
-		rh.getResourceTypes().get(1).addResource("Server 1");
-		rh.getResourceTypes().get(1).addResource("Server 2");
+		rh.addResourceType("Server", requires, conflictsWith);
+		rh.getResourceTypes().get(1).addResource("Server 1", null, null);
+		rh.getResourceTypes().get(1).addResource("Server 2", null, null);
 		
 		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 1", 60, 0, null, null);
 		ph.getProjects().get(0).getTasks().get(1).addRequiredResourceType(rh.getResourceTypes().get(0), 2);
