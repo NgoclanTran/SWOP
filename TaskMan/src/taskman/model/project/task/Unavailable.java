@@ -58,7 +58,12 @@ class Unavailable implements Status {
 
 	@Override
 	public boolean isAlternativeCompleted(Task task) {
-		throw new IllegalStateException("The available task doesn't have alternative.");
+		throw new IllegalStateException("The task is unavailable");
+	}
+
+	@Override
+	public boolean isSeverelyOverdue(Task task) {
+		throw new IllegalStateException("The task is unavailable");
 	}
 
 }

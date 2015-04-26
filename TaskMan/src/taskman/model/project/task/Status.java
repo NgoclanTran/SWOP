@@ -94,6 +94,8 @@ public void addTimeSpan(Task task, boolean failed, DateTime startTime, DateTime 
  * 			a boolean indicating whether a task's alternatives have been completed or not
  */
 public boolean isAlternativeCompleted(Task task);
+
+public boolean isSeverelyOverdue(Task task);
 }
 
 

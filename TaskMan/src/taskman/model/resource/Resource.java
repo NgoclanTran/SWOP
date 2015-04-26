@@ -23,7 +23,7 @@ public class Resource {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public Resource(String name, LocalTime startTime, LocalTime endTime) throws IllegalTimeException {
+	public Resource(String name, LocalTime startTime, LocalTime endTime) throws IllegalTimeException,IllegalTimeException {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		if (startTime == null && endTime == null)

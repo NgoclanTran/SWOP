@@ -26,8 +26,8 @@ public class ResourceTest {
 		name = "name";
 		startTime = new LocalTime(10,0);
 		endTime = new LocalTime(16,0);
-		DateTime st = new DateTime(2015,10,10,10,0);
-		DateTime et = new DateTime(2015,10,10,16,0);
+		DateTime st = new DateTime(2015,10,12,10,0);
+		DateTime et = new DateTime(2015,10,12,16,0);
 		t = new TimeSpan(st, et);
 		task = new Task("description", 10, 1,
 				new ArrayList<Task>(), null);
@@ -118,10 +118,8 @@ public class ResourceTest {
 	@Test
 	public void isAvailableTest_TrueCase(){
 		Resource r = new Resource(name, startTime, endTime);
-		r.addReservation(task, t);
-		
-		DateTime s = new DateTime(2015,10,11,10,0);
-		DateTime e = new DateTime(2015,10,11,16,0);
+		DateTime s = new DateTime(2015,10,12,10,0);
+		DateTime e = new DateTime(2015,10,12,11,0);
 		TimeSpan ts = new TimeSpan(s, e);
 		assertTrue(r.isAvailableAt(ts));
 		

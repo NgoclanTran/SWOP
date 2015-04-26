@@ -11,11 +11,12 @@ import org.joda.time.format.DateTimeFormatter;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.resource.ResourceType;
 import taskman.view.commandline.Input;
 import taskman.view.commandline.Output;
 
 public class View implements IView {
-	
+
 	protected final Input input;
 	protected final Output output;
 	protected final DateTimeFormatter formatter = DateTimeFormat
@@ -74,6 +75,18 @@ public class View implements IView {
 		return formatter.print(time);
 	}
 
+	private String getStringMinutes(int minutes) {
+		if (minutes < 0) {
+			minutes = -minutes;
+		}
+		int hours = minutes / 60;
+		minutes = minutes % 60;
+		int days = hours / 8;
+		hours = hours % 8;
+		return days + " day(s), " + hours + " hour(s), " + minutes
+				+ " minute(s)";
+	}
+
 	private String getStringProjectDetails(Project project) {
 		StringBuilder projectDetails = new StringBuilder();
 		projectDetails.append(project.getName());
@@ -86,6 +99,14 @@ public class View implements IView {
 		projectDetails.append("\n");
 		if (project.isFinished()) {
 			projectDetails.append("Status: Finished");
+			projectDetails.append("\n");
+			projectDetails.append("Total delay: ");
+			int minutes = project.getTotalDelay();
+			projectDetails.append(getStringMinutes(minutes));
+			if (minutes < 0)
+				projectDetails.append(" early.");
+			else
+				projectDetails.append(" too late.");
 		} else {
 			projectDetails.append("Status: Ongoing");
 			projectDetails.append("\n");
@@ -102,6 +123,14 @@ public class View implements IView {
 		taskInfo.append(index);
 		taskInfo.append(": ");
 		taskInfo.append(task.getStatusName());
+		if (task.isCompleted()) {
+			taskInfo.append("\n");
+			taskInfo.append("Percentage of overdueness: ");
+			taskInfo.append(task.getOverduePercentage());
+			taskInfo.append(" %");
+			if (task.isSeverelyOverdue())
+				taskInfo.append(" *");
+		}
 		return taskInfo.toString();
 	}
 
@@ -113,6 +142,10 @@ public class View implements IView {
 		taskInfo.append("\n");
 		taskInfo.append("Status: ");
 		taskInfo.append(task.getStatusName());
+		taskInfo.append("\n");
+		taskInfo.append("Acceptable deviation: ");
+		taskInfo.append(task.getAcceptableDeviation());
+		taskInfo.append(" %");
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
 			taskInfo.append("Start time: ");
@@ -120,6 +153,15 @@ public class View implements IView {
 			taskInfo.append("\n");
 			taskInfo.append("End time: ");
 			taskInfo.append(getStringDate(task.getTimeSpan().getEndTime()));
+			taskInfo.append("\n");
+			taskInfo.append("Total execution time: ");
+			taskInfo.append(getStringMinutes(task.getTotalExecutionTime()));
+			taskInfo.append("\n");
+			taskInfo.append("Percentage of overdueness: ");
+			taskInfo.append(task.getOverduePercentage());
+			taskInfo.append(" %");
+			if (task.isSeverelyOverdue())
+				taskInfo.append(" *");
 		}
 		return taskInfo.toString();
 	}
@@ -229,7 +271,8 @@ public class View implements IView {
 		output.displayEmptyLine();
 	}
 
-	protected void displayTaskList(List<Task> tasks, int tabs, boolean printReturn) {
+	protected void displayTaskList(List<Task> tasks, int tabs,
+			boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
 			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
@@ -242,6 +285,21 @@ public class View implements IView {
 		displayTaskList(tasks, 1, true);
 		int taskId = getListChoice(tasks, "Select a task:");
 		return tasks.get(taskId - 1);
+	}
+	
+	protected void displayResourceTypeList(List<ResourceType> resouceTypes, int tabs, boolean printReturn) {
+		ArrayList<String> resourceTypeInfo = new ArrayList<String>();
+		for (int i = 1; i <= resouceTypes.size(); i++) {
+			resourceTypeInfo.add(resouceTypes.get(i - 1).toString());
+		}
+		output.displayList(resourceTypeInfo, tabs, printReturn);
+		output.displayEmptyLine();
+	}
+	
+	public ResourceType getResourceType(List<ResourceType> resourceTypes) throws ShouldExitException {
+		displayResourceTypeList(resourceTypes, 1, true);
+		int resourceTypeId = getListChoice(resourceTypes, "Select a resource type:");
+		return resourceTypes.get(resourceTypeId - 1);
 	}
 
 	public ICreateProjectForm getNewProjectForm() {

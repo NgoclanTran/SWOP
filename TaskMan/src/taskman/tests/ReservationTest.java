@@ -19,7 +19,7 @@ public class ReservationTest {
 	public void setUp() throws Exception {
 		task = new Task("description", 10, 1,
 				new ArrayList<Task>(), null);
-		ts = new TimeSpan(new DateTime(2015,10,10,10,0), new DateTime(2015,10,10,16,0));
+		ts = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,16,0));
 	}
 
 	@Test (expected = NullPointerException.class)
