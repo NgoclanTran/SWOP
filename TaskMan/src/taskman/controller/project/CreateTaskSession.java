@@ -1,27 +1,34 @@
 package taskman.controller.project;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
+import taskman.model.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.resource.ResourceType;
 import taskman.view.IView;
 
 public class CreateTaskSession extends Session {
 	/**
-	 * Creates the create task session using the given UI and ProjectHandler.
+	 * Creates the create task session using the given UI, ProjectHandler and ResourceHandler.
 	 * 
 	 * @param cli
 	 *            The command line interface.
 	 * @param ph
 	 *            The project handler.
+	 * @param rh
+	 *            The resource handler.
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public CreateTaskSession(IView cli, ProjectHandler ph) {
-		super(cli, ph);
+	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh) {
+		super(cli, ph, rh);
 	}
 
 	/**
@@ -40,23 +47,66 @@ public class CreateTaskSession extends Session {
 		while (true) {
 			try {
 				Project project = getProject();
+				List<Task> tasks = project.getTasks();
+				List<Task> failedTasks = getFailedTasks(tasks);
 
 				String description = getDescription();
 				int estimatedDuration = getEstimatedDuration();
 				int acceptableDeviation = getAcceptableDeviation();
-				// TODO: Enkel vragen als er taken zijn.
-				List<Task> dependencies = getDependencies(project.getTasks());
-				// TODO: Enkel een lijst meegeven van de gefaalde taken en enkel
-				// vragen als er gefaalde taken zijn.
-				Task alternativeFor = getAlternativeFor(project.getTasks());
+				List<Task> dependencies = new ArrayList<Task>();
+				if (tasks.size() > 0)
+					dependencies = getDependencies(project.getTasks());
+				Task alternativeFor = null;
+				if (failedTasks.size() > 0)
+					alternativeFor = getAlternativeFor(project.getTasks());
 
 				if (isValidTask(project, description, estimatedDuration,
-						acceptableDeviation, dependencies, alternativeFor))
+						acceptableDeviation, dependencies, alternativeFor)) {
+					//TODO: als er geannuleerd wordt moet de taak verwijderd worden!
+					if (getRH().getResourceTypes().size() > 0) {
+						addResourceTypesToTask(project, getResourceTypes());
+					}
+
 					break;
+				}
 
 			} catch (ShouldExitException e) {
 				return;
 			}
+		}
+	}
+
+	/**
+	 * This method will try to make a new task with the given parameters. If the
+	 * creation fails it will print the error message and return false.
+	 * 
+	 * @param project
+	 * @param description
+	 * @param estimatedDuration
+	 * @param acceptableDeviation
+	 * @param dependencies
+	 * @param alternativeFor
+	 * 
+	 * @return Returns true if the creation of the task is successful and false
+	 *         if there was an error.
+	 */
+	private boolean isValidTask(Project project, String description,
+			int estimatedDuration, int acceptableDeviation,
+			List<Task> dependencies, Task alternativeFor) {
+		try {
+			project.addTask(description, estimatedDuration,
+					acceptableDeviation, dependencies, alternativeFor);
+			getUI().displayInfo("Task created");
+			return true;
+		} catch (NullPointerException nullEx) {
+			getUI().displayError(nullEx.getMessage());
+			return false;
+		} catch (IllegalArgumentException argEx) {
+			getUI().displayError(argEx.getMessage());
+			return false;
+		} catch (IllegalStateException stateEx) {
+			getUI().displayError(stateEx.getMessage());
+			return false;
 		}
 	}
 
@@ -73,7 +123,7 @@ public class CreateTaskSession extends Session {
 			getUI().displayError("No projects.");
 			throw new ShouldExitException();
 		}
-		
+
 		return getUI().getProject(projects);
 	}
 
@@ -145,36 +195,45 @@ public class CreateTaskSession extends Session {
 	}
 
 	/**
-	 * This method will try to make a new task with the given parameters. If the
-	 * creation fails it will print the error message and return false.
+	 * This method asks the user to select the resource types and their amounts
+	 * needed for the task and returns it.
+	 * 
+	 * @return Returns a map of resource types and their amounts.
+	 * 
+	 * @throws ShouldExitException
+	 */
+	private Map<ResourceType, Integer> getResourceTypes()
+			throws ShouldExitException {
+		return getUI().getNewTaskForm().getNewTaskResourceTypes(getRH());
+	}
+
+	/**
+	 * This method returns the list of failed tasks.
+	 * 
+	 * @param tasks
+	 *            The list of all tasks
+	 * 
+	 * @return Returns a list of failed tasks.
+	 */
+	private List<Task> getFailedTasks(List<Task> tasks) {
+		ArrayList<Task> failedTasks = new ArrayList<Task>();
+		for (Task task : tasks) {
+			if (task.isFailed())
+				failedTasks.add(task);
+		}
+		return failedTasks;
+	}
+	
+	/**
+	 * This method adds all the required resource types and their amounts to the last task.
 	 * 
 	 * @param project
-	 * @param description
-	 * @param estimatedDuration
-	 * @param acceptableDeviation
-	 * @param dependencies
-	 * @param alternativeFor
-	 * 
-	 * @return Returns true if the creation of the task is successful and false
-	 *         if there was an error.
+	 * @param resourceTypes
 	 */
-	private boolean isValidTask(Project project, String description,
-			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor) {
-		try {
-			project.addTask(description, estimatedDuration,
-					acceptableDeviation, dependencies, alternativeFor);
-			getUI().displayInfo("Task created");
-			return true;
-		} catch (NullPointerException nullEx) {
-			getUI().displayError(nullEx.getMessage());
-			return false;
-		} catch (IllegalArgumentException argEx) {
-			getUI().displayError(argEx.getMessage());
-			return false;
-		} catch (IllegalStateException stateEx) {
-			getUI().displayError(stateEx.getMessage());
-			return false;
+	private void addResourceTypesToTask(Project project, Map<ResourceType, Integer> resourceTypes) {
+		Task task = project.getTasks().get(project.getTasks().size() - 1);
+		for(Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
+			task.addRequiredResourceType(entry.getKey(), entry.getValue());
 		}
 	}
 

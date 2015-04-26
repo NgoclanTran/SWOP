@@ -1,8 +1,11 @@
 package taskman.view;
 
 import java.util.List;
+import java.util.Map;
 
+import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
+import taskman.model.resource.ResourceType;
 
 public interface ICreateTaskForm {
 
@@ -16,6 +19,6 @@ public interface ICreateTaskForm {
 
 	public Task getNewTaskAlternativeFor(List<Task> tasks);
 	
-	public void getNewTaskResourceTypes();
+	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh);
 
 }
