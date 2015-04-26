@@ -60,4 +60,9 @@ class Finished implements Status{
 		throw new IllegalStateException("The available task doesn't have alternative.");
 	}
 
+	@Override
+	public boolean isSeverelyOverdue(Task task) {
+		return task.performIsSeverelyOverDue();
+	}
+
 }

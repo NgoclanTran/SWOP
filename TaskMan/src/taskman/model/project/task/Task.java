@@ -199,9 +199,6 @@ public class Task extends Subject {
 			throws IllegalDateException {
 
 		this.timeSpan = new TimeSpan(startTime, endTime);
-
-		this.notifyAllDependants(); // notify dependant task
-		this.notifyAllObservers(); // observer pattern for project
 	}
 
 	/**
@@ -345,7 +342,9 @@ public class Task extends Subject {
 
 		}
 		this.status = status;
-
+		
+		this.notifyAllDependants(); // notify dependant task
+		this.notifyAllObservers(); // observer pattern for project
 	}
 
 	protected boolean isAlternativeCompleted() {
@@ -377,6 +376,7 @@ public class Task extends Subject {
 
 		int time = this.timeSpan.calculatePerformedTime();
 
+		// TODO: is dit nodig?
 		if (this.alternative != null)
 			try {
 				time = time + this.alternative.getTotalExecutionTime();
@@ -392,15 +392,22 @@ public class Task extends Subject {
 	 */
 	public int getOverduePercentage() throws IllegalStateException {
 		return this.status.calculateOverDuePercentage(this);
-
 	}
 
 	protected int performGetOverduePercentage() throws IllegalStateException {
 
-		int totalExecutedTime = this.performGetTotalExecutionTime();
+		int totalExecutedTime = this.getTotalExecutionTime();
 
-		return (totalExecutedTime - this.estimatedDuration)
+		return (totalExecutedTime - this.estimatedDuration) * 100
 				/ this.estimatedDuration;
+	}
+	
+	public boolean isSeverelyOverdue() {
+		return this.status.isSeverelyOverdue(this);
+	}
+	
+	protected boolean performIsSeverelyOverDue() {
+		return getOverduePercentage() > getAcceptableDeviation();
 	}
 
 }

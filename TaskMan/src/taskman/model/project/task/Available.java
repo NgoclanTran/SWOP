@@ -31,13 +31,13 @@ class Available  implements Status {
 		if(startTime == null) throw new NullPointerException("The startTime is null.");
 		if(endTime == null) throw new NullPointerException("The endTime is null.");
 		if(startTime.compareTo(endTime) > 0) throw new IllegalDateException("The startTime must start before endTime.");
+		task.performAddTimeSpan(startTime, endTime);
 		if(failed){
 			task.performUpdateTaskAvailability(new Failed());
 		}
 		else{
 			task.performUpdateTaskAvailability(new Finished());
 		}
-		task.performAddTimeSpan(startTime, endTime);
 	}
 
 	@Override
@@ -58,19 +58,24 @@ class Available  implements Status {
 	@Override
 	public int calculateTotalExecutedTime(Task task) {
 		//return task.performGetTotalExecutionTime();
-		throw new IllegalStateException("The available task doesn't have a timespan.");
+		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task) {
 		//return task.performGetOverduePercentage();
-		throw new IllegalStateException("The available task doesn't have a timespan.");
+		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
 	public boolean isAlternativeCompleted(Task task) {
 		//throw new IllegalStateException("The available task doesn't have alternative.");
-		throw new IllegalStateException("The available task doesn't have a timespan.");
+		throw new IllegalStateException("The task hasn't been completed.");
+	}
+
+	@Override
+	public boolean isSeverelyOverdue(Task task) {
+		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 

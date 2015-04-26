@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import taskman.exceptions.ShouldExitException;
+import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
 
 public class CreateTaskForm implements ICreateTaskForm {
@@ -143,6 +144,34 @@ public class CreateTaskForm implements ICreateTaskForm {
 			view.output.displayEmptyLine();
 			throw new ShouldExitException();
 		}
-	}	
+	}
+	
+	public void getNewTaskResourceTypes() throws ShouldExitException {
+		ResourceHandler rh = new ResourceHandler();
+		
+		view.displayInfo("Do you want to add a resource type? (Y/N or cancel):");
+		String addResouceType = view.input.getInput();
+		view.output.displayEmptyLine();
+
+		while (!(view.isValidYesAnswer(addResouceType) || view.isValidNoAnswer(addResouceType))) {
+			view.displayInfo("Do you want to add a resource type? (Y/N or cancel):");
+			addResouceType = view.input.getInput();
+			view.output.displayEmptyLine();
+		}
+		
+		if (view.isValidYesAnswer(addResouceType)) {
+			view.getResourceType(rh.getResourceTypes());
+			
+			int number = Integer.MIN_VALUE;
+			while (number == Integer.MIN_VALUE) {
+				view.displayInfo("How many resources of the selected type do you want:");
+				number = view.input.getNumberInput();
+			}
+			
+		} else {
+			
+		}
+		
+	}
 
 }

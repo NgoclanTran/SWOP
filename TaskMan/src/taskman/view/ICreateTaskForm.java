@@ -15,5 +15,7 @@ public interface ICreateTaskForm {
 	public List<Task> getNewTaskDependencies(List<Task> tasks);
 
 	public Task getNewTaskAlternativeFor(List<Task> tasks);
+	
+	public void getNewTaskResourceTypes();
 
 }

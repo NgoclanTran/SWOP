@@ -59,4 +59,9 @@ class Failed implements Status{
 		return task.isAlternativeCompleted();
 	}
 
+	@Override
+	public boolean isSeverelyOverdue(Task task) {
+		return task.performIsSeverelyOverDue();
+	}
+
 }

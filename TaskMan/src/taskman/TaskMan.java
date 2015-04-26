@@ -20,13 +20,13 @@ public class TaskMan {
 			MainSession controller = new MainSession(commandLineInterface, projectHandler);
 
 			projectHandler.addProject("Project x", "Test project 1",
-					new DateTime(), new DateTime(2016, 4, 1, 0, 0));
+					new DateTime(), new DateTime(2015, 5, 1, 0, 0));
 			projectHandler.addProject("Project y", "Test project 2",
 					new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 			projectHandler
 					.getProjects()
 					.get(0)
-					.addTask("Task description", 10, 1, new ArrayList<Task>(),
+					.addTask("Task description", 10, 0, new ArrayList<Task>(),
 							null);
 			projectHandler
 					.getProjects()

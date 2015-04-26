@@ -13,14 +13,16 @@ public class TimeSpan {
 	 * @param endTime
 	 *            The given end time of the time span
 	 */
-	public TimeSpan(DateTime startTime, DateTime endTime) {
+	public TimeSpan(DateTime startTime, DateTime endTime) throws IllegalArgumentException, IllegalDateException {
 		if (startTime.compareTo(endTime) > 0)
 			throw new IllegalArgumentException(
 					"The end time cannot be later than de start time.");
 		if (startTime.getHourOfDay() < 8)
 			throw new IllegalDateException("The day starts at 8:00");
-		if (endTime.getMinuteOfDay() > 1020)
+		if (endTime.getHourOfDay() > 17)
 			throw new IllegalDateException("The day ends at 17:00");
+		if (startTime.getDayOfWeek() > 5 || endTime.getDayOfWeek() > 5)
+			throw new IllegalDateException("Only working days are permitted.");
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
@@ -59,11 +61,14 @@ public class TimeSpan {
 		while (start.isBefore(end)) {
 			minutesSpent++;
 			start = start.plusMinutes(1);
-			if (start.getHourOfDay() == 17) {
-				start = start.plusHours(15);
-			}
 			if (start.getDayOfWeek() > 5) {
 				start = start.plusDays(2);
+			}
+			if (start.getHourOfDay() == 11 && start.getMinuteOfHour() > 0) {
+				start = start.plusHours(1);
+			}
+			if (start.getHourOfDay() == 17 && start.getMinuteOfHour() > 0) {
+				start = start.plusHours(15);
 			}
 		}
 
