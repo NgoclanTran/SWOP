@@ -9,6 +9,7 @@ import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
+import taskman.model.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
@@ -16,18 +17,20 @@ import taskman.view.IView;
 public class UpdateTaskStatusSession extends Session {
 
 	/**
-	 * Creates the update task session using the given UI and ProjectHandler.
+	 * Creates the update task session using the given UI, ProjectHandler and ResourceHandler.
 	 * 
 	 * @param cli
 	 *            The command line interface.
 	 * @param ph
 	 *            The project handler.
+	 * @param rh
+	 *            The resource handler.
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public UpdateTaskStatusSession(IView cli, ProjectHandler ph)
+	public UpdateTaskStatusSession(IView cli, ProjectHandler ph, ResourceHandler rh)
 			throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli, ph, rh);
 	}
 
 	/**

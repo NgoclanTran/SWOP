@@ -1,16 +1,19 @@
 package taskman.view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
+import taskman.model.resource.ResourceType;
 
 public class CreateTaskForm implements ICreateTaskForm {
-	
+
 	View view;
-	
+
 	public CreateTaskForm(View view) {
 		this.view = view;
 	}
@@ -70,7 +73,8 @@ public class CreateTaskForm implements ICreateTaskForm {
 			String hasDependencies = view.input.getInput();
 			view.output.displayEmptyLine();
 
-			while (!(view.isValidYesAnswer(hasDependencies) || view.isValidNoAnswer(hasDependencies))) {
+			while (!(view.isValidYesAnswer(hasDependencies) || view
+					.isValidNoAnswer(hasDependencies))) {
 				view.displayError("Does this task have dependencies? (Y/N or cancel):");
 				hasDependencies = view.input.getInput();
 				view.output.displayEmptyLine();
@@ -126,7 +130,8 @@ public class CreateTaskForm implements ICreateTaskForm {
 			String hasAlternativeFor = view.input.getInput();
 			view.output.displayEmptyLine();
 
-			while (!(view.isValidYesAnswer(hasAlternativeFor) || view.isValidNoAnswer(hasAlternativeFor))) {
+			while (!(view.isValidYesAnswer(hasAlternativeFor) || view
+					.isValidNoAnswer(hasAlternativeFor))) {
 				view.displayError("Is this task an alternative for a failed task? (Y/N or cancel):");
 				hasAlternativeFor = view.input.getInput();
 				view.output.displayEmptyLine();
@@ -134,8 +139,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 
 			if (view.isValidYesAnswer(hasAlternativeFor)) {
 				view.displayTaskList(tasks, 0, true);
-				int taskId = view.getListChoice(tasks,
-						"Select a task for which this task will be the alternative (or cancel):");
+				int taskId = view
+						.getListChoice(tasks,
+								"Select a task for which this task will be the alternative (or cancel):");
 				return tasks.get(taskId - 1);
 			} else {
 				return null;
@@ -145,33 +151,42 @@ public class CreateTaskForm implements ICreateTaskForm {
 			throw new ShouldExitException();
 		}
 	}
-	
-	public void getNewTaskResourceTypes() throws ShouldExitException {
-		ResourceHandler rh = new ResourceHandler();
-		
-		view.displayInfo("Do you want to add a resource type? (Y/N or cancel):");
-		String addResouceType = view.input.getInput();
-		view.output.displayEmptyLine();
 
-		while (!(view.isValidYesAnswer(addResouceType) || view.isValidNoAnswer(addResouceType))) {
-			view.displayInfo("Do you want to add a resource type? (Y/N or cancel):");
-			addResouceType = view.input.getInput();
-			view.output.displayEmptyLine();
-		}
-		
-		if (view.isValidYesAnswer(addResouceType)) {
-			view.getResourceType(rh.getResourceTypes());
+	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh) throws ShouldExitException {
+		try {
+			Map<ResourceType, Integer> resourceTypes = new HashMap<ResourceType, Integer>();
 			
-			int number = Integer.MIN_VALUE;
-			while (number == Integer.MIN_VALUE) {
-				view.displayInfo("How many resources of the selected type do you want:");
-				number = view.input.getNumberInput();
+			String addResouceType = "Y";
+			while (!view.isValidNoAnswer(addResouceType)) {
+				view.displayInfo("Do you want to add a resource type? (Y/N or cancel):");
+				addResouceType = view.input.getInput();
+				view.output.displayEmptyLine();
+				
+				if (view.isValidYesAnswer(addResouceType)) {
+					ResourceType resourceToAdd = getNewTaskResourceType(rh);
+					int amountToAdd = getNewTaskResourceTypeAmount();
+					resourceTypes.put(resourceToAdd, amountToAdd);
+				}
 			}
 			
-		} else {
-			
+			return resourceTypes;
+		} catch (ShouldExitException e) {
+			view.output.displayEmptyLine();
+			throw new ShouldExitException();
 		}
-		
+	}
+
+	private ResourceType getNewTaskResourceType(ResourceHandler rh) throws ShouldExitException {
+		return view.getResourceType(rh.getResourceTypes());
+	}
+
+	private int getNewTaskResourceTypeAmount() throws ShouldExitException {
+		int number = Integer.MIN_VALUE;
+		while (number < 0) {
+			view.displayInfo("How many resources of the selected type do you want (or cancel):");
+			number = view.input.getNumberInput();
+		}
+		return number;
 	}
 
 }

@@ -3,8 +3,6 @@ package taskman.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalTime;
-
 import taskman.model.resource.ResourceType;
 
 public class ResourceHandler {
@@ -39,10 +37,9 @@ public class ResourceHandler {
 	 * @throws IllegalArgumentException
 	 */
 	public void addResourceType(String name, List<ResourceType> requires,
-			List<ResourceType> conflictsWith, LocalTime startTime,
-			LocalTime endTime) throws IllegalArgumentException {
+			List<ResourceType> conflictsWith) throws IllegalArgumentException {
 		ResourceType resourceType = new ResourceType(name, requires,
-				conflictsWith, startTime, endTime);
+				conflictsWith);
 		addResourceType(resourceType);
 	}
 
