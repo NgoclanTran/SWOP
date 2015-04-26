@@ -14,6 +14,7 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.project.CreateProjectSession;
 import taskman.model.ProjectHandler;
+import taskman.model.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
@@ -22,6 +23,7 @@ import taskman.view.View;
 public class CreateProjectSessionTest {
 	private IView cli;
 	private ProjectHandler ph;
+	private ResourceHandler rh;
 	private CreateProjectSession session;
 	private String description;
 	private ArrayList<Task> dependencies;
@@ -37,7 +39,8 @@ public class CreateProjectSessionTest {
 	public void setup() {
 		cli = new View();
 		ph = new ProjectHandler();
-		session = new CreateProjectSession(cli, ph);
+		rh = new ResourceHandler();
+		session = new CreateProjectSession(cli, ph, rh);
 
 	}
 
