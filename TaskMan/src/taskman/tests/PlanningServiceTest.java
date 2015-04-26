@@ -20,7 +20,7 @@ import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class PlanningServiceTest {
-
+	ProjectHandler phtest;
 	ProjectHandler ph;
 	ResourceHandler rh;
 	PlanningService planning;
