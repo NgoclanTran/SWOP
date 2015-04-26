@@ -30,12 +30,13 @@ public class ResourceType {
 			List<ResourceType> conflictsWith) throws IllegalArgumentException {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
+		if(requires == null) throw new IllegalArgumentException("The given requires cannot be null.");
+		if(conflictsWith == null) throw new IllegalArgumentException("The given conflictWith cannot be null."); 
 		this.name = name;
-		if (requires != null)
-			this.requires.addAll(requires);
-		if (conflictsWith != null)
-			this.conflictsWith.addAll(conflictsWith);
-		
+
+		this.requires.addAll(requires);
+		this.conflictsWith.addAll(conflictsWith);
+
 	}
 
 	/**
@@ -88,6 +89,8 @@ public class ResourceType {
 	 *         perform the task in the given timespan.
 	 */
 	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
+		if(timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
+		if(amount < 0) throw new IllegalArgumentException("The amount cannot be negative.");
 		ArrayList<Resource> suggestedResources = new ArrayList<Resource>();
 		for (int i = 0; i < amount; i++) {
 			suggestedResources.add(getAvailableResources(timeSpan).get(i));
@@ -105,6 +108,7 @@ public class ResourceType {
 	 *         available in the given timespan.
 	 */
 	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
+		if(timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
 		ArrayList<Resource> availableResources = new ArrayList<Resource>();
 		for (Resource resource : resources) {
 			boolean available = resource.isAvailableAt(timeSpan);
@@ -126,5 +130,10 @@ public class ResourceType {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString(){
+		return name;
 	}
 }
