@@ -24,11 +24,11 @@ public class ResourceTypeTest {
 	public void setUp() throws Exception {
 		name = "name";
 		
-		requiredResource = new ResourceType(name, new ArrayList<ResourceType>(), new ArrayList<ResourceType>());
+		requiredResource = new ResourceType(name, new ArrayList<ResourceType>(), new ArrayList<ResourceType>(),false);
 		requires = new ArrayList<ResourceType>();
 		requires.add(requiredResource);
 		
-		conflictResource = new ResourceType(name, new ArrayList<ResourceType>(), new ArrayList<ResourceType>());
+		conflictResource = new ResourceType(name, new ArrayList<ResourceType>(), new ArrayList<ResourceType>(),false);
 		conflictWith = new ArrayList<ResourceType>();
 		conflictWith.add(conflictResource);
 		startTime = new LocalTime(10,0);
@@ -37,22 +37,22 @@ public class ResourceTypeTest {
 
 	@Test (expected = IllegalArgumentException.class)
 	public void constructorTest_Name_Null(){
-		ResourceType r = new ResourceType(null, requires, conflictWith);
+		ResourceType r = new ResourceType(null, requires, conflictWith,false);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void constructorTest_Requires_Null(){
-		ResourceType r = new ResourceType(name, null, conflictWith);
+		ResourceType r = new ResourceType(name, null, conflictWith,false);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void constructorTest_ConflictWith_Null(){
-		ResourceType r = new ResourceType(name, requires, null);
+		ResourceType r = new ResourceType(name, requires, null,false);
 	}
 	
 	@Test
 	public void constructorTest_TrueCase(){
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		assertEquals(r.getName(), name);
 		assertEquals(r.getRequires(),requires);
 		assertEquals(r.getConflictsWith(), conflictWith);
@@ -60,49 +60,49 @@ public class ResourceTypeTest {
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void addResourceTest_Name_Null(){
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(null, startTime, endTime);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void addResourceTypeTest_StartTime_Null(){
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, null, endTime);
 		
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void addResourceTest_EndTIme_Null(){
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, startTime, null);
 	}
 	@Test (expected = IllegalTimeException.class)
 	public void addResourceTest_StartTimeAfterEndTime(){	
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, endTime, startTime);
 	}
 	@Test
 	public void addResourceTest_StartAndEndTime_Null(){
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, null, null);
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
 		ArrayList<Resource> a = (ArrayList<Resource>) r.getAvailableResources(timeSpan);
-		assertTrue(a.isEmpty());
-		// De lijst zal leeg zijn want als start en end null zijn, wordne die op (0,0) localtime gezet
-		// en zijn ze dus niet available
-		//assertEquals(a.get(0).getName(), name);
-		//assertEquals(a.get(0).getDailyAvailability().getStartTime().getMinuteOfHour(),0);
-		//assertEquals(a.get(0).getDailyAvailability().getStartTime().getHourOfDay(),0);
-		//assertEquals(a.get(0).getDailyAvailability().getEndTime().getHourOfDay(),0);
-		//assertEquals(a.get(0).getDailyAvailability().getEndTime().getMinuteOfHour(),0);
+//		assertTrue(a.isEmpty());
+//		// De lijst zal leeg zijn want als start en end null zijn, wordne die op (0,0) localtime gezet
+//		// en zijn ze dus niet available
+		assertEquals(a.get(0).getName(), name);
+		assertEquals(a.get(0).getDailyAvailability().getStartTime().getMinuteOfHour(),0);
+		assertEquals(a.get(0).getDailyAvailability().getStartTime().getHourOfDay(),0);
+		assertEquals(a.get(0).getDailyAvailability().getEndTime().getHourOfDay(),23);
+		assertEquals(a.get(0).getDailyAvailability().getEndTime().getMinuteOfHour(),59);
 		
 	}
 	
 	@Test
 	public void addResourceTypeTest_TrueCase(){
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, startTime, endTime);
-		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,12,0));
 		ArrayList<Resource> a = (ArrayList<Resource>) r.getAvailableResources(timeSpan);
 		assertEquals(a.get(0).getName(), name);
 		assertEquals(a.get(0).getDailyAvailability().getStartTime(), startTime);
@@ -112,21 +112,21 @@ public class ResourceTypeTest {
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void getSuggestedResourcesTest_TimeSpan_Null(){
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.getSuggestedResources(null, 10);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void getSuggestedResourcesTest_Amount_Negative(){
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.getSuggestedResources(timeSpan, -1);
 	}
 	
 	@Test
 	public void getSuggestedResourcesTest_Amount_Smaller_Than_Available(){
-		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,12,0));
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, startTime, endTime);
 		r.addResource(name, startTime, endTime);
 		r.addResource(name, startTime, endTime);
@@ -135,8 +135,8 @@ public class ResourceTypeTest {
 	
 	@Test
 	public void getSuggestedResourcesTest_Amount_Bigger_Than_Available(){
-		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,12,0));
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, startTime, endTime);
 		r.addResource(name, startTime, endTime);
 		r.addResource(name, startTime, endTime);
@@ -147,7 +147,7 @@ public class ResourceTypeTest {
 	@Test (expected = IllegalArgumentException.class)
 	public void getAvailableResourcesTest_TimeSpan_Null(){
 		
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource("name1", startTime, endTime);
 		r.addResource("name2", startTime, endTime);
 		r.addResource("name3", startTime, endTime);
@@ -157,8 +157,8 @@ public class ResourceTypeTest {
 	
 	@Test
 	public void getAvailableResourcesTypeTest(){
-		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
-		ResourceType r = new ResourceType(name, requires, conflictWith);
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,12,0));
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource("name1", startTime, endTime);
 		r.addResource("name2", startTime, endTime);
 		r.addResource("name3", startTime, endTime);

@@ -53,6 +53,7 @@ public class Task extends Subject {
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
 					"The deviation cannot be negative.");
+		if(dependencies == null) throw new NullPointerException("The dependencies cannot be null.");
 
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;

@@ -3,6 +3,7 @@ package taskman.tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
@@ -13,6 +14,7 @@ import taskman.exceptions.IllegalTimeException;
 import taskman.model.project.task.Task;
 import taskman.model.resource.DailyAvailability;
 import taskman.model.resource.Resource;
+import taskman.model.resource.ResourceType; 
 import taskman.model.time.TimeSpan;
 
 public class ResourceTest {
@@ -26,11 +28,11 @@ public class ResourceTest {
 		name = "name";
 		startTime = new LocalTime(10,0);
 		endTime = new LocalTime(16,0);
-		DateTime st = new DateTime(2015,10,12,10,0);
-		DateTime et = new DateTime(2015,10,12,16,0);
+		DateTime st = new DateTime(2015,10,12,11,0);
+		DateTime et = new DateTime(2015,10,12,12,0);
 		t = new TimeSpan(st, et);
-		task = new Task("description", 10, 1,
-				new ArrayList<Task>(), null);
+		 task = new Task("description", 10, 1,
+				new ArrayList<Task>(), null, null);
 		
 	}
 
@@ -50,8 +52,8 @@ public class ResourceTest {
 		Resource r = new Resource(name, null, null);
 		assertEquals(r.getDailyAvailability().getStartTime().getHourOfDay(), 0);
 		assertEquals(r.getDailyAvailability().getStartTime().getMinuteOfHour(), 0);
-		assertEquals(r.getDailyAvailability().getEndTime().getHourOfDay(), 0);
-		assertEquals(r.getDailyAvailability().getEndTime().getMinuteOfHour(), 0);
+		assertEquals(r.getDailyAvailability().getEndTime().getHourOfDay(), 23);
+		assertEquals(r.getDailyAvailability().getEndTime().getMinuteOfHour(), 59);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -120,8 +122,8 @@ public class ResourceTest {
 	@Test
 	public void isAvailableTest_TrueCase(){
 		Resource r = new Resource(name, startTime, endTime);
-		DateTime s = new DateTime(2015,10,12,10,0);
-		DateTime e = new DateTime(2015,10,12,11,0);
+		DateTime s = new DateTime(2015,10,12,11,0);
+		DateTime e = new DateTime(2015,10,12,12,0);
 		TimeSpan ts = new TimeSpan(s, e);
 		assertTrue(r.isAvailableAt(ts));
 		
@@ -141,6 +143,16 @@ public class ResourceTest {
 		Resource r = new Resource(name, startTime, endTime);
 		r.addReservation(task, t);
 		assertFalse(r.isAvailableAt(t));
+	}
+	
+	@Test
+	public void isAvailableTest_Reservation(){
+		Resource r = new Resource(name, startTime, endTime);
+		r.addReservation(task, t);
+		TimeSpan t1 = new TimeSpan(new DateTime(2015,10,12,14,0), new DateTime(2015,10,12,15,0));
+		r.addReservation(task, t1);
+		TimeSpan t2 = new TimeSpan(new DateTime(2018,10,12,11,0), new DateTime(2018,10,12,12,0));
+		assertTrue(r.isAvailableAt(t2));
 	}
 
 }

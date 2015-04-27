@@ -18,7 +18,7 @@ public class ReservationTest {
 	@Before
 	public void setUp() throws Exception {
 		task = new Task("description", 10, 1,
-				new ArrayList<Task>(), null);
+				new ArrayList<Task>(), null, null);
 		ts = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,16,0));
 	}
 
