@@ -2,11 +2,13 @@ package taskman.model.project;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
 import taskman.model.project.task.Task;
+import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.IClock;
 
@@ -111,16 +113,16 @@ public class Project implements Observer {
 	 */
 	public void addTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor) throws IllegalStateException {
+			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
-				acceptableDeviation, dependencies, alternativeFor);
+				acceptableDeviation, dependencies, alternativeFor, resourceTypes);
 	}
 
 	protected void performAddTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor) {
+			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, dependencies, alternativeFor);
+				acceptableDeviation, dependencies, alternativeFor, resourceTypes);
 		this.tasks.add(task);
 		task.attach(this);
 	}
@@ -241,10 +243,16 @@ public class Project implements Observer {
 		int minutes = 0;
 		expected = clock.getFirstPossibleStartTime(expected);
 		real = clock.getFirstPossibleStartTime(real);
+		if (real.getHourOfDay() == 11)
+			real = real.plusHours(1);
 		while (expected.isBefore(real)) {
-			expected = expected.plusMinutes(1);
-			expected = clock.addBreaks(expected);
-			minutes += 1;
+			DateTime breaks = clock.addBreaks(expected);
+			if (breaks.isEqual(expected)) {
+				expected = expected.plusMinutes(1);
+				minutes += 1;
+			} else {
+				expected = breaks;
+			}
 		}
 		return minutes;
 	}

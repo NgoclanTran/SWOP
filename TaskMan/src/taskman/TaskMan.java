@@ -25,17 +25,23 @@ public class TaskMan {
 			projectHandler.addProject("Project x", "Test project 1",
 					new DateTime(), new DateTime(2015, 5, 1, 0, 0));
 			projectHandler.addProject("Project y", "Test project 2",
-					new DateTime(), new DateTime(2016, 4, 1, 0, 0));
+					new DateTime(2015, 4, 27, 16, 55), new DateTime(2015, 4, 28, 0, 0));
 			projectHandler
 					.getProjects()
 					.get(0)
 					.addTask("Task description", 10, 0, new ArrayList<Task>(),
-							null);
+							null, null);
 			projectHandler
 					.getProjects()
 					.get(0)
 					.addTask("Task description", 10, 1, new ArrayList<Task>(),
-							null);
+							null, null);
+			
+			projectHandler
+			.getProjects()
+			.get(1)
+			.addTask("Task description", 5, 0, new ArrayList<Task>(),
+					null, null);
 			
 			resourceHandler.addResourceType("Car", null, null);
 			

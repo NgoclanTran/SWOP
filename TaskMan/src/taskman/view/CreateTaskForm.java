@@ -158,7 +158,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 			
 			String addResouceType = "Y";
 			while (!view.isValidNoAnswer(addResouceType)) {
-				view.displayInfo("Do you want to add a resource type? (Y/N or cancel):");
+				view.displayInfo("Do you want to add a(nother) resource type? (Y/N or cancel):");
 				addResouceType = view.input.getInput();
 				view.output.displayEmptyLine();
 				
@@ -185,6 +185,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 		while (number < 0) {
 			view.displayInfo("How many resources of the selected type do you want (or cancel):");
 			number = view.input.getNumberInput();
+			view.output.displayEmptyLine();
 		}
 		return number;
 	}

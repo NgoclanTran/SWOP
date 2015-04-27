@@ -43,7 +43,7 @@ public class Task extends Subject {
 	 */
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor) throws IllegalStateException {
+			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) throws IllegalStateException {
 		if (description == null)
 			throw new NullPointerException("Description is null");
 		if (estimatedDuration <= 0)
@@ -68,6 +68,12 @@ public class Task extends Subject {
 
 		if (alternativeFor != null)
 			alternativeFor.addAlternative(this);
+		
+		if (resourceTypes != null) {
+			for(Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
+				addRequiredResourceType(entry.getKey(), entry.getValue());
+			}
+		}
 
 		try {
 			updateTaskAvailability();
@@ -425,7 +431,6 @@ public class Task extends Subject {
 							break;
 						}
 					}
-					resource.getReservations();
 				}
 			}
 		}
