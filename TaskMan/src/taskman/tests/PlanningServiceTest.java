@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -42,7 +42,7 @@ public class PlanningServiceTest {
 		
 		ph.addProject("PlanningService", "Test", startTime, new DateTime(2015,2,1,17,0));
 		
-		ph.getProjects().get(0).addTask("PlanningServiceTest no requirements", 60, 0, null, null);
+		ph.getProjects().get(0).addTask("PlanningServiceTest no requirements", 60, 0, null, null, null);
 		
 		rh.addResourceType("Car", requires, conflictsWith);
 		rh.getResourceTypes().get(0).addResource("Car 1", null, null);
@@ -51,10 +51,10 @@ public class PlanningServiceTest {
 		rh.getResourceTypes().get(1).addResource("Server 1", null, null);
 		rh.getResourceTypes().get(1).addResource("Server 2", null, null);
 		
-		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 1", 60, 0, null, null);
+		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 1", 60, 0, null, null, null);
 		ph.getProjects().get(0).getTasks().get(1).addRequiredResourceType(rh.getResourceTypes().get(0), 2);
 		
-		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 2", 60, 0, null, null);
+		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 2", 60, 0, null, null, null);
 		ph.getProjects().get(0).getTasks().get(2).addRequiredResourceType(rh.getResourceTypes().get(1), 2);
 		
 		firstTimeSpan = new TimeSpan(startTime, startTime.plusMinutes(ph.getProjects().get(0).getTasks().get(2).getEstimatedDuration()));
@@ -62,7 +62,7 @@ public class PlanningServiceTest {
 			resource.addReservation(ph.getProjects().get(0).getTasks().get(2), firstTimeSpan);
 		}
 		
-		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 3", 60, 0, null, null);
+		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 3", 60, 0, null, null, null);
 		ph.getProjects().get(0).getTasks().get(3).addRequiredResourceType(rh.getResourceTypes().get(1), 2);
 	}
 
@@ -86,7 +86,7 @@ public class PlanningServiceTest {
 	public void testGetPossibleStartTimes() {
 		int amount = 3;
 		Task task = ph.getProjects().get(0).getTasks().get(0);
-		Set<DateTime> expectedStartTimes = new HashSet<DateTime>();
+		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
 		Clock systemClock = Clock.getInstance();
 		DateTime systemTime = new DateTime(2015, 1, 1, 8, 0);
 		systemClock.setSystemTime(systemTime);
@@ -102,7 +102,7 @@ public class PlanningServiceTest {
 	public void testGetPossibleStartTimesAfter20150115() {
 		int amount = 3;
 		Task task = ph.getProjects().get(0).getTasks().get(0);
-		Set<DateTime> expectedStartTimes = new HashSet<DateTime>();
+		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
 		for (int i = 0; i < amount; i++) {
 			expectedStartTimes.add(new DateTime(2015, 1, 15, 10 + i, 0));
 		}

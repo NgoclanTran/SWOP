@@ -1,7 +1,7 @@
 package taskman.model;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,14 +15,10 @@ import taskman.model.time.TimeSpan;
 
 public class PlanningService {
 
-	ResourceHandler rh;
 	IClock clock = Clock.getInstance();
 
-	public PlanningService(ResourceHandler rh) {
-		if (rh == null)
-			throw new IllegalArgumentException(
-					"Resource handler can not be null.");
-		this.rh = rh;
+	public PlanningService() {
+		
 	}
 
 	/**
@@ -87,16 +83,10 @@ public class PlanningService {
 		if (timeSpan.getStartTime().isBefore(earliestPossibleStartTime)) {
 			return false;
 		} else {
-			Map<ResourceType, Integer> requiredResourceTypes = task
-					.getRequiredResourceTypes();
-			List<ResourceType> resourceTypes = rh.getResourceTypes();
-			for (ResourceType resourceType : resourceTypes) {
-				if (requiredResourceTypes.containsKey(resourceType)) {
-					if (resourceType.getAvailableResources(timeSpan).size() < requiredResourceTypes
-							.get(resourceType)) {
-						return false;
-					}
-				}
+			Map<ResourceType, Integer> requiredResourceTypes = task.getRequiredResourceTypes();
+			for (Entry<ResourceType, Integer> entry : requiredResourceTypes.entrySet()) {
+				if (entry.getKey().getAvailableResources(timeSpan).size() < entry.getValue())
+					return false;
 			}
 		}
 		return true;

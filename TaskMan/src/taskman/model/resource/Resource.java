@@ -27,7 +27,7 @@ public class Resource {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		if (startTime == null && endTime == null)
-			this.dailyAvailability = new DailyAvailability(new LocalTime(0, 0), new LocalTime(0, 0));
+			this.dailyAvailability = new DailyAvailability(new LocalTime(0, 0), new LocalTime(23, 59));
 		else if (startTime != null && endTime != null)
 			this.dailyAvailability = new DailyAvailability(startTime, endTime);
 		else
@@ -68,10 +68,10 @@ public class Resource {
 				return false;
 			}
 		}
-		if (this.dailyAvailability.getStartTime().getHourOfDay() > timeSpan.getStartTime().getHourOfDay()){
+		if (this.dailyAvailability.getStartTime().getHourOfDay() >= timeSpan.getStartTime().getHourOfDay()){
 			return false;
 		}
-		if (this.dailyAvailability.getEndTime().getHourOfDay() < timeSpan.getEndTime().getHourOfDay()){
+		if (this.dailyAvailability.getEndTime().getHourOfDay() <= timeSpan.getEndTime().getHourOfDay()){
 			return false;
 		}
 		return true;

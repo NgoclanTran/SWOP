@@ -59,7 +59,7 @@ public class Clock implements IClock {
 		if (time.getDayOfWeek() > 5) {
 			time = time.plusDays(8 - time.getDayOfWeek());
 		}
-		if (time.getHourOfDay() == 11 && time.getMinuteOfHour() == 0) {
+		if (time.getHourOfDay() == 11 && time.getMinuteOfHour() > 0) {
 			time = time.plusHours(1);
 		}
 		if (time.getHourOfDay() == 17 && time.getMinuteOfHour() == 0) {
