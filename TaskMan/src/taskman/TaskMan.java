@@ -20,12 +20,15 @@ public class TaskMan {
 			IView commandLineInterface = new View();
 			ProjectHandler projectHandler = new ProjectHandler();
 			ResourceHandler resourceHandler = new ResourceHandler();
-			MainSession controller = new MainSession(commandLineInterface, projectHandler, resourceHandler);
+			Parser parser = new Parser(projectHandler, resourceHandler);
+			MainSession controller = new MainSession(commandLineInterface,
+					projectHandler, resourceHandler);
 
 			projectHandler.addProject("Project x", "Test project 1",
 					new DateTime(), new DateTime(2015, 5, 1, 0, 0));
 			projectHandler.addProject("Project y", "Test project 2",
-					new DateTime(2015, 4, 27, 16, 55), new DateTime(2015, 4, 28, 0, 0));
+					new DateTime(2015, 4, 27, 16, 55), new DateTime(2015, 4,
+							28, 0, 0));
 			projectHandler
 					.getProjects()
 					.get(0)
@@ -36,13 +39,13 @@ public class TaskMan {
 					.get(0)
 					.addTask("Task description", 10, 1, new ArrayList<Task>(),
 							null, null);
-			
+
 			projectHandler
-			.getProjects()
-			.get(1)
-			.addTask("Task description", 5, 0, new ArrayList<Task>(),
-					null, null);
-			
+					.getProjects()
+					.get(1)
+					.addTask("Task description", 5, 0, new ArrayList<Task>(),
+							null, null);
+
 			resourceHandler.addResourceType("Car", null, null);
 			resourceHandler.getResourceTypes().get(0).addResource("Car 1", null, null);
 			resourceHandler.getResourceTypes().get(0).addResource("Car 2", null, null);
@@ -53,9 +56,9 @@ public class TaskMan {
 			
 			projectHandler.getProjects().get(0).getTasks().get(0).addRequiredResourceType(resourceHandler.getResourceTypes().get(0), 1);
 			projectHandler.getProjects().get(0).getTasks().get(0).addRequiredResourceType(resourceHandler.getResourceTypes().get(1), 1);
-			
 			clock.setSystemTime(new DateTime(2015, 1, 1, 8, 0));
 
+			parser.parse();
 			controller.run();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
