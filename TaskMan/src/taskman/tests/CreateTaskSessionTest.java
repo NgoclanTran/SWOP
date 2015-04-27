@@ -189,6 +189,7 @@ public class CreateTaskSessionTest {
 	
 		@Test
 		public void useCaseTest_InputDependenciesYes_CancelCreation(){
+			//TODO: Geen vraag meer na dependencies, dus het wordt gemaakt.
 			//---------- Before running ----------
 			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
@@ -227,7 +228,7 @@ public class CreateTaskSessionTest {
 			// enter task has dependency: N
 			// cancel creation
 	
-			systemInMock.provideText("1\ndescription\n10\n10\na\nN\ncancel\n0");
+			systemInMock.provideText("1\ndescription\n10\n10\na\ncancel\n0");
 			session.run();
 	
 			//-------- Check if nothing has been changed -------
@@ -238,7 +239,7 @@ public class CreateTaskSessionTest {
 	
 		@Test
 		public void useCaseTest_InputAlterativeForYes_CancelCreation(){
-	
+			//TODO WERKT NIET WANT ER WORDT NIET GEVRAAGD NAAR EEN ALTERNATIVE
 			//---------- Before running ----------
 			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
@@ -250,14 +251,11 @@ public class CreateTaskSessionTest {
 			// enter acceptable devation: 10
 			// enter task has dependency: N
 			// cancel creation
-			System.out.println("JUISTE TEST -----------------------------------");
 			systemInMock.provideText("1\ndescription\n10\n10\nN\nY\n1\ncancel\n0");
 			session.run();
 	
 			//-------- Check if nothing has been changed -------
 			assertEquals(ph.getProjects(), projects);
-			System.out.println(tasksOfProject1);
-			System.out.println(ph.getProjects().get(0).getTasks());
 			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
 			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
 		}
@@ -292,6 +290,7 @@ public class CreateTaskSessionTest {
 
 	@Test
 	public void useCaseTest_SuccesScenario_WithDependencies_WithAlternative_NoCreation_ErrorState(){
+		//TODO: De cancel wordt nooit gevraagd want het wordt direct na de N input gemaakt en gestopt
 		//---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
