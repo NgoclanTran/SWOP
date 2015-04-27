@@ -14,6 +14,7 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.ProjectHandler;
+import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
 import taskman.view.View;
@@ -22,6 +23,7 @@ public class UpdateTaskStatusSessionTest {
 
 	private UpdateTaskStatusSession updateTask;
 	private ProjectHandler ph;
+	private ResourceHandler rh;
 	private UpdateTaskStatusSession session;
 	private TextFromStandardInputStream systemMock;
 	private IView cli;
@@ -36,7 +38,8 @@ public class UpdateTaskStatusSessionTest {
 	public void setup() {
 		cli = new View();
 		ph = new ProjectHandler();
-		session = new UpdateTaskStatusSession(cli, ph);
+		rh = new ResourceHandler();
+		session = new UpdateTaskStatusSession(cli, ph,rh);
 		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null);
@@ -47,7 +50,8 @@ public class UpdateTaskStatusSessionTest {
 	public void useCase_NoTask(){
 		IView cli = new View();
 		ProjectHandler ph = new ProjectHandler();
-		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph);
+		ResourceHandler rh = new ResourceHandler();
+		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph,rh);
 		session.run();
 		String output ="No available tasks.\r\n\r\n";
 		assertEquals(output,log.getLog());
