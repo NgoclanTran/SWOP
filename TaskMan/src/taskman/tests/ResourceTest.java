@@ -91,8 +91,8 @@ public class ResourceTest {
 	@Test(expected = IllegalTimeException.class)
 	public void addReservationTest_NotAvailable_DailyAvailibility(){
 		Resource r = new Resource(name, startTime, endTime);
-		r.addReservation(task, t);
-		r.addReservation(task, t);
+		TimeSpan t1 = new TimeSpan(new DateTime(2015,10,12,8,0),new DateTime(2015,10,12,9,0));
+		r.addReservation(task, t1);
 	}
 	
 	@Test (expected = IllegalTimeException.class)
