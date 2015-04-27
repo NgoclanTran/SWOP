@@ -54,6 +54,7 @@ public class Resource {
 
 	public boolean isAvailableAt(TimeSpan timeSpan) {
 		//TODO check if the DailyAvailiblity of this resource
+		// SOLVED, NEEDS TO BE CHECKED PROPERLY
 		for (Reservation reservation : reservations) {
 			
 			DateTime reservationStart = reservation.getTimeSpan().getStartTime();
@@ -66,6 +67,12 @@ public class Resource {
 			if (!(before || after)) {
 				return false;
 			}
+		}
+		if (this.dailyAvailability.getStartTime().getHourOfDay() > timeSpan.getStartTime().getHourOfDay()){
+			return false;
+		}
+		if (this.dailyAvailability.getEndTime().getHourOfDay() < timeSpan.getEndTime().getHourOfDay()){
+			return false;
 		}
 		return true;
 	}
