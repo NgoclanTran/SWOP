@@ -74,7 +74,7 @@ public class TaskTest {
 		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
 		DateTime startTime = new DateTime(2015,1,1,10,1);
-		DateTime endTime = new DateTime(2015,2,1,11,1);
+		DateTime endTime = new DateTime(2015,2,2,11,1);
 		t1.addTimeSpan(true, startTime, endTime);
 		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, t1);
@@ -543,10 +543,10 @@ public class TaskTest {
 	public void calculateTotalExecutionTimeTest_TrueCase() {
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
-		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime startTime = new DateTime(2015, 1, 1, 14, 0);
 		DateTime endTime = new DateTime(2015, 1, 1, 16, 0);
 		t.addTimeSpan(true, startTime, endTime);
-		assertEquals(t.getTotalExecutionTime(), 6 * 60);
+		assertEquals(t.getTotalExecutionTime(), 2 * 60);
 	}
 	
 	@Test (expected = IllegalStateException.class)
@@ -571,22 +571,22 @@ public class TaskTest {
 	public void calculateTotalExecutionTimeTest_StatusFAILED(){
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
-		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime startTime = new DateTime(2015, 1, 1, 14, 0);
 		DateTime endTime = new DateTime(2015, 1, 1, 16, 0);
 		t.addTimeSpan(true, startTime, endTime);
-		assertEquals(t.getTotalExecutionTime(), 6 * 60);
+		assertEquals(t.getTotalExecutionTime(), 2 * 60);
 	}
 	
 	@Test
 	public void calculateTotalExecutionTimeTest_StatusFINISHEED(){
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				dependencies, null);
-		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime startTime = new DateTime(2015, 1, 1, 14, 0);
 		DateTime endTime = new DateTime(2015, 1, 1, 16, 0);
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		int time = t.getTotalExecutionTime();
-		assertEquals(time, 6 * 60);
+		assertEquals(time, 2 * 60);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -635,7 +635,7 @@ public class TaskTest {
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
 		DateTime endTime = new DateTime(2015, 1, 1, 11, 0);
 		t.addTimeSpan(true, startTime, endTime);
-		assertEquals(t.getOverduePercentage(), (60 - this.estimatedDuration)
+		assertEquals(t.getOverduePercentage(), (60 - this.estimatedDuration) *100
 				/ this.estimatedDuration);
 
 	}
