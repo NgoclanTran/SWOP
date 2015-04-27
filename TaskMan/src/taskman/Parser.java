@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFileChooser;
 
@@ -19,7 +19,10 @@ import org.joda.time.LocalTime;
 
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.UserHandler;
+import taskman.model.project.task.Task;
 import taskman.model.resource.DailyAvailability;
+import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 
 public class Parser {
@@ -28,12 +31,14 @@ public class Parser {
 
 	private ProjectHandler projectHandler;
 	private ResourceHandler resourceHandler;
+	private UserHandler userHandler;
 
 	private List<DailyAvailability> dailyAvailability = new ArrayList<DailyAvailability>();
 
-	public Parser(ProjectHandler ph, ResourceHandler rh) {
+	public Parser(ProjectHandler ph, ResourceHandler rh, UserHandler uh) {
 		projectHandler = ph;
 		resourceHandler = rh;
+		userHandler = uh;
 	}
 
 	public void parse() {
@@ -170,6 +175,23 @@ public class Parser {
 		return null;
 	}
 
+	private ArrayList<Integer> parseIntegerList(String line) {
+		ArrayList<Integer> integerList = new ArrayList<Integer>();
+		int end;
+		line = line.replace("[", "");
+		line = line.replace("]", "");
+		line = line.trim();
+		while (line.contains(",")) {
+			end = line.indexOf(",");
+			integerList.add(Integer.parseInt(line.substring(0, end)));
+			line = line.substring(end);
+			line = line.replaceFirst(",", "");
+			line = line.trim();
+		}
+		integerList.add(Integer.parseInt(line));
+		return integerList;
+	}
+
 	private void parseDailyAvailability(ArrayList<String> dailyAvailabilities) {
 		boolean describing = false;
 		List<String> description = new ArrayList<String>();
@@ -190,7 +212,6 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
 	}
 
@@ -209,8 +230,7 @@ public class Parser {
 						descriptionStart + 1, descriptionStart + 3));
 				startMinute = Integer.parseInt(line.substring(
 						descriptionEnd - 2, descriptionEnd));
-			}
-			if (line.startsWith("endTime")) {
+			} else if (line.startsWith("endTime")) {
 				endHour = Integer.parseInt(line.substring(descriptionStart + 1,
 						descriptionStart + 3));
 				endMinute = Integer.parseInt(line.substring(descriptionEnd - 2,
@@ -244,40 +264,65 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
-
 	}
 
 	private void addResourceType(List<String> description) {
 		int descriptionStart;
 		int descriptionEnd;
-		String name;
-		List<Integer> requires;
-		List<Integer> conflictsWith;
+		String name = null;
+		List<Integer> requires = null;
+		List<Integer> conflictsWith = null;
 		int dailyAvailability;
+		boolean conflictsWithSelf = false;
 		for (String line : description) {
 			if (line.startsWith("name")) {
 				descriptionStart = line.indexOf("\"");
 				descriptionEnd = line.length() - 1;
-				name = line.substring(descriptionStart, descriptionEnd);
-			}
-			if (line.startsWith("requires")) {
-
-			}
-			if (line.startsWith("conflictsWith")) {
-
-			}
-			if (line.startsWith("dailyAvailability")) {
-				if (!line.endsWith(":")) {
-					descriptionStart = line.indexOf(":") + 2;
-					descriptionEnd = line.length();
-					dailyAvailability = Integer.parseInt(line.substring(
-							descriptionStart, descriptionEnd));
-				}
+				name = line.substring(descriptionStart + 1, descriptionEnd);
+			} else if (line.startsWith("requires") && !line.endsWith(": []")) {
+				descriptionStart = line.indexOf("[");
+				descriptionEnd = line.length() - 1;
+				requires = parseIntegerList(line.substring(descriptionStart,
+						descriptionEnd));
+			} else if (line.startsWith("conflictsWith")
+					&& !line.endsWith(": []")) {
+				descriptionStart = line.indexOf("[");
+				descriptionEnd = line.length() - 1;
+				conflictsWith = parseIntegerList(line.substring(
+						descriptionStart, descriptionEnd));
+			} else if (line.startsWith("dailyAvailability")
+					&& !line.endsWith(":")) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+				dailyAvailability = Integer.parseInt(line.substring(
+						descriptionStart, descriptionEnd));
 			}
 		}
 
+		List<ResourceType> requiredTypes = new ArrayList<ResourceType>();
+		List<ResourceType> conflictingTypes = new ArrayList<ResourceType>();
+
+		if (requires != null) {
+			for (int i : requires) {
+				requiredTypes.add(resourceHandler.getResourceTypes().get(i));
+			}
+		}
+		if (conflictsWith != null) {
+			if (conflictsWith.contains(resourceHandler.getResourceTypes()
+					.size())) {
+				conflictsWith.remove(conflictsWith.size() - 1);
+				conflictsWithSelf = true;
+			}
+			for (int i : conflictsWith) {
+				conflictingTypes.add(resourceHandler.getResourceTypes().get(i));
+			}
+		}
+
+		resourceHandler.addResourceType(name, requiredTypes, conflictingTypes,
+				conflictsWithSelf);
+
+		// TODO add daily availability to resource type
 	}
 
 	private void parseResources(ArrayList<String> resources) {
@@ -300,14 +345,31 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
-
 	}
 
 	private void addResource(List<String> description) {
-		// TODO Auto-generated method stub
-
+		int descriptionStart;
+		int descriptionEnd;
+		String name = null;
+		int type = -1;
+		for (String line : description) {
+			if (line.startsWith("name")) {
+				descriptionStart = line.indexOf("\"");
+				descriptionEnd = line.length() - 1;
+				name = line.substring(descriptionStart, descriptionEnd);
+			} else if (line.startsWith("type")) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+				type = Integer.parseInt(line.substring(descriptionStart,
+						descriptionEnd));
+			}
+		}
+		LocalTime startTime = null;
+		LocalTime endTime = null;
+		// TODO Daily availability in resource constructor?
+		resourceHandler.getResourceTypes().get(type)
+				.addResource(name, startTime, endTime);
 	}
 
 	private void parseDevelopers(ArrayList<String> developers) {
@@ -330,14 +392,21 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
-
 	}
 
 	private void addDeveloper(List<String> description) {
-		// TODO Auto-generated method stub
-
+		int descriptionStart;
+		int descriptionEnd;
+		String name = null;
+		for (String line : description) {
+			if (line.startsWith("name")) {
+				descriptionStart = line.indexOf("\"");
+				descriptionEnd = line.length() - 1;
+				name = line.substring(descriptionStart, descriptionEnd);
+			}
+		}
+		userHandler.addDeveloper(name);
 	}
 
 	private void parseProjects(ArrayList<String> projects) {
@@ -360,14 +429,32 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
-
 	}
 
 	private void addProject(List<String> description) {
-		// TODO Auto-generated method stub
-
+		int descriptionStart, descriptionEnd;
+		String name = "";
+		String projectDescription = "";
+		Date creationTime = null, dueTime = null;
+		for (String line : description) {
+			descriptionStart = line.indexOf("\"") + 1;
+			descriptionEnd = line.length() - 1;
+			if (line.startsWith("name")) {
+				name = line.substring(descriptionStart, descriptionEnd);
+			} else if (line.startsWith("description")) {
+				projectDescription = line.substring(descriptionStart,
+						descriptionEnd);
+			} else if (line.startsWith("creationTime")) {
+				creationTime = parseDate(line.substring(descriptionStart,
+						descriptionEnd));
+			} else if (line.startsWith("dueTime")) {
+				dueTime = parseDate(line.substring(descriptionStart,
+						descriptionEnd));
+			}
+		}
+		projectHandler.addProject(name, projectDescription, new DateTime(
+				creationTime), new DateTime(dueTime));
 	}
 
 	private void parsePlannings(ArrayList<String> plannings) {
@@ -390,9 +477,7 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
-
 	}
 
 	private void addPlanning(List<String> description) {
@@ -420,14 +505,100 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
-
 	}
 
 	private void addTask(List<String> description) {
-		// TODO Auto-generated method stub
+		int descriptionStart, descriptionEnd;
+		String taskDescription = "";
+		int project = 0, estimatedDuration = 0, acceptableDeviation = 0, alternativeFor = -1;
+		ArrayList<Integer> prerequisiteTasks = new ArrayList<Integer>();
+		String status = "";
+		Date startTime = null, endTime = null;
+		Map<ResourceType, Integer> resourceTypes = null;
+		List<Task> dependencies = new ArrayList<Task>();
+		Task alternativeForTask = null;
+		int help = 0;
+		int currentProject = 0;
+		for (String line : description) {
+			descriptionStart = line.indexOf("\"") + 1;
+			if (descriptionStart == 0) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+			} else
+				descriptionEnd = line.length() - 1;
+			if (!line.endsWith(":")) {
+				if (line.startsWith("project")) {
+					project = Integer.parseInt(line.substring(descriptionStart,
+							descriptionEnd));
+				} else if (line.startsWith("description")) {
+					taskDescription = line.substring(descriptionStart,
+							descriptionEnd);
+				} else if (line.startsWith("estimatedDuration")) {
+					estimatedDuration = Integer.parseInt(line.substring(
+							descriptionStart, descriptionEnd));
+				} else if (line.startsWith("acceptableDeviation")) {
+					acceptableDeviation = Integer.parseInt(line.substring(
+							descriptionStart, descriptionEnd));
+				} else if (line.startsWith("alternativeFor")) {
+					alternativeFor = Integer.parseInt(line.substring(
+							descriptionStart, descriptionEnd));
+				} else if (line.startsWith("prerequisiteTasks")) {
+					prerequisiteTasks = parseIntegerList(line.substring(
+							descriptionStart, descriptionEnd));
+				} else if (line.startsWith("status")) {
+					status = line.substring(descriptionStart, descriptionEnd);
+				} else if (line.startsWith("startTime")) {
+					startTime = parseDate(line.substring(descriptionStart,
+							descriptionEnd));
+				} else if (line.startsWith("endTime")) {
+					endTime = parseDate(line.substring(descriptionStart,
+							descriptionEnd));
+				}
+			}
+		}
 
+		while (currentProject < project) {
+			help += projectHandler.getProjects().get(currentProject).getTasks()
+					.size();
+			currentProject++;
+		}
+
+		if (!prerequisiteTasks.isEmpty()) {
+			for (int i : prerequisiteTasks) {
+				dependencies.add(projectHandler.getProjects().get(project)
+						.getTasks().get(i - help));
+			}
+		}
+
+		if (alternativeFor != -1) {
+			Task alt = projectHandler.getProjects().get(project).getTasks()
+					.get(alternativeFor - help);
+			if (alt.getStatusName().equals("FAILED")) {
+				alternativeForTask = alt;
+			}
+		}
+
+		projectHandler
+				.getProjects()
+				.get(project)
+				.addTask(taskDescription, estimatedDuration,
+						acceptableDeviation, dependencies, alternativeForTask,
+						resourceTypes);
+
+		if (!status.equals("")) {
+			boolean failed = status.equals("failed");
+			Task currentTask = projectHandler
+					.getProjects()
+					.get(project)
+					.getTasks()
+					.get(projectHandler.getProjects().get(project).getTasks()
+							.size() - 1);
+			if (currentTask.getStatusName().equals("AVAILABLE")) {
+				currentTask.addTimeSpan(failed, new DateTime(startTime),
+						new DateTime(endTime));
+			}
+		}
 	}
 
 	private void parseReservations(ArrayList<String> reservations) {
@@ -446,9 +617,7 @@ public class Parser {
 			if (describing && !line.equals("")) {
 				description.add(line);
 			}
-
 		}
-
 	}
 
 	private void addReservation(List<String> description) {

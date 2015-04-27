@@ -43,7 +43,8 @@ public class Task extends Subject {
 	 */
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) throws IllegalStateException {
+			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			throws IllegalStateException {
 		if (description == null)
 			throw new NullPointerException("Description is null");
 		if (estimatedDuration <= 0)
@@ -68,9 +69,9 @@ public class Task extends Subject {
 
 		if (alternativeFor != null)
 			alternativeFor.addAlternative(this);
-		
+
 		if (resourceTypes != null) {
-			for(Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
+			for (Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
 				addRequiredResourceType(entry.getKey(), entry.getValue());
 			}
 		}
@@ -333,9 +334,7 @@ public class Task extends Subject {
 	 * Set to status available
 	 */
 	public void updateTaskAvailability() throws IllegalStateException {
-
 		this.status.updateTaskAvailability(this);
-
 	}
 
 	protected void performUpdateTaskAvailability(Status status) {
@@ -351,7 +350,7 @@ public class Task extends Subject {
 
 		}
 		this.status = status;
-		
+
 		this.notifyAllDependants(); // notify dependant task
 		this.notifyAllObservers(); // observer pattern for project
 	}
@@ -410,21 +409,22 @@ public class Task extends Subject {
 		return (totalExecutedTime - this.estimatedDuration) * 100
 				/ this.estimatedDuration;
 	}
-	
+
 	public boolean isSeverelyOverdue() {
 		return this.status.isSeverelyOverdue(this);
 	}
-	
+
 	protected boolean performIsSeverelyOverDue() {
 		return getOverduePercentage() > getAcceptableDeviation();
 	}
-	
+
 	public boolean isPlanned() {
 		boolean planned = false;
-		
+
 		if (getRequiredResourceTypes().size() > 0) {
-			for(Entry<ResourceType, Integer> entry : getRequiredResourceTypes().entrySet()) {
-				for(Resource resource : entry.getKey().getResources()) {
+			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+					.entrySet()) {
+				for (Resource resource : entry.getKey().getResources()) {
 					for (Reservation reservation : resource.getReservations()) {
 						if (reservation.getTask().equals(this)) {
 							planned = true;
@@ -434,8 +434,8 @@ public class Task extends Subject {
 				}
 			}
 		}
-		
+
 		return planned;
 	}
-	
+
 }

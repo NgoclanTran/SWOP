@@ -31,15 +31,15 @@ public class ResourceHandler {
 	 * @param name
 	 * @param requires
 	 * @param conflictsWith
-	 * @param startTime
-	 * @param endTime
+	 * @param selfConflicting
 	 * 
 	 * @throws IllegalArgumentException
 	 */
 	public void addResourceType(String name, List<ResourceType> requires,
-			List<ResourceType> conflictsWith) throws IllegalArgumentException {
+			List<ResourceType> conflictsWith, boolean selfConflicting)
+			throws IllegalArgumentException {
 		ResourceType resourceType = new ResourceType(name, requires,
-				conflictsWith);
+				conflictsWith, selfConflicting);
 		addResourceType(resourceType);
 	}
 

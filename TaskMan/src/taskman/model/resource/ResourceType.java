@@ -27,15 +27,18 @@ public class ResourceType {
 	 * @throws IllegalArgumentException
 	 */
 	public ResourceType(String name, List<ResourceType> requires,
-			List<ResourceType> conflictsWith) throws IllegalArgumentException {
+			List<ResourceType> conflictsWith, boolean selfConflicting)
+			throws IllegalArgumentException {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		this.name = name;
-		if(requires != null)
+		if (requires != null)
 			this.requires.addAll(requires);
-		if(conflictsWith != null)
+		if (conflictsWith != null)
 			this.conflictsWith.addAll(conflictsWith);
-
+		if (selfConflicting) {
+			this.conflictsWith.add(this);
+		}
 	}
 
 	/**
@@ -46,7 +49,7 @@ public class ResourceType {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * Returns the list of resources.
 	 * 
@@ -81,8 +84,9 @@ public class ResourceType {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public void addResource(String name, LocalTime startTime, LocalTime endTime) throws IllegalArgumentException {
-		Resource resource = new Resource(name,startTime, endTime);
+	public void addResource(String name, LocalTime startTime, LocalTime endTime)
+			throws IllegalArgumentException {
+		Resource resource = new Resource(name, startTime, endTime);
 		resources.add(resource);
 	}
 
@@ -96,9 +100,12 @@ public class ResourceType {
 	 * @return Returns a list of resources that are suggested by the system to
 	 *         perform the task in the given timespan.
 	 */
-	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) throws IllegalStateException {
-		if(timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
-		if(amount < 0) throw new IllegalArgumentException("The amount cannot be negative.");
+	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount)
+			throws IllegalStateException {
+		if (timeSpan == null)
+			throw new IllegalArgumentException("The timeSpan cannot be null.");
+		if (amount < 0)
+			throw new IllegalArgumentException("The amount cannot be negative.");
 		List<Resource> availableResources = getAvailableResources(timeSpan);
 		if (availableResources.size() < amount)
 			throw new IllegalStateException("Not enough resources.");
@@ -119,7 +126,8 @@ public class ResourceType {
 	 *         available in the given timespan.
 	 */
 	public List<Resource> getAvailableResources(TimeSpan timeSpan) {
-		if(timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
+		if (timeSpan == null)
+			throw new IllegalArgumentException("The timeSpan cannot be null.");
 		ArrayList<Resource> availableResources = new ArrayList<Resource>();
 		for (Resource resource : resources) {
 			boolean available = resource.isAvailableAt(timeSpan);
@@ -142,7 +150,7 @@ public class ResourceType {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;
