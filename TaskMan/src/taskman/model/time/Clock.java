@@ -56,19 +56,33 @@ public class Clock implements IClock {
 	}
 	
 	public DateTime addBreaks(DateTime time) {
-		if (time.getDayOfWeek() > 5) {
-			time = time.plusDays(8 - time.getDayOfWeek());
-		}
 		if (time.getHourOfDay() == 11 && time.getMinuteOfHour() > 0) {
 			time = time.plusHours(1);
 		}
 		if (time.getHourOfDay() == 17 && time.getMinuteOfHour() == 0) {
 			time = time.plusHours(15);
 		}
+		if (time.getDayOfWeek() > 5) {
+			time = time.plusDays(8 - time.getDayOfWeek());
+		}
 	
 		return time;
 	}
 	
+	public DateTime addMinutes(DateTime time, int minutesToAdd) {
+		while (minutesToAdd > 0) {
+			time = time.plusMinutes(1);
+			time = addBreaks(time);
+			minutesToAdd -= 1;
+		}
+		return time;
+	}
+	
+	public DateTime getExactHour(DateTime time) {
+		time = time.plusMinutes((60 - time.getMinuteOfHour()) % 60);
+		return resetSecondsAndMilliSeconds(time);
+	}
+
 	public DateTime resetSecondsAndMilliSeconds(DateTime time) {
 		time = time.minusSeconds(time.getSecondOfMinute());
 		time = time.minusMillis(time.getMillisOfSecond());

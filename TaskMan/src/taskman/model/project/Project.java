@@ -194,7 +194,7 @@ public class Project implements Observer {
 				minutesToAdd += t.getEstimatedDuration();
 			}
 		}
-		return calculateEstimatedFinishTime(lastEndTime, minutesToAdd);
+		return clock.addMinutes(lastEndTime, minutesToAdd);
 	}
 
 	/**
@@ -221,22 +221,6 @@ public class Project implements Observer {
 			return calculateTotalDelayInMinutes(dueTime, lastEndTime);
 		else
 			return -calculateTotalDelayInMinutes(lastEndTime, dueTime);
-		// Duration dur = new Duration(dueTime, lastEndTime);
-		// int delay = dur.toStandardMinutes().getMinutes();
-		// if (delay > 0) {
-		// totalDelay = delay;
-		// }
-		// return totalDelay;
-	}
-
-	private DateTime calculateEstimatedFinishTime(DateTime lastEndTime,
-			int minutesToAdd) {
-		while (minutesToAdd > 0) {
-			lastEndTime = lastEndTime.plusMinutes(1);
-			lastEndTime = clock.addBreaks(lastEndTime);
-			minutesToAdd -= 1;
-		}
-		return lastEndTime;
 	}
 
 	private int calculateTotalDelayInMinutes(DateTime expected, DateTime real) {

@@ -10,6 +10,10 @@ public interface IClock {
 	
 	public DateTime addBreaks(DateTime time);
 	
+	public DateTime addMinutes(DateTime time, int minutesToAdd);
+	
+	public DateTime getExactHour(DateTime time);
+	
 	public DateTime resetSecondsAndMilliSeconds(DateTime time);
 
 }

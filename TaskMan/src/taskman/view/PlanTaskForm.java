@@ -9,11 +9,14 @@ import org.joda.time.DateTime;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.resource.Resource;
+import taskman.model.resource.ResourceType;
+import taskman.model.time.TimeSpan;
 
 public class PlanTaskForm implements IPlanTaskForm {
-	
+
 	View view;
-	
+
 	public PlanTaskForm(View view) {
 		this.view = view;
 	}
@@ -30,7 +33,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 			throw new ShouldExitException();
 		}
 	}
-	
+
 	private void displayProjectsWithUnplannedTasksList(List<Project> projects,
 			List<List<Task>> unplannedTasks) throws ShouldExitException {
 		if (projects.size() != unplannedTasks.size()) {
@@ -50,7 +53,8 @@ public class PlanTaskForm implements IPlanTaskForm {
 	}
 
 	@Override
-	public DateTime getStartTime(Set<DateTime> startTimes) throws ShouldExitException {
+	public DateTime getStartTime(Set<DateTime> startTimes)
+			throws ShouldExitException {
 		List<DateTime> startTimesList = new ArrayList<DateTime>();
 		List<String> startTimesStringList = new ArrayList<String>();
 		for (DateTime startTime : startTimes) {
@@ -60,13 +64,14 @@ public class PlanTaskForm implements IPlanTaskForm {
 		startTimesStringList.add("Enter custom start time");
 		view.output.displayList(startTimesStringList, 0, true);
 		view.output.displayEmptyLine();
-		int startTimeId = view.getListChoice(startTimesStringList, "Select a start time:");
+		int startTimeId = view.getListChoice(startTimesStringList,
+				"Select a start time:");
 		if (startTimeId == startTimesStringList.size())
 			return getCustomStartTime();
 		else
 			return (DateTime) startTimesList.get(startTimeId - 1);
 	}
-	
+
 	private DateTime getCustomStartTime() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
@@ -86,6 +91,93 @@ public class PlanTaskForm implements IPlanTaskForm {
 			view.output.displayEmptyLine();
 			throw new ShouldExitException();
 		}
+	}
+
+	public List<Resource> getResources(TimeSpan timeSpan,
+			List<ResourceType> resourceTypes, List<Integer> amounts,
+			List<List<Resource>> suggestedResources) throws ShouldExitException {
+		try {
+			String changeResource = "Y";
+			while (!view.isValidNoAnswer(changeResource)) {
+				view.displayInfo("Suggested resources for each resource type:");
+				displayResourceTypesWithSuggestedResources(false, resourceTypes,
+						amounts, suggestedResources);
+				view.displayInfo("Do you want to change a(nother) resource? (Y/N or cancel):");
+				changeResource = view.input.getInput();
+				view.output.displayEmptyLine();
+
+				if (view.isValidYesAnswer(changeResource)) {
+					suggestedResources = changeResource(timeSpan,
+							resourceTypes, amounts, suggestedResources);
+				}
+			}
+			
+			List<Resource> resources = new ArrayList<Resource>();
+			for (List<Resource> list : suggestedResources) {
+				resources.addAll(list);
+		    }
+			
+			return resources;
+		} catch (ShouldExitException e) {
+			view.output.displayEmptyLine();
+			throw new ShouldExitException();
+		}
+	}
+
+	private List<List<Resource>> changeResource(TimeSpan timeSpan,
+			List<ResourceType> resourceTypes, List<Integer> amounts,
+			List<List<Resource>> suggestedResources) throws ShouldExitException {
+		displayResourceTypesWithSuggestedResources(true, resourceTypes,
+				amounts, suggestedResources);
+		int resourceTypeId = view.getListChoice(resourceTypes,
+				"Select a resource type:");
+
+		view.output.displayList(suggestedResources.get(resourceTypeId - 1), 0,
+				true);
+		view.output.displayEmptyLine();
+		int resourceId = view.getListChoice(
+				suggestedResources.get(resourceTypeId - 1),
+				"Select the resource you want to change:");
+
+		view.displayInfo("You want to change resource ("
+				+ suggestedResources.get(resourceTypeId - 1)
+						.get(resourceId - 1) + ") with:");
+
+		List<Resource> availableResources = resourceTypes.get(
+				resourceTypeId - 1).getAvailableResources(timeSpan);
+		view.output.displayList(availableResources, 0, true);
+		view.output.displayEmptyLine();
+		int newResourceId = view.getListChoice(availableResources,
+				"Select the new resource:");
+		
+		suggestedResources.get(resourceTypeId - 1).set(resourceId - 1, availableResources.get(newResourceId - 1));
+		
+		return suggestedResources;
+	}
+
+	private void displayResourceTypesWithSuggestedResources(
+			boolean printReturn, List<ResourceType> resourceTypes,
+			List<Integer> amounts, List<List<Resource>> suggestedResources)
+			throws ShouldExitException {
+		if (resourceTypes.size() != suggestedResources.size()) {
+			view.displayError("Error occured while creating the suggested resources list.");
+			throw new ShouldExitException();
+		}
+
+		if (printReturn)
+			view.displayInfo("0. Return");
+		for (int i = 1; i <= suggestedResources.size(); i++) {
+			if (suggestedResources.get(i - 1).size() == 0)
+				continue;
+			String resourceType = i + ". "
+					+ resourceTypes.get(i - 1).getName().toString() + ": "
+					+ amounts.get(i - 1).toString() + " resource(s)";
+			view.displayInfo(resourceType);
+			view.output.displayList(suggestedResources.get(i - 1), 1, false);
+			view.output.displayEmptyLine();
+		}
+
+		view.output.displayEmptyLine();
 	}
 
 }

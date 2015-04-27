@@ -44,12 +44,21 @@ public class TaskMan {
 					null, null);
 			
 			resourceHandler.addResourceType("Car", null, null);
+			resourceHandler.getResourceTypes().get(0).addResource("Car 1", null, null);
+			resourceHandler.getResourceTypes().get(0).addResource("Car 2", null, null);
+			
+			resourceHandler.addResourceType("Classroom", null, null);
+			resourceHandler.getResourceTypes().get(1).addResource("Classroom 1", null, null);
+			resourceHandler.getResourceTypes().get(1).addResource("Classroom 2", null, null);
+			
+			projectHandler.getProjects().get(0).getTasks().get(0).addRequiredResourceType(resourceHandler.getResourceTypes().get(0), 1);
+			projectHandler.getProjects().get(0).getTasks().get(0).addRequiredResourceType(resourceHandler.getResourceTypes().get(1), 1);
 			
 			clock.setSystemTime(new DateTime(2015, 1, 1, 8, 0));
 
 			controller.run();
 		} catch (IllegalArgumentException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
