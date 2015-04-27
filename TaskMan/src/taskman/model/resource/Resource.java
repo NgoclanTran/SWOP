@@ -10,7 +10,6 @@ import taskman.exceptions.IllegalTimeException;
 import taskman.model.project.task.Task;
 import taskman.model.time.TimeSpan;
 
-
 public class Resource {
 
 	String name;
@@ -23,15 +22,18 @@ public class Resource {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public Resource(String name, LocalTime startTime, LocalTime endTime) throws IllegalTimeException,IllegalTimeException {
+	public Resource(String name, LocalTime startTime, LocalTime endTime)
+			throws IllegalTimeException, IllegalTimeException {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		if (startTime == null && endTime == null)
-			this.dailyAvailability = new DailyAvailability(new LocalTime(0, 0), new LocalTime(0, 0));
+			this.dailyAvailability = new DailyAvailability(new LocalTime(0, 0),
+					new LocalTime(0, 0));
 		else if (startTime != null && endTime != null)
 			this.dailyAvailability = new DailyAvailability(startTime, endTime);
 		else
-			throw new IllegalArgumentException("Both the start time and end time need to be a localtime or null.");
+			throw new IllegalArgumentException(
+					"Both the start time and end time need to be a localtime or null.");
 		this.name = name;
 	}
 
@@ -43,6 +45,7 @@ public class Resource {
 	public String getName() {
 		return this.name;
 	}
+
 	/**
 	 * Returns the daily availability of the resource type.
 	 * 
@@ -52,14 +55,22 @@ public class Resource {
 		return this.dailyAvailability;
 	}
 
+	/**
+	 * Returns whether or not the resource is available during the given
+	 * timespan.
+	 * 
+	 * @param timeSpan
+	 * 
+	 * @return Returns whether or not the resource is available during the given
+	 *         timespan.
+	 */
 	public boolean isAvailableAt(TimeSpan timeSpan) {
-		//TODO check if the DailyAvailiblity of this resource
-		// SOLVED, NEEDS TO BE CHECKED PROPERLY
 		for (Reservation reservation : reservations) {
-			
-			DateTime reservationStart = reservation.getTimeSpan().getStartTime();
+
+			DateTime reservationStart = reservation.getTimeSpan()
+					.getStartTime();
 			DateTime reservationEnd = reservation.getTimeSpan().getEndTime();
-			
+
 			boolean before = timeSpan.getStartTime().isBefore(reservationStart)
 					&& timeSpan.getEndTime().isBefore(reservationStart);
 			boolean after = timeSpan.getStartTime().isAfter(reservationEnd)
@@ -68,24 +79,43 @@ public class Resource {
 				return false;
 			}
 		}
-		if (this.dailyAvailability.getStartTime().getHourOfDay() > timeSpan.getStartTime().getHourOfDay()){
+		if (this.dailyAvailability.getStartTime().getHourOfDay() > timeSpan
+				.getStartTime().getHourOfDay()) {
 			return false;
 		}
-		if (this.dailyAvailability.getEndTime().getHourOfDay() < timeSpan.getEndTime().getHourOfDay()){
+		if (this.dailyAvailability.getEndTime().getHourOfDay() < timeSpan
+				.getEndTime().getHourOfDay()) {
 			return false;
 		}
 		return true;
 	}
 
-	public void addReservation(Task task, TimeSpan timeSpan) throws NullPointerException{
-		if(task == null) throw new NullPointerException("The given Task is null.");
-		if( timeSpan == null) throw new NullPointerException("The given timeSpan is null.");
-		if(!this.isAvailableAt(timeSpan)) throw new IllegalTimeException("The resource cannot be reserved at the given timeSpan.");
-		
+	/**
+	 * Adds the reservation to the resource's reservation list.
+	 * 
+	 * @param task
+	 * @param timeSpan
+	 * @throws NullPointerException
+	 */
+	public void addReservation(Task task, TimeSpan timeSpan)
+			throws NullPointerException {
+		if (task == null)
+			throw new NullPointerException("The given Task is null.");
+		if (timeSpan == null)
+			throw new NullPointerException("The given timeSpan is null.");
+		if (!this.isAvailableAt(timeSpan))
+			throw new IllegalTimeException(
+					"The resource cannot be reserved at the given timeSpan.");
+
 		Reservation reservation = new Reservation(task, timeSpan);
 		reservations.add(reservation);
 	}
 
+	/**
+	 * Returns a copy of the list of reservations for the resource.
+	 * 
+	 * @return Returns a copy of the list of reservations for the resource.
+	 */
 	public List<Reservation> getReservations() {
 		return new ArrayList<Reservation>(reservations);
 	}

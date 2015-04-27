@@ -20,7 +20,9 @@ public class TaskMan {
 			IView commandLineInterface = new View();
 			ProjectHandler projectHandler = new ProjectHandler();
 			ResourceHandler resourceHandler = new ResourceHandler();
-			MainSession controller = new MainSession(commandLineInterface, projectHandler, resourceHandler);
+			Parser parser = new Parser(projectHandler, resourceHandler);
+			MainSession controller = new MainSession(commandLineInterface,
+					projectHandler, resourceHandler);
 
 			projectHandler.addProject("Project x", "Test project 1",
 					new DateTime(), new DateTime(2015, 5, 1, 0, 0));
@@ -36,11 +38,12 @@ public class TaskMan {
 					.get(0)
 					.addTask("Task description", 10, 1, new ArrayList<Task>(),
 							null);
-			
+
 			resourceHandler.addResourceType("Car", null, null);
-			
+
 			clock.setSystemTime(new DateTime(2015, 1, 1, 8, 0));
 
+			parser.parse();
 			controller.run();
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
