@@ -2,7 +2,7 @@ package taskman.controller.planning;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.joda.time.DateTime;
 
@@ -13,11 +13,15 @@ import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.resource.Reservation;
+import taskman.model.resource.Resource;
+import taskman.model.resource.ResourceType;
+import taskman.model.time.TimeSpan;
 import taskman.view.IView;
 
 public class PlanTaskSession extends Session {
-	
-	PlanningService planning = new PlanningService(getRH());
+
+	PlanningService planning = new PlanningService();
 
 	/**
 	 * Creates the planning session using the given UI, ProjectHandler and
@@ -41,11 +45,11 @@ public class PlanTaskSession extends Session {
 	public void run() {
 		showProjectsAndUnplannedTasks();
 	}
-	
+
 	private void showProjectsAndUnplannedTasks() {
 		List<Project> projects = getPH().getProjects();
 		List<List<Task>> unplannedTasksList = getUnplannedTasksAllProjects(projects);
-		
+
 		if (unplannedTasksList.size() == 0) {
 			getUI().displayError("No unplanned tasks.");
 			return;
@@ -53,15 +57,15 @@ public class PlanTaskSession extends Session {
 
 		Project project;
 		try {
-			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(projects,
-					unplannedTasksList);
+			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(
+					projects, unplannedTasksList);
 		} catch (ShouldExitException e) {
 			return;
 		}
 
 		showUnplannedTasks(project);
 	}
-	
+
 	private void showUnplannedTasks(Project project) {
 		List<Task> tasks = getUnplannedTasks(project.getTasks());
 		getUI().displayProjectDetails(project);
@@ -78,27 +82,54 @@ public class PlanTaskSession extends Session {
 
 		planTask(project, task);
 	}
-	
+
 	private void planTask(Project project, Task task) {
 		while (true) {
 			try {
 				DateTime startTime = getStartTime(project, task);
-				
+
+				if (!isValidStartTime(task, startTime)) {
+					new ResolveConflictSession(getUI(), getPH(), getRH(), task,
+							getConflictingTask(task, startTime)).run();
+					break;
+				}
+
 				getUI().displayInfo(startTime.toString());
 				break;
-				
-//				if (isValidUpdateTask(task, isFailed, startTime, endTime))
-//					break;
+
+				// if (isValidUpdateTask(task, isFailed, startTime, endTime))
+				// break;
 			} catch (ShouldExitException e) {
 				return;
 			}
 		}
 	}
-	
+
+	private Task getConflictingTask(Task task, DateTime startTime) {
+		for (Entry<ResourceType, Integer> entry : task
+				.getRequiredResourceTypes().entrySet()) {
+			for (Resource resource : entry.getKey().getResources()) {
+				for (Reservation reservation : resource.getReservations()) {
+					if (reservation.getTimeSpan().getStartTime().isEqual(startTime))
+						return reservation.getTask();
+				}
+			}
+		}
+		
+		return null;
+	}
+
+	private boolean isValidStartTime(Task task, DateTime startTime) {
+		return planning.isValidTimeSpan(
+				task,
+				new TimeSpan(startTime, startTime.plusMinutes(task
+						.getEstimatedDuration())), null);
+	}
+
 	private List<List<Task>> getUnplannedTasksAllProjects(List<Project> projects) {
 		List<List<Task>> unplannedTasksList = new ArrayList<>();
 		List<Task> unplannedTasks = null;
-		
+
 		boolean noUnplannedTasks = true;
 
 		for (Project p : projects) {
@@ -114,7 +145,7 @@ public class PlanTaskSession extends Session {
 		else
 			return unplannedTasksList;
 	}
-	
+
 	/**
 	 * This method returns the list of planned tasks.
 	 * 
@@ -131,9 +162,11 @@ public class PlanTaskSession extends Session {
 		}
 		return unplannedTasks;
 	}
-	
+
 	private DateTime getStartTime(Project project, Task task) {
-		return getUI().getPlanTaskForm().getStartTime(planning.getPossibleStartTimes(task, 3, project.getCreationTime()));
+		return getUI().getPlanTaskForm().getStartTime(
+				planning.getPossibleStartTimes(task, 3,
+						project.getCreationTime()));
 	}
 
 }

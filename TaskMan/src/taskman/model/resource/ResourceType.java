@@ -96,12 +96,15 @@ public class ResourceType {
 	 * @return Returns a list of resources that are suggested by the system to
 	 *         perform the task in the given timespan.
 	 */
-	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) {
+	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount) throws IllegalStateException {
 		if(timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
 		if(amount < 0) throw new IllegalArgumentException("The amount cannot be negative.");
-		ArrayList<Resource> suggestedResources = new ArrayList<Resource>();
+		List<Resource> availableResources = getAvailableResources(timeSpan);
+		if (availableResources.size() < amount)
+			throw new IllegalStateException("Not enough resources.");
+		List<Resource> suggestedResources = new ArrayList<Resource>();
 		for (int i = 0; i < amount; i++) {
-			suggestedResources.add(getAvailableResources(timeSpan).get(i));
+			suggestedResources.add(availableResources.get(i));
 		}
 		return suggestedResources;
 	}
@@ -120,8 +123,8 @@ public class ResourceType {
 		ArrayList<Resource> availableResources = new ArrayList<Resource>();
 		for (Resource resource : resources) {
 			boolean available = resource.isAvailableAt(timeSpan);
-			boolean requirements = false;
-			if (requires != null) {
+			boolean requirements = true;
+			if (requires != null && !requires.isEmpty()) {
 				requirements = checkRequiredResourceTypes(timeSpan);
 			}
 			if (available && requirements) {

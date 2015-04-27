@@ -3,7 +3,6 @@ package taskman.controller.project;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
@@ -59,16 +58,13 @@ public class CreateTaskSession extends Session {
 				Task alternativeFor = null;
 				if (failedTasks.size() > 0)
 					alternativeFor = getAlternativeFor(project.getTasks());
+				Map<ResourceType, Integer> resourceTypes = null;
+				if (getRH().getResourceTypes().size() > 0)
+					resourceTypes = getResourceTypes();
 
 				if (isValidTask(project, description, estimatedDuration,
-						acceptableDeviation, dependencies, alternativeFor)) {
-					//TODO: als er geannuleerd wordt moet de taak verwijderd worden!
-					if (getRH().getResourceTypes().size() > 0) {
-						addResourceTypesToTask(project, getResourceTypes());
-					}
-
+						acceptableDeviation, dependencies, alternativeFor, resourceTypes))
 					break;
-				}
 
 			} catch (ShouldExitException e) {
 				return;
@@ -92,10 +88,10 @@ public class CreateTaskSession extends Session {
 	 */
 	private boolean isValidTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor) {
+			List<Task> dependencies, Task alternativeFor, Map<ResourceType, Integer> resourceTypes) {
 		try {
 			project.addTask(description, estimatedDuration,
-					acceptableDeviation, dependencies, alternativeFor);
+					acceptableDeviation, dependencies, alternativeFor, resourceTypes);
 			getUI().displayInfo("Task created");
 			return true;
 		} catch (NullPointerException nullEx) {
@@ -222,19 +218,6 @@ public class CreateTaskSession extends Session {
 				failedTasks.add(task);
 		}
 		return failedTasks;
-	}
-	
-	/**
-	 * This method adds all the required resource types and their amounts to the last task.
-	 * 
-	 * @param project
-	 * @param resourceTypes
-	 */
-	private void addResourceTypesToTask(Project project, Map<ResourceType, Integer> resourceTypes) {
-		Task task = project.getTasks().get(project.getTasks().size() - 1);
-		for(Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
-			task.addRequiredResourceType(entry.getKey(), entry.getValue());
-		}
 	}
 
 }

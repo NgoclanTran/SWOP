@@ -62,7 +62,7 @@ public class Clock implements IClock {
 		if (time.getHourOfDay() == 11 && time.getMinuteOfHour() > 0) {
 			time = time.plusHours(1);
 		}
-		if (time.getHourOfDay() == 17 && time.getMinuteOfHour() > 0) {
+		if (time.getHourOfDay() == 17 && time.getMinuteOfHour() == 0) {
 			time = time.plusHours(15);
 		}
 	
