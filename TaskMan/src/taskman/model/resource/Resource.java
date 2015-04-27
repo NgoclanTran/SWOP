@@ -121,5 +121,10 @@ public class Resource {
 	}
 
 	private List<Reservation> reservations = new ArrayList<Reservation>();
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 
 }

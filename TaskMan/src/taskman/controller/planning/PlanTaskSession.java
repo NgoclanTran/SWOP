@@ -16,11 +16,14 @@ import taskman.model.project.task.Task;
 import taskman.model.resource.Reservation;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.time.Clock;
+import taskman.model.time.IClock;
 import taskman.model.time.TimeSpan;
 import taskman.view.IView;
 
 public class PlanTaskSession extends Session {
 
+	IClock clock = Clock.getInstance();
 	PlanningService planning = new PlanningService();
 
 	/**
@@ -87,14 +90,19 @@ public class PlanTaskSession extends Session {
 		while (true) {
 			try {
 				DateTime startTime = getStartTime(project, task);
+				TimeSpan timeSpan = new TimeSpan(startTime, clock.addMinutes(
+						startTime, task.getEstimatedDuration()));
 
-				if (!isValidStartTime(task, startTime)) {
+				if (!isValidStartTime(task, timeSpan)) {
 					new ResolveConflictSession(getUI(), getPH(), getRH(), task,
 							getConflictingTask(task, startTime)).run();
 					break;
 				}
 
-				getUI().displayInfo(startTime.toString());
+				List<Resource> resources = new ArrayList<Resource>();
+				if (task.getRequiredResourceTypes().size() > 0)
+					resources = getResources(task, timeSpan);
+
 				break;
 
 				// if (isValidUpdateTask(task, isFailed, startTime, endTime))
@@ -105,25 +113,25 @@ public class PlanTaskSession extends Session {
 		}
 	}
 
-	private Task getConflictingTask(Task task, DateTime startTime) {
+	private List<Resource> getResources(Task task, TimeSpan timeSpan)
+			throws ShouldExitException {
+		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
+		List<Integer> amounts = new ArrayList<Integer>();
+		List<List<Resource>> suggestedResources = new ArrayList<>();
 		for (Entry<ResourceType, Integer> entry : task
 				.getRequiredResourceTypes().entrySet()) {
-			for (Resource resource : entry.getKey().getResources()) {
-				for (Reservation reservation : resource.getReservations()) {
-					if (reservation.getTimeSpan().getStartTime().isEqual(startTime))
-						return reservation.getTask();
-				}
-			}
+			resourceTypes.add(entry.getKey());
+			amounts.add(entry.getValue());
+			suggestedResources.add(entry.getKey().getSuggestedResources(
+					timeSpan, entry.getValue()));
 		}
-		
-		return null;
+
+		return getUI().getPlanTaskForm().getResources(timeSpan, resourceTypes,
+				amounts, suggestedResources);
 	}
 
-	private boolean isValidStartTime(Task task, DateTime startTime) {
-		return planning.isValidTimeSpan(
-				task,
-				new TimeSpan(startTime, startTime.plusMinutes(task
-						.getEstimatedDuration())), null);
+	private boolean isValidStartTime(Task task, TimeSpan timeSpan) {
+		return planning.isValidTimeSpan(task, timeSpan, null);
 	}
 
 	private List<List<Task>> getUnplannedTasksAllProjects(List<Project> projects) {
@@ -167,6 +175,21 @@ public class PlanTaskSession extends Session {
 		return getUI().getPlanTaskForm().getStartTime(
 				planning.getPossibleStartTimes(task, 3,
 						project.getCreationTime()));
+	}
+
+	private Task getConflictingTask(Task task, DateTime startTime) {
+		for (Entry<ResourceType, Integer> entry : task
+				.getRequiredResourceTypes().entrySet()) {
+			for (Resource resource : entry.getKey().getResources()) {
+				for (Reservation reservation : resource.getReservations()) {
+					if (reservation.getTimeSpan().getStartTime()
+							.isEqual(startTime))
+						return reservation.getTask();
+				}
+			}
+		}
+
+		return null;
 	}
 
 }

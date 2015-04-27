@@ -18,7 +18,7 @@ public class PlanningService {
 	IClock clock = Clock.getInstance();
 
 	public PlanningService() {
-		
+
 	}
 
 	/**
@@ -42,15 +42,16 @@ public class PlanningService {
 		if (earliestPossibleStartTime == null
 				|| earliestPossibleStartTime.isBefore(clock.getSystemTime()))
 			earliestPossibleStartTime = clock.getSystemTime();
-		earliestPossibleStartTime = clock.resetSecondsAndMilliSeconds(earliestPossibleStartTime);
+		earliestPossibleStartTime = clock
+				.getExactHour(earliestPossibleStartTime);
 		Set<DateTime> possibleStartTimes = new TreeSet<DateTime>();
 		DateTime startTime = clock
 				.getFirstPossibleStartTime(earliestPossibleStartTime);
+		//TODO: Deze loop kan oneindig worden!
 		while (possibleStartTimes.size() < amount) {
-			if (isValidTimeSpan(
-					task,
-					new TimeSpan(startTime, startTime.plusMinutes(task
-							.getEstimatedDuration())), earliestPossibleStartTime))
+			TimeSpan timeSpan = new TimeSpan(startTime, clock.addMinutes(
+					startTime, task.getEstimatedDuration()));
+			if (isValidTimeSpan(task, timeSpan, earliestPossibleStartTime))
 				possibleStartTimes.add(startTime);
 			startTime = startTime.plusHours(1);
 			startTime = clock.addBreaks(startTime);
@@ -69,7 +70,7 @@ public class PlanningService {
 	 * 
 	 * @return Returns whether or not the timespan is valid for the task.
 	 */
-	//TODO: Check for developers?
+	// TODO: Check for developers?
 	public boolean isValidTimeSpan(Task task, TimeSpan timeSpan,
 			DateTime earliestPossibleStartTime) {
 		if (task == null)
@@ -83,9 +84,12 @@ public class PlanningService {
 		if (timeSpan.getStartTime().isBefore(earliestPossibleStartTime)) {
 			return false;
 		} else {
-			Map<ResourceType, Integer> requiredResourceTypes = task.getRequiredResourceTypes();
-			for (Entry<ResourceType, Integer> entry : requiredResourceTypes.entrySet()) {
-				if (entry.getKey().getAvailableResources(timeSpan).size() < entry.getValue())
+			Map<ResourceType, Integer> requiredResourceTypes = task
+					.getRequiredResourceTypes();
+			for (Entry<ResourceType, Integer> entry : requiredResourceTypes
+					.entrySet()) {
+				if (entry.getKey().getAvailableResources(timeSpan).size() < entry
+						.getValue())
 					return false;
 			}
 		}

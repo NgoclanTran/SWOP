@@ -264,7 +264,16 @@ public class Task extends Subject {
 		if (!checkResourceTypeRequirements(resourceType))
 			throw new IllegalArgumentException(
 					"Required resource has to be added first.");
+		if (!hasEnougResources(resourceType, amount))
+			throw new IllegalArgumentException("Not enough resources.");
 		requiredResourceTypes.put(resourceType, amount);
+	}
+	
+	private boolean hasEnougResources(ResourceType resourceType, int amount) {
+		if (resourceType.getResources().size() < amount)
+			return false;
+		else
+			return true;
 	}
 
 	private boolean checkResourceTypeConflicts(ResourceType resourceType) {

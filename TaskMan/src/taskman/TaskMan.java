@@ -22,7 +22,7 @@ public class TaskMan {
 			parser.parse();
 			controller.run();
 		} catch (IllegalArgumentException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
