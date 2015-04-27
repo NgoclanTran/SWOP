@@ -45,7 +45,19 @@ public class TimeSpanTest {
 		TimeSpan ts = new TimeSpan(start, t);
 		
 	}
-	
+	@Test (expected = IllegalDateException.class)
+	public void constructorTest_FalseCase_DayOfTheWeekEndTime(){
+		DateTime t = new DateTime(2015,7,25,14,1);
+		TimeSpan ts = new TimeSpan(start, t);
+		
+	}
+	@Test (expected = IllegalDateException.class)
+	public void constructorTest_FalseCase_DayOfTheWeekStartTime(){
+		DateTime t = new DateTime(2015,7,25,14,1);
+		DateTime t1 = new DateTime(2015,7,29,14,1);
+		TimeSpan ts = new TimeSpan(t, t1);
+		
+	}
 	@Test
 	public void calculatedPerformedTimeTest_TrueCase(){
 		TimeSpan ts = new TimeSpan(start, end);
