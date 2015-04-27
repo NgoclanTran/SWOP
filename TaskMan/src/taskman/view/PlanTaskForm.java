@@ -1,6 +1,8 @@
 package taskman.view;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -48,12 +50,42 @@ public class PlanTaskForm implements IPlanTaskForm {
 	}
 
 	@Override
-	public DateTime getStartTime(List<DateTime> startTimes) {
-		view.output.displayList(startTimes, 0, true);
+	public DateTime getStartTime(Set<DateTime> startTimes) throws ShouldExitException {
+		List<DateTime> startTimesList = new ArrayList<DateTime>();
+		List<String> startTimesStringList = new ArrayList<String>();
+		for (DateTime startTime : startTimes) {
+			startTimesList.add(startTime);
+			startTimesStringList.add(view.getStringDate(startTime));
+		}
+		startTimesStringList.add("Enter custom start time");
+		view.output.displayList(startTimesStringList, 0, true);
 		view.output.displayEmptyLine();
-		int startTimeId = view.getListChoice(startTimes, "Select a start time:");
-		view.displayInfo("Chosen start time: " + startTimeId);
-		return null;
+		int startTimeId = view.getListChoice(startTimesStringList, "Select a start time:");
+		if (startTimeId == startTimesStringList.size())
+			return getCustomStartTime();
+		else
+			return (DateTime) startTimesList.get(startTimeId - 1);
+	}
+	
+	private DateTime getCustomStartTime() throws ShouldExitException {
+		try {
+			view.displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
+			String date = view.input.getInput();
+			view.output.displayEmptyLine();
+
+			while (!view.isValidDateTime(date)) {
+				view.displayError("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
+				date = view.input.getInput();
+				view.output.displayEmptyLine();
+			}
+
+			DateTime startTime = view.formatter.parseDateTime(date);
+
+			return startTime;
+		} catch (ShouldExitException e) {
+			view.output.displayEmptyLine();
+			throw new ShouldExitException();
+		}
 	}
 
 }

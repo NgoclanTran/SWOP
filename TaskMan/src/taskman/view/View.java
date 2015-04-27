@@ -67,7 +67,7 @@ public class View implements IView {
 			return false;
 	}
 
-	private String getStringDate(DateTime time) {
+	protected String getStringDate(DateTime time) {
 		return formatter.print(time);
 	}
 

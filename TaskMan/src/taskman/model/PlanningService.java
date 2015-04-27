@@ -1,9 +1,9 @@
 package taskman.model;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.joda.time.DateTime;
 
@@ -43,22 +43,21 @@ public class PlanningService {
 		if (!(amount > 0))
 			throw new IllegalArgumentException(
 					"Amount has to be greater than 0");
-		if (earliestPossibleStartTime == null) {
+		if (earliestPossibleStartTime == null
+				|| earliestPossibleStartTime.isBefore(clock.getSystemTime()))
 			earliestPossibleStartTime = clock.getSystemTime();
-		}
-		HashSet<DateTime> possibleStartTimes = new HashSet<DateTime>();
-		DateTime startTime = earliestPossibleStartTime;
+		earliestPossibleStartTime = clock.resetSecondsAndMilliSeconds(earliestPossibleStartTime);
+		Set<DateTime> possibleStartTimes = new TreeSet<DateTime>();
+		DateTime startTime = clock
+				.getFirstPossibleStartTime(earliestPossibleStartTime);
 		while (possibleStartTimes.size() < amount) {
-			possibleStartTimes.add(startTime);
+			if (isValidTimeSpan(
+					task,
+					new TimeSpan(startTime, startTime.plusMinutes(task
+							.getEstimatedDuration())), earliestPossibleStartTime))
+				possibleStartTimes.add(startTime);
 			startTime = startTime.plusHours(1);
-			//TODO: De vaste uren laten vragen aan de daily availability van developer
-			if (startTime.getHourOfDay() == 17) {
-				startTime = startTime.plusHours(15);
-			}
-			if (startTime.getDayOfWeek() > 5) {
-				startTime = startTime.plusDays(2);
-			}
-
+			startTime = clock.addBreaks(startTime);
 		}
 		return possibleStartTimes;
 	}
@@ -74,6 +73,7 @@ public class PlanningService {
 	 * 
 	 * @return Returns whether or not the timespan is valid for the task.
 	 */
+	//TODO: Check for developers?
 	public boolean isValidTimeSpan(Task task, TimeSpan timeSpan,
 			DateTime earliestPossibleStartTime) {
 		if (task == null)
@@ -81,7 +81,7 @@ public class PlanningService {
 		if (earliestPossibleStartTime == null) {
 			earliestPossibleStartTime = clock.getSystemTime();
 		}
-		if (timeSpan == null){
+		if (timeSpan == null) {
 			throw new IllegalArgumentException("TimeSpan can not be null");
 		}
 		if (timeSpan.getStartTime().isBefore(earliestPossibleStartTime)) {

@@ -8,6 +8,7 @@ import taskman.controller.MainSession;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
+import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
 
@@ -15,6 +16,7 @@ public class TaskMan {
 
 	public static void main(String[] args) {
 		try {
+			Clock clock = Clock.getInstance();
 			IView commandLineInterface = new View();
 			ProjectHandler projectHandler = new ProjectHandler();
 			ResourceHandler resourceHandler = new ResourceHandler();
@@ -36,6 +38,8 @@ public class TaskMan {
 							null);
 			
 			resourceHandler.addResourceType("Car", null, null);
+			
+			clock.setSystemTime(new DateTime(2015, 1, 1, 8, 0));
 
 			controller.run();
 		} catch (IllegalArgumentException e) {

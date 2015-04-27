@@ -5,6 +5,9 @@ import org.joda.time.DateTime;
 import taskman.exceptions.IllegalDateException;
 
 public class TimeSpan {
+	
+	IClock clock = Clock.getInstance();
+	
 	/**
 	 * The constructor of time span
 	 * 
@@ -61,15 +64,7 @@ public class TimeSpan {
 		while (start.isBefore(end)) {
 			minutesSpent++;
 			start = start.plusMinutes(1);
-			if (start.getDayOfWeek() > 5) {
-				start = start.plusDays(2);
-			}
-			if (start.getHourOfDay() == 11 && start.getMinuteOfHour() > 0) {
-				start = start.plusHours(1);
-			}
-			if (start.getHourOfDay() == 17 && start.getMinuteOfHour() > 0) {
-				start = start.plusHours(15);
-			}
+			start = clock.addBreaks(start);
 		}
 
 		return minutesSpent;

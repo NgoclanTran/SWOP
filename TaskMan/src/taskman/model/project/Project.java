@@ -7,8 +7,12 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
 import taskman.model.project.task.Task;
+import taskman.model.time.Clock;
+import taskman.model.time.IClock;
 
 public class Project implements Observer {
+	
+	IClock clock = Clock.getInstance();
 
 	/**
 	 * Creates a new project.
@@ -177,7 +181,7 @@ public class Project implements Observer {
 
 	// TODO Testing
 	protected DateTime performGetEstimatedFinishTime() {
-		DateTime lastEndTime = getFirstPossibleStartTime(creationTime);
+		DateTime lastEndTime = clock.getFirstPossibleStartTime(creationTime);
 		int minutesToAdd = 0;
 		for (Task t : this.tasks) {
 			if (t.isCompleted()) {
@@ -223,62 +227,11 @@ public class Project implements Observer {
 		// return totalDelay;
 	}
 
-	private DateTime getFirstPossibleStartTime(DateTime time) {
-		if (time.getHourOfDay() < 8) {
-			time = time.plusMinutes((60 - time
-					.getMinuteOfHour()) % 60);
-			time = time.plusHours(8 - time
-					.getHourOfDay());
-		} else if (time.getHourOfDay() >= 17) {
-			time = time.plusMinutes((60 - time
-					.getMinuteOfHour()) % 60);
-			time = time.plusHours((24 - time
-					.getHourOfDay()) % 24);
-			time = time.plusHours(8);
-		}
-		if (time.getDayOfWeek() == 6) {
-			time = time.plusDays(1);
-			time = time.plusMinutes((60 - time
-					.getMinuteOfHour()) % 60);
-			time = time.plusHours((24 - time
-					.getHourOfDay()) % 24);
-			time = time.plusHours(8);
-		} else if (time.getDayOfWeek() == 7) {
-			time = time.plusMinutes((60 - time
-					.getMinuteOfHour()) % 60);
-			time = time.plusHours((24 - time
-					.getHourOfDay()) % 24);
-			time = time.plusHours(8);
-		}
-		time = resetSecondsAndMilliSeconds(time);
-		return time;
-	}
-
-	private DateTime resetSecondsAndMilliSeconds(DateTime time) {
-		time = time.minusSeconds(time.getSecondOfMinute());
-		time = time.minusMillis(time.getMillisOfSecond());
-		return time;
-	}
-
-	private DateTime calculateBreaks(DateTime time) {
-		if (time.getDayOfWeek() > 5) {
-			time = time.plusDays(2);
-		}
-		if (time.getHourOfDay() == 11 && time.getMinuteOfHour() > 0) {
-			time = time.plusHours(1);
-		}
-		if (time.getHourOfDay() == 17 && time.getMinuteOfHour() > 0) {
-			time = time.plusHours(15);
-		}
-	
-		return time;
-	}
-
 	private DateTime calculateEstimatedFinishTime(DateTime lastEndTime,
 			int minutesToAdd) {
 		while (minutesToAdd > 0) {
 			lastEndTime = lastEndTime.plusMinutes(1);
-			lastEndTime = calculateBreaks(lastEndTime);
+			lastEndTime = clock.addBreaks(lastEndTime);
 			minutesToAdd -= 1;
 		}
 		return lastEndTime;
@@ -286,11 +239,11 @@ public class Project implements Observer {
 
 	private int calculateTotalDelayInMinutes(DateTime expected, DateTime real) {
 		int minutes = 0;
-		expected = getFirstPossibleStartTime(expected);
-		real = getFirstPossibleStartTime(real);
+		expected = clock.getFirstPossibleStartTime(expected);
+		real = clock.getFirstPossibleStartTime(real);
 		while (expected.isBefore(real)) {
 			expected = expected.plusMinutes(1);
-			expected = calculateBreaks(expected);
+			expected = clock.addBreaks(expected);
 			minutes += 1;
 		}
 		return minutes;

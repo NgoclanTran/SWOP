@@ -84,6 +84,9 @@ public class PlanTaskSession extends Session {
 			try {
 				DateTime startTime = getStartTime(project, task);
 				
+				getUI().displayInfo(startTime.toString());
+				break;
+				
 //				if (isValidUpdateTask(task, isFailed, startTime, endTime))
 //					break;
 			} catch (ShouldExitException e) {
@@ -130,8 +133,7 @@ public class PlanTaskSession extends Session {
 	}
 	
 	private DateTime getStartTime(Project project, Task task) {
-		List<DateTime> startTimes = new ArrayList<DateTime>(planning.getPossibleStartTimes(task, 3, project.getCreationTime()));
-		return getUI().getPlanTaskForm().getStartTime(startTimes);
+		return getUI().getPlanTaskForm().getStartTime(planning.getPossibleStartTimes(task, 3, project.getCreationTime()));
 	}
 
 }

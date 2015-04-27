@@ -1,6 +1,7 @@
 package taskman.view;
 
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -12,6 +13,6 @@ public interface IPlanTaskForm {
 	public Project getProjectWithUnplannedTasks(List<Project> projects,
 			List<List<Task>> unplannedTasks);
 	
-	public DateTime getStartTime(List<DateTime> startTimes);
+	public DateTime getStartTime(Set<DateTime> startTimes);
 
 }
