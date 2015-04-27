@@ -6,7 +6,6 @@ import taskman.exceptions.IllegalDateException;
 
 class Available  implements Status {
 
-
 	private final String name = "AVAILABLE";
 	
 	@Override
@@ -77,6 +76,5 @@ class Available  implements Status {
 	public boolean isSeverelyOverdue(Task task) {
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
-
 
 }

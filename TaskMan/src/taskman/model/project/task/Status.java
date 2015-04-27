@@ -96,6 +96,7 @@ public void addTimeSpan(Task task, boolean failed, DateTime startTime, DateTime 
 public boolean isAlternativeCompleted(Task task);
 
 public boolean isSeverelyOverdue(Task task);
+
 }
 
 

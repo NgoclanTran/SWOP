@@ -1,5 +1,9 @@
 package taskman.controller;
 
+import java.util.Arrays;
+import java.util.List;
+
+import taskman.controller.planning.PlanTaskSession;
 import taskman.controller.project.CreateProjectSession;
 import taskman.controller.project.CreateTaskSession;
 import taskman.controller.project.ShowProjectSession;
@@ -9,6 +13,9 @@ import taskman.model.ResourceHandler;
 import taskman.view.IView;
 
 public class MainSession extends Session {
+	
+	private final List<String> menu = Arrays.asList("Show projects",
+			"Create project", "Create task", "Update task", "Plan task", "Quit");
 
 	/**
 	 * Constructor of the main session. This session will start the main menu on
@@ -32,7 +39,7 @@ public class MainSession extends Session {
 		getUI().displayWelcome();
 
 		while (true) {
-			int menuId = getUI().getMainMenuID();
+			int menuId = getUI().getMainMenuID(menu);
 
 			switch (menuId) {
 			case 1:
@@ -48,6 +55,9 @@ public class MainSession extends Session {
 				new UpdateTaskStatusSession(getUI(), getPH(), getRH()).run();
 				break;
 			case 5:
+				new PlanTaskSession(getUI(), getPH(), getRH()).run();
+				break;
+			case 6:
 				return;
 			}
 		}
