@@ -88,9 +88,11 @@ public class ResourceTest {
 		
 	}
 	
-	@Test //(expected = IllegalTimeException.class)
+	@Test(expected = IllegalTimeException.class)
 	public void addReservationTest_NotAvailable_DailyAvailibility(){
-		//TODO
+		Resource r = new Resource(name, startTime, endTime);
+		TimeSpan t1 = new TimeSpan(new DateTime(2015,10,12,8,0),new DateTime(2015,10,12,9,0));
+		r.addReservation(task, t1);
 	}
 	
 	@Test (expected = IllegalTimeException.class)
@@ -127,7 +129,11 @@ public class ResourceTest {
 	
 	@Test 
 	public void isAvailableTest_DailyAvailability_FalseCase(){
-		//TODO
+		Resource r = new Resource(name, startTime, endTime);
+		DateTime s = new DateTime(2015,10,12,8,0);
+		DateTime e = new DateTime(2015,10,12,9,0);
+		TimeSpan ts = new TimeSpan(s, e);
+		assertFalse(r.isAvailableAt(ts));
 	}
 	
 	@Test 

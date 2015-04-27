@@ -16,6 +16,7 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.project.CreateTaskSession;
 import taskman.model.ProjectHandler;
+import taskman.model.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
@@ -24,6 +25,7 @@ import taskman.view.View;
 public class CreateTaskSessionTest {
 	private IView cli;
 	private ProjectHandler ph;
+	private ResourceHandler rh;
 	private CreateTaskSession session;
 	private String description;
 	private int estimatedDuration ;
@@ -42,7 +44,8 @@ public class CreateTaskSessionTest {
 		//cli = Mockito.mock(View.class);
 		cli = new View();
 		ph = new ProjectHandler();
-		session = new CreateTaskSession(cli, ph);
+		rh = new ResourceHandler();
+		session = new CreateTaskSession(cli, ph, rh);
 		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null);
@@ -59,7 +62,8 @@ public class CreateTaskSessionTest {
 		public void useCaseTest_NoProject(){
 			IView cli = new View();
 			ProjectHandler ph = new ProjectHandler();
-			CreateTaskSession session = new CreateTaskSession(cli, ph);
+			ResourceHandler rh = new ResourceHandler();
+			CreateTaskSession session = new CreateTaskSession(cli, ph, rh);
 	
 			session.run();
 			String output ="No projects.\r\n\r\n";
@@ -185,6 +189,7 @@ public class CreateTaskSessionTest {
 	
 		@Test
 		public void useCaseTest_InputDependenciesYes_CancelCreation(){
+			//TODO: Geen vraag meer na dependencies, dus het wordt gemaakt.
 			//---------- Before running ----------
 			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
@@ -223,7 +228,7 @@ public class CreateTaskSessionTest {
 			// enter task has dependency: N
 			// cancel creation
 	
-			systemInMock.provideText("1\ndescription\n10\n10\na\nN\ncancel\n0");
+			systemInMock.provideText("1\ndescription\n10\n10\na\ncancel\n0");
 			session.run();
 	
 			//-------- Check if nothing has been changed -------
@@ -234,7 +239,7 @@ public class CreateTaskSessionTest {
 	
 		@Test
 		public void useCaseTest_InputAlterativeForYes_CancelCreation(){
-	
+			//TODO WERKT NIET WANT ER WORDT NIET GEVRAAGD NAAR EEN ALTERNATIVE
 			//---------- Before running ----------
 			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
@@ -246,7 +251,6 @@ public class CreateTaskSessionTest {
 			// enter acceptable devation: 10
 			// enter task has dependency: N
 			// cancel creation
-	
 			systemInMock.provideText("1\ndescription\n10\n10\nN\nY\n1\ncancel\n0");
 			session.run();
 	
@@ -286,6 +290,7 @@ public class CreateTaskSessionTest {
 
 	@Test
 	public void useCaseTest_SuccesScenario_WithDependencies_WithAlternative_NoCreation_ErrorState(){
+		//TODO: De cancel wordt nooit gevraagd want het wordt direct na de N input gemaakt en gestopt
 		//---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
