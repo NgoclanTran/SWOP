@@ -1,7 +1,6 @@
 package taskman.view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -21,9 +20,6 @@ public class View implements IView {
 	protected final Output output;
 	protected final DateTimeFormatter formatter = DateTimeFormat
 			.forPattern("dd-MM-yyyy HH:mm");
-
-	private final List<String> menu = Arrays.asList("Show projects",
-			"Create project", "Create task", "Update task", "Quit");
 
 	public View() {
 		input = new Input();
@@ -184,13 +180,13 @@ public class View implements IView {
 		output.displayEmptyLine();
 	}
 
-	private void displayMainMenu() {
+	private void displayMainMenu(List<String> menu) {
 		output.displayList(menu, 0, false);
 		output.displayEmptyLine();
 	}
 
-	public int getMainMenuID() {
-		displayMainMenu();
+	public int getMainMenuID(List<String> menu) {
+		displayMainMenu(menu);
 		displayInfo("Select an option:");
 		int menuId = input.getNumberInput();
 		output.displayEmptyLine();
@@ -312,6 +308,10 @@ public class View implements IView {
 
 	public IUpdateTaskForm getUpdateTaskForm() {
 		return new UpdateTaskForm(this);
+	}
+
+	public IPlanTaskForm getPlanTaskForm() {
+		return new PlanTaskForm(this);
 	}
 
 }

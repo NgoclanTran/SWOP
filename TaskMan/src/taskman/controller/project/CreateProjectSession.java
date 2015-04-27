@@ -7,9 +7,13 @@ import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.time.Clock;
+import taskman.model.time.IClock;
 import taskman.view.IView;
 
 public class CreateProjectSession extends Session {
+	
+	IClock clock = Clock.getInstance();
 
 	/**
 	 * Creates the create project session using the given UI, ProjectHandler and ResourceHandler.
@@ -44,7 +48,7 @@ public class CreateProjectSession extends Session {
 			try {
 				String name = getName();
 				String description = getDescription();
-				DateTime creationTime = new DateTime();
+				DateTime creationTime = clock.getSystemTime();
 				DateTime dueTime = getDueTime();
 
 				if (isValidProject(name, description, creationTime, dueTime))

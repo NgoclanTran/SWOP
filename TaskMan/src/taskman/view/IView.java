@@ -13,7 +13,7 @@ public interface IView {
 	
 	public void displayWelcome();
 	
-	public int getMainMenuID();
+	public int getMainMenuID(List<String> menu);
 	
 	public void displayProjectDetails(Project project);
 	
@@ -28,5 +28,7 @@ public interface IView {
 	public ICreateTaskForm getNewTaskForm();
 	
 	public IUpdateTaskForm getUpdateTaskForm();
+	
+	public IPlanTaskForm getPlanTaskForm();
 	
 }

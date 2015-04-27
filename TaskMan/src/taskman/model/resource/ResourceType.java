@@ -30,12 +30,11 @@ public class ResourceType {
 			List<ResourceType> conflictsWith) throws IllegalArgumentException {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
-		if(requires == null) throw new IllegalArgumentException("The given requires cannot be null.");
-		if(conflictsWith == null) throw new IllegalArgumentException("The given conflictWith cannot be null."); 
 		this.name = name;
-
-		this.requires.addAll(requires);
-		this.conflictsWith.addAll(conflictsWith);
+		if(requires != null)
+			this.requires.addAll(requires);
+		if(conflictsWith != null)
+			this.conflictsWith.addAll(conflictsWith);
 
 	}
 
@@ -46,6 +45,15 @@ public class ResourceType {
 	 */
 	public String getName() {
 		return this.name;
+	}
+	
+	/**
+	 * Returns the list of resources.
+	 * 
+	 * @return Returns the list of resources.
+	 */
+	public List<Resource> getResources() {
+		return new ArrayList<Resource>(resources);
 	}
 
 	/**

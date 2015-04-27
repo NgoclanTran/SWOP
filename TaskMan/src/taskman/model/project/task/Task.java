@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.resource.Reservation;
+import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.TimeSpan;
 
@@ -409,5 +412,25 @@ public class Task extends Subject {
 	protected boolean performIsSeverelyOverDue() {
 		return getOverduePercentage() > getAcceptableDeviation();
 	}
-
+	
+	public boolean isPlanned() {
+		boolean planned = false;
+		
+		if (getRequiredResourceTypes().size() > 0) {
+			for(Entry<ResourceType, Integer> entry : getRequiredResourceTypes().entrySet()) {
+				for(Resource resource : entry.getKey().getResources()) {
+					for (Reservation reservation : resource.getReservations()) {
+						if (reservation.getTask().equals(this)) {
+							planned = true;
+							break;
+						}
+					}
+					resource.getReservations();
+				}
+			}
+		}
+		
+		return planned;
+	}
+	
 }
