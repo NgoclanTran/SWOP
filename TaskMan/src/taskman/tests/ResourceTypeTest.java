@@ -87,11 +87,14 @@ public class ResourceTypeTest {
 		r.addResource(name, null, null);
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
 		ArrayList<Resource> a = (ArrayList<Resource>) r.getAvailableResources(timeSpan);
-		assertEquals(a.get(0).getName(), name);
-		assertEquals(a.get(0).getDailyAvailability().getStartTime().getMinuteOfHour(),0);
-		assertEquals(a.get(0).getDailyAvailability().getStartTime().getHourOfDay(),0);
-		assertEquals(a.get(0).getDailyAvailability().getEndTime().getHourOfDay(),0);
-		assertEquals(a.get(0).getDailyAvailability().getEndTime().getMinuteOfHour(),0);
+		assertTrue(a.isEmpty());
+		// De lijst zal leeg zijn want als start en end null zijn, wordne die op (0,0) localtime gezet
+		// en zijn ze dus niet available
+		//assertEquals(a.get(0).getName(), name);
+		//assertEquals(a.get(0).getDailyAvailability().getStartTime().getMinuteOfHour(),0);
+		//assertEquals(a.get(0).getDailyAvailability().getStartTime().getHourOfDay(),0);
+		//assertEquals(a.get(0).getDailyAvailability().getEndTime().getHourOfDay(),0);
+		//assertEquals(a.get(0).getDailyAvailability().getEndTime().getMinuteOfHour(),0);
 		
 	}
 	
