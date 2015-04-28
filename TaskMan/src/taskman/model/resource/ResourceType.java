@@ -10,6 +10,7 @@ import taskman.model.time.TimeSpan;
 public class ResourceType {
 
 	String name;
+	boolean selfConflicting;
 	List<ResourceType> requires = new ArrayList<ResourceType>();
 	List<ResourceType> conflictsWith = new ArrayList<ResourceType>();
 	List<Resource> resources = new ArrayList<Resource>();
@@ -21,16 +22,18 @@ public class ResourceType {
 	 * @param name
 	 * @param requires
 	 * @param conflictsWith
-	 * @param startTime
-	 * @param endTime
+	 * @param selfConflicting
 	 * 
 	 * @throws IllegalArgumentException
 	 */
 	public ResourceType(String name, List<ResourceType> requires,
 			List<ResourceType> conflictsWith, boolean selfConflicting)
 			throws IllegalArgumentException {
-		if(requires == null) throw new IllegalArgumentException("The requires cannot be null.");
-		if(conflictsWith == null) throw new IllegalArgumentException("The conflicsWith cannot be null.");
+		if (requires == null)
+			throw new IllegalArgumentException("The requires cannot be null.");
+		if (conflictsWith == null)
+			throw new IllegalArgumentException(
+					"The conflicsWith cannot be null.");
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		this.name = name;
@@ -38,9 +41,7 @@ public class ResourceType {
 			this.requires.addAll(requires);
 		if (conflictsWith != null)
 			this.conflictsWith.addAll(conflictsWith);
-		if (selfConflicting) {
-			this.conflictsWith.add(this);
-		}
+		this.selfConflicting = selfConflicting;
 	}
 
 	/**
@@ -50,6 +51,15 @@ public class ResourceType {
 	 */
 	public String getName() {
 		return this.name;
+	}
+
+	/**
+	 * Returns whether or not the resource type conflicts with itself.
+	 * 
+	 * @return Returns whether or not the resource type conflicts with itself.
+	 */
+	public boolean isSelfConflicting() {
+		return this.selfConflicting;
 	}
 
 	/**
