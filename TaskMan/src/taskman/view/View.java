@@ -139,6 +139,9 @@ public class View implements IView {
 		taskInfo.append("Status: ");
 		taskInfo.append(task.getStatusName());
 		taskInfo.append("\n");
+		taskInfo.append("Estimated duration: ");
+		taskInfo.append(getStringMinutes(task.getEstimatedDuration()));
+		taskInfo.append("\n");
 		taskInfo.append("Acceptable deviation: ");
 		taskInfo.append(task.getAcceptableDeviation());
 		taskInfo.append(" %");

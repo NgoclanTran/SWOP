@@ -124,7 +124,7 @@ public class PlanTaskSession extends Session {
 					resources = getResources(task, timeSpan);
 
 				List<Developer> developers = new ArrayList<Developer>();
-				if (!uh.getDevelopers().isEmpty())
+				if (!uh.getAvailableDevelopers(timeSpan).isEmpty())
 					developers = getDevelopers(task, timeSpan);
 
 				break;

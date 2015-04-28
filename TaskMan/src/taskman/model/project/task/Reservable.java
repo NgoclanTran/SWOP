@@ -59,14 +59,8 @@ public class Reservable {
 				return false;
 			}
 		}
-		if (this.dailyAvailability.getStartTime().getHourOfDay() >= timeSpan
-				.getStartTime().getHourOfDay()) {
+		if(!dailyAvailability.isValidTimeSpan(timeSpan))
 			return false;
-		}
-		if (this.dailyAvailability.getEndTime().getHourOfDay() <= timeSpan
-				.getEndTime().getHourOfDay()) {
-			return false;
-		}
 		return true;
 	}
 	

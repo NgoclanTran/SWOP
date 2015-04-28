@@ -188,10 +188,11 @@ public class PlanTaskForm implements IPlanTaskForm {
 			while (!view.isValidNoAnswer(addDeveloper)) {
 				if (!assignedDevelopers.isEmpty()) {
 					view.displayInfo("Assigned developers:");
-					view.output.displayEmptyLine();
 					view.output.displayList(assignedDevelopers, 0, false);
 					view.output.displayEmptyLine();
 				}
+				if(developers.isEmpty())
+					break;
 				view.displayInfo("Do you want to add a(nother) developer? (Y/N or cancel):");
 				addDeveloper = view.input.getInput();
 				view.output.displayEmptyLine();
