@@ -14,6 +14,9 @@ import taskman.model.resource.ResourceType;
 import taskman.view.IView;
 
 public class CreateTaskSession extends Session {
+	
+	private ResourceHandler rh;
+	
 	/**
 	 * Creates the create task session using the given UI, ProjectHandler and ResourceHandler.
 	 * 
@@ -27,7 +30,25 @@ public class CreateTaskSession extends Session {
 	 * @throws IllegalArgumentException
 	 */
 	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh) {
-		super(cli, ph, rh);
+		super(cli, ph);
+		if (!isValidResourceHandler(rh))
+			throw new IllegalArgumentException(
+					"The create task controller needs a ResourceHandler");
+		this.rh = rh;
+	}
+	
+	/**
+	 * Checks if the given resource handler is valid.
+	 * 
+	 * @param rh
+	 * 
+	 * @return Returns true if the resource handler is different from null.
+	 */
+	private boolean isValidResourceHandler(ResourceHandler rh) {
+		if (rh != null)
+			return true;
+		else 
+			return false;
 	}
 
 	/**
@@ -59,7 +80,7 @@ public class CreateTaskSession extends Session {
 				if (failedTasks.size() > 0)
 					alternativeFor = getAlternativeFor(project.getTasks());
 				Map<ResourceType, Integer> resourceTypes = null;
-				if (getRH().getResourceTypes().size() > 0)
+				if (rh.getResourceTypes().size() > 0)
 					resourceTypes = getResourceTypes();
 
 				if (isValidTask(project, description, estimatedDuration,
@@ -200,7 +221,7 @@ public class CreateTaskSession extends Session {
 	 */
 	private Map<ResourceType, Integer> getResourceTypes()
 			throws ShouldExitException {
-		return getUI().getNewTaskForm().getNewTaskResourceTypes(getRH());
+		return getUI().getNewTaskForm().getNewTaskResourceTypes(rh);
 	}
 
 	/**

@@ -32,14 +32,14 @@ public class TaskTest {
 	@Test(expected = NullPointerException.class)
 	public void constructor1Test_FalseCase_DescriptionNull() {
 		Task t = new Task(null, estimatedDuration, acceptableDeviation,
-				dependencies, null);
+				dependencies, null, null);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void constructor1Test_FalseCase_EstimatedDuration() {
 		Task t = new Task(description, -10, acceptableDeviation, dependencies,
-				null);
+				null, null);
 
 	}
 

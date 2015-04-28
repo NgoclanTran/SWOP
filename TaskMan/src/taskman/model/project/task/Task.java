@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
-import taskman.model.resource.Reservation;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.TimeSpan;
@@ -53,6 +52,8 @@ public class Task extends Subject {
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
 					"The deviation cannot be negative.");
+		if (dependencies == null)
+			throw new NullPointerException("The dependencies cannot be null.");
 
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
@@ -257,10 +258,14 @@ public class Task extends Subject {
 	 * @param resourceType
 	 * @param amount
 	 */
-	public void addRequiredResourceType(ResourceType resourceType, int amount) {
+	public void addRequiredResourceType(ResourceType resourceType, int amount)
+			throws IllegalArgumentException {
 		if (checkResourceTypeConflicts(resourceType))
 			throw new IllegalArgumentException(
 					"Conflicting resource already added.");
+		if (checkResourceTypeSelfConflicting(resourceType, amount))
+			throw new IllegalArgumentException(
+					"Only one of this resource type allowed.");
 		if (!checkResourceTypeRequirements(resourceType))
 			throw new IllegalArgumentException(
 					"Required resource has to be added first.");
@@ -268,7 +273,7 @@ public class Task extends Subject {
 			throw new IllegalArgumentException("Not enough resources.");
 		requiredResourceTypes.put(resourceType, amount);
 	}
-	
+
 	private boolean hasEnougResources(ResourceType resourceType, int amount) {
 		if (resourceType.getResources().size() < amount)
 			return false;
@@ -284,6 +289,14 @@ public class Task extends Subject {
 					return true;
 				}
 			}
+		}
+		return false;
+	}
+
+	private boolean checkResourceTypeSelfConflicting(ResourceType resourceType,
+			int amount) {
+		if (resourceType.isSelfConflicting() && amount > 1) {
+			return true;
 		}
 		return false;
 	}
@@ -428,6 +441,10 @@ public class Task extends Subject {
 	}
 
 	public boolean isPlanned() {
+		return status.isPlanned(this);
+	}
+
+	protected boolean performIsPlanned() {
 		boolean planned = false;
 
 		if (getRequiredResourceTypes().size() > 0) {

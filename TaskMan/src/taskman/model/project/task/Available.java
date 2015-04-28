@@ -77,4 +77,9 @@ class Available  implements Status {
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
+	@Override
+	public boolean isPlanned(Task task) {
+		return task.performIsPlanned();
+	}
+
 }

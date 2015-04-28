@@ -66,4 +66,9 @@ class Unavailable implements Status {
 		throw new IllegalStateException("The task is unavailable");
 	}
 
+	@Override
+	public boolean isPlanned(Task task) {
+		return task.performIsPlanned();
+	}
+
 }

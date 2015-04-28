@@ -64,4 +64,9 @@ class Failed implements Status{
 		return task.performIsSeverelyOverDue();
 	}
 
+	@Override
+	public boolean isPlanned(Task task) {
+		return true;
+	}
+
 }

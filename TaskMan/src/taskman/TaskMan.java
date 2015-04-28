@@ -18,7 +18,7 @@ public class TaskMan {
 			Parser parser = new Parser(projectHandler, resourceHandler,
 					userHandler);
 			MainSession controller = new MainSession(commandLineInterface,
-					projectHandler, resourceHandler);
+					projectHandler, resourceHandler, userHandler);
 			parser.parse();
 			controller.run();
 		} catch (IllegalArgumentException e) {
