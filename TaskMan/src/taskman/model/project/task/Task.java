@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
-import taskman.model.resource.Reservation;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.TimeSpan;

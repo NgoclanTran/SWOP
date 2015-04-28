@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.exceptions.IllegalTimeException;
-import taskman.model.resource.DailyAvailability;
+import taskman.model.time.DailyAvailability;
 
 public class DailyAvailabilityTest {
 	private LocalTime startTime, endTime;

@@ -6,8 +6,6 @@ import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
-import taskman.model.UserHandler;
 import taskman.model.time.Clock;
 import taskman.model.time.IClock;
 import taskman.view.IView;
@@ -23,13 +21,11 @@ public class CreateProjectSession extends Session {
 	 *            The command line interface.
 	 * @param ph
 	 *            The project handler.
-	 * @param rh
-	 *            The resource handler.
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public CreateProjectSession(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh) {
-		super(cli, ph, rh, uh);
+	public CreateProjectSession(IView cli, ProjectHandler ph) {
+		super(cli, ph);
 	}
 
 	@Override

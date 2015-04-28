@@ -1,4 +1,4 @@
-package taskman.model.resource;
+package taskman.model.time;
 
 import org.joda.time.LocalTime;
 

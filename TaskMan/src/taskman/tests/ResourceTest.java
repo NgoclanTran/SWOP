@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import taskman.exceptions.IllegalTimeException;
 import taskman.model.project.task.Task;
-import taskman.model.resource.DailyAvailability;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType; 
+import taskman.model.time.DailyAvailability;
 import taskman.model.time.TimeSpan;
 
 public class ResourceTest {
