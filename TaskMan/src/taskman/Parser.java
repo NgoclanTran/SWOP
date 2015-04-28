@@ -223,16 +223,16 @@ public class Parser {
 		int descriptionStart;
 		int descriptionEnd;
 		for (String line : description) {
-			descriptionStart = line.indexOf("\"");
-			descriptionEnd = line.indexOf("\"", descriptionStart + 1);
+			descriptionStart = line.indexOf("\"") + 1;
+			descriptionEnd = line.indexOf("\"", descriptionStart);
 			if (line.startsWith("startTime")) {
-				startHour = Integer.parseInt(line.substring(
-						descriptionStart + 1, descriptionStart + 3));
+				startHour = Integer.parseInt(line.substring(descriptionStart,
+						descriptionStart + 2));
 				startMinute = Integer.parseInt(line.substring(
 						descriptionEnd - 2, descriptionEnd));
 			} else if (line.startsWith("endTime")) {
-				endHour = Integer.parseInt(line.substring(descriptionStart + 1,
-						descriptionStart + 3));
+				endHour = Integer.parseInt(line.substring(descriptionStart,
+						descriptionStart + 2));
 				endMinute = Integer.parseInt(line.substring(descriptionEnd - 2,
 						descriptionEnd));
 			}
@@ -277,9 +277,9 @@ public class Parser {
 		boolean conflictsWithSelf = false;
 		for (String line : description) {
 			if (line.startsWith("name")) {
-				descriptionStart = line.indexOf("\"");
+				descriptionStart = line.indexOf("\"") + 1;
 				descriptionEnd = line.length() - 1;
-				name = line.substring(descriptionStart + 1, descriptionEnd);
+				name = line.substring(descriptionStart, descriptionEnd);
 			} else if (line.startsWith("requires") && !line.endsWith(": []")) {
 				descriptionStart = line.indexOf("[");
 				descriptionEnd = line.length() - 1;
@@ -355,7 +355,7 @@ public class Parser {
 		int type = -1;
 		for (String line : description) {
 			if (line.startsWith("name")) {
-				descriptionStart = line.indexOf("\"");
+				descriptionStart = line.indexOf("\"") + 1;
 				descriptionEnd = line.length() - 1;
 				name = line.substring(descriptionStart, descriptionEnd);
 			} else if (line.startsWith("type")) {
@@ -401,7 +401,7 @@ public class Parser {
 		String name = null;
 		for (String line : description) {
 			if (line.startsWith("name")) {
-				descriptionStart = line.indexOf("\"");
+				descriptionStart = line.indexOf("\"") + 1;
 				descriptionEnd = line.length() - 1;
 				name = line.substring(descriptionStart, descriptionEnd);
 			}
