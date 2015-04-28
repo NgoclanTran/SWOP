@@ -8,6 +8,7 @@ import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.UserHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.model.resource.ResourceType;
@@ -26,8 +27,8 @@ public class CreateTaskSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh) {
-		super(cli, ph, rh);
+	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh) {
+		super(cli, ph, rh, uh);
 	}
 
 	/**

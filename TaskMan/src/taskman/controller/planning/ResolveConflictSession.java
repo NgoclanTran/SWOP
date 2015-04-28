@@ -3,6 +3,7 @@ package taskman.controller.planning;
 import taskman.controller.Session;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.UserHandler;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
 
@@ -25,8 +26,8 @@ public class ResolveConflictSession extends Session {
 	 * @throws IllegalArgumentException
 	 */
 	public ResolveConflictSession(IView cli, ProjectHandler ph,
-			ResourceHandler rh, Task task, Task conflictingTask) throws IllegalArgumentException {
-		super(cli, ph, rh);
+			ResourceHandler rh, UserHandler uh, Task task, Task conflictingTask) throws IllegalArgumentException {
+		super(cli, ph, rh, uh);
 		this.task = task;
 		this.conflictingTask = conflictingTask;
 	}

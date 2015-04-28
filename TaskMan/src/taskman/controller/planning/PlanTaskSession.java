@@ -11,6 +11,7 @@ import taskman.exceptions.ShouldExitException;
 import taskman.model.PlanningService;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.UserHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.model.resource.Reservation;
@@ -19,6 +20,7 @@ import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.IClock;
 import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 import taskman.view.IView;
 
 public class PlanTaskSession extends Session {
@@ -39,9 +41,9 @@ public class PlanTaskSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public PlanTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh)
+	public PlanTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh)
 			throws IllegalArgumentException {
-		super(cli, ph, rh);
+		super(cli, ph, rh, uh);
 	}
 
 	@Override
@@ -94,15 +96,19 @@ public class PlanTaskSession extends Session {
 						startTime, task.getEstimatedDuration()));
 
 				if (!isValidStartTime(task, timeSpan)) {
-					new ResolveConflictSession(getUI(), getPH(), getRH(), task,
+					new ResolveConflictSession(getUI(), getPH(), getRH(), getUH(), task,
 							getConflictingTask(task, startTime)).run();
 					break;
 				}
 
 				List<Resource> resources = new ArrayList<Resource>();
-				if (task.getRequiredResourceTypes().size() > 0)
+				if (!task.getRequiredResourceTypes().isEmpty())
 					resources = getResources(task, timeSpan);
-
+				
+				List<Developer> developers = new ArrayList<Developer>();
+				if (!getUH().getDevelopers().isEmpty())
+					developers = getDevelopers(task, timeSpan);
+				
 				break;
 
 				// if (isValidUpdateTask(task, isFailed, startTime, endTime))
@@ -111,6 +117,11 @@ public class PlanTaskSession extends Session {
 				return;
 			}
 		}
+	}
+	
+	private List<Developer> getDevelopers(Task task, TimeSpan timeSpan)
+			throws ShouldExitException {
+		return getUI().getPlanTaskForm().getDevelopers(getUH().getAvailableDevelopers(timeSpan));
 	}
 
 	private List<Resource> getResources(Task task, TimeSpan timeSpan)

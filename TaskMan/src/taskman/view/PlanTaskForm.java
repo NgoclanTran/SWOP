@@ -12,6 +12,7 @@ import taskman.model.project.task.Task;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 
 public class PlanTaskForm implements IPlanTaskForm {
 
@@ -124,6 +125,31 @@ public class PlanTaskForm implements IPlanTaskForm {
 		}
 	}
 
+	private void displayResourceTypesWithSuggestedResources(
+			boolean printReturn, List<ResourceType> resourceTypes,
+			List<Integer> amounts, List<List<Resource>> suggestedResources)
+			throws ShouldExitException {
+		if (resourceTypes.size() != suggestedResources.size()) {
+			view.displayError("Error occured while creating the suggested resources list.");
+			throw new ShouldExitException();
+		}
+	
+		if (printReturn)
+			view.displayInfo("0. Return");
+		for (int i = 1; i <= suggestedResources.size(); i++) {
+			if (suggestedResources.get(i - 1).size() == 0)
+				continue;
+			String resourceType = i + ". "
+					+ resourceTypes.get(i - 1).getName().toString() + ": "
+					+ amounts.get(i - 1).toString() + " resource(s)";
+			view.displayInfo(resourceType);
+			view.output.displayList(suggestedResources.get(i - 1), 1, false);
+			view.output.displayEmptyLine();
+		}
+	
+		view.output.displayEmptyLine();
+	}
+
 	private List<List<Resource>> changeResource(TimeSpan timeSpan,
 			List<ResourceType> resourceTypes, List<Integer> amounts,
 			List<List<Resource>> suggestedResources) throws ShouldExitException {
@@ -154,30 +180,41 @@ public class PlanTaskForm implements IPlanTaskForm {
 		
 		return suggestedResources;
 	}
-
-	private void displayResourceTypesWithSuggestedResources(
-			boolean printReturn, List<ResourceType> resourceTypes,
-			List<Integer> amounts, List<List<Resource>> suggestedResources)
-			throws ShouldExitException {
-		if (resourceTypes.size() != suggestedResources.size()) {
-			view.displayError("Error occured while creating the suggested resources list.");
+	
+	public List<Developer> getDevelopers(List<Developer> developers) throws ShouldExitException {
+		try {
+			List<Developer> assignedDevelopers = new ArrayList<Developer>();
+			String addDeveloper = "Y";
+			while (!view.isValidNoAnswer(addDeveloper)) {
+				if (!assignedDevelopers.isEmpty()) {
+					view.displayInfo("Assigned developers:");
+					view.output.displayEmptyLine();
+					view.output.displayList(assignedDevelopers, 0, false);
+					view.output.displayEmptyLine();
+				}
+				view.displayInfo("Do you want to add a(nother) developer? (Y/N or cancel):");
+				addDeveloper = view.input.getInput();
+				view.output.displayEmptyLine();
+				
+				if (view.isValidYesAnswer(addDeveloper)) {
+					Developer developer = addDeveloper(developers);
+					assignedDevelopers.add(developer);
+					developers.remove(developer);
+				}
+			}
+			return assignedDevelopers;
+		} catch (ShouldExitException e) {
+			view.output.displayEmptyLine();
 			throw new ShouldExitException();
 		}
-
-		if (printReturn)
-			view.displayInfo("0. Return");
-		for (int i = 1; i <= suggestedResources.size(); i++) {
-			if (suggestedResources.get(i - 1).size() == 0)
-				continue;
-			String resourceType = i + ". "
-					+ resourceTypes.get(i - 1).getName().toString() + ": "
-					+ amounts.get(i - 1).toString() + " resource(s)";
-			view.displayInfo(resourceType);
-			view.output.displayList(suggestedResources.get(i - 1), 1, false);
-			view.output.displayEmptyLine();
-		}
-
+	}
+	
+	private Developer addDeveloper(List<Developer> developers) throws ShouldExitException {
+		view.displayInfo("List of available developers:");
+		view.output.displayList(developers, 0, true);
 		view.output.displayEmptyLine();
+		int developerId = view.getListChoice(developers, "Select a developer:");
+		return developers.get(developerId - 1);
 	}
 
 }

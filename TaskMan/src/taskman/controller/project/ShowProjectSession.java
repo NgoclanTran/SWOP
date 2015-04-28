@@ -6,6 +6,7 @@ import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.UserHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.view.IView;
@@ -24,9 +25,9 @@ public class ShowProjectSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public ShowProjectSession(IView cli, ProjectHandler ph, ResourceHandler rh)
+	public ShowProjectSession(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh)
 			throws IllegalArgumentException {
-		super(cli, ph, rh);
+		super(cli, ph, rh, uh);
 	}
 
 	/**

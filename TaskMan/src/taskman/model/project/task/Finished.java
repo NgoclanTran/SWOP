@@ -65,4 +65,9 @@ class Finished implements Status{
 		return task.performIsSeverelyOverDue();
 	}
 
+	@Override
+	public boolean isPlanned(Task task) {
+		return true;
+	}
+
 }

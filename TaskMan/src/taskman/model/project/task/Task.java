@@ -427,8 +427,12 @@ public class Task extends Subject {
 	protected boolean performIsSeverelyOverDue() {
 		return getOverduePercentage() > getAcceptableDeviation();
 	}
-
+	
 	public boolean isPlanned() {
+		return status.isPlanned(this);
+	}
+
+	protected boolean performIsPlanned() {
 		boolean planned = false;
 
 		if (getRequiredResourceTypes().size() > 0) {

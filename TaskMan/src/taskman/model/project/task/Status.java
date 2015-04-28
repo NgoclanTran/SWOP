@@ -97,6 +97,8 @@ public boolean isAlternativeCompleted(Task task);
 
 public boolean isSeverelyOverdue(Task task);
 
+public boolean isPlanned(Task task);
+
 }
 
 

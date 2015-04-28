@@ -10,6 +10,7 @@ import taskman.controller.project.ShowProjectSession;
 import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.UserHandler;
 import taskman.view.IView;
 
 public class MainSession extends Session {
@@ -28,8 +29,8 @@ public class MainSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public MainSession(IView cli, ProjectHandler ph, ResourceHandler rh) throws IllegalArgumentException {
-		super(cli, ph, rh);
+	public MainSession(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh) throws IllegalArgumentException {
+		super(cli, ph, rh, uh);
 	}
 
 	/**
@@ -43,19 +44,19 @@ public class MainSession extends Session {
 
 			switch (menuId) {
 			case 1:
-				new ShowProjectSession(getUI(), getPH(), getRH()).run();
+				new ShowProjectSession(getUI(), getPH(), getRH(), getUH()).run();
 				break;
 			case 2:
-				new CreateProjectSession(getUI(),getPH(), getRH()).run();
+				new CreateProjectSession(getUI(),getPH(), getRH(), getUH()).run();
 				break;
 			case 3:
-				new CreateTaskSession(getUI(), getPH(), getRH()).run();
+				new CreateTaskSession(getUI(), getPH(), getRH(), getUH()).run();
 				break;
 			case 4:
-				new UpdateTaskStatusSession(getUI(), getPH(), getRH()).run();
+				new UpdateTaskStatusSession(getUI(), getPH(), getRH(), getUH()).run();
 				break;
 			case 5:
-				new PlanTaskSession(getUI(), getPH(), getRH()).run();
+				new PlanTaskSession(getUI(), getPH(), getRH(), getUH()).run();
 				break;
 			case 6:
 				return;
