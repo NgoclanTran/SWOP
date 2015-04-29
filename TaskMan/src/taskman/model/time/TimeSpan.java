@@ -51,7 +51,14 @@ public class TimeSpan {
 	public DateTime getEndTime() {
 		return this.endTime;
 	}
-
+	public boolean isDuringTimeSpan(DateTime time){
+		if(this.getStartTime().isBefore(time) && this.getEndTime().isAfter(time)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	/**
 	 * Will return the performed time of the time span
 	 * 

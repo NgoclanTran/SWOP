@@ -374,7 +374,25 @@ public class Task extends Subject {
 			}
 
 		}
-
+		if (getRequiredResourceTypes().size() > 0) {
+			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+						.entrySet()) {
+				for (Resource resource : entry.getKey().getResources()) {						
+					for (Reservation reservation : resource.getReservations()) {
+						if(!(this.getTimeSpan().isDuringTimeSpan(this.clock.getSystemTime()))){
+							if(reservation.getTimeSpan().isDuringTimeSpan(this.clock.getSystemTime())){
+								return;
+							}
+						}
+						else{
+							if (!(reservation.getTask().equals(this))) {
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
 		this.status = status;
 
 		this.notifyAllDependants(); // notify dependant task
