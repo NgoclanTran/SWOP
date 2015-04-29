@@ -7,7 +7,6 @@ public class Caretaker {
 	// TODO Documentation
 
 	ClockMemento savedClockMemento;
-	ProjectHandlerMemento savedProjectHandlerMemento;
 	ArrayList<ProjectMemento> savedProjectMementos = new ArrayList<ProjectMemento>();
 	ArrayList<ReservableMemento> savedDeveloperMementos = new ArrayList<ReservableMemento>();
 	ArrayList<ReservableMemento> savedResourceMementos = new ArrayList<ReservableMemento>();
@@ -19,14 +18,6 @@ public class Caretaker {
 
 	public ClockMemento getClockMemento() {
 		return savedClockMemento;
-	}
-
-	public void addProjectHandlerMemento(ProjectHandlerMemento m) {
-		savedProjectHandlerMemento = m;
-	}
-
-	public ProjectHandlerMemento getProjectHandlerMemento() {
-		return savedProjectHandlerMemento;
 	}
 
 	public void addProjectMemento(ProjectMemento m) {
