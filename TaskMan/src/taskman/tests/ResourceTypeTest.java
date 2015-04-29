@@ -45,6 +45,16 @@ public class ResourceTypeTest {
 		ResourceType r = new ResourceType(name, null, conflictWith,false);
 	}
 	
+	@Test
+	public void isSelfConflictingTest_False(){
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
+		assertEquals(r.isSelfConflicting(), false);
+	}
+	@Test
+	public void isSelfConflictingTest_True(){
+		ResourceType r = new ResourceType(name, requires, conflictWith,true);
+		assertEquals(r.isSelfConflicting(), true);
+	}
 	@Test (expected = IllegalArgumentException.class)
 	public void constructorTest_ConflictWith_Null(){
 		ResourceType r = new ResourceType(name, requires, null,false);
@@ -109,6 +119,16 @@ public class ResourceTypeTest {
 		assertEquals(a.get(0).getDailyAvailability().getEndTime(), endTime);
 	
 	}
+	@Test
+	public void getResourceTest(){
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
+		Resource r1 = new Resource(name,startTime,endTime);
+		r.addResource(name, startTime, endTime);
+		assertEquals(r1.getName(), r.getResources().get(0).getName());
+		assertEquals(r1.getDailyAvailability().getStartTime(), r.getResources().get(0).getDailyAvailability().getStartTime());
+		assertEquals(r1.getDailyAvailability().getEndTime(), r.getResources().get(0).getDailyAvailability().getEndTime());
+
+	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void getSuggestedResourcesTest_TimeSpan_Null(){
@@ -121,6 +141,13 @@ public class ResourceTypeTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
 		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.getSuggestedResources(timeSpan, -1);
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void getSuggestedResourcesTest_Amount_High(){
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
+		r.getSuggestedResources(timeSpan, 50000);
 	}
 	
 	@Test
@@ -165,6 +192,11 @@ public class ResourceTypeTest {
 		assertEquals(r.getAvailableResources(timeSpan).size(), 3);
 	}
 	
-
+	@Test
+	public void toStringTest(){
+		ResourceType r = new ResourceType(name, requires, conflictWith,false);
+		assertEquals(r.toString(), name);
+	}
+	
 
 }
