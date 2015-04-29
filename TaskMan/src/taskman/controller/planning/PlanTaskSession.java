@@ -41,8 +41,8 @@ public class PlanTaskSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public PlanTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh)
-			throws IllegalArgumentException {
+	public PlanTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh,
+			UserHandler uh) throws IllegalArgumentException {
 		super(cli, ph, rh, uh);
 	}
 
@@ -96,19 +96,19 @@ public class PlanTaskSession extends Session {
 						startTime, task.getEstimatedDuration()));
 
 				if (!isValidStartTime(task, timeSpan)) {
-					new ResolveConflictSession(getUI(), getPH(), getRH(), getUH(), task,
-							getConflictingTask(task, startTime)).run();
+					new ResolveConflictSession(getUI(), getPH(), getRH(),
+							getUH()).run(task, getConflictingTask(task, startTime));
 					break;
 				}
 
 				List<Resource> resources = new ArrayList<Resource>();
 				if (!task.getRequiredResourceTypes().isEmpty())
 					resources = getResources(task, timeSpan);
-				
+
 				List<Developer> developers = new ArrayList<Developer>();
 				if (!getUH().getDevelopers().isEmpty())
-					developers = getDevelopers(task, timeSpan);
-				
+					developers = getDevelopers();
+
 				break;
 
 				// if (isValidUpdateTask(task, isFailed, startTime, endTime))
@@ -117,28 +117,6 @@ public class PlanTaskSession extends Session {
 				return;
 			}
 		}
-	}
-	
-	private List<Developer> getDevelopers(Task task, TimeSpan timeSpan)
-			throws ShouldExitException {
-		return getUI().getPlanTaskForm().getDevelopers(getUH().getAvailableDevelopers(timeSpan));
-	}
-
-	private List<Resource> getResources(Task task, TimeSpan timeSpan)
-			throws ShouldExitException {
-		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<List<Resource>> suggestedResources = new ArrayList<>();
-		for (Entry<ResourceType, Integer> entry : task
-				.getRequiredResourceTypes().entrySet()) {
-			resourceTypes.add(entry.getKey());
-			amounts.add(entry.getValue());
-			suggestedResources.add(entry.getKey().getSuggestedResources(
-					timeSpan, entry.getValue()));
-		}
-
-		return getUI().getPlanTaskForm().getResources(timeSpan, resourceTypes,
-				amounts, suggestedResources);
 	}
 
 	private boolean isValidStartTime(Task task, TimeSpan timeSpan) {
@@ -201,6 +179,27 @@ public class PlanTaskSession extends Session {
 		}
 
 		return null;
+	}
+
+	private List<Resource> getResources(Task task, TimeSpan timeSpan)
+			throws ShouldExitException {
+		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
+		List<Integer> amounts = new ArrayList<Integer>();
+		List<List<Resource>> suggestedResources = new ArrayList<>();
+		for (Entry<ResourceType, Integer> entry : task
+				.getRequiredResourceTypes().entrySet()) {
+			resourceTypes.add(entry.getKey());
+			amounts.add(entry.getValue());
+			suggestedResources.add(entry.getKey().getSuggestedResources(
+					timeSpan, entry.getValue()));
+		}
+
+		return getUI().getPlanTaskForm().getResources(timeSpan, resourceTypes,
+				amounts, suggestedResources);
+	}
+
+	private List<Developer> getDevelopers() throws ShouldExitException {
+		return getUI().getPlanTaskForm().getDevelopers(getUH().getDevelopers());
 	}
 
 }

@@ -9,8 +9,8 @@ import taskman.view.IView;
 
 public class ResolveConflictSession extends Session {
 	
-	Task task;
-	Task conflictingTask;
+	Task task = null;
+	Task conflictingTask = null;
 
 	/**
 	 * Creates the planning session using the given UI, ProjectHandler and
@@ -26,15 +26,19 @@ public class ResolveConflictSession extends Session {
 	 * @throws IllegalArgumentException
 	 */
 	public ResolveConflictSession(IView cli, ProjectHandler ph,
-			ResourceHandler rh, UserHandler uh, Task task, Task conflictingTask) throws IllegalArgumentException {
+			ResourceHandler rh, UserHandler uh) throws IllegalArgumentException {
 		super(cli, ph, rh, uh);
+	}
+
+	public void run(Task task, Task conflictingTask) {
 		this.task = task;
 		this.conflictingTask = conflictingTask;
 	}
 
 	@Override
 	public void run() {
-
+		// TODO Auto-generated method stub
+		
 	}
 
 }

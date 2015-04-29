@@ -191,10 +191,10 @@ public class PlanTaskForm implements IPlanTaskForm {
 					view.output.displayEmptyLine();
 					view.output.displayList(assignedDevelopers, 0, false);
 					view.output.displayEmptyLine();
+					view.displayInfo("Do you want to add a(nother) developer? (Y/N or cancel):");
+					addDeveloper = view.input.getInput();
+					view.output.displayEmptyLine();
 				}
-				view.displayInfo("Do you want to add a(nother) developer? (Y/N or cancel):");
-				addDeveloper = view.input.getInput();
-				view.output.displayEmptyLine();
 				
 				if (view.isValidYesAnswer(addDeveloper)) {
 					Developer developer = addDeveloper(developers);
@@ -210,7 +210,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 	}
 	
 	private Developer addDeveloper(List<Developer> developers) throws ShouldExitException {
-		view.displayInfo("List of available developers:");
+		view.displayInfo("List of developers:");
 		view.output.displayList(developers, 0, true);
 		view.output.displayEmptyLine();
 		int developerId = view.getListChoice(developers, "Select a developer:");
