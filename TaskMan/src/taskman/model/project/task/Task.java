@@ -11,9 +11,12 @@ import org.joda.time.DateTime;
 import taskman.exceptions.IllegalDateException;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.time.Clock;
+import taskman.model.time.IClock;
 import taskman.model.time.TimeSpan;
 
 public class Task extends Subject {
+	IClock clock = Clock.getInstance();
 
 	/**
 	 * The first constructor of task. This will create a task with the given
@@ -371,6 +374,7 @@ public class Task extends Subject {
 			}
 
 		}
+
 		this.status = status;
 
 		this.notifyAllDependants(); // notify dependant task

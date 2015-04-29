@@ -20,7 +20,9 @@ class Available  implements Status {
 
 	@Override
 	public void updateTaskAvailability(Task task) throws IllegalStateException{
-		throw new IllegalStateException("This task is already available.");		
+		//throw new IllegalStateException("This task is already available.");
+		if(task == null) throw new IllegalStateException("Task cannot be null");
+		task.performUpdateTaskAvailability(new Executing());
 	}
 
 	@Override
