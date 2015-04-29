@@ -56,7 +56,7 @@ class Finished implements Status{
 	}
 
 	@Override
-	public boolean isAlternativeCompleted(Task task) {
+	public boolean isAlternativeFinished(Task task) {
 		throw new IllegalStateException("The available task doesn't have alternative.");
 	}
 

@@ -14,8 +14,15 @@ class Unavailable implements Status {
 	@Override
 	public void updateTaskAvailability(Task task) {
 		if(task == null) throw new NullPointerException("The task is null.");
-		task.performUpdateTaskAvailability(new Available());
 		
+		if (task.dependenciesAreFinished() && task.isPlanned()) {
+			for (Reservation reservation : task.getReservations()) {
+				if (reservation.getTimeSpan().isDuringTimeSpan(clock.getSystemTime()))
+					task.performUpdateTaskAvailability(new Available());
+				else if (task.developersAndResourceTypesAvailable(clock.getSystemTime()))
+					task.performUpdateTaskAvailability(new Available());
+			}
+		}
 	}
 
 	@Override
@@ -57,7 +64,7 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public boolean isAlternativeCompleted(Task task) {
+	public boolean isAlternativeFinished(Task task) {
 		throw new IllegalStateException("The task is unavailable");
 	}
 

@@ -4,37 +4,55 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
 
-class Available  implements Status {
+class Available implements Status {
 
 	private final String name = "AVAILABLE";
-	
+
 	@Override
 	public String getName() {
 		return name;
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) throws IllegalStateException{
-		throw new IllegalStateException("The alternative for task has not failed.");
+	public void addAlternative(Task task, Task alternative)
+			throws IllegalStateException {
+		throw new IllegalStateException(
+				"The alternative for task has not failed.");
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) throws IllegalStateException{
-		throw new IllegalStateException("This task is already available.");		
+	public void updateTaskAvailability(Task task) throws IllegalStateException {
+		if (task == null)
+			throw new IllegalStateException("Task cannot be null");
+
+		if (task.dependenciesAreFinished() && task.isPlanned()) {
+			for (Reservation reservation : task.getReservations()) {
+				if (!reservation.getTimeSpan().isDuringTimeSpan(
+						clock.getSystemTime())
+						&& !task.developersAndResourceTypesAvailable(clock
+								.getSystemTime()))
+					task.performUpdateTaskAvailability(new Unavailable());
+			}
+		}
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) {
-		if(task == null) throw new NullPointerException("The task is null.");
-		if(startTime == null) throw new NullPointerException("The startTime is null.");
-		if(endTime == null) throw new NullPointerException("The endTime is null.");
-		if(startTime.compareTo(endTime) > 0) throw new IllegalDateException("The startTime must start before endTime.");
+		if (task == null)
+			throw new NullPointerException("The task is null.");
+		if (startTime == null)
+			throw new NullPointerException("The startTime is null.");
+		if (endTime == null)
+			throw new NullPointerException("The endTime is null.");
+		if (startTime.compareTo(endTime) > 0)
+			throw new IllegalDateException(
+					"The startTime must start before endTime.");
 		task.performAddTimeSpan(startTime, endTime);
-		if(failed){
-			throw new IllegalArgumentException("Task cannot fail if it isn't executing");
-		}
-		else{
+		if (failed) {
+			throw new IllegalArgumentException(
+					"Task cannot fail if it isn't executing");
+		} else {
 			task.performUpdateTaskAvailability(new Executing());
 		}
 	}
@@ -56,19 +74,20 @@ class Available  implements Status {
 
 	@Override
 	public int calculateTotalExecutedTime(Task task) {
-		//return task.performGetTotalExecutionTime();
+		// return task.performGetTotalExecutionTime();
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task) {
-		//return task.performGetOverduePercentage();
+		// return task.performGetOverduePercentage();
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
-	public boolean isAlternativeCompleted(Task task) {
-		//throw new IllegalStateException("The available task doesn't have alternative.");
+	public boolean isAlternativeFinished(Task task) {
+		// throw new
+		// IllegalStateException("The available task doesn't have alternative.");
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
