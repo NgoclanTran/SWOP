@@ -1,8 +1,6 @@
 package taskman.controller;
 
 import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
-import taskman.model.UserHandler;
 import taskman.view.IView;
 
 public abstract class Session {
@@ -20,22 +18,14 @@ public abstract class Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public Session(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh) throws IllegalArgumentException {
+	public Session(IView cli, ProjectHandler ph) throws IllegalArgumentException {
 		if (!isValidUI(cli))
 			throw new IllegalArgumentException("The controller needs a UI.");
 		if (!isValidProjectHandler(ph))
 			throw new IllegalArgumentException(
 					"The controller needs a ProjectHandler");
-		if (!isValidResourceHandler(rh))
-			throw new IllegalArgumentException(
-					"The controller needs a ResourceHandler");
-		if (!isValidUserHandler(uh))
-			throw new IllegalArgumentException(
-					"The controller needs a UserHandler");
 		this.cli = cli;
 		this.ph = ph;
-		this.rh = rh;
-		this.uh = uh;
 	}
 
 	/**
@@ -88,57 +78,6 @@ public abstract class Session {
 	}
 
 	private ProjectHandler ph;
-	
-	
-	/**
-	 * Checks if the given resource handler is valid.
-	 * 
-	 * @param rh
-	 * 
-	 * @return Returns true if the resource handler is different from null.
-	 */
-	private boolean isValidResourceHandler(ResourceHandler rh) {
-		if (rh != null)
-			return true;
-		else 
-			return false;
-	}
-
-	/**
-	 * Returns the resource handler.
-	 * 
-	 * @return Returns the resource handler.
-	 */
-	public ResourceHandler getRH() {
-		return rh;
-	}
-
-	private ResourceHandler rh;
-
-	/**
-	 * Checks if the given user handler is valid.
-	 * 
-	 * @param rh
-	 * 
-	 * @return Returns true if the user handler is different from null.
-	 */
-	private boolean isValidUserHandler(UserHandler uh) {
-		if (uh != null)
-			return true;
-		else 
-			return false;
-	}
-	
-	/**
-	 * Returns the user handler.
-	 * 
-	 * @return Returns the user handler.
-	 */
-	public UserHandler getUH() {
-		return uh;
-	}
-
-	private UserHandler uh;
 	
 	public abstract void run();
 

@@ -1,4 +1,4 @@
-package taskman.model.resource;
+package taskman.model.time;
 
 import org.joda.time.LocalTime;
 
@@ -33,6 +33,14 @@ public class DailyAvailability {
 	
 	public LocalTime getEndTime(){
 		return new LocalTime(endTime.getHourOfDay(), endTime.getMinuteOfHour());
+	}
+	
+	public boolean isValidTimeSpan(TimeSpan timeSpan) {
+		if (timeSpan.getStartTime().getHourOfDay() < startTime.getHourOfDay() && timeSpan.getStartTime().getHourOfDay() > endTime.getHourOfDay())
+			return false;
+		if (timeSpan.getEndTime().getHourOfDay() < startTime.getHourOfDay() && timeSpan.getEndTime().getHourOfDay() > endTime.getHourOfDay())
+			return false;
+		return true;
 	}
 
 }

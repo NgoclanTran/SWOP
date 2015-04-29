@@ -8,8 +8,8 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.model.project.task.Reservation;
 import taskman.model.project.task.Task;
-import taskman.model.resource.Reservation;
 import taskman.model.time.TimeSpan;
 
 public class ReservationTest {

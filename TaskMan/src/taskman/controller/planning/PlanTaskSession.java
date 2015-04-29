@@ -10,11 +10,10 @@ import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.PlanningService;
 import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
 import taskman.model.project.Project;
+import taskman.model.project.task.Reservation;
 import taskman.model.project.task.Task;
-import taskman.model.resource.Reservation;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
@@ -25,8 +24,9 @@ import taskman.view.IView;
 
 public class PlanTaskSession extends Session {
 
-	IClock clock = Clock.getInstance();
-	PlanningService planning = new PlanningService();
+	private UserHandler uh;
+	private IClock clock = Clock.getInstance();
+	private PlanningService planning = new PlanningService();
 
 	/**
 	 * Creates the planning session using the given UI, ProjectHandler and
@@ -36,14 +36,32 @@ public class PlanTaskSession extends Session {
 	 *            The command line interface.
 	 * @param ph
 	 *            The project handler.
-	 * @param rh
-	 *            The resource handler.
+	 * @param uh
+	 *            The user handler.
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public PlanTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh,
-			UserHandler uh) throws IllegalArgumentException {
-		super(cli, ph, rh, uh);
+	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh)
+			throws IllegalArgumentException {
+		super(cli, ph);
+		if (!isValidUserHandler(uh))
+			throw new IllegalArgumentException(
+					"The plan task controller needs a UserHandler");
+		this.uh = uh;
+	}
+
+	/**
+	 * Checks if the given user handler is valid.
+	 * 
+	 * @param rh
+	 * 
+	 * @return Returns true if the user handler is different from null.
+	 */
+	private boolean isValidUserHandler(UserHandler uh) {
+		if (uh != null)
+			return true;
+		else
+			return false;
 	}
 
 	@Override
@@ -96,8 +114,8 @@ public class PlanTaskSession extends Session {
 						startTime, task.getEstimatedDuration()));
 
 				if (!isValidStartTime(task, timeSpan)) {
-					new ResolveConflictSession(getUI(), getPH(), getRH(),
-							getUH()).run(task, getConflictingTask(task, startTime));
+					new ResolveConflictSession(getUI(), getPH()).run(task,
+							getConflictingTask(task, startTime));
 					break;
 				}
 
@@ -106,7 +124,7 @@ public class PlanTaskSession extends Session {
 					resources = getResources(task, timeSpan);
 
 				List<Developer> developers = new ArrayList<Developer>();
-				if (!getUH().getDevelopers().isEmpty())
+				if (!uh.getDevelopers().isEmpty())
 					developers = getDevelopers();
 
 				break;
@@ -199,7 +217,7 @@ public class PlanTaskSession extends Session {
 	}
 
 	private List<Developer> getDevelopers() throws ShouldExitException {
-		return getUI().getPlanTaskForm().getDevelopers(getUH().getDevelopers());
+		return getUI().getPlanTaskForm().getDevelopers(uh.getDevelopers());
 	}
 
 }
