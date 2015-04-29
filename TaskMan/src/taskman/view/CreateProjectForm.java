@@ -5,13 +5,27 @@ import org.joda.time.DateTime;
 import taskman.exceptions.ShouldExitException;
 
 public class CreateProjectForm implements ICreateProjectForm {
-	
-	View view;
-	
+
+	private View view;
+
+	/**
+	 * The constructor of the create project form. It will setup the view to be
+	 * able to get input and output.
+	 * 
+	 * @param view
+	 */
 	public CreateProjectForm(View view) {
 		this.view = view;
 	}
 
+	/**
+	 * This method will ask the user to enter a project name.
+	 * 
+	 * @return Returns a string of the project name.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public String getNewProjectName() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the name of the project (or cancel):");
@@ -24,6 +38,14 @@ public class CreateProjectForm implements ICreateProjectForm {
 		}
 	}
 
+	/**
+	 * This method will ask the user to enter a project description.
+	 * 
+	 * @return Returns a string of the project description.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public String getNewProjectDescription() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the description of the project (or cancel):");
@@ -36,6 +58,14 @@ public class CreateProjectForm implements ICreateProjectForm {
 		}
 	}
 
+	/**
+	 * This method will ask the user to enter a project due time.
+	 * 
+	 * @return Returns a date time of the project due time.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public DateTime getNewProjectDueTime() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):");

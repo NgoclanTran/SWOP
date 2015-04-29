@@ -131,7 +131,12 @@ public class PlanTaskSession extends Session {
 
 	@Override
 	public void run() {
-		showProjectsAndUnplannedTasks();
+		if (!isValidProject(project))
+			showProjectsAndUnplannedTasks();
+		else if (!isValidTask(task))
+			showUnplannedTasks();
+		else
+			planTask();
 	}
 
 	private void showProjectsAndUnplannedTasks() {

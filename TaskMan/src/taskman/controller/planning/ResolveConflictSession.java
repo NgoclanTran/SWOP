@@ -65,7 +65,8 @@ public class ResolveConflictSession extends Session {
 
 		Task taskToReschedule = getTaskToReschedule(getConflictingTasks());
 		Project project = getProject(taskToReschedule);
-		new PlanTaskSession(getUI(), getPH(), uh, project, taskToReschedule);
+		//TODO: Remove old reservations!
+		new PlanTaskSession(getUI(), getPH(), uh, project, taskToReschedule).run();
 	}
 
 	private Project getProject(Task task) {
