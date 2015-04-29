@@ -4,8 +4,8 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
 
-class Executing implements Status{
-	private final String name = "Executing";
+class Executing implements Status {
+	private final String name = "EXECUTING";
 
 	@Override
 	public String getName() {
@@ -53,15 +53,19 @@ class Executing implements Status{
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) throws IllegalStateException {
-		if(task == null) throw new NullPointerException("The task is null.");
-		if(startTime == null) throw new NullPointerException("The startTime is null.");
-		if(endTime == null) throw new NullPointerException("The endTime is null.");
-		if(startTime.compareTo(endTime) > 0) throw new IllegalDateException("The startTime must start before endTime.");
+		if (task == null)
+			throw new NullPointerException("The task is null.");
+		if (startTime == null)
+			throw new NullPointerException("The startTime is null.");
+		if (endTime == null)
+			throw new NullPointerException("The endTime is null.");
+		if (startTime.compareTo(endTime) > 0)
+			throw new IllegalDateException(
+					"The startTime must start before endTime.");
 		task.performAddTimeSpan(startTime, endTime);
-		if(failed){
+		if (failed) {
 			task.performUpdateTaskAvailability(new Failed());
-		}
-		else{
+		} else {
 			task.performUpdateTaskAvailability(new Finished());
 		}
 	}

@@ -90,7 +90,7 @@ public class PlanTaskSession extends Session {
 	/**
 	 * Checks if the given user handler is valid.
 	 * 
-	 * @param rh
+	 * @param uh
 	 * 
 	 * @return Returns true if the user handler is different from null.
 	 */

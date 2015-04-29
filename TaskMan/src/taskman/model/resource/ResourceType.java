@@ -29,11 +29,7 @@ public class ResourceType {
 	public ResourceType(String name, List<ResourceType> requires,
 			List<ResourceType> conflictsWith, boolean selfConflicting)
 			throws IllegalArgumentException {
-		if (requires == null)
-			throw new IllegalArgumentException("The requires cannot be null.");
-		if (conflictsWith == null)
-			throw new IllegalArgumentException(
-					"The conflicsWith cannot be null.");
+		
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		this.name = name;

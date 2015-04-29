@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -190,6 +191,25 @@ public class Parser {
 		}
 		integerList.add(Integer.parseInt(line));
 		return integerList;
+	}
+
+	private HashMap<Integer, Integer> parseIntegerMap(String line) {
+		HashMap<Integer, Integer> integerMap = new HashMap<Integer, Integer>();
+		int descriptionStart, descriptionEnd;
+		int type, quantity;
+		while (line.contains("type")) {
+			descriptionStart = line.indexOf("type: ");
+			descriptionEnd = line.indexOf(",", descriptionStart);
+			type = Integer.parseInt(line.substring(descriptionStart + 6,
+					descriptionEnd));
+			descriptionStart = line.indexOf("quantity: ", descriptionEnd);
+			descriptionEnd = line.indexOf("}", descriptionStart);
+			quantity = Integer.parseInt(line.substring(descriptionStart + 10,
+					descriptionEnd));
+			line = line.substring(descriptionEnd);
+			integerMap.put(type, quantity);
+		}
+		return integerMap;
 	}
 
 	private void parseDailyAvailability(ArrayList<String> dailyAvailabilities) {
@@ -466,7 +486,7 @@ public class Parser {
 				description.clear();
 			}
 			if (line.startsWith("-") || line.equals("")) {
-				line = line.replace("-", "");
+				line = line.replaceFirst("-", "");
 				line = line.trim();
 				if (description != null && !description.isEmpty()) {
 					addPlanning(description);
@@ -480,9 +500,30 @@ public class Parser {
 		}
 	}
 
+	//TODO Finish parsing planning
 	private void addPlanning(List<String> description) {
-		// TODO Auto-generated method stub
-
+		int descriptionStart, descriptionEnd;
+		ArrayList<Integer> developers = new ArrayList<Integer>();
+		HashMap<Integer, Integer> resources = new HashMap<Integer, Integer>();
+		Date plannedStartTime = null;
+		for (String line : description) {
+			if (line.startsWith("plannedStartTime")) {
+				descriptionStart = line.indexOf("\"") + 1;
+				descriptionEnd = line.length() - 1;
+				plannedStartTime = parseDate(line.substring(descriptionStart,
+						descriptionEnd));
+			} else if (line.startsWith("developers")) {
+				descriptionStart = line.indexOf("[");
+				descriptionEnd = line.length() - 1;
+				developers = parseIntegerList(line.substring(descriptionStart,
+						descriptionEnd));
+			} else if (line.startsWith("resources") && !line.endsWith(": []")) {
+				descriptionStart = line.indexOf("[");
+				descriptionEnd = line.length();
+				resources = parseIntegerMap(line.substring(descriptionStart,
+						descriptionEnd));
+			}
+		}
 	}
 
 	private void parseTasks(ArrayList<String> tasks) {

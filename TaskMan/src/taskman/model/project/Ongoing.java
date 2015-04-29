@@ -10,7 +10,7 @@ import taskman.model.resource.ResourceType;
 
 class Ongoing implements State {
 
-	private final String name = "Ongoing";
+	private final String name = "ONGOING";
 
 	@Override
 	public String getName() {
@@ -29,7 +29,8 @@ class Ongoing implements State {
 			Map<ResourceType, Integer> resourceTypes)
 			throws IllegalStateException {
 		project.performAddTask(description, estimatedDuration,
-				acceptableDeviation, dependencies, alternativeFor, resourceTypes);
+				acceptableDeviation, dependencies, alternativeFor,
+				resourceTypes);
 	}
 
 	@Override

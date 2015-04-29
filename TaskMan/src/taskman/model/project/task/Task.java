@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.memento.TaskMemento;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
@@ -57,8 +58,6 @@ public class Task extends Subject {
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
 					"The deviation cannot be negative.");
-		if (dependencies == null)
-			throw new NullPointerException("The dependencies cannot be null.");
 
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
@@ -385,6 +384,38 @@ public class Task extends Subject {
 	}
 
 	protected void performUpdateTaskAvailability(Status status) {
+		for (Task task : this.dependencies) {
+			try {
+				if (!task.status.isAlternativeFinished(task))
+					return;
+
+			} catch (IllegalStateException e) {
+				if (!task.isFinished())
+					return;
+			}
+
+		}
+		if (getRequiredResourceTypes().size() > 0) {
+			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+					.entrySet()) {
+				for (Resource resource : entry.getKey().getResources()) {
+					for (Reservation reservation : resource.getReservations()) {
+						if (!(this.getTimeSpan().isDuringTimeSpan(this.clock
+								.getSystemTime()))) {
+							if (reservation.getTimeSpan().isDuringTimeSpan(
+									this.clock.getSystemTime())) {
+								return;
+							}
+						} else {
+							if (!(reservation.getTask().equals(this))) {
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		this.status = status;
 
 		this.notifyAllDependants(); // notify dependant task
@@ -514,6 +545,38 @@ public class Task extends Subject {
 			return false;
 		else
 			return true;
+	}
+
+	/**
+	 * Creates a new task memento that saves the state of task.
+	 * 
+	 * @return Creates a new task memento that saves the state of the task.
+	 */
+	public TaskMemento createMemento() {
+		return new TaskMemento(dependants, status.getName(), timeSpan,
+				alternative);
+	}
+
+	/**
+	 * Returns the state of task to that saved in the task memento.
+	 * 
+	 * @param m
+	 */
+	public void setMemento(TaskMemento m) {
+		dependants = m.getDependants();
+		timeSpan = m.getTimeSpan();
+		alternative = m.getAlternative();
+		if (m.getStateName().equals("UNAVAILABLE")) {
+			status = new Unavailable();
+		} else if (m.getStateName().equals("AVAILABLE")) {
+			status = new Available();
+		} else if (m.getStateName().equals("EXECUTING")) {
+			status = new Executing();
+		} else if (m.getStateName().equals("FINISHED")) {
+			status = new Finished();
+		} else {
+			status = new Failed();
+		}
 	}
 
 }

@@ -48,8 +48,8 @@ public class CreateTaskSessionTest {
 		session = new CreateTaskSession(cli, ph, rh);
 		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
-		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null);
-		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null);
+		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null, null);
+		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null, null);
 		description = "description";
 		estimatedDuration = 10;
 		acceptableDeviation = 11;
@@ -189,7 +189,6 @@ public class CreateTaskSessionTest {
 	
 		@Test
 		public void useCaseTest_InputDependenciesYes_CancelCreation(){
-			//TODO: Geen vraag meer na dependencies, dus het wordt gemaakt.
 			//---------- Before running ----------
 			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
@@ -209,8 +208,14 @@ public class CreateTaskSessionTest {
 	
 			//-------- Check if nothing has been changed -------
 			assertEquals(ph.getProjects(), projects);
-			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
+//			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
 			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
+			Task lt = ph.getProjects().get(0).getTasks().get(ph.getProjects().get(0).getTasks().size()-1);
+			assertEquals(lt.getDescription(), "description");
+			assertEquals(lt.getEstimatedDuration(),10);
+			assertEquals(lt.getAcceptableDeviation(),10);
+			assertEquals(lt.getDependencies().size(),1);
+			assertNull(lt.getAlternative());
 		}
 	
 		@Test
@@ -237,28 +242,6 @@ public class CreateTaskSessionTest {
 			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
 		}
 	
-		@Test
-		public void useCaseTest_InputAlterativeForYes_CancelCreation(){
-			//TODO WERKT NIET WANT ER WORDT NIET GEVRAAGD NAAR EEN ALTERNATIVE
-			//---------- Before running ----------
-			ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-			ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-			ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-	
-			// select project 1
-			// enter description "description"
-			// enter estimated duration: 10
-			// enter acceptable devation: 10
-			// enter task has dependency: N
-			// cancel creation
-			systemInMock.provideText("1\ndescription\n10\n10\nN\nY\n1\ncancel\n0");
-			session.run();
-	
-			//-------- Check if nothing has been changed -------
-			assertEquals(ph.getProjects(), projects);
-			assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-		}
 	
 		@Test
 		public void useCaseTest_InputAlterativeForNo_CancelCreation(){
@@ -288,34 +271,6 @@ public class CreateTaskSessionTest {
 			assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);		
 		}
 
-	@Test
-	public void useCaseTest_SuccesScenario_WithDependencies_WithAlternative_NoCreation_ErrorState(){
-		//TODO: De cancel wordt nooit gevraagd want het wordt direct na de N input gemaakt en gestopt
-		//---------- Before running ----------
-		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) projects.get(0).getTasks();
-		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) projects.get(1).getTasks();
-
-		// select project 1
-		// enter description "description"
-		// enter estimated duration: 10
-		// enter acceptable devation: 10
-		// enter wrong input for dependencies: a
-		// enter task has dependency: Y
-		// select first task in given list
-		// cancel creation
-
-		systemInMock.provideText("1\ndescription\n10\n10\na\nY\n1\nY\n1\nN\ncancel\n0");
-		session.run();
-
-		//-------- Check if nothing has been changed -------
-		assertEquals(ph.getProjects(), projects);
-		assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
-		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-
-		// We chose project 1. His status is available and we wanted to add a new task which is alternative for
-		// Not possible to create, so nothing was created
-	}
 
 	@Test
 	public void useCaseTest_SuccesScenario_WithoutDependencies_WithoutAlternative(){

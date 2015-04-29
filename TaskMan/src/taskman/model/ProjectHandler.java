@@ -10,6 +10,8 @@ import taskman.model.project.Project;
 
 public class ProjectHandler {
 
+	private ArrayList<Project> projects = new ArrayList<Project>();
+
 	/**
 	 * Return a copy of the list of projects.
 	 * 
@@ -50,6 +52,4 @@ public class ProjectHandler {
 				dueTime);
 		addProject(projectToAdd);
 	}
-
-	private ArrayList<Project> projects = new ArrayList<Project>();
 }

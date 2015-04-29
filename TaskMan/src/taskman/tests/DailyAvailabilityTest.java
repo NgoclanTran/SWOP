@@ -2,18 +2,20 @@ package taskman.tests;
 
 import static org.junit.Assert.*;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import taskman.exceptions.IllegalTimeException;
 import taskman.model.time.DailyAvailability;
+import taskman.model.time.TimeSpan;
 
 public class DailyAvailabilityTest {
 	private LocalTime startTime, endTime;
 	@Before
 	public void setUp() throws Exception {
-		startTime = new LocalTime(10, 0);
+		startTime = new LocalTime(12, 0);
 		endTime = new LocalTime(16,0);
 	}
 
@@ -58,5 +60,16 @@ public class DailyAvailabilityTest {
 		DailyAvailability d = new DailyAvailability(startTime, endTime);
 		LocalTime ld = d.getEndTime().plusHours(2);
 		assertNotEquals(d.getEndTime(), ld);
+	}
+	
+	@Test
+	public void isValidTimeSpanTest(){
+		DailyAvailability d = new DailyAvailability(startTime, endTime);
+		TimeSpan t1 = new TimeSpan(new DateTime(2015,1,1,12,0), new DateTime(2015,1,1,13,0));
+		TimeSpan t2 = new TimeSpan(new DateTime(2015,1,1,10,0), new DateTime(2020,1,1,11,0));
+		TimeSpan t3 = new TimeSpan(new DateTime(1,1,1,10,0), new DateTime(2020,1,1,11,0));
+		assertTrue(d.isValidTimeSpan(t1));
+		assertFalse(d.isValidTimeSpan(t2));
+		assertFalse(d.isValidTimeSpan(t3));
 	}
 }

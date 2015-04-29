@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import taskman.controller.planning.PlanTaskSession;
+import taskman.controller.planning.SimulateSession;
 import taskman.controller.project.CreateProjectSession;
 import taskman.controller.project.CreateTaskSession;
 import taskman.controller.project.ShowProjectSession;
@@ -17,7 +18,7 @@ public class MainSession extends Session {
 
 	private final List<String> menu = Arrays
 			.asList("Show projects", "Create project", "Create task",
-					"Update task", "Plan task", "Quit");
+					"Update task", "Plan task", "Start simulation", "Quit");
 
 	private ResourceHandler rh;
 	private UserHandler uh;
@@ -104,6 +105,9 @@ public class MainSession extends Session {
 				new PlanTaskSession(getUI(), getPH(), uh).run();
 				break;
 			case 6:
+				new SimulateSession(getUI(), getPH(), rh, uh).run();
+				break;
+			case 7:
 				return;
 			}
 		}
