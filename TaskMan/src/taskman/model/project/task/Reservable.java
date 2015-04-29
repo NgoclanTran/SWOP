@@ -50,14 +50,9 @@ public class Reservable {
 			DateTime reservationStart = reservation.getTimeSpan()
 					.getStartTime();
 			DateTime reservationEnd = reservation.getTimeSpan().getEndTime();
-
-			boolean before = timeSpan.getStartTime().isBefore(reservationStart)
-					&& timeSpan.getEndTime().isBefore(reservationStart);
-			boolean after = timeSpan.getStartTime().isAfter(reservationEnd)
-					&& timeSpan.getEndTime().isAfter(reservationEnd);
-			if (!(before || after)) {
+			
+			if(!timeSpan.isDuringTimeSpan(reservationStart) || !timeSpan.isDuringTimeSpan(reservationEnd))
 				return false;
-			}
 		}
 		if(!dailyAvailability.isValidTimeSpan(timeSpan))
 			return false;

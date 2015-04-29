@@ -16,6 +16,7 @@ import taskman.model.time.IClock;
 import taskman.model.time.TimeSpan;
 
 public class Task extends Subject {
+
 	IClock clock = Clock.getInstance();
 
 	/**
@@ -374,29 +375,34 @@ public class Task extends Subject {
 			}
 
 		}
-		if (getRequiredResourceTypes().size() > 0) {
-			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
-						.entrySet()) {
-				for (Resource resource : entry.getKey().getResources()) {						
-					for (Reservation reservation : resource.getReservations()) {
-						if(!(this.getTimeSpan().isDuringTimeSpan(this.clock.getSystemTime()))){
-							if(reservation.getTimeSpan().isDuringTimeSpan(this.clock.getSystemTime())){
-								return;
-							}
-						}
-						else{
-							if (!(reservation.getTask().equals(this))) {
-								return;
-							}
-						}
-					}
-				}
+		if (isPlanned()) {
+			for (Reservation reservation : getReservations()) {
+				if (!reservation.getTimeSpan().isDuringTimeSpan(
+						clock.getSystemTime())
+						&& developersAndResourceTypesAvailable(clock
+								.getSystemTime()))
+					return;
 			}
 		}
 		this.status = status;
 
 		this.notifyAllDependants(); // notify dependant task
 		this.notifyAllObservers(); // observer pattern for project
+	}
+
+	private List<Reservation> getReservations() {
+		// TODO: add developers
+		List<Reservation> reservations = new ArrayList<Reservation>();
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+				.entrySet()) {
+			for (Resource resource : entry.getKey().getResources()) {
+				for (Reservation reservation : resource.getReservations()) {
+					if (reservation.getTask().equals(this))
+						reservations.add(reservation);
+				}
+			}
+		}
+		return reservations;
 	}
 
 	protected boolean isAlternativeCompleted() {
@@ -467,23 +473,10 @@ public class Task extends Subject {
 	}
 
 	protected boolean performIsPlanned() {
-		boolean planned = false;
-
-		if (getRequiredResourceTypes().size() > 0) {
-			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
-					.entrySet()) {
-				for (Resource resource : entry.getKey().getResources()) {
-					for (Reservation reservation : resource.getReservations()) {
-						if (reservation.getTask().equals(this)) {
-							planned = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		return planned;
+		if (!getReservations().isEmpty())
+			return true;
+		else
+			return false;
 	}
 
 }
