@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.memento.TaskMemento;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
@@ -376,15 +377,16 @@ public class Task extends Subject {
 		}
 		if (getRequiredResourceTypes().size() > 0) {
 			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
-						.entrySet()) {
-				for (Resource resource : entry.getKey().getResources()) {						
+					.entrySet()) {
+				for (Resource resource : entry.getKey().getResources()) {
 					for (Reservation reservation : resource.getReservations()) {
-						if(!(this.getTimeSpan().isDuringTimeSpan(this.clock.getSystemTime()))){
-							if(reservation.getTimeSpan().isDuringTimeSpan(this.clock.getSystemTime())){
+						if (!(this.getTimeSpan().isDuringTimeSpan(this.clock
+								.getSystemTime()))) {
+							if (reservation.getTimeSpan().isDuringTimeSpan(
+									this.clock.getSystemTime())) {
 								return;
 							}
-						}
-						else{
+						} else {
 							if (!(reservation.getTask().equals(this))) {
 								return;
 							}
@@ -484,6 +486,38 @@ public class Task extends Subject {
 		}
 
 		return planned;
+	}
+
+	/**
+	 * Creates a new task memento that saves the state of task.
+	 * 
+	 * @return Creates a new task memento that saves the state of the task.
+	 */
+	public TaskMemento createMemento() {
+		return new TaskMemento(dependants, status.getName(), timeSpan,
+				alternative);
+	}
+
+	/**
+	 * Returns the state of task to that saved in the task memento.
+	 * 
+	 * @param m
+	 */
+	public void setMemento(TaskMemento m) {
+		dependants = m.getDependants();
+		timeSpan = m.getTimeSpan();
+		alternative = m.getAlternative();
+		if (m.getStateName().equals("UNAVAILABLE")) {
+			status = new Unavailable();
+		} else if (m.getStateName().equals("AVAILABLE")) {
+			status = new Available();
+		} else if (m.getStateName().equals("EXECUTING")) {
+			status = new Executing();
+		} else if (m.getStateName().equals("FINISHED")) {
+			status = new Finished();
+		} else {
+			status = new Failed();
+		}
 	}
 
 }

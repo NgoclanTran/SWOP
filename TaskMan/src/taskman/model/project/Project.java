@@ -7,13 +7,14 @@ import java.util.Map;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.memento.ProjectMemento;
 import taskman.model.project.task.Task;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.IClock;
 
 public class Project implements Observer {
-	
+
 	IClock clock = Clock.getInstance();
 
 	/**
@@ -113,16 +114,19 @@ public class Project implements Observer {
 	 */
 	public void addTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) throws IllegalStateException {
+			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
-				acceptableDeviation, dependencies, alternativeFor, resourceTypes);
+				acceptableDeviation, dependencies, alternativeFor,
+				resourceTypes);
 	}
 
 	protected void performAddTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
 			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, dependencies, alternativeFor, resourceTypes);
+				acceptableDeviation, dependencies, alternativeFor,
+				resourceTypes);
 		this.tasks.add(task);
 		task.attach(this);
 	}
@@ -248,7 +252,31 @@ public class Project implements Observer {
 
 	@Override
 	public String toString() {
-		return name + ": " + (isFinished() ? "Finished" : "Ongoing");
+		return name + ": " + (isFinished() ? "FINISHED" : "ONGOING");
+	}
+
+	/**
+	 * Creates a new project memento that saves the state of project.
+	 * 
+	 * @return Creates a new project memento that saves the state of the
+	 *         project.
+	 */
+	public ProjectMemento createMemento() {
+		return new ProjectMemento(new ArrayList<Task>(tasks), state.getName());
+	}
+
+	/**
+	 * Returns the state of project to that saved in the project memento.
+	 * 
+	 * @param m
+	 */
+	public void setMemento(ProjectMemento m) {
+		tasks = m.getTasks();
+		if (m.getStateName().equals("ONGOING")) {
+			state = new Ongoing();
+		} else {
+			state = new Finished();
+		}
 	}
 
 }

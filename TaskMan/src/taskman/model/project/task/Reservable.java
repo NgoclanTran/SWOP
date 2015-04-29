@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
 import taskman.exceptions.IllegalTimeException;
+import taskman.model.memento.ReservableMemento;
 import taskman.model.time.DailyAvailability;
 import taskman.model.time.TimeSpan;
 
@@ -25,7 +26,7 @@ public class Reservable {
 			throw new IllegalArgumentException(
 					"Both the start time and end time need to be a localtime or null.");
 	}
-	
+
 	/**
 	 * Returns the daily availability of the resource type.
 	 * 
@@ -34,7 +35,7 @@ public class Reservable {
 	public DailyAvailability getDailyAvailability() {
 		return this.dailyAvailability;
 	}
-	
+
 	/**
 	 * Returns whether or not the resource is available during the given
 	 * timespan.
@@ -59,16 +60,17 @@ public class Reservable {
 				return false;
 			}
 		}
-		if(!dailyAvailability.isValidTimeSpan(timeSpan))
+		if (!dailyAvailability.isValidTimeSpan(timeSpan))
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Adds the reservation to the resource's reservation list.
 	 * 
 	 * @param task
 	 * @param timeSpan
+	 * 
 	 * @throws NullPointerException
 	 */
 	public void addReservation(Task task, TimeSpan timeSpan)
@@ -84,7 +86,7 @@ public class Reservable {
 		Reservation reservation = new Reservation(task, timeSpan);
 		reservations.add(reservation);
 	}
-	
+
 	/**
 	 * Returns a copy of the list of reservations for the resource.
 	 * 
@@ -95,5 +97,26 @@ public class Reservable {
 	}
 
 	private List<Reservation> reservations = new ArrayList<Reservation>();
+
+	/**
+	 * Creates a new reservable memento that saves the state of the
+	 * reservations.
+	 * 
+	 * @return Creates a new reservable memento that saves the state of the
+	 *         reservations.
+	 */
+	public ReservableMemento createMemento() {
+		return new ReservableMemento(new ArrayList<Reservation>(reservations));
+	}
+
+	/**
+	 * Returns the state of the reservations to that saved in the reservable
+	 * memento.
+	 * 
+	 * @param m
+	 */
+	public void setMemento(ReservableMemento m) {
+		reservations = m.getState();
+	}
 
 }
