@@ -14,12 +14,13 @@ import taskman.model.UserHandler;
 import taskman.view.IView;
 
 public class MainSession extends Session {
-	
-	private final List<String> menu = Arrays.asList("Show projects",
-			"Create project", "Create task", "Update task", "Plan task", "Quit");
-	
-	ResourceHandler rh;
-	UserHandler uh;
+
+	private final List<String> menu = Arrays
+			.asList("Show projects", "Create project", "Create task",
+					"Update task", "Plan task", "Quit");
+
+	private ResourceHandler rh;
+	private UserHandler uh;
 
 	/**
 	 * Constructor of the main session. This session will start the main menu on
@@ -29,10 +30,15 @@ public class MainSession extends Session {
 	 *            The command line interface.
 	 * @param ph
 	 *            The project handler.
+	 * @param rh
+	 *            The resource handler.
+	 * @param uh
+	 *            The user handler.
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public MainSession(IView cli, ProjectHandler ph, ResourceHandler rh, UserHandler uh) throws IllegalArgumentException {
+	public MainSession(IView cli, ProjectHandler ph, ResourceHandler rh,
+			UserHandler uh) throws IllegalArgumentException {
 		super(cli, ph);
 		if (!isValidResourceHandler(rh))
 			throw new IllegalArgumentException(
@@ -43,7 +49,7 @@ public class MainSession extends Session {
 		this.rh = rh;
 		this.uh = uh;
 	}
-	
+
 	/**
 	 * Checks if the given resource handler is valid.
 	 * 
@@ -54,21 +60,21 @@ public class MainSession extends Session {
 	private boolean isValidResourceHandler(ResourceHandler rh) {
 		if (rh != null)
 			return true;
-		else 
+		else
 			return false;
 	}
-	
+
 	/**
 	 * Checks if the given user handler is valid.
 	 * 
-	 * @param rh
+	 * @param uh
 	 * 
 	 * @return Returns true if the user handler is different from null.
 	 */
 	private boolean isValidUserHandler(UserHandler uh) {
 		if (uh != null)
 			return true;
-		else 
+		else
 			return false;
 	}
 
@@ -86,7 +92,7 @@ public class MainSession extends Session {
 				new ShowProjectSession(getUI(), getPH()).run();
 				break;
 			case 2:
-				new CreateProjectSession(getUI(),getPH()).run();
+				new CreateProjectSession(getUI(), getPH()).run();
 				break;
 			case 3:
 				new CreateTaskSession(getUI(), getPH(), rh).run();

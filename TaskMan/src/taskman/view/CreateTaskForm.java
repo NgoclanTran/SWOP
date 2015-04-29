@@ -177,7 +177,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	}
 
 	private ResourceType getNewTaskResourceType(ResourceHandler rh) throws ShouldExitException {
-		return view.getResourceType(rh.getResourceTypes());
+		return getResourceType(rh.getResourceTypes());
 	}
 
 	private int getNewTaskResourceTypeAmount() throws ShouldExitException {
@@ -188,6 +188,24 @@ public class CreateTaskForm implements ICreateTaskForm {
 			view.output.displayEmptyLine();
 		}
 		return number;
+	}
+	
+	private void displayResourceTypeList(List<ResourceType> resouceTypes,
+			int tabs, boolean printReturn) {
+		ArrayList<String> resourceTypeInfo = new ArrayList<String>();
+		for (int i = 1; i <= resouceTypes.size(); i++) {
+			resourceTypeInfo.add(resouceTypes.get(i - 1).toString());
+		}
+		view.output.displayList(resourceTypeInfo, tabs, printReturn);
+		view.output.displayEmptyLine();
+	}
+
+	private ResourceType getResourceType(List<ResourceType> resourceTypes)
+			throws ShouldExitException {
+		displayResourceTypeList(resourceTypes, 1, true);
+		int resourceTypeId = view.getListChoice(resourceTypes,
+				"Select a resource type:");
+		return resourceTypes.get(resourceTypeId - 1);
 	}
 
 }

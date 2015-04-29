@@ -18,7 +18,8 @@ public abstract class Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public Session(IView cli, ProjectHandler ph) throws IllegalArgumentException {
+	public Session(IView cli, ProjectHandler ph)
+			throws IllegalArgumentException {
 		if (!isValidUI(cli))
 			throw new IllegalArgumentException("The controller needs a UI.");
 		if (!isValidProjectHandler(ph))
@@ -78,7 +79,7 @@ public abstract class Session {
 	}
 
 	private ProjectHandler ph;
-	
+
 	public abstract void run();
 
 }
