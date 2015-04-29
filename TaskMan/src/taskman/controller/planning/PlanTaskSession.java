@@ -114,18 +114,27 @@ public class PlanTaskSession extends Session {
 						startTime, task.getEstimatedDuration()));
 
 				if (!isValidStartTime(task, timeSpan)) {
-					new ResolveConflictSession(getUI(), getPH()).run(task,
-							getConflictingTask(task, startTime));
+					new ResolveConflictSession(getUI(), getPH()).run();
 					break;
 				}
 
 				List<Resource> resources = new ArrayList<Resource>();
 				if (!task.getRequiredResourceTypes().isEmpty())
 					resources = getResources(task, timeSpan);
+				
+				if (!isValidResource(resources, timeSpan)) {
+					new ResolveConflictSession(getUI(), getPH()).run();
+					break;
+				}
 
 				List<Developer> developers = new ArrayList<Developer>();
 				if (!uh.getDevelopers().isEmpty())
 					developers = getDevelopers();
+				
+				if (!isvalidDeveloper(developers, timeSpan)) {
+					new ResolveConflictSession(getUI(), getPH()).run();
+					break;
+				}
 
 				break;
 
@@ -139,6 +148,22 @@ public class PlanTaskSession extends Session {
 
 	private boolean isValidStartTime(Task task, TimeSpan timeSpan) {
 		return planning.isValidTimeSpan(task, timeSpan, null);
+	}
+	
+	private boolean isValidResource(List<Resource> resources, TimeSpan timeSpan) {
+		for (Resource resource : resources) {
+			if (!resource.isAvailableAt(timeSpan))
+				return false;
+		}
+		return true;
+	}
+	
+	private boolean isvalidDeveloper(List<Developer> developers, TimeSpan timeSpan) {
+		for (Developer developer : developers) {
+			if (!developer.isAvailableAt(timeSpan))
+				return false;
+		}
+		return true;
 	}
 
 	private List<List<Task>> getUnplannedTasksAllProjects(List<Project> projects) {
@@ -182,21 +207,6 @@ public class PlanTaskSession extends Session {
 		return getUI().getPlanTaskForm().getStartTime(
 				planning.getPossibleStartTimes(task, 3,
 						project.getCreationTime()));
-	}
-
-	private Task getConflictingTask(Task task, DateTime startTime) {
-		for (Entry<ResourceType, Integer> entry : task
-				.getRequiredResourceTypes().entrySet()) {
-			for (Resource resource : entry.getKey().getResources()) {
-				for (Reservation reservation : resource.getReservations()) {
-					if (reservation.getTimeSpan().getStartTime()
-							.isEqual(startTime))
-						return reservation.getTask();
-				}
-			}
-		}
-
-		return null;
 	}
 
 	private List<Resource> getResources(Task task, TimeSpan timeSpan)

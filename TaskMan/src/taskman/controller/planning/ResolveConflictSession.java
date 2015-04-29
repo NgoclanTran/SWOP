@@ -8,7 +8,6 @@ import taskman.view.IView;
 public class ResolveConflictSession extends Session {
 
 	Task task = null;
-	Task conflictingTask = null;
 
 	/**
 	 * Creates the planning session using the given UI, ProjectHandler and
@@ -26,14 +25,8 @@ public class ResolveConflictSession extends Session {
 		super(cli, ph);
 	}
 
-	public void run(Task task, Task conflictingTask) {
-		this.task = task;
-		this.conflictingTask = conflictingTask;
-	}
-
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 
 	}
 
