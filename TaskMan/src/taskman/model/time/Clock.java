@@ -1,6 +1,7 @@
 package taskman.model.time;
 
 import org.joda.time.DateTime;
+import taskman.model.memento.ClockMemento;
 
 import taskman.model.memento.ClockMemento;
 
@@ -10,7 +11,6 @@ public class Clock implements IClock {
 
 	private static Clock systemClock = new Clock();
 
-	// TODO documentation
 	public Clock() {
 		systemTime = new DateTime(0);
 	}
@@ -20,6 +20,7 @@ public class Clock implements IClock {
 	}
 
 	public void setSystemTime(DateTime systemTime) {
+		if(systemTime == null) throw new IllegalArgumentException("The systemTime cannot be null.");
 		this.systemTime = systemTime;
 	}
 
@@ -28,6 +29,7 @@ public class Clock implements IClock {
 	}
 
 	public DateTime getFirstPossibleStartTime(DateTime time) {
+		if(time == null) throw new IllegalArgumentException("The time cannot be null.");
 		if (time.getHourOfDay() < 8) {
 			time = time.plusMinutes((60 - time.getMinuteOfHour()) % 60);
 			time = time.plusHours(8 - time.getHourOfDay());
@@ -51,6 +53,8 @@ public class Clock implements IClock {
 	}
 
 	public DateTime addBreaks(DateTime time) {
+		if(time == null) throw new IllegalArgumentException("The time cannot be null.");
+
 		if (time.getHourOfDay() == 11 && time.getMinuteOfHour() > 0) {
 			time = time.plusHours(1);
 		}
