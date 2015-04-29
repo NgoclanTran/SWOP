@@ -10,7 +10,7 @@ import taskman.model.resource.ResourceType;
 
 public class Finished implements State {
 
-	private final String name = "Finished";
+	private final String name = "FINISHED";
 
 	@Override
 	public String getName() {

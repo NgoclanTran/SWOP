@@ -6,9 +6,12 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.memento.ProjectHandlerMemento;
 import taskman.model.project.Project;
 
 public class ProjectHandler {
+
+	private ArrayList<Project> projects = new ArrayList<Project>();
 
 	/**
 	 * Return a copy of the list of projects.
@@ -51,5 +54,11 @@ public class ProjectHandler {
 		addProject(projectToAdd);
 	}
 
-	private ArrayList<Project> projects = new ArrayList<Project>();
+	public void setMemento(ProjectHandlerMemento m) {
+		this.projects = m.getProjects();
+	}
+
+	public ProjectHandlerMemento createMemento() {
+		return new ProjectHandlerMemento(new ArrayList<Project>(projects));
+	}
 }

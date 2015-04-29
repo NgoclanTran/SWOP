@@ -4,7 +4,6 @@ import org.joda.time.LocalTime;
 
 import taskman.exceptions.IllegalTimeException;
 import taskman.model.project.task.Reservable;
-import taskman.model.time.DailyAvailability;
 
 public class Resource extends Reservable {
 
@@ -34,6 +33,11 @@ public class Resource extends Reservable {
 		return this.name;
 	}
 
+	/**
+	 * Returns the name of the resource.
+	 * 
+	 * @return Returns the name of the resource.
+	 */
 	@Override
 	public String toString() {
 		return name;
