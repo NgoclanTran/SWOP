@@ -36,9 +36,7 @@ public class DailyAvailability {
 	}
 	
 	public boolean isValidTimeSpan(TimeSpan timeSpan) {
-		if (timeSpan.getStartTime().getHourOfDay() < startTime.getHourOfDay() && timeSpan.getStartTime().getHourOfDay() > endTime.getHourOfDay())
-			return false;
-		if (timeSpan.getEndTime().getHourOfDay() < startTime.getHourOfDay() && timeSpan.getEndTime().getHourOfDay() > endTime.getHourOfDay())
+		if (timeSpan.getStartTime().getHourOfDay() < startTime.getHourOfDay() || timeSpan.getStartTime().getHourOfDay() > endTime.getHourOfDay())
 			return false;
 		return true;
 	}

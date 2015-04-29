@@ -46,6 +46,7 @@ public class Reservable {
 	 *         timespan.
 	 */
 	public boolean isAvailableAt(TimeSpan timeSpan) {
+		if(timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
 		for (Reservation reservation : reservations) {
 
 			DateTime reservationStart = reservation.getTimeSpan()
@@ -71,9 +72,9 @@ public class Reservable {
 	public void addReservation(Task task, TimeSpan timeSpan)
 			throws NullPointerException {
 		if (task == null)
-			throw new NullPointerException("The given Task is null.");
+			throw new IllegalArgumentException("The given Task is null.");
 		if (timeSpan == null)
-			throw new NullPointerException("The given timeSpan is null.");
+			throw new IllegalArgumentException("The given timeSpan is null.");
 		if (!this.isAvailableAt(timeSpan))
 			throw new IllegalTimeException(
 					"The resource cannot be reserved at the given timeSpan.");

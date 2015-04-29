@@ -2,6 +2,7 @@ package taskman.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -9,6 +10,8 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.exceptions.IllegalTimeException;
+import taskman.model.memento.ReservableMemento;
 import taskman.model.project.task.Reservable;
 import taskman.model.project.task.Reservation;
 import taskman.model.project.task.Task;
@@ -56,19 +59,25 @@ public class ReservableTest {
 		Reservable r = new Reservable(null,end);
 	}
 	
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void addReservationTest_Task_Null(){
-		//TODO
+		Reservable r = new Reservable(start,end);
+		r.addReservation(null, ts);
 	}
 	
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void addReservationTest_TimeSpan_Null(){
-		//TODO
+		Reservable r = new Reservable(start,end);
+		Task task = new Task("d", 10, 1, null, null, null);
+		r.addReservation(task, null);
 	}
 	
-	@Test
+	@Test (expected = IllegalTimeException.class)
 	public void addReservationTest_TimeSpan_Invalid(){
-		//TODO
+		Reservable r = new Reservable(start,end);
+		Task task = new Task("d", 10, 1, null, null, null);
+		r.addReservation(task, ts);
+		r.addReservation(task, ts);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -78,9 +87,27 @@ public class ReservableTest {
 	}
 	
 	@Test
-	public void isAvailableTest_TrueCase(){
-		//TODO example without reservation
-		//TODO example with reservation
+	public void isAvailableTest_TrueCase1(){
+		Reservable r = new Reservable(start,end);
+		assertTrue(r.isAvailableAt(ts));
+		//example without reservation
+	}
+	
+	@Test
+	public void isAvailableTestTest_TrueCase(){
+		TimeSpan ts1 = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,16,0));
+		Reservable r = new Reservable(start,end);
+		assertFalse(r.isAvailableAt(ts1));
+		
+	}
+	
+	@Test
+	public void isAvailableTest_TrueCase2(){
+		Reservable r = new Reservable(start,end);
+		Task task = new Task("d", 10, 1, null, null, null);
+		r.addReservation(task, ts);
+		assertFalse(r.isAvailableAt(ts));
+		// example with reservation
 	}
 	
 	
@@ -88,8 +115,16 @@ public class ReservableTest {
 	public void getReservationsTest(){
 		Reservable r = new Reservable(null,null);
 		List<Reservation> l = r.getReservations();
-		//TODO create reservation and add to l, if nothing change then Ok
-		
-		
+		Task task = new Task("d", 10, 1, null, null, null);
+		Reservation rv = new Reservation(task, ts);
+		l.add(rv);
+		assertNotEquals(r.getReservations(), rv);
+		// create reservation and add to l, if nothing change then Ok	
+	}
+	
+	@Test
+	public void createMomentoTest(){
+		Reservable r = new Reservable(null,null);
+		assertTrue(r.createMemento() instanceof ReservableMemento);
 	}
 }
