@@ -71,4 +71,9 @@ class Unavailable implements Status {
 		return task.performIsPlanned();
 	}
 
+	@Override
+	public boolean isExecuting() {
+		return false;
+	}
+
 }

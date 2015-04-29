@@ -70,4 +70,9 @@ class Finished implements Status{
 		return true;
 	}
 
+	@Override
+	public boolean isExecuting() {
+		return false;
+	}
+
 }

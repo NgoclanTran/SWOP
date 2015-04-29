@@ -43,6 +43,11 @@ public boolean isFinished();
 public boolean isFailed();
 
 /**
+ * Returns whether the status is executing or not
+ * @return
+ */
+public boolean isExecuting();
+/**
  * Will update the task availability if possible
  * 
  * @param task

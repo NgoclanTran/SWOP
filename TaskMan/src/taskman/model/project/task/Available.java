@@ -32,10 +32,10 @@ class Available  implements Status {
 		if(startTime.compareTo(endTime) > 0) throw new IllegalDateException("The startTime must start before endTime.");
 		task.performAddTimeSpan(startTime, endTime);
 		if(failed){
-			task.performUpdateTaskAvailability(new Failed());
+			throw new IllegalArgumentException("Task cannot fail if it isn't executing");
 		}
 		else{
-			task.performUpdateTaskAvailability(new Finished());
+			task.performUpdateTaskAvailability(new Executing());
 		}
 	}
 
@@ -80,6 +80,11 @@ class Available  implements Status {
 	@Override
 	public boolean isPlanned(Task task) {
 		return task.performIsPlanned();
+	}
+
+	@Override
+	public boolean isExecuting() {
+		return false;
 	}
 
 }
