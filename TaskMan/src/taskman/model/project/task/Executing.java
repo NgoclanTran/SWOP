@@ -67,7 +67,7 @@ class Executing implements Status{
 	}
 
 	@Override
-	public boolean isAlternativeCompleted(Task task) {
+	public boolean isAlternativeFinished(Task task) {
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
 

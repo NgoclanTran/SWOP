@@ -55,8 +55,8 @@ class Failed implements Status{
 	}
 
 	@Override
-	public boolean isAlternativeCompleted(Task task) {
-		return task.isAlternativeCompleted();
+	public boolean isAlternativeFinished(Task task) {
+		return task.isAlternativeFinished();
 	}
 
 	@Override
