@@ -1,6 +1,6 @@
 package taskman.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -63,5 +63,17 @@ public class TimeSpanTest {
 		TimeSpan ts = new TimeSpan(start, end);
 		assertEquals(ts.calculatePerformedTime(),60);
 	}
+	
+	@Test
+	public void isDuringTimeSpanTest(){
+		
+		TimeSpan ts = new TimeSpan(start, end);
+		assertTrue(ts.isDuringTimeSpan(new DateTime(2015,1,1,10,2)));
+		assertFalse(ts.isDuringTimeSpan(new DateTime(2016,1,1,10,2)));
+		assertFalse(ts.isDuringTimeSpan(new DateTime(2000,1,1,10,2)));
+
+	}
+	
+
 
 }

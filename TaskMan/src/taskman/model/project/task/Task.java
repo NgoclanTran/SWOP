@@ -15,8 +15,10 @@ import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.IClock;
 import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 
 public class Task extends Subject {
+
 	IClock clock = Clock.getInstance();
 
 	/**
@@ -56,8 +58,6 @@ public class Task extends Subject {
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
 					"The deviation cannot be negative.");
-		if (dependencies == null)
-			throw new NullPointerException("The dependencies cannot be null.");
 
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
@@ -99,6 +99,7 @@ public class Task extends Subject {
 	private TimeSpan timeSpan;
 	private Task alternative = null;
 	private HashMap<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType, Integer>();
+	private List<Developer> requiredDevelopers = new ArrayList<Developer>();
 
 	/**
 	 * Returns the description of the task
@@ -318,6 +319,25 @@ public class Task extends Subject {
 	}
 
 	/**
+	 * Returns the list of required developers for the task.
+	 * 
+	 * @return Returns the list of required developers for the task.
+	 */
+	public List<Developer> getRequiredDevelopers() {
+		return new ArrayList<Developer>(requiredDevelopers);
+	}
+
+	/**
+	 * Adds the given developer to the list of required developers.
+	 * 
+	 * @param developer
+	 *            The developer to add
+	 */
+	public void addRequiredDeveloper(Developer developer) {
+		requiredDevelopers.add(developer);
+	}
+
+	/**
 	 * Check if this task is available
 	 * 
 	 * @return True if the task has status available
@@ -366,7 +386,7 @@ public class Task extends Subject {
 	protected void performUpdateTaskAvailability(Status status) {
 		for (Task task : this.dependencies) {
 			try {
-				if (!task.status.isAlternativeCompleted(task))
+				if (!task.status.isAlternativeFinished(task))
 					return;
 
 			} catch (IllegalStateException e) {
@@ -395,19 +415,71 @@ public class Task extends Subject {
 				}
 			}
 		}
+
 		this.status = status;
 
 		this.notifyAllDependants(); // notify dependant task
 		this.notifyAllObservers(); // observer pattern for project
 	}
 
-	protected boolean isAlternativeCompleted() {
+	protected boolean developersAndResourceTypesAvailable(DateTime time) {
+		for (Developer developer : getRequiredDevelopers()) {
+			if (!developer.isAvailableAt(new TimeSpan(time, clock.addMinutes(
+					time, getEstimatedDuration()))))
+				return false;
+		}
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+				.entrySet()) {
+			for (Resource resource : entry.getKey().getResources()) {
+				if (!resource.isAvailableAt(new TimeSpan(time, clock
+						.addMinutes(time, getEstimatedDuration()))))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	protected boolean dependenciesAreFinished() {
+		for (Task task : this.dependencies) {
+			try {
+				if (!task.status.isAlternativeFinished(task))
+					return false;
+
+			} catch (IllegalStateException e) {
+				if (!task.isFinished())
+					return false;
+			}
+		}
+		return true;
+	}
+
+	protected List<Reservation> getReservations() {
+		List<Reservation> reservations = new ArrayList<Reservation>();
+		for (Developer developer : getRequiredDevelopers()) {
+			for (Reservation reservation : developer.getReservations()) {
+				if (reservation.getTask().equals(this))
+					reservations.add(reservation);
+			}
+		}
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+				.entrySet()) {
+			for (Resource resource : entry.getKey().getResources()) {
+				for (Reservation reservation : resource.getReservations()) {
+					if (reservation.getTask().equals(this))
+						reservations.add(reservation);
+				}
+			}
+		}
+		return reservations;
+	}
+
+	protected boolean isAlternativeFinished() {
 		if (this.alternative == null)
 			return false;
 		if (this.alternative.isFinished())
 			return true;
 		if (this.alternative.isFailed())
-			return this.alternative.status.isAlternativeCompleted(alternative);
+			return this.alternative.status.isAlternativeFinished(alternative);
 		return false;
 
 	}
@@ -469,23 +541,10 @@ public class Task extends Subject {
 	}
 
 	protected boolean performIsPlanned() {
-		boolean planned = false;
-
-		if (getRequiredResourceTypes().size() > 0) {
-			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
-					.entrySet()) {
-				for (Resource resource : entry.getKey().getResources()) {
-					for (Reservation reservation : resource.getReservations()) {
-						if (reservation.getTask().equals(this)) {
-							planned = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		return planned;
+		if (!getReservations().isEmpty())
+			return true;
+		else
+			return false;
 	}
 
 	/**

@@ -40,7 +40,7 @@ public class CreateProjectSessionTest {
 		cli = new View();
 		ph = new ProjectHandler();
 		rh = new ResourceHandler();
-		session = new CreateProjectSession(cli, ph, rh);
+		session = new CreateProjectSession(cli, ph);
 
 	}
 
@@ -76,11 +76,11 @@ public class CreateProjectSessionTest {
 		// -------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 
-		systemInMock.provideText("name\n21-04-201511:11\n21-04-2015 10:10\ncancel");
+		systemInMock.provideText("name\n21-04-201511:11\n21-04-100 10:10\ncancel");
 		session.run();
 
 		// --------- Check if nothing has changed or created --------------
-		assertEquals(ph.getProjects(), projects);
+		assertEquals(ph.getProjects(),projects);
 		assertEquals("Enter the name of the project (or cancel):\r\n\r\n\r\nEnter the description of the project (or cancel):\r\n\r\n\r\nEnter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):\r\n\r\n\r\nDue time has to be after creation time.\r\n\r\nEnter the name of the project (or cancel):\r\n\r\n\r\n", log.getLog());
 	}
 
@@ -197,13 +197,12 @@ public class CreateProjectSessionTest {
 		// -------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
 
-		systemInMock.provideText("name\ndescription\n20-10-2000 12:10\ncancel");
+		systemInMock.provideText("name\ndescription\n20-10-100 12:10\ncancel");
 		session.run();
 
 		// --------- Check if nothing has changed or created --------------
 		assertEquals(ph.getProjects(), projects);
 
 	}
-
 
 }
