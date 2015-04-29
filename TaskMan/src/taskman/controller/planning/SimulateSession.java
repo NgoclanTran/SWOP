@@ -105,7 +105,6 @@ public class SimulateSession extends Session {
 	private void saveCurrentState() {
 		caretaker = new Caretaker();
 		caretaker.addClockMemento(Clock.getInstance().createMemento());
-		caretaker.addProjectHandlerMemento(getPH().createMemento());
 		for (int i = 0; i < getPH().getProjects().size(); i++) {
 			Project project = getPH().getProjects().get(i);
 			caretaker.addProjectMemento(project.createMemento());
@@ -126,7 +125,6 @@ public class SimulateSession extends Session {
 
 	private void resetState() {
 		Clock.getInstance().setMemento(caretaker.getClockMemento());
-		getPH().setMemento(caretaker.getProjectHandlerMemento());
 		for (int i = 0; i < uh.getDevelopers().size(); i++) {
 			uh.getDevelopers().get(i)
 					.setMemento(caretaker.getDeveloperMemento(i));
