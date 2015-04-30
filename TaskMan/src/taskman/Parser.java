@@ -22,7 +22,9 @@ import org.joda.time.LocalTime;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
+import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.DailyAvailability;
@@ -539,7 +541,6 @@ public class Parser {
 				resources = parseIntegerMap(line.substring(descriptionStart,
 						descriptionEnd));
 			}
-
 		}
 		Planning planning = new Planning(plannedStartTime, developers,
 				resources);
@@ -712,11 +713,71 @@ public class Parser {
 				description.add(line);
 			}
 		}
+		addReservation(description);
 	}
 
 	private void addReservation(List<String> description) {
-		// TODO Add reservation parsing
-
+		int descriptionStart, descriptionEnd;
+		int resource = 0, task = 0;
+		Date startTime = null, endTime = null;
+		int pastResources = -1, pastTasks = -1;
+		for (String line : description) {
+			if (line.startsWith("resource")) {
+				line = line.substring(line.indexOf(":") + 1);
+				line = line.trim();
+				resource = Integer.parseInt(line);
+			} else if (line.startsWith("task")) {
+				line = line.substring(line.indexOf(":") + 1);
+				line = line.trim();
+				task = Integer.parseInt(line);
+			} else if (line.startsWith("startTime")) {
+				descriptionStart = line.indexOf("\"") + 1;
+				descriptionEnd = line.length() - 1;
+				startTime = parseDate(line.substring(descriptionStart,
+						descriptionEnd));
+			} else if (line.startsWith("endTime")) {
+				descriptionStart = line.indexOf("\"") + 1;
+				descriptionEnd = line.length() - 1;
+				endTime = parseDate(line.substring(descriptionStart,
+						descriptionEnd));
+			}
+		}
+		Resource res = null;
+		int i = 0;
+		for (ResourceType rt : resourceHandler.getResourceTypes()) {
+			for (Resource r : rt.getResources()) {
+				if (i == resource) {
+					res = r;
+				}
+				i++;
+			}
+		}
+		Task tsk = null;
+		i = 0;
+		for (Project project : projectHandler.getProjects()) {
+			for (Task t : project.getTasks()) {
+				if (i == task) {
+					tsk = t;
+				}
+				i++;
+			}
+		}
+		DateTime startDate = Clock.getInstance().getFirstPossibleStartTime(
+				new DateTime(startTime));
+		DateTime endDate = new DateTime(endTime);
+		int hourDifference = res.getDailyAvailability().getStartTime()
+				.getHourOfDay()
+				- startDate.getHourOfDay();
+		if (hourDifference > 0) {
+			startDate = startDate.plusHours(hourDifference);
+		}
+		hourDifference = endDate.getHourOfDay()
+				- res.getDailyAvailability().getEndTime().getHourOfDay();
+		if (hourDifference > 0) {
+			endDate = endDate.minusHours(hourDifference);
+		}
+		TimeSpan timeSpan = new TimeSpan(startDate, endDate);
+		res.addReservation(tsk, timeSpan);
 	}
 
 	class Planning {
