@@ -94,6 +94,9 @@ public class ResourceType {
 	 */
 	public void addResource(String name, LocalTime startTime, LocalTime endTime)
 			throws IllegalArgumentException {
+		if(name == null) throw new IllegalArgumentException("The name cannot be null.");
+		if(startTime == null) throw new IllegalArgumentException("The startTIme cannot be null.");
+		if(endTime == null) throw new IllegalArgumentException("The endTime cannot be null.");
 		Resource resource = new Resource(name, startTime, endTime);
 		resources.add(resource);
 	}
@@ -114,6 +117,7 @@ public class ResourceType {
 			throw new IllegalArgumentException("The timeSpan cannot be null.");
 		if (amount < 0)
 			throw new IllegalArgumentException("The amount cannot be negative.");
+		
 		List<Resource> resources = getResources();
 		List<Resource> availableResources = getAvailableResources(timeSpan);
 		List<Resource> suggestedResources = new ArrayList<Resource>();
