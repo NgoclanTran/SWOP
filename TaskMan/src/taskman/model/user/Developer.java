@@ -1,4 +1,4 @@
-package taskman.model.user;
+ package taskman.model.user;
 
 import org.joda.time.LocalTime;
 

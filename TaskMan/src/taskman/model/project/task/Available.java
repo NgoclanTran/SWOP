@@ -48,11 +48,11 @@ class Available implements Status {
 		if (startTime.compareTo(endTime) > 0)
 			throw new IllegalDateException(
 					"The startTime must start before endTime.");
-		task.performAddTimeSpan(startTime, endTime);
 		if (failed) {
 			throw new IllegalArgumentException(
 					"Task cannot fail if it isn't executing");
 		} else {
+			task.performAddTimeSpan(startTime, endTime);
 			task.performUpdateTaskAvailability(new Executing());
 		}
 	}
