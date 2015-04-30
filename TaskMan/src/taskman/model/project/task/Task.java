@@ -541,10 +541,10 @@ public class Task extends Subject {
 	}
 
 	protected boolean performIsPlanned() {
-		if (!getReservations().isEmpty())
-			return true;
-		else
+		if (getReservations().isEmpty())
 			return false;
+		else
+			return true;
 	}
 
 	/**

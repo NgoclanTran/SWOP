@@ -12,7 +12,7 @@ import taskman.view.IView;
 public class ShowProjectSession extends Session {
 
 	/**
-	 * Creates the show project session using the given UI, ProjectHandler and ResourceHandler.
+	 * Creates the show project session using the given UI and ProjectHandler.
 	 * 
 	 * @param cli
 	 *            The command line interface.

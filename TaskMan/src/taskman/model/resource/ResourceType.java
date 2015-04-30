@@ -109,17 +109,20 @@ public class ResourceType {
 	 *         perform the task in the given timespan.
 	 */
 	public List<Resource> getSuggestedResources(TimeSpan timeSpan, int amount)
-			throws IllegalStateException {
+			throws IllegalArgumentException {
 		if (timeSpan == null)
 			throw new IllegalArgumentException("The timeSpan cannot be null.");
 		if (amount < 0)
 			throw new IllegalArgumentException("The amount cannot be negative.");
+		List<Resource> resources = getResources();
 		List<Resource> availableResources = getAvailableResources(timeSpan);
-		if (availableResources.size() < amount)
-			throw new IllegalStateException("Not enough resources.");
 		List<Resource> suggestedResources = new ArrayList<Resource>();
-		for (int i = 0; i < amount; i++) {
+		for (int i = 0; i < availableResources.size(); i++) {
 			suggestedResources.add(availableResources.get(i));
+		}
+		resources.removeAll(suggestedResources);
+		for (int i = 0; i < amount - suggestedResources.size(); i++) {
+			suggestedResources.add(resources.get(i));
 		}
 		return suggestedResources;
 	}

@@ -14,10 +14,24 @@ public class CreateTaskForm implements ICreateTaskForm {
 
 	View view;
 
+	/**
+	 * The constructor of the create task form. It will setup the view to be
+	 * able to get input and output.
+	 * 
+	 * @param view
+	 */
 	public CreateTaskForm(View view) {
 		this.view = view;
 	}
 
+	/**
+	 * This method will ask the user to enter a task description.
+	 * 
+	 * @return Returns a string with the task description.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public String getNewTaskDescription() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the description of the task (or cancel):");
@@ -30,6 +44,15 @@ public class CreateTaskForm implements ICreateTaskForm {
 		}
 	}
 
+	/**
+	 * This method will ask the user to enter a task estimated duration in
+	 * minutes and returns it.
+	 * 
+	 * @return Returns a integer with the task estimated duration in minutes.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public int getNewTaskEstimatedDuration() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the estimated duration of the task (or cancel):");
@@ -48,6 +71,15 @@ public class CreateTaskForm implements ICreateTaskForm {
 		}
 	}
 
+	/**
+	 * This method will ask the user to enter a task acceptable deviation in
+	 * percents and returns it.
+	 * 
+	 * @return Returns an integer with the task acceptable deviation in percents.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public int getNewTaskAcceptableDeviation() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the acceptable deviation of the task (or cancel):");
@@ -66,6 +98,15 @@ public class CreateTaskForm implements ICreateTaskForm {
 		}
 	}
 
+	/**
+	 * This method will ask he user to enter the task dependencies and returns
+	 * them as a list of tasks.
+	 * 
+	 * @return Returns a list of tasks that are dependencies.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public List<Task> getNewTaskDependencies(List<Task> tasks)
 			throws ShouldExitException {
 		try {
@@ -96,6 +137,17 @@ public class CreateTaskForm implements ICreateTaskForm {
 		}
 	}
 
+	/**
+	 * This method will parse the input that the user entered to the dependent
+	 * tasks and return them as a list.
+	 * 
+	 * @param tasks
+	 * 
+	 * @return Returns a list of dependent tasks.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	private List<Task> parseDependecies(List<Task> tasks)
 			throws ShouldExitException {
 		ArrayList<Task> list = new ArrayList<Task>();
@@ -123,6 +175,17 @@ public class CreateTaskForm implements ICreateTaskForm {
 		return null;
 	}
 
+	/**
+	 * This method will ask the user to enter the task for which this task is an
+	 * alternative and return it.
+	 * 
+	 * @param tasks
+	 * 
+	 * @return Returns a task for which this task is an alternative.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	public Task getNewTaskAlternativeFor(List<Task> tasks)
 			throws ShouldExitException {
 		try {
@@ -152,23 +215,36 @@ public class CreateTaskForm implements ICreateTaskForm {
 		}
 	}
 
-	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh) throws ShouldExitException {
+	/**
+	 * This method will ask the user to enter the required resource types and
+	 * their amount and return them as a map of resource types and integers.
+	 * 
+	 * @param rh
+	 * 
+	 * @return Returns a map of ResourceType and Integer with the required
+	 *         resource types and their amount.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
+	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh)
+			throws ShouldExitException {
 		try {
 			Map<ResourceType, Integer> resourceTypes = new HashMap<ResourceType, Integer>();
-			
+
 			String addResouceType = "Y";
 			while (!view.isValidNoAnswer(addResouceType)) {
 				view.displayInfo("Do you want to add a(nother) resource type? (Y/N or cancel):");
 				addResouceType = view.input.getInput();
 				view.output.displayEmptyLine();
-				
+
 				if (view.isValidYesAnswer(addResouceType)) {
 					ResourceType resourceToAdd = getNewTaskResourceType(rh);
 					int amountToAdd = getNewTaskResourceTypeAmount();
 					resourceTypes.put(resourceToAdd, amountToAdd);
 				}
 			}
-			
+
 			return resourceTypes;
 		} catch (ShouldExitException e) {
 			view.output.displayEmptyLine();
@@ -176,10 +252,36 @@ public class CreateTaskForm implements ICreateTaskForm {
 		}
 	}
 
-	private ResourceType getNewTaskResourceType(ResourceHandler rh) throws ShouldExitException {
-		return view.getResourceType(rh.getResourceTypes());
+	/**
+	 * This method will ask the user for one specific resource type and return
+	 * it.
+	 * 
+	 * @param rh
+	 * 
+	 * @return Returns the resource type the user selected.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
+	private ResourceType getNewTaskResourceType(ResourceHandler rh)
+			throws ShouldExitException {
+		List<ResourceType> resourceTypes = rh.getResourceTypes();
+		displayResourceTypeList(resourceTypes, 1, true);
+		int resourceTypeId = view.getListChoice(resourceTypes,
+				"Select a resource type:");
+		return resourceTypes.get(resourceTypeId - 1);
 	}
 
+	/**
+	 * This method will ask the user for the amount needed for the selected
+	 * resource type and return it.
+	 * 
+	 * @return Returns the amount of resource needed for the specified resource
+	 *         type.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the project creation.
+	 */
 	private int getNewTaskResourceTypeAmount() throws ShouldExitException {
 		int number = Integer.MIN_VALUE;
 		while (number < 0) {
@@ -188,6 +290,23 @@ public class CreateTaskForm implements ICreateTaskForm {
 			view.output.displayEmptyLine();
 		}
 		return number;
+	}
+
+	/**
+	 * This method will print the resource types as a list.
+	 * 
+	 * @param resouceTypes
+	 * @param tabs
+	 * @param printReturn
+	 */
+	private void displayResourceTypeList(List<ResourceType> resouceTypes,
+			int tabs, boolean printReturn) {
+		ArrayList<String> resourceTypeInfo = new ArrayList<String>();
+		for (int i = 1; i <= resouceTypes.size(); i++) {
+			resourceTypeInfo.add(resouceTypes.get(i - 1).toString());
+		}
+		view.output.displayList(resourceTypeInfo, tabs, printReturn);
+		view.output.displayEmptyLine();
 	}
 
 }

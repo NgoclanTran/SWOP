@@ -12,7 +12,7 @@ import taskman.model.PlanningService;
 import taskman.model.ProjectHandler;
 import taskman.model.UserHandler;
 import taskman.model.project.Project;
-import taskman.model.project.task.Reservation;
+import taskman.model.project.task.Reservable;
 import taskman.model.project.task.Task;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
@@ -27,6 +27,9 @@ public class PlanTaskSession extends Session {
 	private UserHandler uh;
 	private IClock clock = Clock.getInstance();
 	private PlanningService planning = new PlanningService();
+
+	private Project project = null;
+	private Task task = null;
 
 	/**
 	 * Creates the planning session using the given UI, ProjectHandler and
@@ -51,6 +54,40 @@ public class PlanTaskSession extends Session {
 	}
 
 	/**
+	 * Creates the planning session using the given UI, ProjectHandler and
+	 * ResourceHandler.
+	 * 
+	 * @param cli
+	 *            The command line interface.
+	 * @param ph
+	 *            The project handler.
+	 * @param uh
+	 *            The user handler.
+	 * @param project
+	 *            The project.
+	 * @param task
+	 *            The task.
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
+			Project project, Task task) throws IllegalArgumentException {
+		super(cli, ph);
+		if (!isValidUserHandler(uh))
+			throw new IllegalArgumentException(
+					"The plan task controller needs a UserHandler");
+		if (!isValidProject(project))
+			throw new IllegalArgumentException(
+					"The plan task controller needs a project");
+		if (!isValidTask(task))
+			throw new IllegalArgumentException(
+					"The plan task controller needs a task");
+		this.uh = uh;
+		this.project = project;
+		this.task = task;
+	}
+
+	/**
 	 * Checks if the given user handler is valid.
 	 * 
 	 * @param uh
@@ -64,9 +101,42 @@ public class PlanTaskSession extends Session {
 			return false;
 	}
 
+	/**
+	 * Checks if the given project is valid.
+	 * 
+	 * @param project
+	 * 
+	 * @return Returns true if the project is different from null.
+	 */
+	private boolean isValidProject(Project project) {
+		if (project != null)
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Checks if the given task is valid.
+	 * 
+	 * @param task
+	 * 
+	 * @return Returns true if the task is different from null.
+	 */
+	private boolean isValidTask(Task task) {
+		if (task != null)
+			return true;
+		else
+			return false;
+	}
+
 	@Override
 	public void run() {
-		showProjectsAndUnplannedTasks();
+		if (!isValidProject(project))
+			showProjectsAndUnplannedTasks();
+		else if (!isValidTask(task))
+			showUnplannedTasks();
+		else
+			planTask();
 	}
 
 	private void showProjectsAndUnplannedTasks() {
@@ -86,10 +156,14 @@ public class PlanTaskSession extends Session {
 			return;
 		}
 
-		showUnplannedTasks(project);
+		this.project = project;
+		showUnplannedTasks();
 	}
 
-	private void showUnplannedTasks(Project project) {
+	private void showUnplannedTasks() {
+		if (project == null)
+			throw new IllegalStateException(
+					"Plan task should have a project by now.");
 		List<Task> tasks = getUnplannedTasks(project.getTasks());
 		getUI().displayProjectDetails(project);
 
@@ -103,53 +177,63 @@ public class PlanTaskSession extends Session {
 			return;
 		}
 
-		planTask(project, task);
+		this.task = task;
+		planTask();
 	}
 
-	private void planTask(Project project, Task task) {
+	private void planTask() throws IllegalStateException {
+		if (task == null)
+			throw new IllegalStateException(
+					"Plan task should have a task by now.");
 		while (true) {
 			try {
-				DateTime startTime = getStartTime(project, task);
+				List<Reservable> reservables = null;
+				DateTime startTime = getStartTime();
 				TimeSpan timeSpan = new TimeSpan(startTime, clock.addMinutes(
 						startTime, task.getEstimatedDuration()));
 
-				if (!isValidStartTime(task, timeSpan)) {
-					new ResolveConflictSession(getUI(), getPH()).run();
+				if (!isValidStartTime(timeSpan)) {
+					reservables = new ArrayList<Reservable>(
+							getSuggestedResources(timeSpan));
+					new ResolveConflictSession(getUI(), getPH(), uh, task,
+							timeSpan, reservables).run();
 					break;
 				}
 
 				List<Resource> resources = new ArrayList<Resource>();
 				if (!task.getRequiredResourceTypes().isEmpty())
-					resources = getResources(task, timeSpan);
-				
+					resources = getResources(timeSpan);
+
 				if (!isValidResource(resources, timeSpan)) {
-					new ResolveConflictSession(getUI(), getPH()).run();
+					reservables = new ArrayList<Reservable>(resources);
+					new ResolveConflictSession(getUI(), getPH(), uh, task,
+							timeSpan, reservables).run();
 					break;
 				}
 
 				List<Developer> developers = new ArrayList<Developer>();
 				if (!uh.getDevelopers().isEmpty())
 					developers = getDevelopers();
-				
+
 				if (!isvalidDeveloper(developers, timeSpan)) {
-					new ResolveConflictSession(getUI(), getPH()).run();
+					reservables = new ArrayList<Reservable>(developers);
+					new ResolveConflictSession(getUI(), getPH(), uh, task,
+							timeSpan, reservables).run();
 					break;
 				}
 
-				break;
-
-				// if (isValidUpdateTask(task, isFailed, startTime, endTime))
-				// break;
+				if (isValidPlanning(timeSpan, resources, developers))
+					break;
 			} catch (ShouldExitException e) {
 				return;
 			}
 		}
 	}
 
-	private boolean isValidStartTime(Task task, TimeSpan timeSpan) {
+	private boolean isValidStartTime(TimeSpan timeSpan) {
 		return planning.isValidTimeSpan(task, timeSpan, null);
 	}
-	
+
 	private boolean isValidResource(List<Resource> resources, TimeSpan timeSpan) {
 		for (Resource resource : resources) {
 			if (!resource.isAvailableAt(timeSpan))
@@ -157,13 +241,33 @@ public class PlanTaskSession extends Session {
 		}
 		return true;
 	}
-	
-	private boolean isvalidDeveloper(List<Developer> developers, TimeSpan timeSpan) {
+
+	private boolean isvalidDeveloper(List<Developer> developers,
+			TimeSpan timeSpan) {
 		for (Developer developer : developers) {
 			if (!developer.isAvailableAt(timeSpan))
 				return false;
 		}
 		return true;
+	}
+
+	private boolean isValidPlanning(TimeSpan timeSpan,
+			List<Resource> resources, List<Developer> developers) {
+		try {
+			for (Developer developer : developers) {
+				task.addRequiredDeveloper(developer);
+				developer.addReservation(task, timeSpan);
+			}
+			for (Resource resource : resources) {
+				resource.addReservation(task, timeSpan);
+			}
+			task.updateTaskAvailability();
+			getUI().displayInfo("Task planned.");
+			return true;
+		} catch (Exception Ex) {
+			getUI().displayError(Ex.getMessage());
+			return false;
+		}
 	}
 
 	private List<List<Task>> getUnplannedTasksAllProjects(List<Project> projects) {
@@ -203,14 +307,24 @@ public class PlanTaskSession extends Session {
 		return unplannedTasks;
 	}
 
-	private DateTime getStartTime(Project project, Task task) {
+	private DateTime getStartTime() {
 		return getUI().getPlanTaskForm().getStartTime(
 				planning.getPossibleStartTimes(task, 3,
 						project.getCreationTime()));
 	}
 
-	private List<Resource> getResources(Task task, TimeSpan timeSpan)
-			throws ShouldExitException {
+	private List<Resource> getSuggestedResources(TimeSpan timeSpan) {
+		List<Resource> suggestedResources = new ArrayList<>();
+		for (Entry<ResourceType, Integer> entry : task
+				.getRequiredResourceTypes().entrySet()) {
+			suggestedResources.addAll(entry.getKey().getSuggestedResources(
+					timeSpan, entry.getValue()));
+		}
+		return suggestedResources;
+	}
+
+	private List<Resource> getResources(TimeSpan timeSpan)
+			throws ShouldExitException, IllegalStateException {
 		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
 		List<Integer> amounts = new ArrayList<Integer>();
 		List<List<Resource>> suggestedResources = new ArrayList<>();

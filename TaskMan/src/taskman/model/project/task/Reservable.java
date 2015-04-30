@@ -53,7 +53,7 @@ public class Reservable {
 					.getStartTime();
 			DateTime reservationEnd = reservation.getTimeSpan().getEndTime();
 			
-			if(!timeSpan.isDuringTimeSpan(reservationStart) || !timeSpan.isDuringTimeSpan(reservationEnd))
+			if(timeSpan.isDuringTimeSpan(reservationStart) || timeSpan.isDuringTimeSpan(reservationEnd))
 				return false;
 		}
 		if (!dailyAvailability.isValidTimeSpan(timeSpan))
