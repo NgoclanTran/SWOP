@@ -28,8 +28,8 @@ public class ResourceType {
 	 */
 	public ResourceType(String name, List<ResourceType> requires,
 			List<ResourceType> conflictsWith, boolean selfConflicting)
-			throws IllegalArgumentException {
-		
+					throws IllegalArgumentException {
+
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		this.name = name;
@@ -117,18 +117,23 @@ public class ResourceType {
 			throw new IllegalArgumentException("The timeSpan cannot be null.");
 		if (amount < 0)
 			throw new IllegalArgumentException("The amount cannot be negative.");
-		
+
 		List<Resource> resources = getResources();
 		List<Resource> availableResources = getAvailableResources(timeSpan);
 		List<Resource> suggestedResources = new ArrayList<Resource>();
 		for (int i = 0; i < availableResources.size(); i++) {
 			suggestedResources.add(availableResources.get(i));
 		}
-		resources.removeAll(suggestedResources);
-		for (int i = 0; i < amount - suggestedResources.size() && i < resources.size(); i++) {
-			suggestedResources.add(resources.get(i));
+		if(amount > suggestedResources.size()){
+			resources.removeAll(suggestedResources);
+			for (int i = 0; i < amount - suggestedResources.size() && i < resources.size(); i++) {
+				suggestedResources.add(resources.get(i));
+			}
+			return suggestedResources;
+		}else{
+			return suggestedResources.subList(0, amount);
 		}
-		return suggestedResources;
+		
 	}
 
 	/**

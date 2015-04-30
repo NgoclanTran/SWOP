@@ -334,6 +334,8 @@ public class Task extends Subject {
 	 *            The developer to add
 	 */
 	public void addRequiredDeveloper(Developer developer) {
+		if(developer == null) throw new IllegalArgumentException("The developer cannot be null.");
+		if(requiredDevelopers.contains(developer)) throw new IllegalArgumentException("The developer is already in the list of developpers.");
 		requiredDevelopers.add(developer);
 	}
 

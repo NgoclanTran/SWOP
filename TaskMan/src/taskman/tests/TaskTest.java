@@ -29,58 +29,61 @@ public class TaskTest {
 
 	}
 
-	@Test(expected = NullPointerException.class)
-	public void constructor1Test_FalseCase_DescriptionNull() {
-		Task t = new Task(null, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
-
+//	@Test(expected = IllegalArgumentException.class)
+//	public void constructor1Test_FalseCase_DescriptionNull() {
+//		Task t = new Task(null, estimatedDuration, acceptableDeviation,
+//				dependencies, null, null);
+//
+//	}
+//
+//	@Test(expected = IllegalArgumentException.class)
+//	public void constructor1Test_FalseCase_EstimatedDuration() {
+//		Task t = new Task(description, -10, acceptableDeviation, dependencies,
+//				null, null);
+//
+//	}
+//
+//	@Test(expected = IllegalArgumentException.class)
+//	public void constructor1Test_FalseCase_acceptableDeviation() {
+//		Task t = new Task(description, estimatedDuration, -10, dependencies,
+//				null, null);
+//	}
+//
+//	@Test(expected = IllegalArgumentException.class)
+//	public void constructor2Test_FalseCase_DescriptionNull() {
+//		Task t = new Task(null, estimatedDuration, acceptableDeviation,
+//				dependencies, null, null);
+//
+//	}
+	
+	@Test
+	public void constructorTest_TrueCase(){
+		Task t = new Task(description, estimatedDuration, acceptableDeviation, null, null, null);
+		assertEquals(t.getDescription(), description);
+		assertEquals(t.getEstimatedDuration(), estimatedDuration);
+		assertEquals(t.getAcceptableDeviation(), acceptableDeviation);
+		assertTrue(t.getDependencies().isEmpty());
+		assertTrue(t.getRequiredDevelopers().isEmpty());
+		assertTrue(t.getRequiredResourceTypes().isEmpty());
+		assertEquals(t.getStatusName(), "UNAVAILABLE");
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor1Test_FalseCase_EstimatedDuration() {
-		Task t = new Task(description, -10, acceptableDeviation, dependencies,
-				null, null);
-
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor1Test_FalseCase_acceptableDeviation() {
-		Task t = new Task(description, estimatedDuration, -10, dependencies,
-				null, null);
-	}
-
-	@Test(expected = NullPointerException.class)
-	public void constructor2Test_FalseCase_DescriptionNull() {
-		Task t = new Task(null, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
-
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor2Test_FalseCase_EstimatedDuration() {
-		Task t = new Task(description, -10, acceptableDeviation, dependencies,
-				null, null);
-
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor2Test_FalseCase_acceptableDeviation() {
-		Task t = new Task(description, estimatedDuration, -10, dependencies,
-				null, null);
+	@Test
+	public void constructorTest_WithDependencies(){
+		
 	}
 	
 	@Test
-	public void constructorTest_WithAlternative(){
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
-		assertEquals(t1.getStatusName(),"AVAILABLE");
-//		DateTime startTime = new DateTime(2015,1,1,10,1);
-//		DateTime endTime = new DateTime(2015,2,2,11,1);
-//		t1.addTimeSpan(true, startTime, endTime);
-//		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
-//				dependencies, t1, null);
-//		assertEquals(t1.getAlternative(),t2);
+	public void constructorTest_WithRequireResourceTypes(){
+		
 	}
+	
+	@Test
+	public void constructorTest_WithAlternativeFor(){
+		
+	}
+	
+
 
 //	@Test
 //	public void constructorTest_TrueCase() {
