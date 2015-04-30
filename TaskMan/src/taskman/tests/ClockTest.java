@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.model.memento.ClockMemento;
 import taskman.model.time.Clock;
 
 public class ClockTest {
@@ -139,5 +140,10 @@ public class ClockTest {
 		assertEquals(t1.getYear(),2015);
 		assertEquals(t1.getHourOfDay(),23);
 		assertEquals(t1.getMinuteOfHour(),0);
+	}
+	
+	@Test
+	public void createMomentoTest(){
+		assertTrue(c.createMemento() instanceof ClockMemento);
 	}
 }

@@ -125,7 +125,7 @@ public class ResourceType {
 			suggestedResources.add(availableResources.get(i));
 		}
 		resources.removeAll(suggestedResources);
-		for (int i = 0; i < amount - suggestedResources.size(); i++) {
+		for (int i = 0; i < amount - suggestedResources.size() && i < resources.size(); i++) {
 			suggestedResources.add(resources.get(i));
 		}
 		return suggestedResources;
