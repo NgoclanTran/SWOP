@@ -95,7 +95,7 @@ public class ResourceType {
 	public void addResource(String name, LocalTime startTime, LocalTime endTime)
 			throws IllegalArgumentException {
 		if(name == null) throw new IllegalArgumentException("The name cannot be null.");
-		if(startTime == null) throw new IllegalArgumentException("The startTIme cannot be null.");
+		if(startTime == null) throw new IllegalArgumentException("The startTime cannot be null.");
 		if(endTime == null) throw new IllegalArgumentException("The endTime cannot be null.");
 		Resource resource = new Resource(name, startTime, endTime);
 		resources.add(resource);
