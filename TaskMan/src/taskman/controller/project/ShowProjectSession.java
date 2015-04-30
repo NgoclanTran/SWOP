@@ -20,6 +20,7 @@ public class ShowProjectSession extends Session {
 	 *            The project handler.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
 	 */
 	public ShowProjectSession(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {

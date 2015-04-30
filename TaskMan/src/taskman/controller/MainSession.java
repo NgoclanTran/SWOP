@@ -37,6 +37,7 @@ public class MainSession extends Session {
 	 *            The user handler.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
 	 */
 	public MainSession(IView cli, ProjectHandler ph, ResourceHandler rh,
 			UserHandler uh) throws IllegalArgumentException {

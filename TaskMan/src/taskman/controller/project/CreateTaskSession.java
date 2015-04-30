@@ -28,6 +28,7 @@ public class CreateTaskSession extends Session {
 	 *            The resource handler.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             The given view,the project handler and the resource handler need to be valid.
 	 */
 	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh) {
 		super(cli, ph);
@@ -54,12 +55,13 @@ public class CreateTaskSession extends Session {
 	/**
 	 * starts the use case by calling the create task method.
 	 */
+	@Override
 	public void run() {
 		createTask();
 	}
 
 	/**
-	 * This method will ask the ui to get user input to create the task with
+	 * This method will ask the UI to get user input to create the task with
 	 * this given input. This is the main method for the execution of this
 	 * particular use case.
 	 */
@@ -70,18 +72,18 @@ public class CreateTaskSession extends Session {
 				List<Task> tasks = project.getTasks();
 				List<Task> failedTasks = getFailedTasks(tasks);
 
-				String description = getDescription();
-				int estimatedDuration = getEstimatedDuration();
-				int acceptableDeviation = getAcceptableDeviation();
+				String description = getUI().getNewTaskForm().getNewTaskDescription();
+				int estimatedDuration = getUI().getNewTaskForm().getNewTaskEstimatedDuration();
+				int acceptableDeviation = getUI().getNewTaskForm().getNewTaskAcceptableDeviation();
 				List<Task> dependencies = new ArrayList<Task>();
 				if (tasks.size() > 0)
-					dependencies = getDependencies(project.getTasks());
+					dependencies = getUI().getNewTaskForm().getNewTaskDependencies(tasks);
 				Task alternativeFor = null;
 				if (failedTasks.size() > 0)
-					alternativeFor = getAlternativeFor(project.getTasks());
+					alternativeFor = getUI().getNewTaskForm().getNewTaskAlternativeFor(tasks);
 				Map<ResourceType, Integer> resourceTypes = null;
 				if (rh.getResourceTypes().size() > 0)
-					resourceTypes = getResourceTypes();
+					resourceTypes = getUI().getNewTaskForm().getNewTaskResourceTypes(rh);
 
 				if (isValidTask(project, description, estimatedDuration,
 						acceptableDeviation, dependencies, alternativeFor, resourceTypes))
@@ -128,7 +130,7 @@ public class CreateTaskSession extends Session {
 	}
 
 	/**
-	 * This method will ask the ui to display a list of projects and lets the
+	 * This method will ask the UI to display a list of projects and lets the
 	 * user choose one of them.
 	 * 
 	 * @return The project as chosen by the user in the UI.
@@ -142,86 +144,6 @@ public class CreateTaskSession extends Session {
 		}
 
 		return getUI().getProject(projects);
-	}
-
-	/**
-	 * This method asks the user to enter the description of the task and
-	 * returns it.
-	 * 
-	 * @return Returns the description of the task that is to be entered.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private String getDescription() throws ShouldExitException {
-		return getUI().getNewTaskForm().getNewTaskDescription();
-	}
-
-	/**
-	 * This method asks the user to enter the estimated duration of the task and
-	 * returns it.
-	 * 
-	 * @return Returns the estimated duration of the task that is to be entered.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private int getEstimatedDuration() throws ShouldExitException {
-		return getUI().getNewTaskForm().getNewTaskEstimatedDuration();
-	}
-
-	/**
-	 * This method asks the user to enter the acceptable deviation of the task
-	 * and returns it.
-	 * 
-	 * @return Returns the acceptable deviation of the task that is to be
-	 *         entered.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private int getAcceptableDeviation() throws ShouldExitException {
-		return getUI().getNewTaskForm().getNewTaskAcceptableDeviation();
-	}
-
-	/**
-	 * This method asks the user to select the dependencies and returns it.
-	 * 
-	 * @param tasks
-	 *            The list of all tasks
-	 * 
-	 * @return Returns a list of dependencies.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private List<Task> getDependencies(List<Task> tasks)
-			throws ShouldExitException {
-		return getUI().getNewTaskForm().getNewTaskDependencies(tasks);
-	}
-
-	/**
-	 * This method asks the user to select the task for which this task will be
-	 * the alternative and returns it.
-	 * 
-	 * @param tasks
-	 *            The list of all tasks.
-	 * 
-	 * @return Returns the task for which this task will be the alternative.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private Task getAlternativeFor(List<Task> tasks) throws ShouldExitException {
-		return getUI().getNewTaskForm().getNewTaskAlternativeFor(tasks);
-	}
-
-	/**
-	 * This method asks the user to select the resource types and their amounts
-	 * needed for the task and returns it.
-	 * 
-	 * @return Returns a map of resource types and their amounts.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private Map<ResourceType, Integer> getResourceTypes()
-			throws ShouldExitException {
-		return getUI().getNewTaskForm().getNewTaskResourceTypes(rh);
 	}
 
 	/**
