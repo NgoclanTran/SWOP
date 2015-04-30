@@ -3,7 +3,7 @@ package taskman.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import taskman.controller.planning.AdvanceClockSession;
+import taskman.controller.planning.AdvanceTimeSession;
 import taskman.controller.planning.PlanTaskSession;
 import taskman.controller.planning.SimulateSession;
 import taskman.controller.project.CreateProjectSession;
@@ -105,7 +105,7 @@ public class MainSession extends Session {
 				new UpdateTaskStatusSession(getUI(), getPH()).run();
 				break;
 			case 5:
-				new AdvanceClockSession(getUI(), getPH()).run();
+				new AdvanceTimeSession(getUI(), getPH()).run();
 				break;
 			case 6:
 				new PlanTaskSession(getUI(), getPH(), uh).run();

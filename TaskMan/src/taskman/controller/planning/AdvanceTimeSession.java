@@ -10,7 +10,7 @@ import taskman.model.project.task.Task;
 import taskman.model.time.Clock;
 import taskman.view.IView;
 
-public class AdvanceClockSession extends Session {
+public class AdvanceTimeSession extends Session {
 
 	Clock clock = Clock.getInstance();
 
@@ -25,7 +25,7 @@ public class AdvanceClockSession extends Session {
 	 * @throws IllegalArgumentException
 	 *             Both the given view and the project handler need to be valid.
 	 */
-	public AdvanceClockSession(IView cli, ProjectHandler ph) {
+	public AdvanceTimeSession(IView cli, ProjectHandler ph) {
 		super(cli, ph);
 	}
 
