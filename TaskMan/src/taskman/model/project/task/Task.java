@@ -51,7 +51,7 @@ public class Task extends Subject {
 			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
 			throws IllegalStateException {
 		if (description == null)
-			throw new NullPointerException("Description is null");
+			throw new IllegalArgumentException("Description is null");
 		if (estimatedDuration <= 0)
 			throw new IllegalArgumentException(
 					"The estimated duration cannot be negative.");

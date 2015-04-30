@@ -27,7 +27,7 @@ class Ongoing implements State {
 			int estimatedDuration, int acceptableDeviation,
 			List<Task> dependencies, Task alternativeFor,
 			Map<ResourceType, Integer> resourceTypes)
-			throws IllegalStateException {
+			throws IllegalStateException,IllegalArgumentException {
 		project.performAddTask(description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor,
 				resourceTypes);

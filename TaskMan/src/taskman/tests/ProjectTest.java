@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.memento.ProjectMemento;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 
@@ -62,6 +63,15 @@ public class ProjectTest {
 	public void createProjectDueBeforeCreation() {
 		new Project(name, description, new DateTime(2014, 1, 2, 0, 0),
 				new DateTime(2014, 1, 1, 0, 0));
+	}
+	
+	@Test
+	public void createTprojectTest_TrueCase(){
+		Project p = new Project(name, description, creation, due);
+		assertEquals(p.getName(), name);
+		assertEquals(p.getDescription(), description);
+		assertEquals(p.getCreationTime(), creation);
+		assertEquals(p.getDueTime(), due);
 	}
 
 	@Test
@@ -146,6 +156,32 @@ public class ProjectTest {
 				.getAcceptableDeviation());
 		assertFalse(project.isFinished());
 	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testAddTask_Name_Null(){
+		int estimatedDuration = 500, acceptableDeviation = 50;
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(null, estimatedDuration, acceptableDeviation,
+				dependencies, null, null);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testAddTask_EstimatedDuration_Neg(){
+		String desc = "desc";
+		int acceptableDeviation = 50;
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, -1, acceptableDeviation,
+				dependencies, null, null);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testAddTask_AcceptableDeviation_Null(){
+		String desc = "desc";
+		int estimatedDuration = 500;
+		List<Task> dependencies = new ArrayList<Task>();
+		project.addTask(desc, estimatedDuration, -1,
+				dependencies, null, null);
+	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testAddTaskFinishedProject() {
@@ -217,6 +253,7 @@ public class ProjectTest {
 
 	@Test
 	public void testUpdateProjectStateFinishedTask() {
+		//TODO task is unavailable
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
@@ -243,6 +280,7 @@ public class ProjectTest {
 
 	@Test
 	public void testUpdateProjectStateAvailableTasks() {
+		//TODO task is unavailable
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
@@ -261,7 +299,7 @@ public class ProjectTest {
 	@Test
 	public void testGetStateNameOngoing() {
 		assertFalse(project.isFinished());
-		assertEquals("Ongoing", project.getStateName());
+		assertEquals("ONGOING", project.getStateName());
 	}
 
 	@Test
@@ -305,6 +343,12 @@ public class ProjectTest {
 						new DateTime(2014, 1, 2, 10, 0));
 		assertTrue(project.isFinished());
 		assertEquals(60, project.getTotalDelay());
+	}
+	
+	@Test
+	public void createMomenttoTest(){
+		Project p = new Project(name, description, creation, due);
+		assertTrue(p.createMemento()instanceof ProjectMemento);
 	}
 
 }

@@ -123,7 +123,7 @@ public class Project implements Observer {
 
 	protected void performAddTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) {
+			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) throws IllegalArgumentException {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor,
 				resourceTypes);
