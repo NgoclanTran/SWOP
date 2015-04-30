@@ -19,6 +19,18 @@ public class AdvanceTimeForm implements IAdvanceTimeForm {
 	}
 	
 	/**
+	 * This method will display the given current time.
+	 * 
+	 * @param currentTime
+	 */
+	@Override
+	public void displayCurrentTime(DateTime currentTime) {
+		view.displayInfo("The current system time:");
+		view.displayInfo(view.getStringDate(currentTime));
+		view.output.displayEmptyLine();
+	}
+
+	/**
 	 * This method will ask the user to enter a new system time.
 	 * 
 	 * @param currentTime
@@ -31,13 +43,11 @@ public class AdvanceTimeForm implements IAdvanceTimeForm {
 	@Override
 	public DateTime getNewTime(DateTime currentTime) throws ShouldExitException {
 		try {
-			view.displayInfo("The current system time:");
-			view.displayInfo(view.getStringDate(currentTime));
-			view.output.displayEmptyLine();
-			
+			displayCurrentTime(currentTime);
+
 			String date = "";
 			while (!view.isValidDateTime(date)) {
-				view.displayInfo("Enter the new system time with format dd-MM-yyyy HH:mm (or cancel):");
+				view.displayInfo("Enter the new (future) system time with format dd-MM-yyyy HH:mm (or cancel):");
 				date = view.input.getInput();
 				view.output.displayEmptyLine();
 			}

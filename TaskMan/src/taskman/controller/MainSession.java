@@ -3,6 +3,7 @@ package taskman.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import taskman.controller.planning.AdvanceClockSession;
 import taskman.controller.planning.PlanTaskSession;
 import taskman.controller.planning.SimulateSession;
 import taskman.controller.project.CreateProjectSession;
@@ -16,9 +17,9 @@ import taskman.view.IView;
 
 public class MainSession extends Session {
 
-	private final List<String> menu = Arrays
-			.asList("Show projects", "Create project", "Create task",
-					"Update task", "Plan task", "Start simulation", "Quit");
+	private final List<String> menu = Arrays.asList("Show projects",
+			"Create project", "Create task", "Update task", "Advance time",
+			"Plan task", "Start simulation", "Quit");
 
 	private ResourceHandler rh;
 	private UserHandler uh;
@@ -104,12 +105,15 @@ public class MainSession extends Session {
 				new UpdateTaskStatusSession(getUI(), getPH()).run();
 				break;
 			case 5:
-				new PlanTaskSession(getUI(), getPH(), uh).run();
+				new AdvanceClockSession(getUI(), getPH()).run();
 				break;
 			case 6:
-				new SimulateSession(getUI(), getPH(), rh, uh).run();
+				new PlanTaskSession(getUI(), getPH(), uh).run();
 				break;
 			case 7:
+				new SimulateSession(getUI(), getPH(), rh, uh).run();
+				break;
+			case 8:
 				return;
 			}
 		}

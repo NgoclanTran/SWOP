@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
+import taskman.model.project.Project;
+import taskman.model.project.task.Task;
 import taskman.model.time.Clock;
 import taskman.view.IView;
 
@@ -34,23 +36,56 @@ public class AdvanceClockSession extends Session {
 	public void run() {
 		advanceTime();
 	}
-	
+
+	/**
+	 * This method will show the user the current time and ask the user to enter
+	 * a new system time in the future. Afterwards it will check the time and
+	 * update all the appropriate object.
+	 */
 	private void advanceTime() {
 		while (true) {
 			try {
-				DateTime time = getUI().getNewProjectForm().getNewProjectDueTime();
+				DateTime time = getUI().getAdvanceTimeForm().getNewTime(
+						clock.getSystemTime());
 
-				if (isValidTime(time))
+				if (isValidTime(time)) {
+					getUI().getAdvanceTimeForm().displayCurrentTime(
+							clock.getSystemTime());
+					updateAll();
 					break;
-
+				}
 			} catch (ShouldExitException e) {
 				return;
 			}
 		}
 	}
-	
+
+	/**
+	 * This method will check if the given time is a valid time.
+	 * 
+	 * @param time
+	 * 
+	 * @return Returns true if the given time is after the current system time,
+	 *         else it returns false.
+	 */
 	private boolean isValidTime(DateTime time) {
-		return false;
+		if (clock.getSystemTime().isBefore(time)) {
+			clock.setSystemTime(time);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * This method will update all the tasks.
+	 */
+	private void updateAll() {
+		for (Project project : getPH().getProjects()) {
+			for (Task task : project.getTasks()) {
+				task.updateTaskAvailability();
+			}
+		}
 	}
 
 }
