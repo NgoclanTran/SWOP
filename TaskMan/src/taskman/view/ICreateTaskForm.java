@@ -16,9 +16,9 @@ public interface ICreateTaskForm {
 	 * @return Returns a string with the task description.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
-	public String getNewTaskDescription();
+	public String getNewTaskDescription() throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to enter a task estimated duration in
@@ -27,9 +27,9 @@ public interface ICreateTaskForm {
 	 * @return Returns a integer with the task estimated duration in minutes.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
-	public int getNewTaskEstimatedDuration();
+	public int getNewTaskEstimatedDuration() throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to enter a task acceptable deviation in
@@ -38,9 +38,9 @@ public interface ICreateTaskForm {
 	 * @return Returns an integer with the task acceptable deviation in percents.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
-	public int getNewTaskAcceptableDeviation();
+	public int getNewTaskAcceptableDeviation() throws ShouldExitException;
 
 	/**
 	 * This method will ask he user to enter the task dependencies and returns
@@ -49,9 +49,9 @@ public interface ICreateTaskForm {
 	 * @return Returns a list of tasks that are dependencies.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
-	public List<Task> getNewTaskDependencies(List<Task> tasks);
+	public List<Task> getNewTaskDependencies(List<Task> tasks) throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to enter the task for which this task is an
@@ -62,9 +62,9 @@ public interface ICreateTaskForm {
 	 * @return Returns a task for which this task is an alternative.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
-	public Task getNewTaskAlternativeFor(List<Task> tasks);
+	public Task getNewTaskAlternativeFor(List<Task> tasks) throws ShouldExitException;
 	
 	/**
 	 * This method will ask the user to enter the required resource types and
@@ -76,8 +76,8 @@ public interface ICreateTaskForm {
 	 *         resource types and their amount.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
-	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh);
+	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh) throws ShouldExitException;
 
 }

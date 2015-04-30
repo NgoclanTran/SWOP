@@ -256,6 +256,7 @@ public class View implements IView {
 	 * 
 	 * @param message
 	 */
+	@Override
 	public void displayInfo(String message) {
 		try {
 			display(message);
@@ -269,6 +270,7 @@ public class View implements IView {
 	 * 
 	 * @param message
 	 */
+	@Override
 	public void displayError(String message) {
 		try {
 			display(message);
@@ -280,6 +282,7 @@ public class View implements IView {
 	/**
 	 * This method will print a welcome message.
 	 */
+	@Override
 	public void displayWelcome() {
 		displayInfo("TaskMan V2.0");
 		output.displayEmptyLine();
@@ -296,19 +299,20 @@ public class View implements IView {
 	 * @throws IllegalArgumentException
 	 *             The menu needs to be a list with at least 1 item.
 	 */
+	@Override
 	public int getMainMenuID(List<String> menu) throws IllegalArgumentException {
 		try {
 			displayMainMenu(menu);
 			displayInfo("Select an option:");
 			int menuId = input.getNumberInput();
 			output.displayEmptyLine();
-	
+
 			while (menuId <= 0 || menuId > menu.size()) {
 				displayError("Invalid selection!\nSelect an option:");
 				menuId = input.getNumberInput();
 				output.displayEmptyLine();
 			}
-	
+
 			return menuId;
 		} catch (ShouldExitException ex) {
 			output.displayEmptyLine();
@@ -374,11 +378,31 @@ public class View implements IView {
 	}
 
 	/**
+	 * This method will print the given list of projects to the command line and
+	 * will ask the user to choose one. It will return the chosen project.
+	 * 
+	 * @param projects
+	 * 
+	 * @return The chosen project.
+	 * 
+	 * @throws ShouldExitException
+	 *             The choice of the user is to stop.
+	 */
+	@Override
+	public Project getProject(List<Project> projects)
+			throws ShouldExitException {
+		displayProjectList(projects, 0, true);
+		int projectId = getListChoice(projects, "Select a project:");
+		return projects.get(projectId - 1);
+	}
+
+	/**
 	 * This method will print the project details of a given project to the
 	 * command line.
 	 * 
 	 * @param project
 	 */
+	@Override
 	public void displayProjectDetails(Project project) {
 		displayInfo(output.indentStringWithNewLines(
 				getStringProjectDetails(project), 1));
@@ -401,21 +425,21 @@ public class View implements IView {
 	}
 
 	/**
-	 * This method will print the given list of projects to the command line and
-	 * will ask the user to choose one. It will return the chosen project.
+	 * This method will print the given list of tasks to the command line and
+	 * will ask the user to choose one. It will return the chosen task.
 	 * 
-	 * @param projects
+	 * @param tasks
 	 * 
-	 * @return The chosen project.
+	 * @return The chosen task.
 	 * 
 	 * @throws ShouldExitException
 	 *             The choice of the user is to stop.
 	 */
-	public Project getProject(List<Project> projects)
-			throws ShouldExitException {
-		displayProjectList(projects, 0, true);
-		int projectId = getListChoice(projects, "Select a project:");
-		return projects.get(projectId - 1);
+	@Override
+	public Task getTask(List<Task> tasks) throws ShouldExitException {
+		displayTaskList(tasks, 1, true);
+		int taskId = getListChoice(tasks, "Select a task:");
+		return tasks.get(taskId - 1);
 	}
 
 	/**
@@ -424,6 +448,7 @@ public class View implements IView {
 	 * 
 	 * @param task
 	 */
+	@Override
 	public void displayTaskDetails(Task task) {
 		displayInfo(output.indentStringWithNewLines(getStringTaskDetails(task),
 				1));
@@ -450,25 +475,9 @@ public class View implements IView {
 	}
 
 	/**
-	 * This method will print the given list of tasks to the command line and
-	 * will ask the user to choose one. It will return the chosen task.
-	 * 
-	 * @param tasks
-	 * 
-	 * @return The chosen task.
-	 * 
-	 * @throws ShouldExitException
-	 *             The choice of the user is to stop.
-	 */
-	public Task getTask(List<Task> tasks) throws ShouldExitException {
-		displayTaskList(tasks, 1, true);
-		int taskId = getListChoice(tasks, "Select a task:");
-		return tasks.get(taskId - 1);
-	}
-
-	/**
 	 * This method will return a new create project form.
 	 */
+	@Override
 	public ICreateProjectForm getNewProjectForm() {
 		return new CreateProjectForm(this);
 	}
@@ -476,6 +485,7 @@ public class View implements IView {
 	/**
 	 * This method will return a new create task form.
 	 */
+	@Override
 	public ICreateTaskForm getNewTaskForm() {
 		return new CreateTaskForm(this);
 	}
@@ -483,6 +493,7 @@ public class View implements IView {
 	/**
 	 * This method will return a new update task form.
 	 */
+	@Override
 	public IUpdateTaskForm getUpdateTaskForm() {
 		return new UpdateTaskForm(this);
 	}
@@ -490,6 +501,7 @@ public class View implements IView {
 	/**
 	 * This method will return a new plan task form.
 	 */
+	@Override
 	public IPlanTaskForm getPlanTaskForm() {
 		return new PlanTaskForm(this);
 	}
@@ -497,6 +509,7 @@ public class View implements IView {
 	/**
 	 * This method will return a new resolve conflict form.
 	 */
+	@Override
 	public IResolveConflictForm getResolveConflictForm() {
 		return new ResolveConflictForm(this);
 	}

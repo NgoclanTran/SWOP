@@ -26,6 +26,7 @@ public class CreateProjectForm implements ICreateProjectForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the project creation.
 	 */
+	@Override
 	public String getNewProjectName() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the name of the project (or cancel):");
@@ -46,6 +47,7 @@ public class CreateProjectForm implements ICreateProjectForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the project creation.
 	 */
+	@Override
 	public String getNewProjectDescription() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the description of the project (or cancel):");
@@ -66,6 +68,7 @@ public class CreateProjectForm implements ICreateProjectForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the project creation.
 	 */
+	@Override
 	public DateTime getNewProjectDueTime() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the due time of the project with format dd-MM-yyyy HH:mm (or cancel):");
