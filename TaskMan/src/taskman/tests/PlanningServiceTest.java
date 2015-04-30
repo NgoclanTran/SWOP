@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,18 +39,18 @@ public class PlanningServiceTest {
 		rh = new ResourceHandler();
 		planning = new PlanningService();
 		
-		startTime = new DateTime(2015,1,1,8,0);
+		startTime = new DateTime(2015,1,1,13,0);
 		
 		ph.addProject("PlanningService", "Test", startTime, new DateTime(2015,2,1,17,0));
 		
 		ph.getProjects().get(0).addTask("PlanningServiceTest no requirements", 60, 0, null, null, null);
 		
 		rh.addResourceType("Car", requires, conflictsWith, false);
-		rh.getResourceTypes().get(0).addResource("Car 1", null, null);
+		rh.getResourceTypes().get(0).addResource("Car 1", new LocalTime(12,0), new LocalTime(15,0));
 		
 		rh.addResourceType("Server", requires, conflictsWith, false);
-		rh.getResourceTypes().get(1).addResource("Server 1", null, null);
-		rh.getResourceTypes().get(1).addResource("Server 2", null, null);
+		rh.getResourceTypes().get(1).addResource("Server 1", new LocalTime(12,0), new LocalTime(16,0));
+		rh.getResourceTypes().get(1).addResource("Server 2", new LocalTime(12,0), new LocalTime(16,0));
 		
 		ph.getProjects().get(0).addTask("PlanningServiceTest requirements 1", 60, 0, null, null, null);
 		ph.getProjects().get(0).getTasks().get(1).addRequiredResourceType(rh.getResourceTypes().get(0), 0);
@@ -58,6 +59,8 @@ public class PlanningServiceTest {
 		ph.getProjects().get(0).getTasks().get(2).addRequiredResourceType(rh.getResourceTypes().get(1), 0);
 		
 		firstTimeSpan = new TimeSpan(startTime, startTime.plusMinutes(ph.getProjects().get(0).getTasks().get(2).getEstimatedDuration()));
+		System.out.println(startTime);
+		System.out.println(startTime.plusMinutes(ph.getProjects().get(0).getTasks().get(2).getEstimatedDuration()));
 		for (Resource resource : rh.getResourceTypes().get(1).getSuggestedResources(firstTimeSpan, 2)) {
 			resource.addReservation(ph.getProjects().get(0).getTasks().get(2), firstTimeSpan);
 		}
