@@ -1,6 +1,6 @@
 package taskman.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.io.ByteArrayOutputStream;
@@ -45,9 +45,12 @@ public class ShowProjectSessionTest {
 		ph = new ProjectHandler();
 		rh = new ResourceHandler();
 		session = new ShowProjectSession(cli, ph);
+		ArrayList<Task> dependencies = new ArrayList<Task>();
+		Task t1 = new Task("",10,10,null,null,null);
 		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
-		 
+		ph.getProjects().get(1).addTask("",10,10,null,null,null);
+
 		// Session without projects
 		cli1 = new View();
 		ph1 = new ProjectHandler();
@@ -59,7 +62,28 @@ public class ShowProjectSessionTest {
 		session1.run();
 		assertEquals("No projects.\r\n\r\n", log.getLog());
 	}
-	
-	//cannot test with projects -> creation time changes
-
+	@Test
+	public void useCastTest_Projects(){
+		systemInMock.provideText("1\n");
+		session.run();
+		assertTrue(log.getLog().contains(ph.getProjects().get(0).toString()));
+	}
+	@Test
+	public void useCastTest_ProjectsCancel(){
+		systemInMock.provideText("0\ncancel\n");
+		session.run();
+		//assertTrue(log.getLog().contains(ph.getProjects().get(0).toString()));
+	}
+	@Test
+	public void useCastTest_ProjectsGetTask(){
+		systemInMock.provideText("2\n1\n");
+		session.run();
+		assertTrue(log.getLog().contains("Task:"));
+	}
+	@Test
+	public void useCastTest_ProjectsGetTaskCancel(){
+		systemInMock.provideText("2\n0\n");
+		session.run();
+		//assertTrue(log.getLog().endsWith("Select a task:"));
+	}
 }

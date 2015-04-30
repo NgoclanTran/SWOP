@@ -39,7 +39,7 @@ public class Task extends Subject {
 	 *       acceptableDevaition
 	 * @post The status of this task is Unavailable
 	 * @post The new dependencies is equal to the given dependencies
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *             The description cannot be null
 	 * @throws IllegalArgumentException
 	 *             The estimatedDuration is negative
@@ -141,13 +141,13 @@ public class Task extends Subject {
 	 * Add dependant task
 	 * 
 	 * @param dependant
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *             The dependant task is null
 	 * @post The list of depandants contains the given dependant task
 	 */
 	public void attachDependant(Task dependant) {
 		if (dependant == null)
-			throw new NullPointerException("the dependant observer is null.");
+			throw new IllegalArgumentException("the dependant observer is null.");
 		this.dependants.add(dependant);
 	}
 
@@ -191,9 +191,9 @@ public class Task extends Subject {
 	 *            The start time of the timespan
 	 * @param endTime
 	 *            The end time of the timespan
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *             The startTime cannot be equal to null
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *             The endTime is equal to null
 	 * @throws IllegalArgumentException
 	 *             Exception will be thrown if the end time is earlier than the
@@ -201,11 +201,11 @@ public class Task extends Subject {
 	 */
 	public void addTimeSpan(boolean failed, DateTime startTime, DateTime endTime)
 			throws IllegalArgumentException, IllegalDateException,
-			NullPointerException {
+			IllegalArgumentException {
 		if (startTime == null)
-			throw new NullPointerException("The startTime is null.");
+			throw new IllegalArgumentException("The startTime is null.");
 		if (endTime == null)
-			throw new NullPointerException("The endTime is null.");
+			throw new IllegalArgumentException("The endTime is null.");
 
 		this.status.addTimeSpan(this, failed, startTime, endTime);
 
@@ -231,13 +231,13 @@ public class Task extends Subject {
 	 *
 	 * @param task
 	 *            The new alternative task for this task
-	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 *             The alternative task is equal to null
 	 * 
 	 */
 	public void addAlternative(Task task) throws IllegalStateException {
 		if (task == null)
-			throw new NullPointerException("The alternative is null.");
+			throw new IllegalArgumentException("The alternative is null.");
 
 		this.status.addAlternative(this, task);
 
@@ -334,6 +334,8 @@ public class Task extends Subject {
 	 *            The developer to add
 	 */
 	public void addRequiredDeveloper(Developer developer) {
+		if(developer == null) throw new IllegalArgumentException("The developer cannot be null.");
+		if(requiredDevelopers.contains(developer)) throw new IllegalArgumentException("The developer is already in the list of developpers.");
 		requiredDevelopers.add(developer);
 	}
 

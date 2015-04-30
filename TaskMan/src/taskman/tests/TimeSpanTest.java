@@ -68,7 +68,6 @@ public class TimeSpanTest {
 	public void isDuringTimeSpanTest(){
 		
 		TimeSpan ts = new TimeSpan(start, end);
-		//TODO
 		assertTrue(ts.isDuringTimeSpan(new DateTime(2015,1,1,10,2)));
 		assertFalse(ts.isDuringTimeSpan(new DateTime(2016,1,1,10,2)));
 		assertFalse(ts.isDuringTimeSpan(new DateTime(2000,1,1,10,2)));

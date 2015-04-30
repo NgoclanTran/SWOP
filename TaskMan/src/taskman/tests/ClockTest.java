@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.model.memento.ClockMemento;
 import taskman.model.time.Clock;
 
 public class ClockTest {
@@ -14,6 +15,13 @@ public class ClockTest {
 	@Before
 	public void setUp() throws Exception {
 		c = new Clock();
+	}
+	
+	@Test
+	public void getSystemTimeTest(){
+		assertEquals(c.getSystemTime().getHourOfDay(),1);
+		c.setSystemTime(new DateTime(2015,10,12,9,0));
+		assertEquals(c.getSystemTime().getHourOfDay(),9);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
@@ -139,5 +147,10 @@ public class ClockTest {
 		assertEquals(t1.getYear(),2015);
 		assertEquals(t1.getHourOfDay(),23);
 		assertEquals(t1.getMinuteOfHour(),0);
+	}
+	
+	@Test
+	public void createMomentoTest(){
+		assertTrue(c.createMemento() instanceof ClockMemento);
 	}
 }

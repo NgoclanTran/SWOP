@@ -3,6 +3,7 @@ package taskman.tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
@@ -118,12 +119,16 @@ public class ResourceTypeTest {
 		r.getSuggestedResources(timeSpan, -1);
 	}
 	
-	@Test (expected = IllegalStateException.class)
+	@Test 
 	public void getSuggestedResourcesTest_Amount_High(){
-		//TODO
+		
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
 		ResourceType r = new ResourceType(name, requires, conflictWith,false);
-		r.getSuggestedResources(timeSpan, 50000);
+		r.addResource(name, startTime, endTime);
+		List<Resource> res = r.getSuggestedResources(timeSpan, 5000);
+		assertNotEquals(res.size(), 5000);
+		assertEquals(res.size(),1);
+		
 	}
 	
 	@Test

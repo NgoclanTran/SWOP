@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JFileChooser;
 
@@ -21,10 +22,14 @@ import org.joda.time.LocalTime;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
+import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.DailyAvailability;
+import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 
 public class Parser {
 
@@ -35,6 +40,9 @@ public class Parser {
 	private UserHandler userHandler;
 
 	private List<DailyAvailability> dailyAvailability = new ArrayList<DailyAvailability>();
+	private List<Planning> planning = new ArrayList<Planning>();
+	private Map<Integer, DailyAvailability> rtda = new HashMap<Integer, DailyAvailability>();
+	private int resourceTypeNumber = 0;
 
 	public Parser(ProjectHandler ph, ResourceHandler rh, UserHandler uh) {
 		projectHandler = ph;
@@ -293,7 +301,7 @@ public class Parser {
 		String name = null;
 		List<Integer> requires = null;
 		List<Integer> conflictsWith = null;
-		int dailyAvailability;
+		int dailyAvailability = -1;
 		boolean conflictsWithSelf = false;
 		for (String line : description) {
 			if (line.startsWith("name")) {
@@ -342,7 +350,11 @@ public class Parser {
 		resourceHandler.addResourceType(name, requiredTypes, conflictingTypes,
 				conflictsWithSelf);
 
-		// TODO add daily availability to resource type
+		if (dailyAvailability != -1) {
+			rtda.put(resourceTypeNumber,
+					this.dailyAvailability.get(dailyAvailability));
+		}
+		resourceTypeNumber++;
 	}
 
 	private void parseResources(ArrayList<String> resources) {
@@ -385,9 +397,16 @@ public class Parser {
 						descriptionEnd));
 			}
 		}
-		LocalTime startTime = null;
-		LocalTime endTime = null;
-		// TODO Daily availability in resource constructor?
+
+		LocalTime startTime = null, endTime = null;
+
+		if (rtda.containsKey(type)) {
+			startTime = rtda.get(type).getStartTime();
+			endTime = rtda.get(type).getEndTime();
+		} else {
+			startTime = new LocalTime("00:00");
+			endTime = new LocalTime("23:59");
+		}
 		resourceHandler.getResourceTypes().get(type)
 				.addResource(name, startTime, endTime);
 	}
@@ -500,7 +519,6 @@ public class Parser {
 		}
 	}
 
-	//TODO Finish parsing planning
 	private void addPlanning(List<String> description) {
 		int descriptionStart, descriptionEnd;
 		ArrayList<Integer> developers = new ArrayList<Integer>();
@@ -524,6 +542,9 @@ public class Parser {
 						descriptionEnd));
 			}
 		}
+		Planning planning = new Planning(plannedStartTime, developers,
+				resources);
+		this.planning.add(planning);
 	}
 
 	private void parseTasks(ArrayList<String> tasks) {
@@ -552,11 +573,11 @@ public class Parser {
 	private void addTask(List<String> description) {
 		int descriptionStart, descriptionEnd;
 		String taskDescription = "";
-		int project = 0, estimatedDuration = 0, acceptableDeviation = 0, alternativeFor = -1;
+		int project = 0, estimatedDuration = 0, acceptableDeviation = 0, alternativeFor = -1, planningNumber = -1;
 		ArrayList<Integer> prerequisiteTasks = new ArrayList<Integer>();
 		String status = "";
 		Date startTime = null, endTime = null;
-		Map<ResourceType, Integer> resourceTypes = null;
+		Map<ResourceType, Integer> resourceTypes = new HashMap<ResourceType, Integer>();
 		List<Task> dependencies = new ArrayList<Task>();
 		Task alternativeForTask = null;
 		int help = 0;
@@ -586,6 +607,9 @@ public class Parser {
 							descriptionStart, descriptionEnd));
 				} else if (line.startsWith("prerequisiteTasks")) {
 					prerequisiteTasks = parseIntegerList(line.substring(
+							descriptionStart, descriptionEnd));
+				} else if (line.startsWith("planning")) {
+					planningNumber = Integer.parseInt(line.substring(
 							descriptionStart, descriptionEnd));
 				} else if (line.startsWith("status")) {
 					status = line.substring(descriptionStart, descriptionEnd);
@@ -620,6 +644,17 @@ public class Parser {
 			}
 		}
 
+		if (planningNumber != -1) {
+			Planning planning = this.planning.get(planningNumber);
+			for (Entry<Integer, Integer> entry : planning.getResources()
+					.entrySet()) {
+				ResourceType resourceType = resourceHandler.getResourceTypes()
+						.get(entry.getKey());
+				int amount = entry.getValue();
+				resourceTypes.put(resourceType, amount);
+			}
+		}
+
 		projectHandler
 				.getProjects()
 				.get(project)
@@ -638,6 +673,25 @@ public class Parser {
 			if (currentTask.getStatusName().equals("AVAILABLE")) {
 				currentTask.addTimeSpan(failed, new DateTime(startTime),
 						new DateTime(endTime));
+			}
+		}
+
+		if (planningNumber != -1) {
+			Planning planning = this.planning.get(planningNumber);
+			Task currentTask = projectHandler
+					.getProjects()
+					.get(project)
+					.getTasks()
+					.get(projectHandler.getProjects().get(project).getTasks()
+							.size() - 1);
+			for (int i : planning.getDevelopers()) {
+				Developer d = userHandler.getDevelopers().get(i);
+				DateTime start = new DateTime(planning.getPlannedStartTime());
+				start = Clock.getInstance().getFirstPossibleStartTime(start);
+				DateTime end = Clock.getInstance().addMinutes(start,
+						estimatedDuration);
+				TimeSpan timespan = new TimeSpan(start, end);
+				d.addReservation(currentTask, timespan);
 			}
 		}
 	}
@@ -659,10 +713,97 @@ public class Parser {
 				description.add(line);
 			}
 		}
+		addReservation(description);
 	}
 
 	private void addReservation(List<String> description) {
-		// TODO Auto-generated method stub
+		int descriptionStart, descriptionEnd;
+		int resource = 0, task = 0;
+		Date startTime = null, endTime = null;
+		int pastResources = -1, pastTasks = -1;
+		for (String line : description) {
+			if (line.startsWith("resource")) {
+				line = line.substring(line.indexOf(":") + 1);
+				line = line.trim();
+				resource = Integer.parseInt(line);
+			} else if (line.startsWith("task")) {
+				line = line.substring(line.indexOf(":") + 1);
+				line = line.trim();
+				task = Integer.parseInt(line);
+			} else if (line.startsWith("startTime")) {
+				descriptionStart = line.indexOf("\"") + 1;
+				descriptionEnd = line.length() - 1;
+				startTime = parseDate(line.substring(descriptionStart,
+						descriptionEnd));
+			} else if (line.startsWith("endTime")) {
+				descriptionStart = line.indexOf("\"") + 1;
+				descriptionEnd = line.length() - 1;
+				endTime = parseDate(line.substring(descriptionStart,
+						descriptionEnd));
+			}
+		}
+		Resource res = null;
+		int i = 0;
+		for (ResourceType rt : resourceHandler.getResourceTypes()) {
+			for (Resource r : rt.getResources()) {
+				if (i == resource) {
+					res = r;
+				}
+				i++;
+			}
+		}
+		Task tsk = null;
+		i = 0;
+		for (Project project : projectHandler.getProjects()) {
+			for (Task t : project.getTasks()) {
+				if (i == task) {
+					tsk = t;
+				}
+				i++;
+			}
+		}
+		DateTime startDate = Clock.getInstance().getFirstPossibleStartTime(
+				new DateTime(startTime));
+		DateTime endDate = new DateTime(endTime);
+		int hourDifference = res.getDailyAvailability().getStartTime()
+				.getHourOfDay()
+				- startDate.getHourOfDay();
+		if (hourDifference > 0) {
+			startDate = startDate.plusHours(hourDifference);
+		}
+		hourDifference = endDate.getHourOfDay()
+				- res.getDailyAvailability().getEndTime().getHourOfDay();
+		if (hourDifference > 0) {
+			endDate = endDate.minusHours(hourDifference);
+		}
+		TimeSpan timeSpan = new TimeSpan(startDate, endDate);
+		res.addReservation(tsk, timeSpan);
+	}
+
+	class Planning {
+
+		private Date plannedStartTime;
+		private List<Integer> developers;
+		private Map<Integer, Integer> resources;
+
+		protected Planning(Date plannedStartTime, List<Integer> developers,
+				Map<Integer, Integer> resources) {
+			this.plannedStartTime = plannedStartTime;
+			this.developers = developers;
+			this.resources = resources;
+		}
+
+		protected Date getPlannedStartTime() {
+			return plannedStartTime;
+		}
+
+		protected List<Integer> getDevelopers() {
+			return developers;
+		}
+
+		protected Map<Integer, Integer> getResources() {
+			return resources;
+		}
 
 	}
 
