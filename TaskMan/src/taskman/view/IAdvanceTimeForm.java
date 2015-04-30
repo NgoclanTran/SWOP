@@ -7,6 +7,13 @@ import taskman.exceptions.ShouldExitException;
 public interface IAdvanceTimeForm {
 	
 	/**
+	 * This method will display the given current time.
+	 * 
+	 * @param currentTime
+	 */
+	public void displayCurrentTime(DateTime currentTime);
+	
+	/**
 	 * This method will ask the user to enter a new system time.
 	 * 
 	 * @param currentTime
@@ -16,6 +23,6 @@ public interface IAdvanceTimeForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the advance time.
 	 */
-	public DateTime getNewTime(DateTime currentTim) throws ShouldExitException;
+	public DateTime getNewTime(DateTime currentTime) throws ShouldExitException;
 
 }

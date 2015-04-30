@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
+import taskman.controller.planning.AdvanceTimeSession;
 import taskman.controller.project.CreateProjectSession;
 import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
