@@ -40,11 +40,6 @@ public class ResourceTypeTest {
 		ResourceType r = new ResourceType(null, requires, conflictWith,false);
 	}
 	
-	@Test (expected = IllegalArgumentException.class)
-	public void constructorTest_Requires_Null(){
-		ResourceType r = new ResourceType(name, null, conflictWith,false);
-	}
-	
 	@Test
 	public void isSelfConflictingTest_False(){
 		ResourceType r = new ResourceType(name, requires, conflictWith,false);
@@ -54,10 +49,6 @@ public class ResourceTypeTest {
 	public void isSelfConflictingTest_True(){
 		ResourceType r = new ResourceType(name, requires, conflictWith,true);
 		assertEquals(r.isSelfConflicting(), true);
-	}
-	@Test (expected = IllegalArgumentException.class)
-	public void constructorTest_ConflictWith_Null(){
-		ResourceType r = new ResourceType(name, requires, null,false);
 	}
 	
 	@Test
@@ -91,23 +82,7 @@ public class ResourceTypeTest {
 		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.addResource(name, endTime, startTime);
 	}
-	@Test
-	public void addResourceTest_StartAndEndTime_Null(){
-		ResourceType r = new ResourceType(name, requires, conflictWith,false);
-		r.addResource(name, null, null);
-		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
-		ArrayList<Resource> a = (ArrayList<Resource>) r.getAvailableResources(timeSpan);
-//		assertTrue(a.isEmpty());
-//		// De lijst zal leeg zijn want als start en end null zijn, wordne die op (0,0) localtime gezet
-//		// en zijn ze dus niet available
-		assertEquals(a.get(0).getName(), name);
-		assertEquals(a.get(0).getDailyAvailability().getStartTime().getMinuteOfHour(),0);
-		assertEquals(a.get(0).getDailyAvailability().getStartTime().getHourOfDay(),0);
-		assertEquals(a.get(0).getDailyAvailability().getEndTime().getHourOfDay(),23);
-		assertEquals(a.get(0).getDailyAvailability().getEndTime().getMinuteOfHour(),59);
-		
-	}
-	
+
 	@Test
 	public void addResourceTypeTest_TrueCase(){
 		ResourceType r = new ResourceType(name, requires, conflictWith,false);
@@ -145,6 +120,7 @@ public class ResourceTypeTest {
 	
 	@Test (expected = IllegalStateException.class)
 	public void getSuggestedResourcesTest_Amount_High(){
+		//TODO
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
 		ResourceType r = new ResourceType(name, requires, conflictWith,false);
 		r.getSuggestedResources(timeSpan, 50000);
@@ -158,6 +134,7 @@ public class ResourceTypeTest {
 		r.addResource(name, startTime, endTime);
 		r.addResource(name, startTime, endTime);
 		assertEquals(r.getSuggestedResources(timeSpan, 2).size(), 2);
+		//TODO
 	}
 	
 	@Test
