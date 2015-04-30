@@ -15,6 +15,7 @@ public class UserHandler {
 	}
 	
 	public List<Developer> getAvailableDevelopers(TimeSpan timeSpan) {
+		if (timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
 		List<Developer> availableDevelopers = new ArrayList<Developer>();
 		for (Developer developer : developers) {
 			if (developer.isAvailableAt(timeSpan)) {
@@ -25,6 +26,7 @@ public class UserHandler {
 	}
 
 	public void addDeveloper(String name) {
+		if(name == null) throw new IllegalArgumentException("The name cannot be null.");
 		Developer developer = new Developer(name, new LocalTime(8,0), new LocalTime(17,0));
 		addDeveloper(developer);
 	}
