@@ -15,7 +15,7 @@ public class CreateProjectSession extends Session {
 	IClock clock = Clock.getInstance();
 
 	/**
-	 * Creates the create project session using the given UI, ProjectHandler and ResourceHandler.
+	 * Creates the create project session using the given UI and ProjectHandler.
 	 * 
 	 * @param cli
 	 *            The command line interface.

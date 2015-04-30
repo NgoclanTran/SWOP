@@ -99,6 +99,11 @@ public interface IView {
 	public IUpdateTaskForm getUpdateTaskForm();
 
 	/**
+	 * This method will return a new advance time form.
+	 */
+	public IAdvanceTimeForm getAdvanceTimeForm();
+
+	/**
 	 * This method will return a new plan task form.
 	 */
 	public IPlanTaskForm getPlanTaskForm();

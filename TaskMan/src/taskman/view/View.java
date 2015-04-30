@@ -499,6 +499,14 @@ public class View implements IView {
 	}
 
 	/**
+	 * This method will return a new advance time form.
+	 */
+	@Override
+	public IAdvanceTimeForm getAdvanceTimeForm() {
+		return new AdvanceTimeForm(this);
+	}
+
+	/**
 	 * This method will return a new plan task form.
 	 */
 	@Override

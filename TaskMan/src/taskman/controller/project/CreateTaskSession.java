@@ -14,11 +14,12 @@ import taskman.model.resource.ResourceType;
 import taskman.view.IView;
 
 public class CreateTaskSession extends Session {
-	
+
 	private ResourceHandler rh;
-	
+
 	/**
-	 * Creates the create task session using the given UI, ProjectHandler and ResourceHandler.
+	 * Creates the create task session using the given UI, ProjectHandler and
+	 * ResourceHandler.
 	 * 
 	 * @param cli
 	 *            The command line interface.
@@ -28,7 +29,8 @@ public class CreateTaskSession extends Session {
 	 *            The resource handler.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             The given view,the project handler and the resource handler need to be valid.
+	 *             The given view, the project handler and the resource handler
+	 *             need to be valid.
 	 */
 	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh) {
 		super(cli, ph);
@@ -37,7 +39,7 @@ public class CreateTaskSession extends Session {
 					"The create task controller needs a ResourceHandler");
 		this.rh = rh;
 	}
-	
+
 	/**
 	 * Checks if the given resource handler is valid.
 	 * 
@@ -48,7 +50,7 @@ public class CreateTaskSession extends Session {
 	private boolean isValidResourceHandler(ResourceHandler rh) {
 		if (rh != null)
 			return true;
-		else 
+		else
 			return false;
 	}
 
@@ -72,21 +74,28 @@ public class CreateTaskSession extends Session {
 				List<Task> tasks = project.getTasks();
 				List<Task> failedTasks = getFailedTasks(tasks);
 
-				String description = getUI().getNewTaskForm().getNewTaskDescription();
-				int estimatedDuration = getUI().getNewTaskForm().getNewTaskEstimatedDuration();
-				int acceptableDeviation = getUI().getNewTaskForm().getNewTaskAcceptableDeviation();
+				String description = getUI().getNewTaskForm()
+						.getNewTaskDescription();
+				int estimatedDuration = getUI().getNewTaskForm()
+						.getNewTaskEstimatedDuration();
+				int acceptableDeviation = getUI().getNewTaskForm()
+						.getNewTaskAcceptableDeviation();
 				List<Task> dependencies = new ArrayList<Task>();
 				if (tasks.size() > 0)
-					dependencies = getUI().getNewTaskForm().getNewTaskDependencies(tasks);
+					dependencies = getUI().getNewTaskForm()
+							.getNewTaskDependencies(tasks);
 				Task alternativeFor = null;
 				if (failedTasks.size() > 0)
-					alternativeFor = getUI().getNewTaskForm().getNewTaskAlternativeFor(tasks);
+					alternativeFor = getUI().getNewTaskForm()
+							.getNewTaskAlternativeFor(tasks);
 				Map<ResourceType, Integer> resourceTypes = null;
 				if (rh.getResourceTypes().size() > 0)
-					resourceTypes = getUI().getNewTaskForm().getNewTaskResourceTypes(rh);
+					resourceTypes = getUI().getNewTaskForm()
+							.getNewTaskResourceTypes(rh);
 
 				if (isValidTask(project, description, estimatedDuration,
-						acceptableDeviation, dependencies, alternativeFor, resourceTypes))
+						acceptableDeviation, dependencies, alternativeFor,
+						resourceTypes))
 					break;
 
 			} catch (ShouldExitException e) {
@@ -111,10 +120,12 @@ public class CreateTaskSession extends Session {
 	 */
 	private boolean isValidTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor, Map<ResourceType, Integer> resourceTypes) {
+			List<Task> dependencies, Task alternativeFor,
+			Map<ResourceType, Integer> resourceTypes) {
 		try {
 			project.addTask(description, estimatedDuration,
-					acceptableDeviation, dependencies, alternativeFor, resourceTypes);
+					acceptableDeviation, dependencies, alternativeFor,
+					resourceTypes);
 			getUI().displayInfo("Task created");
 			return true;
 		} catch (NullPointerException nullEx) {

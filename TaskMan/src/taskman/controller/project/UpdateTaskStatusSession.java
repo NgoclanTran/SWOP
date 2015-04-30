@@ -16,7 +16,7 @@ import taskman.view.IView;
 public class UpdateTaskStatusSession extends Session {
 
 	/**
-	 * Creates the update task session using the given UI, ProjectHandler and ResourceHandler.
+	 * Creates the update task session using the given UI and ProjectHandler.
 	 * 
 	 * @param cli
 	 *            The command line interface.
@@ -24,6 +24,7 @@ public class UpdateTaskStatusSession extends Session {
 	 *            The project handler.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
 	 */
 	public UpdateTaskStatusSession(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {
@@ -54,8 +55,8 @@ public class UpdateTaskStatusSession extends Session {
 
 		Project project;
 		try {
-			project = getUI().getUpdateTaskForm().getProjectWithAvailableTasks(projects,
-					availableTasksList);
+			project = getUI().getUpdateTaskForm().getProjectWithAvailableTasks(
+					projects, availableTasksList);
 		} catch (ShouldExitException e) {
 			return;
 		}
@@ -215,7 +216,7 @@ public class UpdateTaskStatusSession extends Session {
 		} catch (NullPointerException nullEx) {
 			getUI().displayError(nullEx.getMessage());
 			return false;
-		} catch( IllegalDateException DateEx){
+		} catch (IllegalDateException DateEx) {
 			getUI().displayError(DateEx.getMessage());
 			return false;
 		}
