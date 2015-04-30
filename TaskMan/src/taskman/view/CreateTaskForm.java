@@ -30,8 +30,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @return Returns a string with the task description.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
+	@Override
 	public String getNewTaskDescription() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the description of the task (or cancel):");
@@ -51,8 +52,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @return Returns a integer with the task estimated duration in minutes.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
+	@Override
 	public int getNewTaskEstimatedDuration() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the estimated duration of the task (or cancel):");
@@ -78,8 +80,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @return Returns an integer with the task acceptable deviation in percents.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
+	@Override
 	public int getNewTaskAcceptableDeviation() throws ShouldExitException {
 		try {
 			view.displayInfo("Enter the acceptable deviation of the task (or cancel):");
@@ -105,8 +108,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @return Returns a list of tasks that are dependencies.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
+	@Override
 	public List<Task> getNewTaskDependencies(List<Task> tasks)
 			throws ShouldExitException {
 		try {
@@ -146,7 +150,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @return Returns a list of dependent tasks.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
 	private List<Task> parseDependecies(List<Task> tasks)
 			throws ShouldExitException {
@@ -184,8 +188,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @return Returns a task for which this task is an alternative.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
+	@Override
 	public Task getNewTaskAlternativeFor(List<Task> tasks)
 			throws ShouldExitException {
 		try {
@@ -225,8 +230,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 *         resource types and their amount.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
+	@Override
 	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh)
 			throws ShouldExitException {
 		try {
@@ -261,7 +267,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @return Returns the resource type the user selected.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
 	private ResourceType getNewTaskResourceType(ResourceHandler rh)
 			throws ShouldExitException {
@@ -280,7 +286,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 *         type.
 	 * 
 	 * @throws ShouldExitException
-	 *             The user cancelled the project creation.
+	 *             The user cancelled the task creation.
 	 */
 	private int getNewTaskResourceTypeAmount() throws ShouldExitException {
 		int number = Integer.MIN_VALUE;

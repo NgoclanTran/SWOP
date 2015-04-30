@@ -14,7 +14,7 @@ public interface ICreateProjectForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the project creation.
 	 */
-	public String getNewProjectName();
+	public String getNewProjectName() throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to enter a project description.
@@ -24,7 +24,7 @@ public interface ICreateProjectForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the project creation.
 	 */
-	public String getNewProjectDescription();
+	public String getNewProjectDescription() throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to enter a project due time.
@@ -34,6 +34,6 @@ public interface ICreateProjectForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the project creation.
 	 */
-	public DateTime getNewProjectDueTime();
+	public DateTime getNewProjectDueTime() throws ShouldExitException;
 
 }

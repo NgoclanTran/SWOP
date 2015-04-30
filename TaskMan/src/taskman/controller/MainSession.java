@@ -82,6 +82,7 @@ public class MainSession extends Session {
 	/**
 	 * Runs the initial main menu asking the user what to do.
 	 */
+	@Override
 	public void run() {
 		getUI().displayWelcome();
 

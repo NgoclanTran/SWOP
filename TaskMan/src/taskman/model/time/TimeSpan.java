@@ -5,9 +5,9 @@ import org.joda.time.DateTime;
 import taskman.exceptions.IllegalDateException;
 
 public class TimeSpan {
-	
+
 	IClock clock = Clock.getInstance();
-	
+
 	/**
 	 * The constructor of time span
 	 * 
@@ -16,7 +16,8 @@ public class TimeSpan {
 	 * @param endTime
 	 *            The given end time of the time span
 	 */
-	public TimeSpan(DateTime startTime, DateTime endTime) throws IllegalArgumentException, IllegalDateException {
+	public TimeSpan(DateTime startTime, DateTime endTime)
+			throws IllegalArgumentException, IllegalDateException {
 		if (startTime.compareTo(endTime) > 0)
 			throw new IllegalArgumentException(
 					"The end time cannot be later than de start time.");
@@ -51,12 +52,14 @@ public class TimeSpan {
 	public DateTime getEndTime() {
 		return this.endTime;
 	}
-	public boolean isDuringTimeSpan(DateTime time){
-		if(this.getStartTime().isBefore(time) && this.getEndTime().isAfter(time))
+
+	public boolean isDuringTimeSpan(DateTime time) {
+		if (time.isBefore(getStartTime()) || time.isAfter(getEndTime()))
 			return false;
 		else
 			return true;
 	}
+
 	/**
 	 * Will return the performed time of the time span
 	 * 
