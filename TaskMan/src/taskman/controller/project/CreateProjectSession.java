@@ -23,15 +23,16 @@ public class CreateProjectSession extends Session {
 	 *            The project handler.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
 	 */
 	public CreateProjectSession(IView cli, ProjectHandler ph) {
 		super(cli, ph);
 	}
 
-	@Override
 	/**
 	 * starts the use case by calling the create project method
 	 */
+	@Override
 	public void run() {
 		createProject();
 	}
@@ -43,10 +44,10 @@ public class CreateProjectSession extends Session {
 	private void createProject() {
 		while (true) {
 			try {
-				String name = getName();
-				String description = getDescription();
+				String name = getUI().getNewProjectForm().getNewProjectName();
+				String description = getUI().getNewProjectForm().getNewProjectDescription();
 				DateTime creationTime = clock.getSystemTime();
-				DateTime dueTime = getDueTime();
+				DateTime dueTime = getUI().getNewProjectForm().getNewProjectDueTime();
 
 				if (isValidProject(name, description, creationTime, dueTime))
 					break;
@@ -55,43 +56,6 @@ public class CreateProjectSession extends Session {
 				return;
 			}
 		}
-	}
-
-	/**
-	 * This method asks the user to enter the name of the project and returns
-	 * it.
-	 * 
-	 * @return Returns the name of the project that is to be entered.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private String getName() throws ShouldExitException {
-		return getUI().getNewProjectForm().getNewProjectName();
-	}
-
-	/**
-	 * This method asks the user to enter the description of the project and
-	 * returns it.
-	 * 
-	 * @return Returns the description of the project that is to be entered.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private String getDescription() throws ShouldExitException {
-		return getUI().getNewProjectForm().getNewProjectDescription();
-	}
-
-	/**
-	 * This method asks the user to enter the due time of the project and
-	 * returns it. It will loop over the question until the date is correctly
-	 * given or the user decides to cancel.
-	 * 
-	 * @return Returns the due time of the project that is to be entered.
-	 * 
-	 * @throws ShouldExitException
-	 */
-	private DateTime getDueTime() throws ShouldExitException {
-		return getUI().getNewProjectForm().getNewProjectDueTime();
 	}
 
 	/**

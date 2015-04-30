@@ -17,6 +17,7 @@ public abstract class Session {
 	 * @post The new project handler equals the given one.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
 	 */
 	public Session(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {
