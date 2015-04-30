@@ -16,6 +16,13 @@ public class ClockTest {
 	public void setUp() throws Exception {
 		c = new Clock();
 	}
+	
+	@Test
+	public void getSystemTimeTest(){
+		assertEquals(c.getSystemTime().getHourOfDay(),1);
+		c.setSystemTime(new DateTime(2015,10,12,9,0));
+		assertEquals(c.getSystemTime().getHourOfDay(),9);
+	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void setClockTest_Null(){

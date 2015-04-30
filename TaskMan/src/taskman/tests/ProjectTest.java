@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +16,9 @@ import taskman.exceptions.IllegalDateException;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.time.Clock;
+import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 
 public class ProjectTest {
 
@@ -23,10 +27,12 @@ public class ProjectTest {
 	String description = "Description";
 	DateTime creation = new DateTime(2014, 1, 1, 0, 0);
 	DateTime due = new DateTime(2014, 1, 2, 9, 0);
+	private Clock clock = Clock.getInstance();
 
 	@Before
 	public void setUp() throws Exception {
 		project = new Project(name, description, creation, due);
+		clock.setSystemTime(new DateTime(2015,10,12,8,0));
 	}
 
 	@Test
@@ -253,17 +259,25 @@ public class ProjectTest {
 
 	@Test
 	public void testUpdateProjectStateFinishedTask() {
-		//TODO task is unavailable
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<Task> dependencies = new ArrayList<Task>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		project.getTasks()
-				.get(0)
-				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
-						new DateTime(2014, 1, 1, 9, 0));
+		Task t = project.getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.updateTaskAvailability();
+		
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(),"EXECUTING");
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
 	}
 
@@ -280,7 +294,6 @@ public class ProjectTest {
 
 	@Test
 	public void testUpdateProjectStateAvailableTasks() {
-		//TODO task is unavailable
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
@@ -289,10 +302,12 @@ public class ProjectTest {
 				dependencies, null, null);
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		project.getTasks()
-				.get(0)
-				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
-						new DateTime(2014, 1, 1, 9, 0));
+		Task t = project.getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.updateTaskAvailability();
 		assertFalse(project.isFinished());
 	}
 
@@ -304,19 +319,27 @@ public class ProjectTest {
 
 	@Test
 	public void testGetStateNameFinished() {
-		//TODO Update Status task
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<Task> dependencies = new ArrayList<Task>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		project.getTasks()
-				.get(0)
-				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
-						new DateTime(2014, 1, 1, 9, 0));
+		Task t = project.getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.updateTaskAvailability();
+		
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(),"EXECUTING");
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
-		assertEquals("Finished", project.getStateName());
+		assertEquals("FINISHED", project.getStateName());
 	}
 
 	@Test
@@ -337,10 +360,19 @@ public class ProjectTest {
 		String desc = "desc";
 		List<Task> dependencies = new ArrayList<Task>();
 		project.addTask(desc, 600, 0, dependencies, null, null);
-		project.getTasks()
-				.get(0)
-				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
-						new DateTime(2014, 1, 2, 10, 0));
+		Task t = project.getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.updateTaskAvailability();
+		
+		DateTime startTime = new DateTime(2014, 1, 1, 8, 1);
+		DateTime endTime = new DateTime(2014, 1, 1, 10, 1);
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(),"EXECUTING");
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
 		assertEquals(60, project.getTotalDelay());
 	}
