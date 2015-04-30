@@ -51,7 +51,7 @@ public class CaretakerTest {
 		Task t = new Task("",10,10,null,null,null);
 		Task t1 = new Task("",10,10,null,null,null);
 		ArrayList<Task> tasks = new ArrayList<Task>();
-		TaskMemento t2 = new TaskMemento(tasks, "name", new TimeSpan(new DateTime(), new DateTime()), t1);
+		TaskMemento t2 = new TaskMemento(tasks, "name", new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0)), t1);
 		c.addTaskMemento(t2);
 		assertEquals(c.getTaskMemento(0),t2);
 	}
