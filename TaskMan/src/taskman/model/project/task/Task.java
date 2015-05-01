@@ -183,7 +183,8 @@ public class Task extends Subject {
 	public TimeSpan getTimeSpan() {
 		return this.status.getTimeSpan(this);
 	}
-	protected TimeSpan performGetTimeSpan(){
+
+	protected TimeSpan performGetTimeSpan() {
 		return new TimeSpan(this.timeSpan.getStartTime(),
 				this.timeSpan.getEndTime());
 	}
@@ -212,7 +213,43 @@ public class Task extends Subject {
 			throw new IllegalArgumentException("The endTime is null.");
 
 		this.status.addTimeSpan(this, failed, startTime, endTime);
-
+		for (Developer d : getRequiredDevelopers()) {
+			for (Reservation r : d.getReservations()) {
+				if (r.getTask().equals(this)) {
+					if (r.getTimeSpan().getEndTime().isAfter(endTime)) {
+						if (r.getTimeSpan().getStartTime().isAfter(endTime)) {
+							d.removeReservation(r);
+						} else {
+							DateTime start = r.getTimeSpan().getStartTime();
+							DateTime end = endTime;
+							d.removeReservation(r);
+							d.addReservation(this, new TimeSpan(start, end));
+						}
+					}
+				}
+			}
+		}
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+				.entrySet()) {
+			for (Resource r : entry.getKey().getResources()) {
+				for (Reservation res : r.getReservations()) {
+					if (res.getTask().equals(this)) {
+						if (res.getTimeSpan().getEndTime().isAfter(endTime)) {
+							if (res.getTimeSpan().getStartTime()
+									.isAfter(endTime)) {
+								r.removeReservation(res);
+							} else {
+								DateTime start = res.getTimeSpan()
+										.getStartTime();
+								DateTime end = endTime;
+								r.removeReservation(res);
+								r.addReservation(this, new TimeSpan(start, end));
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	protected void performAddTimeSpan(DateTime startTime, DateTime endTime)
