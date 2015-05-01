@@ -57,7 +57,9 @@ public class UpdateTaskStatusSession extends Session {
 	}
 
 	/**
-	 * Starts the use case by calling the update task method.
+	 * Starts the use case by asking the user to select a developer, a project
+	 * and task that the selected developer can change the status of and finally
+	 * change the status of the selected task.
 	 */
 	@Override
 	public void run() {
@@ -70,6 +72,8 @@ public class UpdateTaskStatusSession extends Session {
 	 * This method asks the UI to render the list of all projects and the
 	 * available tasks per project. Also it will ask to make a choice from the
 	 * projects to select a task to update.
+	 * 
+	 * @param developer
 	 */
 	private void showProjectsAndAvailableTasks(Developer developer) {
 		List<Project> projects = getPH().getProjects();
@@ -97,6 +101,7 @@ public class UpdateTaskStatusSession extends Session {
 	 * projects. Per project there will be a list of available tasks that will
 	 * be added to the main list.
 	 * 
+	 * @param developer
 	 * @param projects
 	 * 
 	 * @return Returns a list of a list of all available tasks.
@@ -149,6 +154,7 @@ public class UpdateTaskStatusSession extends Session {
 	 * given project. Also it will ask to make a choice from the list to update
 	 * the details of the selected task.
 	 * 
+	 * @param developer
 	 * @param project
 	 */
 	private void showAvailableTasks(Developer developer, Project project) {
@@ -199,9 +205,10 @@ public class UpdateTaskStatusSession extends Session {
 	}
 
 	/**
-	 * This method asks the user to enter the start time of the specified task
-	 * and returns it. It will loop over the question until the date is
-	 * correctly given or the user decides to cancel.
+	 * This method will get the first reservation time for the given task and
+	 * return it.
+	 * 
+	 * @param task
 	 * 
 	 * @return Returns the start time of the specified task that is to be
 	 *         entered.

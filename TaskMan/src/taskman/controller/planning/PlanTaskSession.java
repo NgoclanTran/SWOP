@@ -129,6 +129,11 @@ public class PlanTaskSession extends Session {
 			return false;
 	}
 
+	/**
+	 * This method will ask the user to enter a project and a task (if they
+	 * aren't already given with the constructor) and start the planning of this
+	 * task.
+	 */
 	@Override
 	public void run() {
 		if (!isValidProject(project))
