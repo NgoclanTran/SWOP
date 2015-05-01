@@ -161,7 +161,13 @@ public class ResourceType {
 		}
 		return availableResources;
 	}
-
+	/**
+	 * Will return true or false depending on whether there are available resources
+	 * from the required resource types
+	 * @param timeSpan
+	 * 			The timespan for which this will be checked in
+	 * @return returns true or false depending on whether there are available resources or not
+	 */
 	private boolean checkRequiredResourceTypes(TimeSpan timeSpan) {
 		for (ResourceType resourceType : requires) {
 			if (resourceType.getAvailableResources(timeSpan).size() > 0) {
@@ -172,6 +178,10 @@ public class ResourceType {
 	}
 
 	@Override
+	/**
+	 * Will return the name of the resource type
+	 * @return returns the name of the resource type
+	 */
 	public String toString() {
 		return name;
 	}
