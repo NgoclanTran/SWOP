@@ -35,7 +35,8 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 			view.displayInfo("List of developers:");
 			view.output.displayList(developers, 0, true);
 			view.output.displayEmptyLine();
-			int developerId = view.getListChoice(developers, "Select a developer:");
+			int developerId = view.getListChoice(developers,
+					"Select a developer:");
 			return developers.get(developerId - 1);
 		} catch (ShouldExitException e) {
 			view.output.displayEmptyLine();
@@ -43,6 +44,11 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 		}
 	}
 
+	/**
+	 * This method will ask the user to enter whether or not the selected task
+	 * has failed.
+	 */
+	@Override
 	public boolean getUpdateTaskFailed() throws ShouldExitException {
 		try {
 			view.displayInfo("Did the selected task fail? (Y/N or cancel):");
@@ -67,32 +73,24 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 		}
 	}
 
-	public DateTime getUpdateTaskStartTime() throws ShouldExitException {
-		try {
-			view.displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
-			String date = view.input.getInput();
-			view.output.displayEmptyLine();
-
-			while (!view.isValidDateTime(date)) {
-				view.displayInfo("Enter the start time of the task with format dd-MM-yyyy HH:mm (or cancel):");
-				date = view.input.getInput();
-				view.output.displayEmptyLine();
-			}
-
-			DateTime startTime = view.formatter.parseDateTime(date);
-
-			return startTime;
-		} catch (ShouldExitException e) {
-			view.output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
-	}
-
-	public DateTime getUpdateTaskStopTime(DateTime startTime) throws ShouldExitException {
+	/**
+	 * This method will view the start time of the selected task and ask the
+	 * user to enter the end time of the selected task. Afterwards it will
+	 * return the end time as a DateTime.
+	 * 
+	 * @param startTime
+	 * 
+	 * @return Returns the end time as a DateTime.
+	 * 
+	 * @throws ShouldExitException
+	 */
+	@Override
+	public DateTime getUpdateTaskStopTime(DateTime startTime)
+			throws ShouldExitException {
 		try {
 			view.displayInfo("Start time: " + view.getStringDate(startTime));
 			view.output.displayEmptyLine();
-			
+
 			view.displayInfo("Enter the stop time of the task with format dd-MM-yyyy HH:mm (or cancel):");
 			String date = view.input.getInput();
 			view.output.displayEmptyLine();
@@ -112,6 +110,14 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 		}
 	}
 
+	/**
+	 * This method will view all the projects and their available tasks.
+	 * 
+	 * @param projects
+	 * @param availableTasks
+	 * 
+	 * @throws ShouldExitException
+	 */
 	private void displayProjectsWithAvailableTasksList(List<Project> projects,
 			List<List<Task>> availableTasks) throws ShouldExitException {
 		if (projects.size() != availableTasks.size()) {
@@ -130,6 +136,15 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 		}
 	}
 
+	/**
+	 * This method will ask the user to select a project and returns it.
+	 * 
+	 * @param projects
+	 * @param availableTasks
+	 * 
+	 * @throws ShouldExitException
+	 */
+	@Override
 	public Project getProjectWithAvailableTasks(List<Project> projects,
 			List<List<Task>> availableTasks) throws ShouldExitException {
 		try {

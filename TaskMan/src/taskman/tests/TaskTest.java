@@ -16,10 +16,8 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.exceptions.IllegalDateException;
 import taskman.model.memento.TaskMemento;
 import taskman.model.project.task.Task;
-import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
@@ -203,8 +201,6 @@ public class TaskTest {
 		DateTime startTime = new DateTime(2015, 1, 1, 1, 1);
 		t.addTimeSpan(true, startTime, null);
 	}
-
-
 
 	@Test(expected = IllegalStateException.class)
 	public void addTimeSpanTest_StatusUNAVAILABLE() {
@@ -799,175 +795,226 @@ public class TaskTest {
 		t.updateTaskAvailability();
 
 	}
-	
+
 	@Test
-	public void updateTaskAvailabitlityTest_DependantUpdate(){
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation, null, null, null);
+	public void updateTaskAvailabitlityTest_DependantUpdate() {
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, null, null);
 		ArrayList<Task> l = new ArrayList<Task>();
 		l.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation, l, null, null);
-		Developer d1 = new Developer("name developer 1", new LocalTime(8,0),  new LocalTime(23,0));
-		d1.addReservation(t1, new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,10,0)));
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				l, null, null);
+		Developer d1 = new Developer("name developer 1", new LocalTime(8, 0),
+				new LocalTime(23, 0));
+		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 10, 0)));
 		t1.addRequiredDeveloper(d1);
-		
-		Developer d2 = new Developer("name developer 2", new LocalTime(8,0),  new LocalTime(23,0));
-		d2.addReservation(t2, new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,10,0)));
+
+		Developer d2 = new Developer("name developer 2", new LocalTime(8, 0),
+				new LocalTime(23, 0));
+		d2.addReservation(t2, new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 10, 0)));
 		t2.addRequiredDeveloper(d2);
-		
-		assertEquals(t1.getStatusName(),"UNAVAILABLE");
-		assertEquals(t2.getStatusName(),"UNAVAILABLE");
-		
+
+		assertEquals(t1.getStatusName(), "UNAVAILABLE");
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+
 		t1.updateTaskAvailability();
-		assertEquals(t1.getStatusName(),"AVAILABLE");
-		assertEquals(t2.getStatusName(),"UNAVAILABLE");
+		assertEquals(t1.getStatusName(), "AVAILABLE");
+		assertEquals(t2.getStatusName(), "UNAVAILABLE");
 
 	}
-	
+
 	@Test
-	public void updateTaskAvailabilityTest_DeveloperAvailableTest(){
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation, null, null, null);
-		Developer d = new Developer("name developer 1", new LocalTime(8,0),  new LocalTime(23,0));
-		d.addReservation(t1, new TimeSpan(new DateTime(2015,10,12,11,11), new DateTime(2015,10,14,10,0)));
+	public void updateTaskAvailabilityTest_DeveloperAvailableTest() {
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, null, null);
+		Developer d = new Developer("name developer 1", new LocalTime(8, 0),
+				new LocalTime(23, 0));
+		d.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 11, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d);
-		
-		Developer d2 = new Developer("name developer 1", new LocalTime(13,0),  new LocalTime(23,0));
+
+		Developer d2 = new Developer("name developer 1", new LocalTime(13, 0),
+				new LocalTime(23, 0));
 		t1.addRequiredDeveloper(d2);
 		t1.updateTaskAvailability();
 	}
-	
+
 	@Test
-	public void updateTaskAvailabilityTest_ResourceAvailableTest(){
-		
-		ResourceType rt = new ResourceType("name resourceTyp 1", null, null,false);
-		rt.addResource("1", new LocalTime(8,0),  new LocalTime(23,0));
-		rt.addResource("2", new LocalTime(16,0),  new LocalTime(23,0));
-		
+	public void updateTaskAvailabilityTest_ResourceAvailableTest() {
+
+		ResourceType rt = new ResourceType("name resourceTyp 1", null, null,
+				false);
+		rt.addResource("1", new LocalTime(8, 0), new LocalTime(23, 0));
+		rt.addResource("2", new LocalTime(16, 0), new LocalTime(23, 0));
+
 		LinkedHashMap<ResourceType, Integer> l = new LinkedHashMap<ResourceType, Integer>();
 		l.put(rt, 2);
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation, null, null, l);
-		rt.getResources().get(0).addReservation(t1, new TimeSpan(new DateTime(2015,10,12,11,11), new DateTime(2015,10,14,10,0)));
-		Developer d = new Developer("name developer 1", new LocalTime(8,0),  new LocalTime(23,0));
-		d.addReservation(t1, new TimeSpan(new DateTime(2015,10,12,11,11), new DateTime(2015,10,14,10,0)));
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, null, l);
+		rt.getResources()
+				.get(0)
+				.addReservation(
+						t1,
+						new TimeSpan(new DateTime(2015, 10, 12, 11, 11),
+								new DateTime(2015, 10, 14, 10, 0)));
+		Developer d = new Developer("name developer 1", new LocalTime(8, 0),
+				new LocalTime(23, 0));
+		d.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 11, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d);
-		
+
 		t1.updateTaskAvailability();
 	}
 
 	@Test
-	public void updateTaskAvailabilityTest_FAILEDTask_Update(){
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation, null, null, null);
-		Developer d1 = new Developer("name", new LocalTime(8, 0), new LocalTime(16,0));
-		d1.addReservation(t1, new TimeSpan(new DateTime(2015,10,12,8,11), new DateTime(2015,10,14,10,0)));
+	public void updateTaskAvailabilityTest_FAILEDTask_Update() {
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, null, null);
+		Developer d1 = new Developer("name", new LocalTime(8, 0),
+				new LocalTime(16, 0));
+		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
 		t1.updateTaskAvailability();
-		assertEquals(t1.getStatusName(),"AVAILABLE");
-		
+		assertEquals(t1.getStatusName(), "AVAILABLE");
+
 		t1.executeTask();
-		assertEquals(t1.getStatusName(),"EXECUTING");
-		t1.addTimeSpan(true, new DateTime(2015,10,12,8,0),  new DateTime(2015,10,12,16,0));
-		assertEquals(t1.getStatusName(),"FAILED");
-		
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation, null, t1, null);
-		Developer d2 = new Developer("name", new LocalTime(8, 0), new LocalTime(16,0));
-		d2.addReservation(t2, new TimeSpan(new DateTime(2015,10,12,8,11), new DateTime(2015,10,14,10,0)));
+		assertEquals(t1.getStatusName(), "EXECUTING");
+		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
+				2015, 10, 12, 16, 0));
+		assertEquals(t1.getStatusName(), "FAILED");
+
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, t1, null);
+		Developer d2 = new Developer("name", new LocalTime(8, 0),
+				new LocalTime(16, 0));
+		d2.addReservation(t2, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
 		t2.addRequiredDeveloper(d2);
 		t2.updateTaskAvailability();
-		assertEquals(t2.getStatusName(),"AVAILABLE");
-		
+		assertEquals(t2.getStatusName(), "AVAILABLE");
+
 		t2.executeTask();
-		assertEquals(t2.getStatusName(),"EXECUTING");
-		
+		assertEquals(t2.getStatusName(), "EXECUTING");
+
 		ArrayList<Task> listTasks = new ArrayList<Task>();
 		listTasks.add(t1);
-		Task t3 = new Task(description, estimatedDuration, acceptableDeviation, listTasks, null, null);
+		Task t3 = new Task(description, estimatedDuration, acceptableDeviation,
+				listTasks, null, null);
 		t3.updateTaskAvailability();
-		
-	}
-	
-	@Test
-	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_NoAlternative(){
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation, null, null, null);
-		Developer d1 = new Developer("name", new LocalTime(8, 0), new LocalTime(16,0));
-		d1.addReservation(t1, new TimeSpan(new DateTime(2015,10,12,8,11), new DateTime(2015,10,14,10,0)));
-		t1.addRequiredDeveloper(d1);
-		t1.updateTaskAvailability();
-		assertEquals(t1.getStatusName(),"AVAILABLE");
-		t1.executeTask();
-		assertEquals(t1.getStatusName(),"EXECUTING");
-		t1.addTimeSpan(true, new DateTime(2015,10,12,8,0),  new DateTime(2015,10,12,16,0));
-		assertEquals(t1.getStatusName(),"FAILED");
-		
-		ArrayList<Task> dependencies = new ArrayList<Task>();
-		dependencies.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
-		t2.updateTaskAvailability();
-		
-	}
-	
-	@Test
-	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFINISHED(){
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation, null, null, null);
-		Developer d1 = new Developer("name", new LocalTime(8, 0), new LocalTime(16,0));
-		d1.addReservation(t1, new TimeSpan(new DateTime(2015,10,12,8,11), new DateTime(2015,10,14,10,0)));
-		t1.addRequiredDeveloper(d1);
-		t1.updateTaskAvailability();
-		assertEquals(t1.getStatusName(),"AVAILABLE");
-		t1.executeTask();
-		assertEquals(t1.getStatusName(),"EXECUTING");
-		t1.addTimeSpan(true, new DateTime(2015,10,12,8,0),  new DateTime(2015,10,12,16,0));
-		assertEquals(t1.getStatusName(),"FAILED");
-		
-		Task t3 = new Task(description, estimatedDuration, acceptableDeviation, null, t1, null);
-		Developer d2 = new Developer("name", new LocalTime(8, 0), new LocalTime(16,0));
-		d2.addReservation(t3, new TimeSpan(new DateTime(2015,10,12,8,11), new DateTime(2015,10,14,10,0)));
-		t3.addRequiredDeveloper(d2);
-		t3.updateTaskAvailability();
-		assertEquals(t3.getStatusName(),"AVAILABLE");
-		t3.executeTask();
-		assertEquals(t3.getStatusName(),"EXECUTING");
-		t3.addTimeSpan(false, new DateTime(2015,10,12,8,0),  new DateTime(2015,10,12,16,0));
-		assertEquals(t3.getStatusName(),"FINISHED");
-		
-		ArrayList<Task> dependencies = new ArrayList<Task>();
-		dependencies.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
-		t2.updateTaskAvailability();
-		
+
 	}
 
 	@Test
-	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFAILED(){
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation, null, null, null);
-		Developer d1 = new Developer("name", new LocalTime(8, 0), new LocalTime(16,0));
-		d1.addReservation(t1, new TimeSpan(new DateTime(2015,10,12,8,11), new DateTime(2015,10,14,10,0)));
+	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_NoAlternative() {
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, null, null);
+		Developer d1 = new Developer("name", new LocalTime(8, 0),
+				new LocalTime(16, 0));
+		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
 		t1.updateTaskAvailability();
-		assertEquals(t1.getStatusName(),"AVAILABLE");
+		assertEquals(t1.getStatusName(), "AVAILABLE");
 		t1.executeTask();
-		assertEquals(t1.getStatusName(),"EXECUTING");
-		t1.addTimeSpan(true, new DateTime(2015,10,12,8,0),  new DateTime(2015,10,12,16,0));
-		assertEquals(t1.getStatusName(),"FAILED");
-		
-		Task t3 = new Task(description, estimatedDuration, acceptableDeviation, null, t1, null);
-		Developer d2 = new Developer("name", new LocalTime(8, 0), new LocalTime(16,0));
-		d2.addReservation(t3, new TimeSpan(new DateTime(2015,10,12,8,11), new DateTime(2015,10,14,10,0)));
-		t3.addRequiredDeveloper(d2);
-		t3.updateTaskAvailability();
-		assertEquals(t3.getStatusName(),"AVAILABLE");
-		t3.executeTask();
-		assertEquals(t3.getStatusName(),"EXECUTING");
-		t3.addTimeSpan(true, new DateTime(2015,10,12,8,0),  new DateTime(2015,10,12,16,0));
-		assertEquals(t3.getStatusName(),"FAILED");
-		
+		assertEquals(t1.getStatusName(), "EXECUTING");
+		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
+				2015, 10, 12, 16, 0));
+		assertEquals(t1.getStatusName(), "FAILED");
+
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null, null);
 		t2.updateTaskAvailability();
-		
+
 	}
+
+	@Test
+	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFINISHED() {
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, null, null);
+		Developer d1 = new Developer("name", new LocalTime(8, 0),
+				new LocalTime(16, 0));
+		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
+		t1.addRequiredDeveloper(d1);
+		t1.updateTaskAvailability();
+		assertEquals(t1.getStatusName(), "AVAILABLE");
+		t1.executeTask();
+		assertEquals(t1.getStatusName(), "EXECUTING");
+		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
+				2015, 10, 12, 16, 0));
+		assertEquals(t1.getStatusName(), "FAILED");
+
+		Task t3 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, t1, null);
+		Developer d2 = new Developer("name", new LocalTime(8, 0),
+				new LocalTime(16, 0));
+		d2.addReservation(t3, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
+		t3.addRequiredDeveloper(d2);
+		t3.updateTaskAvailability();
+		assertEquals(t3.getStatusName(), "AVAILABLE");
+		t3.executeTask();
+		assertEquals(t3.getStatusName(), "EXECUTING");
+		t3.addTimeSpan(false, new DateTime(2015, 10, 12, 8, 0), new DateTime(
+				2015, 10, 12, 16, 0));
+		assertEquals(t3.getStatusName(), "FINISHED");
+
+		ArrayList<Task> dependencies = new ArrayList<Task>();
+		dependencies.add(t1);
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null, null);
+		t2.updateTaskAvailability();
+
+	}
+
+	@Test
+	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFAILED() {
+		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, null, null);
+		Developer d1 = new Developer("name", new LocalTime(8, 0),
+				new LocalTime(16, 0));
+		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
+		t1.addRequiredDeveloper(d1);
+		t1.updateTaskAvailability();
+		assertEquals(t1.getStatusName(), "AVAILABLE");
+		t1.executeTask();
+		assertEquals(t1.getStatusName(), "EXECUTING");
+		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
+				2015, 10, 12, 16, 0));
+		assertEquals(t1.getStatusName(), "FAILED");
+
+		Task t3 = new Task(description, estimatedDuration, acceptableDeviation,
+				null, t1, null);
+		Developer d2 = new Developer("name", new LocalTime(8, 0),
+				new LocalTime(16, 0));
+		d2.addReservation(t3, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
+				new DateTime(2015, 10, 14, 10, 0)));
+		t3.addRequiredDeveloper(d2);
+		t3.updateTaskAvailability();
+		assertEquals(t3.getStatusName(), "AVAILABLE");
+		t3.executeTask();
+		assertEquals(t3.getStatusName(), "EXECUTING");
+		t3.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
+				2015, 10, 12, 16, 0));
+		assertEquals(t3.getStatusName(), "FAILED");
+
+		ArrayList<Task> dependencies = new ArrayList<Task>();
+		dependencies.add(t1);
+		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+				dependencies, null, null);
+		t2.updateTaskAvailability();
+
+	}
+
 	@Test
 	public void calculateTotalExecutionTimeTest_TrueCase() {
-	
+
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -977,7 +1024,7 @@ public class TaskTest {
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
 		t.updateTaskAvailability();
-	
+
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2015, 1, 1, 12, 1);
 		t.executeTask();
@@ -1314,7 +1361,7 @@ public class TaskTest {
 		map.put(r1, 1);
 		new Task(description, estimatedDuration, 0, null, null, map);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void addRequiredResourceTest_Conflicting2() {
 
@@ -1345,27 +1392,25 @@ public class TaskTest {
 		map.put(r, 3);
 		new Task(description, estimatedDuration, 0, null, null, map);
 	}
-	
-	@Test (expected  = IllegalArgumentException.class)
-	public void addRequiredResourceTest_AddRequiredFirst(){
+
+	@Test(expected = IllegalArgumentException.class)
+	public void addRequiredResourceTest_AddRequiredFirst() {
 		ResourceType t1 = new ResourceType("type 1", null, null, false);
 		t1.addResource("effective resource 1", new LocalTime(0, 0),
 				new LocalTime(23, 59));
 		ArrayList<ResourceType> l = new ArrayList<ResourceType>();
 		l.add(t1);
-		
+
 		ResourceType t2 = new ResourceType("type 1", l, null, false);
-		
+
 		LinkedHashMap<ResourceType, Integer> map = new LinkedHashMap<ResourceType, Integer>();
 		map.put(t2, 1);
 		new Task(description, estimatedDuration, 0, null, null, map);
-		
-		
-		
+
 	}
 
 	@Test
-	public void setMomenToTest_Status_UNAVAILABLE(){
+	public void setMomenToTest_Status_UNAVAILABLE() {
 
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				null, null, null);
@@ -1379,20 +1424,20 @@ public class TaskTest {
 		t.updateTaskAvailability();
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
-		
+
 		t.setMemento(tm);
-		assertEquals(t.getDependencies(),dependencies);
+		assertEquals(t.getDependencies(), dependencies);
 		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(),"UNAVAILABLE");
-		
+		assertEquals(t.getStatusName(), "UNAVAILABLE");
+
 	}
-	
+
 	@Test
-	public void setMomenToTest_Status_AVAILABLE(){
+	public void setMomenToTest_Status_AVAILABLE() {
 
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				null, null, null);
-		
+
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
@@ -1404,20 +1449,20 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		TaskMemento tm = t.createMemento();
 		t.executeTask();
-		assertEquals(t.getStatusName(),"EXECUTING");
+		assertEquals(t.getStatusName(), "EXECUTING");
 		t.setMemento(tm);
-		assertEquals(t.getDependencies(),dependencies);
+		assertEquals(t.getDependencies(), dependencies);
 		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(),"AVAILABLE");
-		
+		assertEquals(t.getStatusName(), "AVAILABLE");
+
 	}
-	
+
 	@Test
-	public void setMomenToTest_Status_FINISHED(){
+	public void setMomenToTest_Status_FINISHED() {
 
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				null, null, null);
-		
+
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
@@ -1428,24 +1473,25 @@ public class TaskTest {
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
-		assertEquals(t.getStatusName(),"EXECUTING");
-		
-		t.addTimeSpan(false, new DateTime(2015,10,14,10,0), new DateTime(2015,10,14,13,0));
-		assertEquals(t.getStatusName(),"FINISHED");
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(false, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FINISHED");
 		TaskMemento tm = t.createMemento();
 		t.setMemento(tm);
-		assertEquals(t.getDependencies(),dependencies);
+		assertEquals(t.getDependencies(), dependencies);
 		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(),"FINISHED");
-		
+		assertEquals(t.getStatusName(), "FINISHED");
+
 	}
-	
+
 	@Test
-	public void setMomenToTest_Status_FAILED(){
+	public void setMomenToTest_Status_FAILED() {
 
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				null, null, null);
-		
+
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
@@ -1456,24 +1502,25 @@ public class TaskTest {
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
-		assertEquals(t.getStatusName(),"EXECUTING");
-		
-		t.addTimeSpan(true, new DateTime(2015,10,14,10,0), new DateTime(2015,10,14,13,0));
-		assertEquals(t.getStatusName(),"FAILED");
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
 		TaskMemento tm = t.createMemento();
 		t.setMemento(tm);
-		assertEquals(t.getDependencies(),dependencies);
+		assertEquals(t.getDependencies(), dependencies);
 		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(),"FAILED");
-		
+		assertEquals(t.getStatusName(), "FAILED");
+
 	}
-	
+
 	@Test
-	public void setMomenToTest_Status_EXECUTING(){
+	public void setMomenToTest_Status_EXECUTING() {
 
 		Task t = new Task(description, estimatedDuration, acceptableDeviation,
 				null, null, null);
-		
+
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
@@ -1484,21 +1531,21 @@ public class TaskTest {
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
-		assertEquals(t.getStatusName(),"EXECUTING");
-		
-		
+		assertEquals(t.getStatusName(), "EXECUTING");
+
 		TaskMemento tm = t.createMemento();
-		t.addTimeSpan(true, new DateTime(2015,10,14,10,0), new DateTime(2015,10,14,13,0));
-		assertEquals(t.getStatusName(),"FAILED");
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
 		t.setMemento(tm);
-		assertEquals(t.getDependencies(),dependencies);
+		assertEquals(t.getDependencies(), dependencies);
 		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(),"EXECUTING");
-		
+		assertEquals(t.getStatusName(), "EXECUTING");
+
 	}
-	
+
 	@Test
-	public void executeTaskTest(){
-		
+	public void executeTaskTest() {
+
 	}
 }

@@ -83,7 +83,11 @@ public class AdvanceTimeSession extends Session {
 	private void updateAll() {
 		for (Project project : getPH().getProjects()) {
 			for (Task task : project.getTasks()) {
-				task.updateTaskAvailability();
+				try {
+					task.updateTaskAvailability();
+				} catch (Exception e) {
+
+				}
 			}
 		}
 	}
