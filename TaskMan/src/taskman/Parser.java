@@ -693,6 +693,7 @@ public class Parser {
 						estimatedDuration);
 				TimeSpan timespan = new TimeSpan(start, end);
 				d.addReservation(currentTask, timespan);
+				currentTask.addRequiredDeveloper(d);
 			}
 		}
 	}
