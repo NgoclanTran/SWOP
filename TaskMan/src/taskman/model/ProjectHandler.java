@@ -25,7 +25,7 @@ public class ProjectHandler {
 	 * Adds the given project to the list of projects.
 	 * 
 	 * @param project
-	 * 
+	 * 			The project to be added to the list
 	 * @post The new list of projects contains the given project.
 	 */
 	private void addProject(Project project) {
@@ -36,10 +36,13 @@ public class ProjectHandler {
 	 * Make a new project and store it to the list of projects.
 	 * 
 	 * @param name
+	 * 			The name of the project to be created
 	 * @param description
+	 * 			The description of the project to be created
 	 * @param creationTime
+	 * 			The creation time of the project to be created
 	 * @param dueTime
-	 * 
+	 * 			The due time of the project to be created
 	 * @effect Adds the project to the list of projects.
 	 * 
 	 * @throws IllegalArgumentException

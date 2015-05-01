@@ -16,7 +16,9 @@ import taskman.model.time.TimeSpan;
 public class PlanningService {
 
 	IClock clock = Clock.getInstance();
-
+	/**
+	 * De constructor van de service.
+	 */
 	public PlanningService() {
 
 	}
@@ -27,8 +29,11 @@ public class PlanningService {
 	 * available starting from the earliest possible starting time.
 	 * 
 	 * @param task
+	 * 			The task of which the starting times will be gathered
 	 * @param amount
+	 * 			The amount of starting times that will be gathered
 	 * @param earliestPossibleStartTime
+	 * 			The earliest time that the task should be started
 	 * 
 	 * @return Returns a set of possible starting times for the task.
 	 */
@@ -65,8 +70,11 @@ public class PlanningService {
 	 * available for the entire duration.
 	 * 
 	 * @param task
+	 * 			The task for which this will be checked for
 	 * @param timeSpan
+	 * 			The timespan for which will be checked if it is valid for the task
 	 * @param earliestPossibleStartTime
+	 * 			The earliest possible starting time for the task
 	 * 
 	 * @return Returns whether or not the timespan is valid for the task.
 	 */
