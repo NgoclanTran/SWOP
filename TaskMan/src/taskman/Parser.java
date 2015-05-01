@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -201,8 +202,8 @@ public class Parser {
 		return integerList;
 	}
 
-	private HashMap<Integer, Integer> parseIntegerMap(String line) {
-		HashMap<Integer, Integer> integerMap = new HashMap<Integer, Integer>();
+	private LinkedHashMap<Integer, Integer> parseIntegerMap(String line) {
+		LinkedHashMap<Integer, Integer> integerMap = new LinkedHashMap<Integer, Integer>();
 		int descriptionStart, descriptionEnd;
 		int type, quantity;
 		while (line.contains("type")) {
@@ -522,7 +523,7 @@ public class Parser {
 	private void addPlanning(List<String> description) {
 		int descriptionStart, descriptionEnd;
 		ArrayList<Integer> developers = new ArrayList<Integer>();
-		HashMap<Integer, Integer> resources = new HashMap<Integer, Integer>();
+		LinkedHashMap<Integer, Integer> resources = new LinkedHashMap<Integer, Integer>();
 		Date plannedStartTime = null;
 		for (String line : description) {
 			if (line.startsWith("plannedStartTime")) {
@@ -577,7 +578,7 @@ public class Parser {
 		ArrayList<Integer> prerequisiteTasks = new ArrayList<Integer>();
 		String status = "";
 		Date startTime = null, endTime = null;
-		Map<ResourceType, Integer> resourceTypes = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resourceTypes = new LinkedHashMap<ResourceType, Integer>();
 		List<Task> dependencies = new ArrayList<Task>();
 		Task alternativeForTask = null;
 		int help = 0;
@@ -720,7 +721,6 @@ public class Parser {
 		int descriptionStart, descriptionEnd;
 		int resource = 0, task = 0;
 		Date startTime = null, endTime = null;
-		int pastResources = -1, pastTasks = -1;
 		for (String line : description) {
 			if (line.startsWith("resource")) {
 				line = line.substring(line.indexOf(":") + 1);
