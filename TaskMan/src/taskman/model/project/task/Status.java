@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 
 import taskman.model.time.Clock;
 import taskman.model.time.IClock;
+import taskman.model.time.TimeSpan;
 
 interface Status {
 
@@ -131,4 +132,10 @@ interface Status {
 	 */
 	public boolean isPlanned(Task task);
 
+	/**
+	 * Returns the timespan of the task
+	 * 
+	 * @return The timespan of the task
+	 */
+	public TimeSpan getTimeSpan(Task task);
 }
