@@ -61,17 +61,17 @@ public class CreateTaskSessionTest {
 		public void useCaseTest_nullRh(){
 			CreateTaskSession session2 = new CreateTaskSession(cli,ph,null);
 		}
-		@Test 
-		public void useCaseTest_NoProject(){
-			IView cli = new View();
-			ProjectHandler ph = new ProjectHandler();
-			ResourceHandler rh = new ResourceHandler();
-			CreateTaskSession session = new CreateTaskSession(cli, ph, rh);
-	
-			session.run();
-			String output ="No projects.\r\n\r\n";
-			assertEquals(output,log.getLog());
-		}
+//		@Test 
+//		public void useCaseTest_NoProject(){
+//			IView cli = new View();
+//			ProjectHandler ph = new ProjectHandler();
+//			ResourceHandler rh = new ResourceHandler();
+//			CreateTaskSession session = new CreateTaskSession(cli, ph, rh);
+//	
+//			session.run();
+//			String output ="No projects.\r\n\r\n";
+//			assertEquals(output,log.getLog());
+//		}
 	
 		@Test
 		public void useCaseTest_WithProjects_WrongInput_Exit_CancelCreation(){

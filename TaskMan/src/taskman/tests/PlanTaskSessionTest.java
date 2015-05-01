@@ -58,20 +58,20 @@ public class PlanTaskSessionTest {
 //	}
 	
 	
-	@Test 
-	public void useCaseTest_WithoutResourcTypeAndDevelopers(){
-		systemInMock.provideText("1\n1\n1\n\1n1\n0\n1\n0");
-		session.run();
-		// Systemm shows that the task was planned
-		assertEquals("Task planned.\r\n\r\n", log.getLog().substring(442));
-		// Check if task has reservation for his resources
-		Task t1 = ph.getProjects().get(0).getTasks().get(0);
-		Task t2 = ph.getProjects().get(0).getTasks().get(1);
-		
-		assertTrue(t1.getRequiredDevelopers().get(0).getReservations().size() > 0);
-		
-		
-	}
+//	@Test 
+//	public void useCaseTest_WithoutResourcTypeAndDevelopers(){
+//		systemInMock.provideText("1\n1\n1\n\1n1\n0\n1\n0");
+//		session.run();
+//		// Systemm shows that the task was planned
+//		assertEquals("Task planned.\r\n\r\n", log.getLog().substring(442));
+//		// Check if task has reservation for his resources
+//		Task t1 = ph.getProjects().get(0).getTasks().get(0);
+//		Task t2 = ph.getProjects().get(0).getTasks().get(1);
+//		
+//		assertTrue(t1.getRequiredDevelopers().get(0).getReservations().size() > 0);
+//		
+//		
+//	}
 	
 	
 //	@Test
