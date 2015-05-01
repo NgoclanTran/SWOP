@@ -14,12 +14,14 @@ import taskman.model.time.TimeSpan;
 public class Reservable {
 
 	DailyAvailability dailyAvailability;
+
 	/**
 	 * The constructor of the reservable class
+	 * 
 	 * @param startTime
-	 * 			The start time of the reservable
+	 *            The start time of the reservable
 	 * @param endTime
-	 * 			The end time of the reservable
+	 *            The end time of the reservable
 	 * @throws IllegalTimeException
 	 * @throws IllegalArgumentException
 	 */
@@ -54,14 +56,16 @@ public class Reservable {
 	 *         timespan.
 	 */
 	public boolean isAvailableAt(TimeSpan timeSpan) {
-		if(timeSpan == null) throw new IllegalArgumentException("The timeSpan cannot be null.");
+		if (timeSpan == null)
+			throw new IllegalArgumentException("The timeSpan cannot be null.");
 		for (Reservation reservation : reservations) {
 
 			DateTime reservationStart = reservation.getTimeSpan()
 					.getStartTime();
 			DateTime reservationEnd = reservation.getTimeSpan().getEndTime();
-			
-			if(timeSpan.isDuringTimeSpan(reservationStart) || timeSpan.isDuringTimeSpan(reservationEnd))
+
+			if (timeSpan.isDuringTimeSpan(reservationStart)
+					|| timeSpan.isDuringTimeSpan(reservationEnd))
 				return false;
 		}
 		if (!dailyAvailability.isValidTimeSpan(timeSpan))
@@ -89,6 +93,13 @@ public class Reservable {
 
 		Reservation reservation = new Reservation(task, timeSpan);
 		reservations.add(reservation);
+	}
+
+	/**
+	 * Removes the reservation from the list of reservations.
+	 */
+	public void removeReservation(Reservation r) {
+		reservations.remove(r);
 	}
 
 	/**
