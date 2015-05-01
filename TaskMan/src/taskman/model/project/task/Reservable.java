@@ -14,7 +14,15 @@ import taskman.model.time.TimeSpan;
 public class Reservable {
 
 	DailyAvailability dailyAvailability;
-
+	/**
+	 * The constructor of the reservable class
+	 * @param startTime
+	 * 			The start time of the reservable
+	 * @param endTime
+	 * 			The end time of the reservable
+	 * @throws IllegalTimeException
+	 * @throws IllegalArgumentException
+	 */
 	public Reservable(LocalTime startTime, LocalTime endTime)
 			throws IllegalTimeException, IllegalArgumentException {
 		if (startTime == null && endTime == null)
