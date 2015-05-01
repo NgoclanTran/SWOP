@@ -52,7 +52,14 @@ public class TimeSpan {
 	public DateTime getEndTime() {
 		return this.endTime;
 	}
-
+	/**
+	 * Will return true or false depending on whether the parameter date time falls within the
+	 * timespan or not
+	 * @param time
+	 * 			the date time parameter that will be used.
+	 * @return returns true or false depending on whether the given parameter falls within the 
+	 * 		   timespan or not
+	 */
 	public boolean isDuringTimeSpan(DateTime time) {
 		if (time.isBefore(getStartTime()) || time.isAfter(getEndTime()))
 			return false;
