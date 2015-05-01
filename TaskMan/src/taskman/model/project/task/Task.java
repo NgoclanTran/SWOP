@@ -481,12 +481,11 @@ public class Task extends Subject {
 
 		int time = this.timeSpan.calculatePerformedTime();
 
-		// TODO: is dit nodig?
-		if (this.alternative != null)
-			try {
-				time = time + this.alternative.getTotalExecutionTime();
-			} catch (IllegalStateException e) {
-			}
+		// if (this.alternative != null)
+		// try {
+		// time = time + this.alternative.getTotalExecutionTime();
+		// } catch (IllegalStateException e) {
+		// }
 		return time;
 	}
 

@@ -12,10 +12,12 @@ import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.IClock;
 import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 
 public class PlanningService {
 
 	IClock clock = Clock.getInstance();
+
 	/**
 	 * De constructor van de service.
 	 */
@@ -29,11 +31,11 @@ public class PlanningService {
 	 * available starting from the earliest possible starting time.
 	 * 
 	 * @param task
-	 * 			The task of which the starting times will be gathered
+	 *            The task of which the starting times will be gathered
 	 * @param amount
-	 * 			The amount of starting times that will be gathered
+	 *            The amount of starting times that will be gathered
 	 * @param earliestPossibleStartTime
-	 * 			The earliest time that the task should be started
+	 *            The earliest time that the task should be started
 	 * 
 	 * @return Returns a set of possible starting times for the task.
 	 */
@@ -52,7 +54,6 @@ public class PlanningService {
 		Set<DateTime> possibleStartTimes = new TreeSet<DateTime>();
 		DateTime startTime = clock
 				.getFirstPossibleStartTime(earliestPossibleStartTime);
-		//TODO: Deze loop kan oneindig worden!
 		while (possibleStartTimes.size() < amount) {
 			TimeSpan timeSpan = new TimeSpan(startTime, clock.addMinutes(
 					startTime, task.getEstimatedDuration()));
@@ -70,15 +71,15 @@ public class PlanningService {
 	 * available for the entire duration.
 	 * 
 	 * @param task
-	 * 			The task for which this will be checked for
+	 *            The task for which this will be checked for
 	 * @param timeSpan
-	 * 			The timespan for which will be checked if it is valid for the task
+	 *            The timespan for which will be checked if it is valid for the
+	 *            task
 	 * @param earliestPossibleStartTime
-	 * 			The earliest possible starting time for the task
+	 *            The earliest possible starting time for the task
 	 * 
 	 * @return Returns whether or not the timespan is valid for the task.
 	 */
-	// TODO: Check for developers?
 	public boolean isValidTimeSpan(Task task, TimeSpan timeSpan,
 			DateTime earliestPossibleStartTime) {
 		if (task == null)
@@ -99,6 +100,11 @@ public class PlanningService {
 				if (entry.getKey().getAvailableResources(timeSpan).size() < entry
 						.getValue())
 					return false;
+			}
+			for (Developer d : task.getRequiredDevelopers()) {
+				if (!d.isAvailableAt(timeSpan)) {
+					return false;
+				}
 			}
 		}
 		return true;
