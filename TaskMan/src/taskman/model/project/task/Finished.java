@@ -2,6 +2,8 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
+import taskman.model.time.TimeSpan;
+
 class Finished implements Status{
 
 	private final String name = "FINISHED";
@@ -78,6 +80,11 @@ class Finished implements Status{
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Finished task can not be executed");		
+	}
+
+	@Override
+	public TimeSpan getTimeSpan(Task task) {
+		return task.performGetTimeSpan();
 	}
 
 }

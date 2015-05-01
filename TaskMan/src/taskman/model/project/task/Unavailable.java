@@ -2,6 +2,8 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
+import taskman.model.time.TimeSpan;
+
 class Unavailable implements Status {
 
 	private final String name = "UNAVAILABLE";
@@ -92,6 +94,12 @@ class Unavailable implements Status {
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Unavailable task can not be executed");
+
+	}
+
+	@Override
+	public TimeSpan getTimeSpan(Task task) {
+		throw new IllegalStateException("Unavailable Task doesn't have timeSpan.");	
 
 	}
 

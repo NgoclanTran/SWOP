@@ -274,7 +274,7 @@ public class ProjectTest {
 		
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
-		t.addTimeSpan(false, startTime, endTime);
+		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
@@ -334,7 +334,7 @@ public class ProjectTest {
 		
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
-		t.addTimeSpan(false, startTime, endTime);
+		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
@@ -369,7 +369,7 @@ public class ProjectTest {
 		
 		DateTime startTime = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime = new DateTime(2014, 1, 1, 8, 59);
-		t.addTimeSpan(false, startTime, endTime);
+		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
@@ -392,7 +392,7 @@ public class ProjectTest {
 		
 		DateTime startTime = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime = new DateTime(2014, 1, 1, 11, 00);
-		t.addTimeSpan(false, startTime, endTime);
+		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
@@ -415,7 +415,7 @@ public class ProjectTest {
 		t.updateTaskAvailability();		
 		DateTime startTime = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime = new DateTime(2014, 1, 1, 9, 30);
-		t.addTimeSpan(false, startTime, endTime);
+		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
@@ -430,7 +430,7 @@ public class ProjectTest {
 		assertEquals(t2.getStatusName(),"AVAILABLE");
 		DateTime startTime2 = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime2 = new DateTime(2014, 1, 1, 10, 30);
-		t2.addTimeSpan(false, startTime2, endTime2);
+		t2.executeTask();
 		assertEquals(t2.getStatusName(),"EXECUTING");
 		t2.addTimeSpan(false, startTime2, endTime2);
 		assertEquals(t2.getStatusName(),"FINISHED");
@@ -468,7 +468,7 @@ public class ProjectTest {
 		
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
-		t.addTimeSpan(false, startTime, endTime);
+		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");

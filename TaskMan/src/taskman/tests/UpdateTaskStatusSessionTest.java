@@ -16,6 +16,7 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
+import taskman.model.UserHandler;
 import taskman.model.project.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
@@ -28,6 +29,7 @@ public class UpdateTaskStatusSessionTest {
 	private UpdateTaskStatusSession updateTask;
 	private ProjectHandler ph;
 	private ResourceHandler rh;
+	private UserHandler uh;
 	private UpdateTaskStatusSession session;
 	private TextFromStandardInputStream systemMock;
 	private IView cli;
@@ -44,7 +46,8 @@ public class UpdateTaskStatusSessionTest {
 		clock.setSystemTime(new DateTime(2015,10,12,8,0));
 		ph = new ProjectHandler();
 		rh = new ResourceHandler();
-		session = new UpdateTaskStatusSession(cli, ph);
+		uh = new UserHandler();
+		session = new UpdateTaskStatusSession(cli, ph, uh);
 		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null, null);
@@ -61,7 +64,7 @@ public class UpdateTaskStatusSessionTest {
 		IView cli = new View();
 		ProjectHandler ph = new ProjectHandler();
 		ResourceHandler rh = new ResourceHandler();
-		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph);
+		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph, uh);
 		session.run();
 		String output ="No available tasks.\r\n\r\n";
 		assertEquals(output,log.getLog());

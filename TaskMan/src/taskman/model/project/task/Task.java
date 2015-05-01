@@ -181,6 +181,9 @@ public class Task extends Subject {
 	 * @return The timespan of the task
 	 */
 	public TimeSpan getTimeSpan() {
+		return this.status.getTimeSpan(this);
+	}
+	protected TimeSpan performGetTimeSpan(){
 		return new TimeSpan(this.timeSpan.getStartTime(),
 				this.timeSpan.getEndTime());
 	}

@@ -3,6 +3,7 @@ package taskman.model.project.task;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.time.TimeSpan;
 
 class Available implements Status {
 
@@ -94,6 +95,12 @@ class Available implements Status {
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		task.performExecuteTask(new Executing());
+	}
+
+	@Override
+	public TimeSpan getTimeSpan(Task task) {
+		throw new IllegalStateException("Available Task doesn't have timeSpan.");	
+
 	}
 
 }
