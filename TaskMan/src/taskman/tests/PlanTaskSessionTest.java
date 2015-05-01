@@ -1,6 +1,7 @@
 package taskman.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.util.ArrayList;
@@ -13,17 +14,15 @@ import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.planning.PlanTaskSession;
-import taskman.controller.project.ShowProjectSession;
 import taskman.model.ProjectHandler;
 import taskman.model.UserHandler;
 import taskman.model.project.task.Task;
-import taskman.model.user.Developer;
 import taskman.view.IView;
 import taskman.view.View;
 
 public class PlanTaskSessionTest {
 
-	private IView cli,cli1;
+	private IView cli, cli1;
 	private ProjectHandler ph;
 	private PlanTaskSession session;
 	private UserHandler uh;
@@ -36,19 +35,26 @@ public class PlanTaskSessionTest {
 
 	@Before
 	public void setup() {
-		
+
 		// Session with projects
 		cli = new View();
 		ph = new ProjectHandler();
 		uh = new UserHandler();
-		session = new PlanTaskSession(cli,ph,uh);
-		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
-		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
-		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null, null);
-		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<Task>(), null, null);
-		 
+		session = new PlanTaskSession(cli, ph, uh);
+		ph.addProject("Project x", "Test project 1", new DateTime(),
+				new DateTime(2016, 4, 1, 0, 0));
+		ph.addProject("Project y", "Test project 2", new DateTime(),
+				new DateTime(2016, 4, 1, 0, 0));
+		ph.getProjects()
+				.get(0)
+				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+						null, null);
+		ph.getProjects()
+				.get(0)
+				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+						null, null);
+
 	}
-	
 	
 //	@Test
 //	public void useCaseTest_NoTask(){
@@ -124,6 +130,5 @@ public class PlanTaskSessionTest {
 //		assertEquals("", log.getLog());
 //		// check if reservation.planning was created
 //	}
-	
 
 }
