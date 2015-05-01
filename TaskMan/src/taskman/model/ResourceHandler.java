@@ -29,9 +29,13 @@ public class ResourceHandler {
 	 * Creates a new resource type and adds it to the list of resource types.
 	 * 
 	 * @param name
+	 * 			The name of the resource type to be created
 	 * @param requires
+	 * 			The list of required resource types for the resource to be created
 	 * @param conflictsWith
+	 * 			The list of resources that this resource conflicts with
 	 * @param selfConflicting
+	 * 			An indicator whether this resource conflicts with itself or not
 	 * 
 	 * @throws IllegalArgumentException
 	 */
