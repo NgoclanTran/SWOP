@@ -75,4 +75,9 @@ class Finished implements Status{
 		return false;
 	}
 
+	@Override
+	public void executeTask(Task task) throws IllegalStateException {
+		throw new IllegalStateException("Finished task can not be executed");		
+	}
+
 }

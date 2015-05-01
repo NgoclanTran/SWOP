@@ -179,7 +179,6 @@ public class Parser {
 		try {
 			return dateFormat.parse(line);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -663,20 +662,6 @@ public class Parser {
 						acceptableDeviation, dependencies, alternativeForTask,
 						resourceTypes);
 
-		if (!status.equals("")) {
-			boolean failed = status.equals("failed");
-			Task currentTask = projectHandler
-					.getProjects()
-					.get(project)
-					.getTasks()
-					.get(projectHandler.getProjects().get(project).getTasks()
-							.size() - 1);
-			if (currentTask.getStatusName().equals("AVAILABLE")) {
-				currentTask.addTimeSpan(failed, new DateTime(startTime),
-						new DateTime(endTime));
-			}
-		}
-
 		if (planningNumber != -1) {
 			Planning planning = this.planning.get(planningNumber);
 			Task currentTask = projectHandler
@@ -694,6 +679,22 @@ public class Parser {
 				TimeSpan timespan = new TimeSpan(start, end);
 				d.addReservation(currentTask, timespan);
 				currentTask.addRequiredDeveloper(d);
+			}
+			currentTask.updateTaskAvailability();
+		}
+
+		if (!status.equals("")) {
+			boolean failed = status.equals("failed");
+			Task currentTask = projectHandler
+					.getProjects()
+					.get(project)
+					.getTasks()
+					.get(projectHandler.getProjects().get(project).getTasks()
+							.size() - 1);
+			if (currentTask.getStatusName().equals("AVAILABLE")) {
+				currentTask.executeTask();
+				currentTask.addTimeSpan(failed, new DateTime(startTime),
+						new DateTime(endTime));
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 package taskman.controller.project;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -179,6 +178,7 @@ public class UpdateTaskStatusSession extends Session {
 		while (true) {
 			try {
 				if (task.isAvailable()) {
+					task.executeTask();
 					getUI().displayInfo("The selected task is now executing.");
 					break;
 				}

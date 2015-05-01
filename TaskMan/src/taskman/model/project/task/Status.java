@@ -102,6 +102,8 @@ interface Status {
 	 */
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) throws IllegalStateException;
+	
+	public void executeTask(Task task) throws IllegalStateException;
 
 	/**
 	 * Will check if the task given in the parameter has his alternatives
@@ -113,9 +115,20 @@ interface Status {
 	 *         completed or not
 	 */
 	public boolean isAlternativeFinished(Task task);
-
+	/**
+	 * Returns a boolean indicating whether the given task is severly overdue or not.
+	 * This will return true if the overdue percentage is higher than the acceptable deviation
+	 * @param task
+	 * 			The task which this will be checked for
+	 * @return returns a boolean indicating whether the task is serverly overdue or not
+	 */
 	public boolean isSeverelyOverdue(Task task);
-
+	/**
+	 * Returns a boolean indicating whether the given task is planned or not
+	 * @param task
+	 * 			The task for which this will be checked for
+	 * @return Returns a boolean indicating whether the given task is planned or not
+	 */
 	public boolean isPlanned(Task task);
 
 }

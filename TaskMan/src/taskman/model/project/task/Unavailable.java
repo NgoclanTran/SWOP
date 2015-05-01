@@ -83,4 +83,10 @@ class Unavailable implements Status {
 		return false;
 	}
 
+	@Override
+	public void executeTask(Task task) throws IllegalStateException {
+		throw new IllegalStateException("Unavailable task can not be executed");
+		
+	}
+
 }
