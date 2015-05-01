@@ -17,6 +17,7 @@ import taskman.controller.project.ShowProjectSession;
 import taskman.model.ProjectHandler;
 import taskman.model.UserHandler;
 import taskman.model.project.task.Task;
+import taskman.model.user.Developer;
 import taskman.view.IView;
 import taskman.view.View;
 
@@ -58,15 +59,20 @@ public class PlanTaskSessionTest {
 	
 	
 	@Test 
-	public void useCaseTest_BeforeSelectingPlannedTime_cancelPlanning(){
-		systemInMock.provideText("1\n1\n");
+	public void useCaseTest_WithoutResourcTypeAndDevelopers(){
+		systemInMock.provideText("1\n1\n1\n\1n1\n0\n1\n0");
 		session.run();
-		// here comes output for selecting tasks, selecting plan time
-		assertEquals("", log.getLog());
-		//Test wrong input too
-		// Check if reservation was not created
+		// Systemm shows that the task was planned
+		assertEquals("Task planned.\r\n\r\n", log.getLog().substring(442));
+		// Check if task has reservation for his resources
+		Task t1 = ph.getProjects().get(0).getTasks().get(0);
+		Task t2 = ph.getProjects().get(0).getTasks().get(1);
+		
+		assertTrue(t1.getRequiredDevelopers().get(0).getReservations().size() > 0);
+		
 		
 	}
+	
 	
 //	@Test
 //	public void useCaseTest_BeforeSelectingRequirement_EnterSuggestedTime_cancelPlanning(){
