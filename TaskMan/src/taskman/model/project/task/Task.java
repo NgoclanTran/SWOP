@@ -1,7 +1,7 @@
 package taskman.model.project.task;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -49,7 +49,7 @@ public class Task extends Subject {
 	public Task(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
 			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
-			throws IllegalStateException {
+			throws IllegalStateException, IllegalArgumentException {
 		if (description == null)
 			throw new IllegalArgumentException("Description is null");
 		if (estimatedDuration <= 0)
@@ -98,7 +98,7 @@ public class Task extends Subject {
 	private Status status;
 	private TimeSpan timeSpan;
 	private Task alternative = null;
-	private HashMap<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType, Integer>();
+	private LinkedHashMap<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 	private List<Developer> requiredDevelopers = new ArrayList<Developer>();
 
 	/**
@@ -253,7 +253,7 @@ public class Task extends Subject {
 	 * @return Returns the map of required resource types for the task.
 	 */
 	public Map<ResourceType, Integer> getRequiredResourceTypes() {
-		return new HashMap<ResourceType, Integer>(requiredResourceTypes);
+		return new LinkedHashMap<ResourceType, Integer>(requiredResourceTypes);
 	}
 
 	/**
@@ -263,7 +263,7 @@ public class Task extends Subject {
 	 * @param resourceType
 	 * @param amount
 	 */
-	public void addRequiredResourceType(ResourceType resourceType, int amount)
+	private void addRequiredResourceType(ResourceType resourceType, int amount)
 			throws IllegalArgumentException {
 		if (checkResourceTypeConflicts(resourceType))
 			throw new IllegalArgumentException(
@@ -294,6 +294,10 @@ public class Task extends Subject {
 					return true;
 				}
 			}
+		}
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes().entrySet()) {
+			if (entry.getKey().getConflictsWith().contains(resourceType))
+				return true;
 		}
 		return false;
 	}
@@ -386,38 +390,6 @@ public class Task extends Subject {
 	}
 
 	protected void performUpdateTaskAvailability(Status status) {
-		for (Task task : this.dependencies) {
-			try {
-				if (!task.status.isAlternativeFinished(task))
-					return;
-
-			} catch (IllegalStateException e) {
-				if (!task.isFinished())
-					return;
-			}
-
-		}
-		if (getRequiredResourceTypes().size() > 0) {
-			for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
-					.entrySet()) {
-				for (Resource resource : entry.getKey().getResources()) {
-					for (Reservation reservation : resource.getReservations()) {
-						if (!(this.getTimeSpan().isDuringTimeSpan(this.clock
-								.getSystemTime()))) {
-							if (reservation.getTimeSpan().isDuringTimeSpan(
-									this.clock.getSystemTime())) {
-								return;
-							}
-						} else {
-							if (!(reservation.getTask().equals(this))) {
-								return;
-							}
-						}
-					}
-				}
-			}
-		}
-
 		this.status = status;
 
 		this.notifyAllDependants(); // notify dependant task
