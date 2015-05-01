@@ -207,6 +207,7 @@ public class View implements IView {
 		StringBuilder taskInfo = new StringBuilder();
 		taskInfo.append("Task:");
 		taskInfo.append("\n");
+		taskInfo.append("Description: ");
 		taskInfo.append(task.getDescription());
 		taskInfo.append("\n");
 		taskInfo.append("Status: ");

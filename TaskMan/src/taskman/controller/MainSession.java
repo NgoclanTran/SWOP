@@ -102,7 +102,7 @@ public class MainSession extends Session {
 				new CreateTaskSession(getUI(), getPH(), rh).run();
 				break;
 			case 4:
-				new UpdateTaskStatusSession(getUI(), getPH()).run();
+				new UpdateTaskStatusSession(getUI(), getPH(), uh).run();
 				break;
 			case 5:
 				new AdvanceTimeSession(getUI(), getPH()).run();

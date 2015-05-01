@@ -7,13 +7,40 @@ import org.joda.time.DateTime;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.user.Developer;
 
 public class UpdateTaskForm implements IUpdateTaskForm {
-	
+
 	View view;
-	
+
 	public UpdateTaskForm(View view) {
 		this.view = view;
+	}
+
+	/**
+	 * This method will ask the user to select the developer to update a task
+	 * and it will return the developer.
+	 * 
+	 * @param developers
+	 * 
+	 * @return Returns the selected developer.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the updating of the task.
+	 */
+	@Override
+	public Developer getDeveloper(List<Developer> developers)
+			throws ShouldExitException {
+		try {
+			view.displayInfo("List of developers:");
+			view.output.displayList(developers, 0, true);
+			view.output.displayEmptyLine();
+			int developerId = view.getListChoice(developers, "Select a developer:");
+			return developers.get(developerId - 1);
+		} catch (ShouldExitException e) {
+			view.output.displayEmptyLine();
+			throw new ShouldExitException();
+		}
 	}
 
 	public boolean getUpdateTaskFailed() throws ShouldExitException {
@@ -22,7 +49,8 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 			String didFail = view.input.getInput();
 			view.output.displayEmptyLine();
 
-			while (!(view.isValidYesAnswer(didFail) || view.isValidNoAnswer(didFail))) {
+			while (!(view.isValidYesAnswer(didFail) || view
+					.isValidNoAnswer(didFail))) {
 				view.displayInfo("Did the selected task fail? (Y/N or cancel):");
 				didFail = view.input.getInput();
 				view.output.displayEmptyLine();
@@ -60,8 +88,11 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 		}
 	}
 
-	public DateTime getUpdateTaskStopTime() throws ShouldExitException {
+	public DateTime getUpdateTaskStopTime(DateTime startTime) throws ShouldExitException {
 		try {
+			view.displayInfo("Start time: " + view.getStringDate(startTime));
+			view.output.displayEmptyLine();
+			
 			view.displayInfo("Enter the stop time of the task with format dd-MM-yyyy HH:mm (or cancel):");
 			String date = view.input.getInput();
 			view.output.displayEmptyLine();
