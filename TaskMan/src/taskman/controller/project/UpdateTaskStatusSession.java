@@ -182,10 +182,12 @@ public class UpdateTaskStatusSession extends Session {
 					getUI().displayInfo("The selected task is now executing.");
 					break;
 				}
-				
-				boolean isFailed = getUI().getUpdateTaskForm().getUpdateTaskFailed();
+
+				boolean isFailed = getUI().getUpdateTaskForm()
+						.getUpdateTaskFailed();
 				DateTime startTime = getStartTime(task);
-				DateTime endTime = getUI().getUpdateTaskForm().getUpdateTaskStopTime(startTime);
+				DateTime endTime = getUI().getUpdateTaskForm()
+						.getUpdateTaskStopTime(startTime);
 
 				if (isValidUpdateTask(task, isFailed, startTime, endTime))
 					break;
@@ -208,10 +210,13 @@ public class UpdateTaskStatusSession extends Session {
 		DateTime startTime = null;
 		for (Developer developer : task.getRequiredDevelopers()) {
 			for (Reservation reservation : developer.getReservations()) {
-				if (reservation.getTask().equals(this)
-						&& (startTime == null || reservation.getTimeSpan()
-								.getStartTime().isBefore(startTime)))
-					startTime = reservation.getTimeSpan().getStartTime();
+				if (reservation.getTask().equals(task)) {
+					if (startTime == null
+							|| reservation.getTimeSpan().getStartTime()
+									.isBefore(startTime)) {
+						startTime = reservation.getTimeSpan().getStartTime();
+					}
+				}
 			}
 		}
 		return startTime;

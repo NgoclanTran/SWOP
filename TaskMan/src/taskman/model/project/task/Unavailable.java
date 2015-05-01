@@ -13,13 +13,16 @@ class Unavailable implements Status {
 
 	@Override
 	public void updateTaskAvailability(Task task) {
-		if(task == null) throw new NullPointerException("The task is null.");
-		
+		if (task == null)
+			throw new NullPointerException("The task is null.");
+
 		if (task.dependenciesAreFinished() && task.isPlanned()) {
 			for (Reservation reservation : task.getReservations()) {
-				if (reservation.getTimeSpan().isDuringTimeSpan(clock.getSystemTime()))
+				if (reservation.getTimeSpan().isDuringTimeSpan(
+						clock.getFirstPossibleStartTime(clock.getSystemTime())))
 					task.performUpdateTaskAvailability(new Available());
-				else if (task.developersAndResourceTypesAvailable(clock.getSystemTime()))
+				else if (task.developersAndResourceTypesAvailable(clock
+						.getFirstPossibleStartTime(clock.getSystemTime())))
 					task.performUpdateTaskAvailability(new Available());
 			}
 		}
@@ -27,15 +30,16 @@ class Unavailable implements Status {
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) throws IllegalStateException{
+			DateTime endTime) throws IllegalStateException {
 		throw new IllegalStateException("This task is unavailable");
-		
+
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) throws IllegalStateException{
+	public void addAlternative(Task task, Task alternative)
+			throws IllegalStateException {
 		throw new IllegalStateException("This task is unavailable");
-		
+
 	}
 
 	@Override
@@ -54,12 +58,14 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public int calculateTotalExecutedTime(Task task) throws IllegalStateException{
+	public int calculateTotalExecutedTime(Task task)
+			throws IllegalStateException {
 		throw new IllegalStateException("The task is unavailable");
 	}
 
 	@Override
-	public int calculateOverDuePercentage(Task task) throws IllegalStateException{
+	public int calculateOverDuePercentage(Task task)
+			throws IllegalStateException {
 		throw new IllegalStateException("The task is unavailable");
 	}
 
@@ -86,7 +92,7 @@ class Unavailable implements Status {
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Unavailable task can not be executed");
-		
+
 	}
 
 }
