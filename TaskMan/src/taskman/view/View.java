@@ -218,6 +218,16 @@ public class View implements IView {
 		taskInfo.append("Acceptable deviation: ");
 		taskInfo.append(task.getAcceptableDeviation());
 		taskInfo.append(" %");
+		if (!task.getRequiredDevelopers().isEmpty()) {
+			taskInfo.append("\n");
+			taskInfo.append("Assigned developers: ");
+			taskInfo.append(task.getRequiredDevelopers().toString());
+		}
+		if (!task.getRequiredResourceTypes().isEmpty()) {
+			taskInfo.append("\n");
+			taskInfo.append("Required resource types: ");
+			taskInfo.append(task.getRequiredResourceTypes().toString());
+		}
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
 			taskInfo.append("Start time: ");
