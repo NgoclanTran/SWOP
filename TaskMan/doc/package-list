@@ -1,0 +1,15 @@
+taskman
+taskman.controller
+taskman.controller.planning
+taskman.controller.project
+taskman.exceptions
+taskman.model
+taskman.model.memento
+taskman.model.project
+taskman.model.project.task
+taskman.model.resource
+taskman.model.time
+taskman.model.user
+taskman.tests
+taskman.view
+taskman.view.commandline
