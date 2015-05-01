@@ -147,7 +147,8 @@ public class Task extends Subject {
 	 */
 	public void attachDependant(Task dependant) {
 		if (dependant == null)
-			throw new IllegalArgumentException("the dependant observer is null.");
+			throw new IllegalArgumentException(
+					"the dependant observer is null.");
 		this.dependants.add(dependant);
 	}
 
@@ -295,7 +296,8 @@ public class Task extends Subject {
 				}
 			}
 		}
-		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes().entrySet()) {
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+				.entrySet()) {
 			if (entry.getKey().getConflictsWith().contains(resourceType))
 				return true;
 		}
@@ -338,8 +340,11 @@ public class Task extends Subject {
 	 *            The developer to add
 	 */
 	public void addRequiredDeveloper(Developer developer) {
-		if(developer == null) throw new IllegalArgumentException("The developer cannot be null.");
-		if(requiredDevelopers.contains(developer)) throw new IllegalArgumentException("The developer is already in the list of developpers.");
+		if (developer == null)
+			throw new IllegalArgumentException("The developer cannot be null.");
+		if (requiredDevelopers.contains(developer))
+			throw new IllegalArgumentException(
+					"The developer is already in the list of developpers.");
 		requiredDevelopers.add(developer);
 	}
 
@@ -553,4 +558,41 @@ public class Task extends Subject {
 		}
 	}
 
+	public void executeTask() {
+		this.status.executeTask(this);
+	}
+
+	protected void performExecuteTask(Status status) {
+		DateTime reservationStart = null;
+		for (Developer d : requiredDevelopers) {
+			for (Reservation r : d.getReservations()) {
+				if (r.getTask().equals(this)) {
+					reservationStart = r.getTimeSpan().getStartTime();
+				}
+				if (reservationStart != null) {
+					break;
+				}
+			}
+			if (reservationStart != null) {
+				break;
+			}
+		}
+		if (clock.getSystemTime().isBefore(reservationStart)) {
+			TimeSpan ts = new TimeSpan(clock.getSystemTime(), clock.addMinutes(
+					clock.getSystemTime(), estimatedDuration));
+			for (Developer d : requiredDevelopers) {
+				d.addReservation(this, ts);
+			}
+
+			for (Entry<ResourceType, Integer> entry : requiredResourceTypes
+					.entrySet()) {
+				List<Resource> availableResources = entry.getKey()
+						.getAvailableResources(ts);
+				for (int i = 0; i < entry.getValue(); i++) {
+					availableResources.get(i).addReservation(this, ts);
+				}
+			}
+		}
+		this.status = status;
+	}
 }

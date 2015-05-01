@@ -102,6 +102,8 @@ interface Status {
 	 */
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) throws IllegalStateException;
+	
+	public void executeTask(Task task) throws IllegalStateException;
 
 	/**
 	 * Will check if the task given in the parameter has his alternatives

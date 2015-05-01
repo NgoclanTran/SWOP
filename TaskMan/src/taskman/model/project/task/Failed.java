@@ -73,5 +73,10 @@ class Failed implements Status{
 	public boolean isExecuting() {
 		return false;
 	}
+	
+	@Override
+	public void executeTask(Task task) throws IllegalStateException {
+		throw new IllegalStateException("Failed task can not be executed");		
+	}
 
 }
