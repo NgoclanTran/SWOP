@@ -1,9 +1,8 @@
 package taskman.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -22,28 +21,32 @@ public class TaskMementoTest {
 	private TaskMemento t;
 
 	@Before
-	public void setup(){
-		Task t1 = new Task("",10,10,null,null,null);
-		alternative = new Task("",10,10,null,null,null);
+	public void setup() {
+		Task t1 = new Task("", 10, 10, null, null, null);
+		alternative = new Task("", 10, 10, null, null, null);
 		dependants.add(t1);
 		t = new TaskMemento(dependants, "state", timeSpan, alternative);
-		
+
 	}
+
 	@Test
-	public void getDependantsTest(){
+	public void getDependantsTest() {
 		assertEquals(t.getDependants(), dependants);
 	}
+
 	@Test
-	public void getStateTest(){
+	public void getStateTest() {
 		assertEquals(t.getStateName(), "state");
 	}
+
 	@Test
-	public void getTimeSpanTest(){
+	public void getTimeSpanTest() {
 		assertEquals(t.getTimeSpan(), timeSpan);
 	}
+
 	@Test
-	public void getAlternativeTest(){
+	public void getAlternativeTest() {
 		assertEquals(t.getAlternative(), alternative);
 	}
-	
+
 }
