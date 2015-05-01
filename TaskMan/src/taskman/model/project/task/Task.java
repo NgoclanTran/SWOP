@@ -183,7 +183,8 @@ public class Task extends Subject {
 	public TimeSpan getTimeSpan() {
 		return this.status.getTimeSpan(this);
 	}
-	protected TimeSpan performGetTimeSpan(){
+
+	protected TimeSpan performGetTimeSpan() {
 		return new TimeSpan(this.timeSpan.getStartTime(),
 				this.timeSpan.getEndTime());
 	}
@@ -212,7 +213,43 @@ public class Task extends Subject {
 			throw new IllegalArgumentException("The endTime is null.");
 
 		this.status.addTimeSpan(this, failed, startTime, endTime);
-
+		for (Developer d : getRequiredDevelopers()) {
+			for (Reservation r : d.getReservations()) {
+				if (r.getTask().equals(this)) {
+					if (r.getTimeSpan().getEndTime().isAfter(endTime)) {
+						if (r.getTimeSpan().getStartTime().isAfter(endTime)) {
+							d.removeReservation(r);
+						} else {
+							DateTime start = r.getTimeSpan().getStartTime();
+							DateTime end = endTime;
+							d.removeReservation(r);
+							d.addReservation(this, new TimeSpan(start, end));
+						}
+					}
+				}
+			}
+		}
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+				.entrySet()) {
+			for (Resource r : entry.getKey().getResources()) {
+				for (Reservation res : r.getReservations()) {
+					if (res.getTask().equals(this)) {
+						if (res.getTimeSpan().getEndTime().isAfter(endTime)) {
+							if (res.getTimeSpan().getStartTime()
+									.isAfter(endTime)) {
+								r.removeReservation(res);
+							} else {
+								DateTime start = res.getTimeSpan()
+										.getStartTime();
+								DateTime end = endTime;
+								r.removeReservation(res);
+								r.addReservation(this, new TimeSpan(start, end));
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	protected void performAddTimeSpan(DateTime startTime, DateTime endTime)
@@ -282,13 +319,17 @@ public class Task extends Subject {
 			throw new IllegalArgumentException("Not enough resources.");
 		requiredResourceTypes.put(resourceType, amount);
 	}
+
 	/**
-	 * Returns true or false depending on whether the task has a certain amount resources of a given resource type
+	 * Returns true or false depending on whether the task has a certain amount
+	 * resources of a given resource type
+	 * 
 	 * @param resourceType
-	 * 			The given resource type to be checked
+	 *            The given resource type to be checked
 	 * @param amount
-	 * 			The amount of resources that are needed
-	 * @return Returns true or false depending on whether there is a certain amount of resources available for the given resource type
+	 *            The amount of resources that are needed
+	 * @return Returns true or false depending on whether there is a certain
+	 *         amount of resources available for the given resource type
 	 */
 	private boolean hasEnougResources(ResourceType resourceType, int amount) {
 		if (resourceType.getResources().size() < amount)
@@ -296,11 +337,15 @@ public class Task extends Subject {
 		else
 			return true;
 	}
+
 	/**
-	 * Returns true or false depending on whether the given resource type has conflicts or not
+	 * Returns true or false depending on whether the given resource type has
+	 * conflicts or not
+	 * 
 	 * @param resourceType
-	 * 			The resource type to be checked
-	 * @return true or false depending on whether the given resource type has conflicts or not
+	 *            The resource type to be checked
+	 * @return true or false depending on whether the given resource type has
+	 *         conflicts or not
 	 */
 	private boolean checkResourceTypeConflicts(ResourceType resourceType) {
 		List<ResourceType> conflicts = resourceType.getConflictsWith();
@@ -318,13 +363,17 @@ public class Task extends Subject {
 		}
 		return false;
 	}
+
 	/**
-	 * Returns a boolean indicating whether the resource type is self conflicting or not
+	 * Returns a boolean indicating whether the resource type is self
+	 * conflicting or not
+	 * 
 	 * @param resourceType
-	 * 			The resource type to be checked
+	 *            The resource type to be checked
 	 * @param amount
-	 * 			The amount of resources needed of this type
-	 * @return Returns true if the amount is larger than 1 and if the resource type is self conflicting
+	 *            The amount of resources needed of this type
+	 * @return Returns true if the amount is larger than 1 and if the resource
+	 *         type is self conflicting
 	 */
 	private boolean checkResourceTypeSelfConflicting(ResourceType resourceType,
 			int amount) {
@@ -333,11 +382,15 @@ public class Task extends Subject {
 		}
 		return false;
 	}
+
 	/**
-	 * Returns true or false whether the resource type requirements are fullfilled or not
+	 * Returns true or false whether the resource type requirements are
+	 * fullfilled or not
+	 * 
 	 * @param resourceType
-	 * 			The resource type to be checked
-	 * @return Returns true or false whether the resource type requirements are fullfilled or not
+	 *            The resource type to be checked
+	 * @return Returns true or false whether the resource type requirements are
+	 *         fullfilled or not
 	 */
 	private boolean checkResourceTypeRequirements(ResourceType resourceType) {
 		List<ResourceType> requirements = resourceType.getRequires();
@@ -383,7 +436,7 @@ public class Task extends Subject {
 	public boolean isAvailable() {
 		return this.status.isAvailable();
 	}
-	
+
 	/**
 	 * Check if this task is executing
 	 * 
@@ -436,12 +489,15 @@ public class Task extends Subject {
 		this.notifyAllDependants(); // notify dependant task
 		this.notifyAllObservers(); // observer pattern for project
 	}
+
 	/**
-	 * Returns a boolean whether the developpers and resource types are available for this task or not
+	 * Returns a boolean whether the developpers and resource types are
+	 * available for this task or not
+	 * 
 	 * @param time
-	 * 			The date time for which this will be checked
-	 * @return Returns true or false depending on whether the developpers and resource types are
-	 * 		   available for this task or not
+	 *            The date time for which this will be checked
+	 * @return Returns true or false depending on whether the developpers and
+	 *         resource types are available for this task or not
 	 */
 	protected boolean developersAndResourceTypesAvailable(DateTime time) {
 		for (Developer developer : getRequiredDevelopers()) {
@@ -459,9 +515,13 @@ public class Task extends Subject {
 		}
 		return true;
 	}
+
 	/**
-	 * Returns a boolean indicating whether the dependencies for this task are fullfilled or not
-	 * @return Returns true or false depending on whether the dependencies are fullfilled or not
+	 * Returns a boolean indicating whether the dependencies for this task are
+	 * fullfilled or not
+	 * 
+	 * @return Returns true or false depending on whether the dependencies are
+	 *         fullfilled or not
 	 */
 	protected boolean dependenciesAreFinished() {
 		for (Task task : this.dependencies) {
@@ -476,8 +536,10 @@ public class Task extends Subject {
 		}
 		return true;
 	}
+
 	/**
 	 * Returns the list of reservations for this task
+	 * 
 	 * @return returns the list of reservations for this task
 	 */
 	protected List<Reservation> getReservations() {
@@ -499,9 +561,12 @@ public class Task extends Subject {
 		}
 		return reservations;
 	}
+
 	/**
 	 * Returns a boolean whether the alternative task is finished or not
-	 * @return Returns true or false depending on whether the alternative task is finished or not
+	 * 
+	 * @return Returns true or false depending on whether the alternative task
+	 *         is finished or not
 	 */
 	protected boolean isAlternativeFinished() {
 		if (this.alternative == null)
@@ -556,9 +621,12 @@ public class Task extends Subject {
 		return (totalExecutedTime - this.estimatedDuration) * 100
 				/ this.estimatedDuration;
 	}
+
 	/**
 	 * Returns a boolean depending on whether the task is severly overdue or not
-	 * @return Returns true or false depending on whether the task is serverly overdue or not
+	 * 
+	 * @return Returns true or false depending on whether the task is serverly
+	 *         overdue or not
 	 */
 	public boolean isSeverelyOverdue() {
 		return this.status.isSeverelyOverdue(this);
@@ -567,9 +635,12 @@ public class Task extends Subject {
 	protected boolean performIsSeverelyOverDue() {
 		return getOverduePercentage() > getAcceptableDeviation();
 	}
+
 	/**
 	 * Returns a boolean indicating whether this task is planned or not
-	 * @return Returns true or false depending on whether the task is planned or not
+	 * 
+	 * @return Returns true or false depending on whether the task is planned or
+	 *         not
 	 */
 	public boolean isPlanned() {
 		return status.isPlanned(this);
@@ -634,8 +705,10 @@ public class Task extends Subject {
 			}
 		}
 		if (clock.getSystemTime().isBefore(reservationStart)) {
-			TimeSpan ts = new TimeSpan(clock.getSystemTime(), clock.addMinutes(
-					clock.getSystemTime(), estimatedDuration));
+			TimeSpan ts = new TimeSpan(clock.getFirstPossibleStartTime(clock
+					.getSystemTime()), clock.addMinutes(
+					clock.getFirstPossibleStartTime(clock.getSystemTime()),
+					estimatedDuration));
 			for (Developer d : requiredDevelopers) {
 				d.addReservation(this, ts);
 			}
