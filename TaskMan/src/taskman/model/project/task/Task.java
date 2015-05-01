@@ -383,6 +383,15 @@ public class Task extends Subject {
 	public boolean isAvailable() {
 		return this.status.isAvailable();
 	}
+	
+	/**
+	 * Check if this task is executing
+	 * 
+	 * @return True if the task has status executing
+	 */
+	public boolean isExecuting() {
+		return this.status.isExecuting();
+	}
 
 	/**
 	 * Check if this task is failed
@@ -523,12 +532,11 @@ public class Task extends Subject {
 
 		int time = this.timeSpan.calculatePerformedTime();
 
-		// TODO: is dit nodig?
-		if (this.alternative != null)
-			try {
-				time = time + this.alternative.getTotalExecutionTime();
-			} catch (IllegalStateException e) {
-			}
+		// if (this.alternative != null)
+		// try {
+		// time = time + this.alternative.getTotalExecutionTime();
+		// } catch (IllegalStateException e) {
+		// }
 		return time;
 	}
 

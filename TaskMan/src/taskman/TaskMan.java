@@ -27,6 +27,4 @@ public class TaskMan {
 
 	}
 
-	// TODO getters for handlers and service
-
 }

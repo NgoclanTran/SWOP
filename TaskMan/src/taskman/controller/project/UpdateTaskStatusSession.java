@@ -9,14 +9,20 @@ import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
+import taskman.model.UserHandler;
 import taskman.model.project.Project;
+import taskman.model.project.task.Reservation;
 import taskman.model.project.task.Task;
+import taskman.model.user.Developer;
 import taskman.view.IView;
 
 public class UpdateTaskStatusSession extends Session {
 
+	private UserHandler uh;
+
 	/**
-	 * Creates the update task session using the given UI and ProjectHandler.
+	 * Creates the update task session using the given UI, ProjectHandler and
+	 * ResourceHandler.
 	 * 
 	 * @param cli
 	 *            The command line interface.
@@ -24,11 +30,30 @@ public class UpdateTaskStatusSession extends Session {
 	 *            The project handler.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             Both the given view and the project handler need to be valid.
+	 *             The given view, project handler and user handler need to be
+	 *             valid.
 	 */
-	public UpdateTaskStatusSession(IView cli, ProjectHandler ph)
+	public UpdateTaskStatusSession(IView cli, ProjectHandler ph, UserHandler uh)
 			throws IllegalArgumentException {
 		super(cli, ph);
+		if (!isValidUserHandler(uh))
+			throw new IllegalArgumentException(
+					"The plan task controller needs a UserHandler");
+		this.uh = uh;
+	}
+
+	/**
+	 * Checks if the given user handler is valid.
+	 * 
+	 * @param uh
+	 * 
+	 * @return Returns true if the user handler is different from null.
+	 */
+	private boolean isValidUserHandler(UserHandler uh) {
+		if (uh != null)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -36,7 +61,9 @@ public class UpdateTaskStatusSession extends Session {
 	 */
 	@Override
 	public void run() {
-		showProjectsAndAvailableTasks();
+		Developer developer = getUI().getUpdateTaskForm().getDeveloper(
+				uh.getDevelopers());
+		showProjectsAndAvailableTasks(developer);
 	}
 
 	/**
@@ -44,9 +71,10 @@ public class UpdateTaskStatusSession extends Session {
 	 * available tasks per project. Also it will ask to make a choice from the
 	 * projects to select a task to update.
 	 */
-	private void showProjectsAndAvailableTasks() {
+	private void showProjectsAndAvailableTasks(Developer developer) {
 		List<Project> projects = getPH().getProjects();
-		List<List<Task>> availableTasksList = getAvailableTasksAllProjects(projects);
+		List<List<Task>> availableTasksList = getAvailableTasksAllProjects(
+				developer, projects);
 
 		if (availableTasksList.size() == 0) {
 			getUI().displayError("No available tasks.");
@@ -61,7 +89,7 @@ public class UpdateTaskStatusSession extends Session {
 			return;
 		}
 
-		showAvailableTasks(project);
+		showAvailableTasks(developer, project);
 	}
 
 	/**
@@ -73,14 +101,15 @@ public class UpdateTaskStatusSession extends Session {
 	 * 
 	 * @return Returns a list of a list of all available tasks.
 	 */
-	private List<List<Task>> getAvailableTasksAllProjects(List<Project> projects) {
+	private List<List<Task>> getAvailableTasksAllProjects(Developer developer,
+			List<Project> projects) {
 		List<List<Task>> availableTasksList = new ArrayList<>();
 		List<Task> availableTasks = null;
 
 		boolean noAvailableTasks = true;
 
-		for (Project p : projects) {
-			availableTasks = getAvailableTasksProject(p);
+		for (Project project : projects) {
+			availableTasks = getAvailableTasksProject(developer, project);
 			availableTasksList.add(availableTasks);
 
 			if (noAvailableTasks && availableTasks.size() > 0)
@@ -94,17 +123,22 @@ public class UpdateTaskStatusSession extends Session {
 	}
 
 	/**
-	 * This method returns a list of all available tasks within a given project.
+	 * This method returns a list of all available tasks for a specific
+	 * developer within a given project.
 	 * 
+	 * @param developer
 	 * @param project
 	 * 
-	 * @return Returns a list of all available tasks within a given project.
+	 * @return Returns a list of all available tasks for a specific developer
+	 *         within a given project.
 	 */
-	private List<Task> getAvailableTasksProject(Project project) {
+	private List<Task> getAvailableTasksProject(Developer developer,
+			Project project) {
 		List<Task> availableTasks = new ArrayList<Task>();
 		List<Task> tasks = project.getTasks();
 		for (Task t : tasks) {
-			if (t.isAvailable())
+			if ((t.isAvailable() || t.isExecuting())
+					&& t.getRequiredDevelopers().contains(developer))
 				availableTasks.add(t);
 		}
 		return availableTasks;
@@ -117,8 +151,8 @@ public class UpdateTaskStatusSession extends Session {
 	 * 
 	 * @param project
 	 */
-	private void showAvailableTasks(Project project) {
-		List<Task> tasks = getAvailableTasksProject(project);
+	private void showAvailableTasks(Developer developer, Project project) {
+		List<Task> tasks = getAvailableTasksProject(developer, project);
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
@@ -135,7 +169,7 @@ public class UpdateTaskStatusSession extends Session {
 	}
 
 	/**
-	 * This method loops over the update form of a task until the user neters
+	 * This method loops over the update form of a task until the user enters
 	 * all details correctly or decides to cancel the update process.
 	 * 
 	 * @param task
@@ -143,9 +177,15 @@ public class UpdateTaskStatusSession extends Session {
 	private void updateTask(Task task) {
 		while (true) {
 			try {
-				boolean isFailed = getFailed();
-				DateTime startTime = getStartTime();
-				DateTime endTime = getEndTime();
+				if (task.isAvailable()) {
+					task.executeTask();
+					getUI().displayInfo("The selected task is now executing.");
+					break;
+				}
+				
+				boolean isFailed = getUI().getUpdateTaskForm().getUpdateTaskFailed();
+				DateTime startTime = getStartTime(task);
+				DateTime endTime = getUI().getUpdateTaskForm().getUpdateTaskStopTime(startTime);
 
 				if (isValidUpdateTask(task, isFailed, startTime, endTime))
 					break;
@@ -157,17 +197,6 @@ public class UpdateTaskStatusSession extends Session {
 	}
 
 	/**
-	 * This method asks the user to enter whether or not the specified task has
-	 * failed and returns it as a boolean.
-	 * 
-	 * @return Returns true if the user enters 'yes' and false if the user
-	 *         enters 'no'.
-	 */
-	private boolean getFailed() {
-		return getUI().getUpdateTaskForm().getUpdateTaskFailed();
-	}
-
-	/**
 	 * This method asks the user to enter the start time of the specified task
 	 * and returns it. It will loop over the question until the date is
 	 * correctly given or the user decides to cancel.
@@ -175,19 +204,17 @@ public class UpdateTaskStatusSession extends Session {
 	 * @return Returns the start time of the specified task that is to be
 	 *         entered.
 	 */
-	private DateTime getStartTime() {
-		return getUI().getUpdateTaskForm().getUpdateTaskStartTime();
-	}
-
-	/**
-	 * This method asks the user to enter the end time of the specified task and
-	 * returns it. It will loop over the question until the date is correctly
-	 * given or the user decides to cancel.
-	 * 
-	 * @return Returns the end time of the specified task that is to be entered.
-	 */
-	private DateTime getEndTime() {
-		return getUI().getUpdateTaskForm().getUpdateTaskStopTime();
+	private DateTime getStartTime(Task task) {
+		DateTime startTime = null;
+		for (Developer developer : task.getRequiredDevelopers()) {
+			for (Reservation reservation : developer.getReservations()) {
+				if (reservation.getTask().equals(this)
+						&& (startTime == null || reservation.getTimeSpan()
+								.getStartTime().isBefore(startTime)))
+					startTime = reservation.getTimeSpan().getStartTime();
+			}
+		}
+		return startTime;
 	}
 
 	/**
