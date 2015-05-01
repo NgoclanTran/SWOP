@@ -226,7 +226,14 @@ public class Project implements Observer {
 		else
 			return -calculateTotalDelayInMinutes(lastEndTime, dueTime);
 	}
-
+	/**
+	 * Will calculate the total delay of the project in minutes
+	 * @param expected
+	 * 			The date time in which the project will be expected to finish
+	 * @param real
+	 * 			The date time in which the project actually finished
+	 * @return Returns the total delay in minutes for this project
+	 */
 	private int calculateTotalDelayInMinutes(DateTime expected, DateTime real) {
 		int minutes = 0;
 		expected = clock.getFirstPossibleStartTime(expected);
@@ -246,11 +253,19 @@ public class Project implements Observer {
 	}
 
 	@Override
+	/**
+	 * Will update the project state
+	 * @post the project state will be updated
+	 */
 	public void update() {
 		updateProjectState();
 	}
 
 	@Override
+	/**
+	 * Returns the name and if the project is finished or ongoing in a String
+	 * @return The name and whether the project is finished or ongoing
+	 */
 	public String toString() {
 		return name + ": " + (isFinished() ? "FINISHED" : "ONGOING");
 	}

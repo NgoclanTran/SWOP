@@ -23,7 +23,7 @@ class Available implements Status {
 	@Override
 	public void updateTaskAvailability(Task task) throws IllegalStateException {
 		if (task == null)
-			throw new IllegalStateException("Task cannot be null");
+			throw new IllegalStateException("Task cannot be null.");
 
 		if (task.dependenciesAreFinished() && task.isPlanned()) {
 			for (Reservation reservation : task.getReservations()) {
@@ -39,22 +39,7 @@ class Available implements Status {
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) {
-		if (task == null)
-			throw new NullPointerException("The task is null.");
-		if (startTime == null)
-			throw new NullPointerException("The startTime is null.");
-		if (endTime == null)
-			throw new NullPointerException("The endTime is null.");
-		if (startTime.compareTo(endTime) > 0)
-			throw new IllegalDateException(
-					"The startTime must start before endTime.");
-		if (failed) {
-			throw new IllegalArgumentException(
-					"Task cannot fail if it isn't executing");
-		} else {
-			task.performAddTimeSpan(startTime, endTime);
-			task.performUpdateTaskAvailability(new Executing());
-		}
+		throw new IllegalStateException("Available task can not get a timespan.");
 	}
 
 	@Override
@@ -104,6 +89,11 @@ class Available implements Status {
 	@Override
 	public boolean isExecuting() {
 		return false;
+	}
+	
+	@Override
+	public void executeTask(Task task) throws IllegalStateException {
+		task.performExecuteTask(new Executing());
 	}
 
 }

@@ -90,4 +90,9 @@ class Executing implements Status {
 		return true;
 	}
 
+	@Override
+	public void executeTask(Task task) throws IllegalStateException {
+		throw new IllegalStateException("Executing task can not be executed.");
+	}
+
 }
