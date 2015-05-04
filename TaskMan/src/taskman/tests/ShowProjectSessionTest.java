@@ -1,6 +1,5 @@
 package taskman.tests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
@@ -54,13 +53,12 @@ public class ShowProjectSessionTest {
 		session1 = new ShowProjectSession(cli1, ph1);
 
 	}
-
-	@Test
-	public void useCaseTest_NoProjects() {
-		session1.run();
-		assertEquals("No projects.\r\n\r\n", log.getLog());
-	}
-
+	
+//	@Test public void useCaseTest_NoProjects(){
+//		session1.run();
+//		assertEquals("No projects.\r\n\r\n", log.getLog());
+//	}
+	
 	@Test
 	public void useCastTest_Projects() {
 		systemInMock.provideText("1\n");

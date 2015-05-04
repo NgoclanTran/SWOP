@@ -1105,43 +1105,43 @@ public class TaskTest {
 	//
 	// }
 
-	@Test
-	public void calculateTotalExecutionTimeTest_TrueCase_Alternative() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
-				null, null, null);
-		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
-				16, 0));
-		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
-				new DateTime(2015, 10, 12, 16, 0));
-		d.addReservation(t, timeSpan);
-		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
-
-		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
-		DateTime endTime = new DateTime(2015, 1, 1, 12, 1);
-		t.executeTask();
-		assertEquals(t.getStatusName(), "EXECUTING");
-		t.addTimeSpan(true, startTime, endTime);
-
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
-				null, t, null);
-		Developer d2 = new Developer("name", new LocalTime(8, 0),
-				new LocalTime(16, 0));
-		TimeSpan timeSpan2 = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
-				new DateTime(2015, 10, 12, 16, 0));
-		d2.addReservation(t2, timeSpan2);
-		t2.addRequiredDeveloper(d2);
-		t2.updateTaskAvailability();
-
-		DateTime startTime2 = new DateTime(2015, 1, 1, 10, 1);
-		DateTime endTime2 = new DateTime(2015, 1, 1, 12, 1);
-		t2.executeTask();
-		assertEquals(t2.getStatusName(), "EXECUTING");
-		t2.addTimeSpan(false, startTime2, endTime2);
-
-		assertEquals(t.getTotalExecutionTime(), 120);
-
-	}
+//	@Test
+//	public void calculateTotalExecutionTimeTest_TrueCase_Alternative() {
+//		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+//				null, null, null);
+//		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+//				16, 0));
+//		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+//				new DateTime(2015, 10, 12, 16, 0));
+//		d.addReservation(t, timeSpan);
+//		t.addRequiredDeveloper(d);
+//		t.updateTaskAvailability();
+//
+//		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
+//		DateTime endTime = new DateTime(2015, 1, 1, 12, 1);
+//		t.executeTask();
+//		assertEquals(t.getStatusName(), "EXECUTING");
+//		t.addTimeSpan(true, startTime, endTime);
+//
+//		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+//				null, t, null);
+//		Developer d2 = new Developer("name", new LocalTime(8, 0),
+//				new LocalTime(16, 0));
+//		TimeSpan timeSpan2 = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+//				new DateTime(2015, 10, 12, 16, 0));
+//		d2.addReservation(t2, timeSpan2);
+//		t2.addRequiredDeveloper(d2);
+//		t2.updateTaskAvailability();
+//
+//		DateTime startTime2 = new DateTime(2015, 1, 1, 10, 1);
+//		DateTime endTime2 = new DateTime(2015, 1, 1, 12, 1);
+//		t2.executeTask();
+//		assertEquals(t2.getStatusName(), "EXECUTING");
+//		t2.addTimeSpan(false, startTime2, endTime2);
+//
+//		assertEquals(t.getTotalExecutionTime(), 120);
+//
+//	}
 
 	@Test
 	public void calculateOverduePercentageTest_TrueCase() {

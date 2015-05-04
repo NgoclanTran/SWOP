@@ -53,7 +53,7 @@ interface Status {
 	/**
 	 * Returns whether the status is executing or not
 	 * 
-	 * @return
+	 * @return boolean depending on whether the status is executing or not
 	 */
 	public boolean isExecuting();
 

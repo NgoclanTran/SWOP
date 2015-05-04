@@ -68,15 +68,15 @@ public class MainSessionTest {
 	}
 
 	@Test
-	public void runTest_showProjects() {
-		systemInMock.provideText("1\n7\n");
+	public void runTest_showProjects(){
+		systemInMock.provideText("1\n8\n");
 		session.run();
 		assertTrue(log.getLog().contains("No projects."));
 	}
 
 	@Test
-	public void runTest_createProject() {
-		systemInMock.provideText("2\ncancel\n7\n");
+	public void runTest_createProject(){
+		systemInMock.provideText("2\ncancel\n8\n");
 		session.run();
 		assertTrue(log.getLog().contains(
 				"Enter the name of the project (or cancel):"));
@@ -85,36 +85,36 @@ public class MainSessionTest {
 	@Test
 	public void runTest_createTask() {
 		ph.addProject("name", "", new DateTime(), new DateTime());
-		systemInMock.provideText("3\ncancel\n7\n");
+		systemInMock.provideText("3\ncancel\n8\n");
 		session.run();
 		assertTrue(log.getLog().contains("1. name: ONGOING"));
 	}
 
+	// @Test
+	// public void runTest_updateTask(){
+	// systemInMock.provideText("4\ncancel\n8\n");
+	// session.run();
+	// assertTrue(log.getLog().contains("No available tasks"));
+	// }
+	
 	@Test
-	public void runTest_updateTask() {
-		systemInMock.provideText("4\ncancel\n7\n");
-		session.run();
-		assertTrue(log.getLog().contains("No available tasks"));
-	}
-
-	@Test
-	public void runTest_planTask() {
-		systemInMock.provideText("5\ncancel\n7\n");
+	public void runTest_planTask(){
+		systemInMock.provideText("6\ncancel\n8\n");
 		session.run();
 		assertTrue(log.getLog().contains("No unplanned tasks"));
 	}
 
 	@Test
-	public void runTest_simulateSession() {
-		systemInMock.provideText("6\n4\n7\n");
+	public void runTest_simulateSession(){
+		systemInMock.provideText("7\n4\n8\n");
 		session.run();
 		assertTrue(log.getLog().contains("State saved."));
 		assertTrue(log.getLog().contains("State reset"));
 	}
 
 	@Test
-	public void runTest_DisplayWelcome() {
-		systemInMock.provideText("7\n");
+	public void runTest_DisplayWelcome(){
+		systemInMock.provideText("8\n");
 		session.run();
 		assertTrue(log.getLog().contains("TaskMan V2.0"));
 	}

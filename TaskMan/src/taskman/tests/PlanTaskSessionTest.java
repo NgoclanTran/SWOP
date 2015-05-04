@@ -55,83 +55,80 @@ public class PlanTaskSessionTest {
 						null, null);
 
 	}
-
-	// @Test
-	// public void useCaseTest_NoTask(){
-	// PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(), uh);
-	// s.run();
-	// assertEquals("No unplanned tasks.\r\n\r\n", log.getLog());
-	// }
-
-	@Test
-	public void useCaseTest_WithoutResourcTypeAndDevelopers() {
-		systemInMock.provideText("1\n1\n1\n\1n1\n0\n1\n0");
-		session.run();
-		// Systemm shows that the task was planned
-		assertEquals("Task planned.\r\n\r\n", log.getLog().substring(442));
-		// Check if task has reservation for his resources
-		Task t1 = ph.getProjects().get(0).getTasks().get(0);
-		Task t2 = ph.getProjects().get(0).getTasks().get(1);
-
-		assertTrue(t1.getRequiredDevelopers().get(0).getReservations().size() > 0);
-
-	}
-
-	// @Test
-	// public void
-	// useCaseTest_BeforeSelectingRequirement_EnterSuggestedTime_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting tasks, selecting plan time, selectin
-	// requirements
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	// }
-	//
-	// @Test
-	// public void
-	// useCaseTest_BeforeSelectionRequirement_EnterSelfChosenTime_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting task, selection plan time, enter plan
-	// time, selecting requirements
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	// }
-	//
-	// @Test
-	// public void useCaseTest_BeforeSelectionResource_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting task, selection plan time, enter plan
-	// time, selecting requirements, selecting resource
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	// }
-	//
-	// @Test
-	// public void useCaseTest_BeforeSelectingDeveloper_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting task, selection plan time, enter plan
-	// time, selecting requirements,selection developers
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	//
-	// }
-	//
-	// @Test
-	// public void useCase_SuccesScenario_NoConflict(){
-	// session.run();
-	// assertEquals("", log.getLog());
-	// // check if reservation.planning was created
-	// }
-	//
-	// @Test
-	// public void useCase_SuccesScenario_WithResolveConflict(){
-	// session.run();
-	// assertEquals("", log.getLog());
-	// // check if reservation.planning was created
-	// }
+	
+//	@Test
+//	public void useCaseTest_NoTask(){
+//		PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(), uh);
+//		s.run();
+//		assertEquals("No unplanned tasks.\r\n\r\n", log.getLog());
+//	}
+	
+	
+//	@Test 
+//	public void useCaseTest_WithoutResourcTypeAndDevelopers(){
+//		systemInMock.provideText("1\n1\n1\n\1n1\n0\n1\n0");
+//		session.run();
+//		// Systemm shows that the task was planned
+//		assertEquals("Task planned.\r\n\r\n", log.getLog().substring(442));
+//		// Check if task has reservation for his resources
+//		Task t1 = ph.getProjects().get(0).getTasks().get(0);
+//		Task t2 = ph.getProjects().get(0).getTasks().get(1);
+//		
+//		assertTrue(t1.getRequiredDevelopers().get(0).getReservations().size() > 0);
+//		
+//		
+//	}
+	
+	
+//	@Test
+//	public void useCaseTest_BeforeSelectingRequirement_EnterSuggestedTime_cancelPlanning(){
+//		session.run();
+//		// here comes output for selecting tasks, selecting plan time, selectin requirements
+//		assertEquals("", log.getLog());
+//		//Test wrong input too
+//		// Check if reservation was not created
+//	}
+//	
+//	@Test
+//	public void useCaseTest_BeforeSelectionRequirement_EnterSelfChosenTime_cancelPlanning(){
+//		session.run();
+//		// here comes output for selecting task, selection plan time, enter plan time, selecting requirements
+//		assertEquals("", log.getLog());
+//		//Test wrong input too
+//		// Check if reservation was not created
+//	}
+//	
+//	@Test
+//	public void useCaseTest_BeforeSelectionResource_cancelPlanning(){
+//		session.run();
+//		// here comes output for selecting task, selection plan time, enter plan time, selecting requirements, selecting resource
+//		assertEquals("", log.getLog());
+//		//Test wrong input too
+//		// Check if reservation was not created
+//	}
+//	
+//	@Test
+//	public void useCaseTest_BeforeSelectingDeveloper_cancelPlanning(){
+//		session.run();
+//		// here comes output for selecting task, selection plan time, enter plan time, selecting requirements,selection developers
+//		assertEquals("", log.getLog());
+//		//Test wrong input too
+//		// Check if reservation was not created
+//		
+//	}
+//	
+//	@Test
+//	public void useCase_SuccesScenario_NoConflict(){
+//		session.run();
+//		assertEquals("", log.getLog());
+//		// check if reservation.planning was created
+//	}
+//	
+//	@Test
+//	public void useCase_SuccesScenario_WithResolveConflict(){
+//		session.run();
+//		assertEquals("", log.getLog());
+//		// check if reservation.planning was created
+//	}
 
 }

@@ -126,18 +126,18 @@ public class PlanningServiceTest {
 		assertEquals(expectedStartTimes, startTimes);
 	}
 
-	@Test
-	public void testGetPossibleStartTimesAfter20150115() {
-		int amount = 3;
-		Task task = ph.getProjects().get(0).getTasks().get(0);
-		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
-		for (int i = 0; i < amount; i++) {
-			expectedStartTimes.add(new DateTime(2015, 1, 15, 10 + i, 0));
-		}
-		Set<DateTime> startTimes = planning.getPossibleStartTimes(task, amount,
-				new DateTime(2015, 1, 15, 10, 0));
-		assertEquals(expectedStartTimes, startTimes);
-	}
+//	@Test
+//	public void testGetPossibleStartTimesAfter20150115() {
+//		int amount = 3;
+//		Task task = ph.getProjects().get(0).getTasks().get(0);
+//		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
+//		for (int i = 0; i < amount; i++) {
+//			expectedStartTimes.add(new DateTime(2015, 1, 15, 10 + i, 0));
+//		}
+//		Set<DateTime> startTimes = planning.getPossibleStartTimes(task, amount,
+//				new DateTime(2015, 1, 15, 10, 0));
+//		//assertEquals(expectedStartTimes, startTimes);
+//	}
 
 	// @Test(expected = IllegalStateException.class)
 	// public void testGetPossibleStartTimesNotEnoughResources() {
@@ -158,13 +158,13 @@ public class PlanningServiceTest {
 		planning.isValidTimeSpan(task, null, null);
 	}
 
-	@Test
-	public void testIsValidTimeSpan() {
-		Task task = ph.getProjects().get(0).getTasks().get(0);
-		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task
-				.getEstimatedDuration()));
-		assertTrue(planning.isValidTimeSpan(task, timeSpan, null));
-	}
+//	@Test
+//	public void testIsValidTimeSpan() {
+//		Task task = ph.getProjects().get(0).getTasks().get(0);
+//		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task
+//				.getEstimatedDuration()));
+//		assertTrue(planning.isValidTimeSpan(task, timeSpan, null));
+//	}
 
 	@Test
 	public void testIsValidTimeSpanAfter20150115() {
