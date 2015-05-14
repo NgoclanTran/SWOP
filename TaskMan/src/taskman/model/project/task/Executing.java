@@ -35,7 +35,8 @@ class Executing implements Status {
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) throws IllegalStateException {
+	public void updateTaskAvailability(Task task, DateTime currentTime)
+			throws IllegalStateException {
 		throw new IllegalStateException("This task is already executing");
 	}
 
@@ -98,7 +99,7 @@ class Executing implements Status {
 
 	@Override
 	public TimeSpan getTimeSpan(Task task) {
-		throw new IllegalStateException("Executing Task doesn't have timeSpan.");	
+		throw new IllegalStateException("Executing Task doesn't have timeSpan.");
 	}
 
 }

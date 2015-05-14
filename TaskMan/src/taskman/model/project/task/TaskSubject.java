@@ -3,9 +3,9 @@ package taskman.model.project.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import taskman.model.project.Observer;
+import taskman.model.Observer;
 
-public class Subject {
+public class TaskSubject {
 
 	/**
 	 * Adds the given observer to the list of observers.

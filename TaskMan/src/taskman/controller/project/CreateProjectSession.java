@@ -7,12 +7,11 @@ import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.ProjectHandler;
 import taskman.model.time.Clock;
-import taskman.model.time.IClock;
 import taskman.view.IView;
 
 public class CreateProjectSession extends Session {
-	
-	IClock clock = Clock.getInstance();
+
+	private Clock clock;
 
 	/**
 	 * Creates the create project session using the given UI and ProjectHandler.
@@ -21,12 +20,35 @@ public class CreateProjectSession extends Session {
 	 *            The command line interface.
 	 * @param ph
 	 *            The project handler.
+	 * @param clock
+	 *            The system clock.
 	 * 
 	 * @throws IllegalArgumentException
 	 *             Both the given view and the project handler need to be valid.
+	 * @throws IllegalArgumentException
+	 *             The clock needs to be valid.
 	 */
-	public CreateProjectSession(IView cli, ProjectHandler ph) {
+	public CreateProjectSession(IView cli, ProjectHandler ph, Clock clock)
+			throws IllegalArgumentException {
 		super(cli, ph);
+		if (!isValidClock(clock))
+			throw new IllegalArgumentException(
+					"The create project controller needs a clock");
+		this.clock = clock;
+	}
+
+	/**
+	 * Checks if the given clock is valid.
+	 * 
+	 * @param clock
+	 * 
+	 * @return Returns true if the clock is different from null.
+	 */
+	private boolean isValidClock(Clock clock) {
+		if (clock != null)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -45,9 +67,11 @@ public class CreateProjectSession extends Session {
 		while (true) {
 			try {
 				String name = getUI().getNewProjectForm().getNewProjectName();
-				String description = getUI().getNewProjectForm().getNewProjectDescription();
+				String description = getUI().getNewProjectForm()
+						.getNewProjectDescription();
 				DateTime creationTime = clock.getSystemTime();
-				DateTime dueTime = getUI().getNewProjectForm().getNewProjectDueTime();
+				DateTime dueTime = getUI().getNewProjectForm()
+						.getNewProjectDueTime();
 
 				if (isValidProject(name, description, creationTime, dueTime))
 					break;

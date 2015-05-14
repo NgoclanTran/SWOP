@@ -10,19 +10,20 @@ import org.joda.time.DateTime;
 import taskman.model.project.task.Task;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
-import taskman.model.time.IClock;
+import taskman.model.time.TimeService;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 
 public class PlanningService {
-
-	IClock clock = Clock.getInstance();
+	
+	Clock clock;
+	TimeService timeService = new TimeService();
 
 	/**
-	 * De constructor van de service.
+	 * The constructor of the planning service.
 	 */
-	public PlanningService() {
-
+	public PlanningService(Clock clock) {
+		this.clock = clock;
 	}
 
 	/**
@@ -49,18 +50,18 @@ public class PlanningService {
 		if (earliestPossibleStartTime == null
 				|| earliestPossibleStartTime.isBefore(clock.getSystemTime()))
 			earliestPossibleStartTime = clock.getSystemTime();
-		earliestPossibleStartTime = clock
+		earliestPossibleStartTime = timeService
 				.getExactHour(earliestPossibleStartTime);
 		Set<DateTime> possibleStartTimes = new TreeSet<DateTime>();
-		DateTime startTime = clock
+		DateTime startTime = timeService
 				.getFirstPossibleStartTime(earliestPossibleStartTime);
 		while (possibleStartTimes.size() < amount) {
-			TimeSpan timeSpan = new TimeSpan(startTime, clock.addMinutes(
+			TimeSpan timeSpan = new TimeSpan(startTime, timeService.addMinutes(
 					startTime, task.getEstimatedDuration()));
 			if (isValidTimeSpan(task, timeSpan, earliestPossibleStartTime))
 				possibleStartTimes.add(startTime);
 			startTime = startTime.plusHours(1);
-			startTime = clock.addBreaks(startTime);
+			startTime = timeService.addBreaks(startTime);
 		}
 		return possibleStartTimes;
 	}

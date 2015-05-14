@@ -22,8 +22,9 @@ import taskman.view.IView;
 
 public class SimulateSession extends Session {
 
-	ResourceHandler rh;
-	UserHandler uh;
+	private ResourceHandler rh;
+	private UserHandler uh;
+	private Clock clock;
 	private Caretaker caretaker;
 	private HashMap<Integer, Integer> projectCounter = new HashMap<Integer, Integer>();
 
@@ -32,7 +33,7 @@ public class SimulateSession extends Session {
 			"End simulation and keep changes");
 
 	public SimulateSession(IView cli, ProjectHandler ph, ResourceHandler rh,
-			UserHandler uh) throws IllegalArgumentException {
+			UserHandler uh, Clock clock) throws IllegalArgumentException {
 		super(cli, ph);
 		if (!isValidResourceHandler(rh))
 			throw new IllegalArgumentException(
@@ -40,9 +41,12 @@ public class SimulateSession extends Session {
 		if (!isValidUserHandler(uh))
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
-
+		if (!isValidClock(clock))
+			throw new IllegalArgumentException(
+					"The create project controller needs a clock");
 		this.rh = rh;
 		this.uh = uh;
+		this.clock = clock;
 	}
 
 	/**
@@ -72,6 +76,20 @@ public class SimulateSession extends Session {
 		else
 			return false;
 	}
+	
+	/**
+	 * Checks if the given clock is valid.
+	 * 
+	 * @param clock
+	 * 
+	 * @return Returns true if the clock is different from null.
+	 */
+	private boolean isValidClock(Clock clock) {
+		if (clock != null)
+			return true;
+		else
+			return false;
+	}
 
 	@Override
 	public void run() {
@@ -91,7 +109,7 @@ public class SimulateSession extends Session {
 				new CreateTaskSession(getUI(), getPH(), rh).run();
 				break;
 			case 3:
-				new PlanTaskSession(getUI(), getPH(), uh).run();
+				new PlanTaskSession(getUI(), getPH(), uh, clock).run();
 				break;
 			case 4:
 				resetState();
@@ -104,7 +122,7 @@ public class SimulateSession extends Session {
 
 	private void saveCurrentState() {
 		caretaker = new Caretaker();
-		caretaker.addClockMemento(Clock.getInstance().createMemento());
+		caretaker.addClockMemento(clock.createMemento());
 		for (int i = 0; i < getPH().getProjects().size(); i++) {
 			Project project = getPH().getProjects().get(i);
 			caretaker.addProjectMemento(project.createMemento());
@@ -124,7 +142,7 @@ public class SimulateSession extends Session {
 	}
 
 	private void resetState() {
-		Clock.getInstance().setMemento(caretaker.getClockMemento());
+		clock.setMemento(caretaker.getClockMemento());
 		for (int i = 0; i < uh.getDevelopers().size(); i++) {
 			uh.getDevelopers().get(i)
 					.setMemento(caretaker.getDeveloperMemento(i));

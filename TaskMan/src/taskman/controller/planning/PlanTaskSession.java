@@ -17,7 +17,7 @@ import taskman.model.project.task.Task;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
-import taskman.model.time.IClock;
+import taskman.model.time.TimeService;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 import taskman.view.IView;
@@ -25,8 +25,9 @@ import taskman.view.IView;
 public class PlanTaskSession extends Session {
 
 	private UserHandler uh;
-	private IClock clock = Clock.getInstance();
-	private PlanningService planning = new PlanningService();
+	private Clock clock;
+	private PlanningService planning;
+	private TimeService timeService = new TimeService();
 
 	private Project project = null;
 	private Task task = null;
@@ -41,16 +42,26 @@ public class PlanTaskSession extends Session {
 	 *            The project handler.
 	 * @param uh
 	 *            The user handler.
+	 * @param clock
+	 *            The system clock.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
+	 * @throws IllegalArgumentException
+	 *             The user handler and clock need to be valid.
 	 */
-	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh)
-			throws IllegalArgumentException {
+	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
+			Clock clock) throws IllegalArgumentException {
 		super(cli, ph);
 		if (!isValidUserHandler(uh))
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
+		if (!isValidClock(clock))
+			throw new IllegalArgumentException(
+					"The plan task controller needs a clock");
 		this.uh = uh;
+		this.clock = clock;
+		this.planning = new PlanningService(clock);
 	}
 
 	/**
@@ -63,28 +74,31 @@ public class PlanTaskSession extends Session {
 	 *            The project handler.
 	 * @param uh
 	 *            The user handler.
+	 * @param clock
+	 *            The system clock.
 	 * @param project
 	 *            The project.
 	 * @param task
 	 *            The task.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
+	 * @throws IllegalArgumentException
+	 *             The user handler and clock need to be valid.
 	 */
 	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
-			Project project, Task task) throws IllegalArgumentException {
+			Clock clock, Project project, Task task)
+			throws IllegalArgumentException {
 		super(cli, ph);
 		if (!isValidUserHandler(uh))
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
-		if (!isValidProject(project))
+		if (!isValidClock(clock))
 			throw new IllegalArgumentException(
-					"The plan task controller needs a project");
-		if (!isValidTask(task))
-			throw new IllegalArgumentException(
-					"The plan task controller needs a task");
+					"The plan task controller needs a clock");
 		this.uh = uh;
-		this.project = project;
-		this.task = task;
+		this.clock = clock;
+		this.planning = new PlanningService(clock);
 	}
 
 	/**
@@ -96,6 +110,20 @@ public class PlanTaskSession extends Session {
 	 */
 	private boolean isValidUserHandler(UserHandler uh) {
 		if (uh != null)
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Checks if the given clock is valid.
+	 * 
+	 * @param clock
+	 * 
+	 * @return Returns true if the clock is different from null.
+	 */
+	private boolean isValidClock(Clock clock) {
+		if (clock != null)
 			return true;
 		else
 			return false;
@@ -135,7 +163,7 @@ public class PlanTaskSession extends Session {
 	 * task.
 	 */
 	@Override
-	public void run() {
+	public void run() throws IllegalStateException {
 		if (!isValidProject(project))
 			showProjectsAndUnplannedTasks();
 		else if (!isValidTask(task))
@@ -144,7 +172,7 @@ public class PlanTaskSession extends Session {
 			planTask();
 	}
 
-	private void showProjectsAndUnplannedTasks() {
+	private void showProjectsAndUnplannedTasks() throws IllegalStateException {
 		List<Project> projects = getPH().getProjects();
 		List<List<Task>> unplannedTasksList = getUnplannedTasksAllProjects(projects);
 
@@ -165,7 +193,7 @@ public class PlanTaskSession extends Session {
 		showUnplannedTasks();
 	}
 
-	private void showUnplannedTasks() {
+	private void showUnplannedTasks() throws IllegalStateException {
 		if (project == null)
 			throw new IllegalStateException(
 					"Plan task should have a project by now.");
@@ -190,19 +218,28 @@ public class PlanTaskSession extends Session {
 		if (task == null)
 			throw new IllegalStateException(
 					"Plan task should have a task by now.");
+		if (task.isPlanned())
+			throw new IllegalStateException(
+					"Plan task can't plan a task that is already planned.");
 		while (true) {
 			try {
 				List<Reservable> reservables = null;
 				DateTime startTime = getStartTime();
-				TimeSpan timeSpan = new TimeSpan(startTime, clock.addMinutes(
-						startTime, task.getEstimatedDuration()));
+				TimeSpan timeSpan = new TimeSpan(startTime,
+						timeService.addMinutes(startTime,
+								task.getEstimatedDuration()));
 
 				if (!isValidStartTime(timeSpan)) {
 					reservables = new ArrayList<Reservable>(
 							getSuggestedResources(timeSpan));
-					new ResolveConflictSession(getUI(), getPH(), uh, task,
-							timeSpan, reservables).run();
-					break;
+					new ResolveConflictSession(getUI(), getPH(), uh, clock,
+							task, timeSpan, reservables).run();
+					// TODO: Print some info to user to make sure he/she knows
+					// the original task is getting planned all over again.
+					if (task.isPlanned())
+						break;
+					else
+						continue;
 				}
 
 				List<Resource> resources = new ArrayList<Resource>();
@@ -211,9 +248,14 @@ public class PlanTaskSession extends Session {
 
 				if (!isValidResource(resources, timeSpan)) {
 					reservables = new ArrayList<Reservable>(resources);
-					new ResolveConflictSession(getUI(), getPH(), uh, task,
-							timeSpan, reservables).run();
-					break;
+					new ResolveConflictSession(getUI(), getPH(), uh, clock,
+							task, timeSpan, reservables).run();
+					// TODO: Print some info to user to make sure he/she knows
+					// the original task is getting planned all over again.
+					if (task.isPlanned())
+						break;
+					else
+						continue;
 				}
 
 				List<Developer> developers = new ArrayList<Developer>();
@@ -222,9 +264,14 @@ public class PlanTaskSession extends Session {
 
 				if (!isvalidDeveloper(developers, timeSpan)) {
 					reservables = new ArrayList<Reservable>(developers);
-					new ResolveConflictSession(getUI(), getPH(), uh, task,
-							timeSpan, reservables).run();
-					break;
+					new ResolveConflictSession(getUI(), getPH(), uh, clock,
+							task, timeSpan, reservables).run();
+					// TODO: Print some info to user to make sure he/she knows
+					// the original task is getting planned all over again.
+					if (task.isPlanned())
+						break;
+					else
+						continue;
 				}
 
 				if (isValidPlanning(timeSpan, resources, developers))

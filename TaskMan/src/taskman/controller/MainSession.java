@@ -13,6 +13,7 @@ import taskman.controller.project.UpdateTaskStatusSession;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
+import taskman.model.time.Clock;
 import taskman.view.IView;
 
 public class MainSession extends Session {
@@ -23,6 +24,7 @@ public class MainSession extends Session {
 
 	private ResourceHandler rh;
 	private UserHandler uh;
+	private Clock clock;
 
 	/**
 	 * Constructor of the main session. This session will start the main menu on
@@ -36,12 +38,17 @@ public class MainSession extends Session {
 	 *            The resource handler.
 	 * @param uh
 	 *            The user handler.
+	 * @param clock
+	 *            The system clock.
 	 * 
 	 * @throws IllegalArgumentException
 	 *             Both the given view and the project handler need to be valid.
+	 * @throws IllegalArgumentException
+	 *             The given resource handler, user handler and clock need to be
+	 *             valid.
 	 */
 	public MainSession(IView cli, ProjectHandler ph, ResourceHandler rh,
-			UserHandler uh) throws IllegalArgumentException {
+			UserHandler uh, Clock clock) throws IllegalArgumentException {
 		super(cli, ph);
 		if (!isValidResourceHandler(rh))
 			throw new IllegalArgumentException(
@@ -49,8 +56,12 @@ public class MainSession extends Session {
 		if (!isValidUserHandler(uh))
 			throw new IllegalArgumentException(
 					"The main controller needs a UserHandler");
+		if (!isValidClock(clock))
+			throw new IllegalArgumentException(
+					"The main controller needs a clock");
 		this.rh = rh;
 		this.uh = uh;
+		this.clock = clock;
 	}
 
 	/**
@@ -80,6 +91,20 @@ public class MainSession extends Session {
 		else
 			return false;
 	}
+	
+	/**
+	 * Checks if the given clock is valid.
+	 * 
+	 * @param clock
+	 * 
+	 * @return Returns true if the clock is different from null.
+	 */
+	private boolean isValidClock(Clock clock) {
+		if (clock != null)
+			return true;
+		else
+			return false;
+	}
 
 	/**
 	 * Runs the initial main menu asking the user what to do.
@@ -96,7 +121,7 @@ public class MainSession extends Session {
 				new ShowProjectSession(getUI(), getPH()).run();
 				break;
 			case 2:
-				new CreateProjectSession(getUI(), getPH()).run();
+				new CreateProjectSession(getUI(), getPH(), clock).run();
 				break;
 			case 3:
 				new CreateTaskSession(getUI(), getPH(), rh).run();
@@ -105,13 +130,13 @@ public class MainSession extends Session {
 				new UpdateTaskStatusSession(getUI(), getPH(), uh).run();
 				break;
 			case 5:
-				new AdvanceTimeSession(getUI(), getPH()).run();
+				new AdvanceTimeSession(getUI(), getPH(), clock).run();
 				break;
 			case 6:
-				new PlanTaskSession(getUI(), getPH(), uh).run();
+				new PlanTaskSession(getUI(), getPH(), uh, clock).run();
 				break;
 			case 7:
-				new SimulateSession(getUI(), getPH(), rh, uh).run();
+				new SimulateSession(getUI(), getPH(), rh, uh, clock).run();
 				break;
 			case 8:
 				return;

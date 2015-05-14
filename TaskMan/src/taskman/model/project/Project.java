@@ -7,15 +7,17 @@ import java.util.Map;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.Observer;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
 import taskman.model.resource.ResourceType;
-import taskman.model.time.Clock;
-import taskman.model.time.IClock;
+import taskman.model.time.TimeService;
 
 public class Project implements Observer {
 
-	IClock clock = Clock.getInstance();
+	private final TaskFactory taskFactory;
+	private TimeService timeService = new TimeService();
 
 	/**
 	 * Creates a new project.
@@ -29,8 +31,8 @@ public class Project implements Observer {
 	 * @throws IllegalDateException
 	 */
 	public Project(String name, String description, DateTime creationTime,
-			DateTime dueTime) throws IllegalArgumentException,
-			IllegalDateException {
+			DateTime dueTime, TaskFactory taskFactory)
+			throws IllegalArgumentException, IllegalDateException {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
 		if (description == null)
@@ -39,6 +41,8 @@ public class Project implements Observer {
 			throw new IllegalArgumentException("Creation time can not be null.");
 		if (dueTime == null)
 			throw new IllegalArgumentException("Due time can not be null.");
+		if (taskFactory == null)
+			throw new IllegalArgumentException("Task factory can not be null.");
 		if (dueTime.isBefore(creationTime))
 			throw new IllegalDateException(
 					"Due time has to be after creation time.");
@@ -46,6 +50,7 @@ public class Project implements Observer {
 		this.description = description;
 		this.creationTime = creationTime;
 		this.dueTime = dueTime;
+		this.taskFactory = taskFactory;
 		this.tasks = new ArrayList<Task>();
 	}
 
@@ -123,8 +128,9 @@ public class Project implements Observer {
 
 	protected void performAddTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes) throws IllegalArgumentException {
-		Task task = new Task(description, estimatedDuration,
+			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			throws IllegalArgumentException {
+		Task task = taskFactory.makeTask(description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor,
 				resourceTypes);
 		this.tasks.add(task);
@@ -187,7 +193,8 @@ public class Project implements Observer {
 
 	// TODO Testing
 	protected DateTime performGetEstimatedFinishTime() {
-		DateTime lastEndTime = clock.getFirstPossibleStartTime(creationTime);
+		DateTime lastEndTime = timeService
+				.getFirstPossibleStartTime(creationTime);
 		int minutesToAdd = 0;
 		for (Task t : this.tasks) {
 			if (t.isCompleted()) {
@@ -198,7 +205,7 @@ public class Project implements Observer {
 				minutesToAdd += t.getEstimatedDuration();
 			}
 		}
-		return clock.addMinutes(lastEndTime, minutesToAdd);
+		return timeService.addMinutes(lastEndTime, minutesToAdd);
 	}
 
 	/**
@@ -226,22 +233,24 @@ public class Project implements Observer {
 		else
 			return -calculateTotalDelayInMinutes(lastEndTime, dueTime);
 	}
+
 	/**
 	 * Will calculate the total delay of the project in minutes
+	 * 
 	 * @param expected
-	 * 			The date time in which the project will be expected to finish
+	 *            The date time in which the project will be expected to finish
 	 * @param real
-	 * 			The date time in which the project actually finished
+	 *            The date time in which the project actually finished
 	 * @return Returns the total delay in minutes for this project
 	 */
 	private int calculateTotalDelayInMinutes(DateTime expected, DateTime real) {
 		int minutes = 0;
-		expected = clock.getFirstPossibleStartTime(expected);
-		real = clock.getFirstPossibleStartTime(real);
+		expected = timeService.getFirstPossibleStartTime(expected);
+		real = timeService.getFirstPossibleStartTime(real);
 		if (real.getHourOfDay() == 11)
 			real = real.plusHours(1);
 		while (expected.isBefore(real)) {
-			DateTime breaks = clock.addBreaks(expected);
+			DateTime breaks = timeService.addBreaks(expected);
 			if (breaks.isEqual(expected)) {
 				expected = expected.plusMinutes(1);
 				minutes += 1;

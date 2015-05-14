@@ -2,13 +2,12 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
-import taskman.model.time.Clock;
-import taskman.model.time.IClock;
+import taskman.model.time.TimeService;
 import taskman.model.time.TimeSpan;
 
 interface Status {
 
-	IClock clock = Clock.getInstance();
+	TimeService timeService = new TimeService();
 
 	/**
 	 * Returns the name of the status
@@ -64,7 +63,7 @@ interface Status {
 	 *            the task to be updated if possible
 	 * @throws IllegalStateException
 	 */
-	public void updateTaskAvailability(Task task) throws IllegalStateException;
+	public void updateTaskAvailability(Task task, DateTime currentTime) throws IllegalStateException;
 
 	/**
 	 * Will calculate the total executed time if possible

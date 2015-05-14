@@ -4,9 +4,10 @@ import org.joda.time.DateTime;
 
 import taskman.model.time.TimeSpan;
 
-class Failed implements Status{
+class Failed implements Status {
 
 	private final String name = "FAILED";
+
 	@Override
 	public String getName() {
 		return name;
@@ -15,7 +16,7 @@ class Failed implements Status{
 	@Override
 	public void addAlternative(Task task, Task alternative) {
 		task.performAddAlternative(alternative);
-		
+
 	}
 
 	@Override
@@ -34,16 +35,17 @@ class Failed implements Status{
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) throws IllegalStateException{
+	public void updateTaskAvailability(Task task, DateTime currentTime)
+			throws IllegalStateException {
 		throw new IllegalStateException("This task is failed");
-		
+
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) throws IllegalStateException{
+			DateTime endTime) throws IllegalStateException {
 		throw new IllegalStateException("This task is failed");
-		
+
 	}
 
 	@Override
@@ -75,10 +77,10 @@ class Failed implements Status{
 	public boolean isExecuting() {
 		return false;
 	}
-	
+
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
-		throw new IllegalStateException("Failed task can not be executed");		
+		throw new IllegalStateException("Failed task can not be executed");
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package taskman.model.project;
+package taskman.model;
 
 public interface Observer {
 	

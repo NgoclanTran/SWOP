@@ -9,22 +9,26 @@ import java.util.Map.Entry;
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
+import taskman.model.Observer;
 import taskman.model.memento.TaskMemento;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
-import taskman.model.time.IClock;
+import taskman.model.time.TimeService;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 
-public class Task extends Subject {
+public class Task extends TaskSubject implements Observer {
 
-	IClock clock = Clock.getInstance();
+	private Clock clock;
+	private TimeService timeService = new TimeService();
 
 	/**
 	 * The first constructor of task. This will create a task with the given
 	 * parameters
 	 * 
+	 * @param clock
+	 *            The system clock.
 	 * @param description
 	 *            The description of the task
 	 * @param estimatedDuration
@@ -33,12 +37,18 @@ public class Task extends Subject {
 	 *            The acceptable deviation of the task
 	 * @param dependencies
 	 *            The list of dependencies of the task
+	 * @param alternativeFor
+	 *            The task for which this task is the alternative.
+	 * @param resourcetypes
+	 *            The resource types and their amount accordingly.
+	 * 
 	 * @post The new description is equal to the given description
 	 * @post The new estimatedDuration is equal to the given estimatedDuration
 	 * @post The new acceptableDeviation is equal to the given
 	 *       acceptableDevaition
 	 * @post The status of this task is Unavailable
 	 * @post The new dependencies is equal to the given dependencies
+	 * 
 	 * @throws IllegalArgumentException
 	 *             The description cannot be null
 	 * @throws IllegalArgumentException
@@ -46,10 +56,13 @@ public class Task extends Subject {
 	 * @throws IllegalArgumentException
 	 *             The acceptableDeviation is negative
 	 */
-	public Task(String description, int estimatedDuration,
+	public Task(Clock clock, String description, int estimatedDuration,
 			int acceptableDeviation, List<Task> dependencies,
 			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
 			throws IllegalStateException, IllegalArgumentException {
+		if (!isValidClock(clock))
+			throw new IllegalArgumentException(
+					"The create project controller needs a clock");
 		if (description == null)
 			throw new IllegalArgumentException("Description is null");
 		if (estimatedDuration <= 0)
@@ -58,7 +71,7 @@ public class Task extends Subject {
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
 					"The deviation cannot be negative.");
-
+		this.clock = clock;
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
 		this.acceptableDeviation = acceptableDeviation;
@@ -87,6 +100,20 @@ public class Task extends Subject {
 
 		}
 
+	}
+
+	/**
+	 * Checks if the given clock is valid.
+	 * 
+	 * @param clock
+	 * 
+	 * @return Returns true if the clock is different from null.
+	 */
+	private boolean isValidClock(Clock clock) {
+		if (clock != null)
+			return true;
+		else
+			return false;
 	}
 
 	private final String description;
@@ -480,7 +507,7 @@ public class Task extends Subject {
 	 * Set to status available
 	 */
 	public void updateTaskAvailability() throws IllegalStateException {
-		this.status.updateTaskAvailability(this);
+		this.status.updateTaskAvailability(this, clock.getSystemTime());
 	}
 
 	protected void performUpdateTaskAvailability(Status status) {
@@ -501,14 +528,14 @@ public class Task extends Subject {
 	 */
 	protected boolean developersAndResourceTypesAvailable(DateTime time) {
 		for (Developer developer : getRequiredDevelopers()) {
-			if (!developer.isAvailableAt(new TimeSpan(time, clock.addMinutes(
-					time, getEstimatedDuration()))))
+			if (!developer.isAvailableAt(new TimeSpan(time, timeService
+					.addMinutes(time, getEstimatedDuration()))))
 				return false;
 		}
 		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
 				.entrySet()) {
 			for (Resource resource : entry.getKey().getResources()) {
-				if (!resource.isAvailableAt(new TimeSpan(time, clock
+				if (!resource.isAvailableAt(new TimeSpan(time, timeService
 						.addMinutes(time, getEstimatedDuration()))))
 					return false;
 			}
@@ -518,10 +545,10 @@ public class Task extends Subject {
 
 	/**
 	 * Returns a boolean indicating whether the dependencies for this task are
-	 * fullfilled or not
+	 * fulfilled or not
 	 * 
 	 * @return Returns true or false depending on whether the dependencies are
-	 *         fullfilled or not
+	 *         fulfilled or not
 	 */
 	protected boolean dependenciesAreFinished() {
 		for (Task task : this.dependencies) {
@@ -705,10 +732,12 @@ public class Task extends Subject {
 			}
 		}
 		if (clock.getSystemTime().isBefore(reservationStart)) {
-			TimeSpan ts = new TimeSpan(clock.getFirstPossibleStartTime(clock
-					.getSystemTime()), clock.addMinutes(
-					clock.getFirstPossibleStartTime(clock.getSystemTime()),
-					estimatedDuration));
+			TimeSpan ts = new TimeSpan(
+					timeService
+							.getFirstPossibleStartTime(clock.getSystemTime()),
+					timeService.addMinutes(timeService
+							.getFirstPossibleStartTime(clock.getSystemTime()),
+							estimatedDuration));
 			for (Developer d : requiredDevelopers) {
 				d.addReservation(this, ts);
 			}
@@ -723,5 +752,10 @@ public class Task extends Subject {
 			}
 		}
 		this.status = status;
+	}
+
+	@Override
+	public void update() {
+		updateTaskAvailability();		
 	}
 }

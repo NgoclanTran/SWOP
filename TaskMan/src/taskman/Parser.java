@@ -29,26 +29,31 @@ import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 import taskman.model.time.DailyAvailability;
+import taskman.model.time.TimeService;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 
 public class Parser {
 
-	static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private TimeService timeService = new TimeService();
 
 	private ProjectHandler projectHandler;
 	private ResourceHandler resourceHandler;
 	private UserHandler userHandler;
+	private Clock systemClock;
 
 	private List<DailyAvailability> dailyAvailability = new ArrayList<DailyAvailability>();
 	private List<Planning> planning = new ArrayList<Planning>();
 	private Map<Integer, DailyAvailability> rtda = new HashMap<Integer, DailyAvailability>();
 	private int resourceTypeNumber = 0;
 
-	public Parser(ProjectHandler ph, ResourceHandler rh, UserHandler uh) {
+	public Parser(ProjectHandler ph, ResourceHandler rh, UserHandler uh,
+			Clock clock) {
 		projectHandler = ph;
 		resourceHandler = rh;
 		userHandler = uh;
+		systemClock = clock;
 	}
 
 	public void parse() {
@@ -76,7 +81,6 @@ public class Parser {
 				if (line.startsWith("dailyAvailability")) {
 					declaring++;
 				} else if (line.startsWith("systemTime")) {
-					Clock systemClock = Clock.getInstance();
 					int descriptionStart = line.indexOf("\"") + 1;
 					int descriptionEnd = line.length() - 1;
 					DateTime systemTime = new DateTime(
@@ -673,9 +677,8 @@ public class Parser {
 			for (int i : planning.getDevelopers()) {
 				Developer d = userHandler.getDevelopers().get(i);
 				DateTime start = new DateTime(planning.getPlannedStartTime());
-				start = Clock.getInstance().getFirstPossibleStartTime(start);
-				DateTime end = Clock.getInstance().addMinutes(start,
-						estimatedDuration);
+				start = timeService.getFirstPossibleStartTime(start);
+				DateTime end = timeService.addMinutes(start, estimatedDuration);
 				TimeSpan timespan = new TimeSpan(start, end);
 				d.addReservation(currentTask, timespan);
 				currentTask.addRequiredDeveloper(d);
@@ -764,8 +767,8 @@ public class Parser {
 				i++;
 			}
 		}
-		DateTime startDate = Clock.getInstance().getFirstPossibleStartTime(
-				new DateTime(startTime));
+		DateTime startDate = timeService
+				.getFirstPossibleStartTime(new DateTime(startTime));
 		DateTime endDate = new DateTime(endTime);
 		int hourDifference = res.getDailyAvailability().getStartTime()
 				.getHourOfDay()

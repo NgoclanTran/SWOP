@@ -14,17 +14,17 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) {
+	public void updateTaskAvailability(Task task, DateTime currentTime) {
 		if (task == null)
 			throw new NullPointerException("The task is null.");
 
 		if (task.dependenciesAreFinished() && task.isPlanned()) {
 			for (Reservation reservation : task.getReservations()) {
 				if (reservation.getTimeSpan().isDuringTimeSpan(
-						clock.getFirstPossibleStartTime(clock.getSystemTime())))
+						timeService.getFirstPossibleStartTime(currentTime)))
 					task.performUpdateTaskAvailability(new Available());
-				else if (task.developersAndResourceTypesAvailable(clock
-						.getFirstPossibleStartTime(clock.getSystemTime())))
+				else if (task.developersAndResourceTypesAvailable(timeService
+						.getFirstPossibleStartTime(currentTime)))
 					task.performUpdateTaskAvailability(new Available());
 			}
 		}
@@ -99,7 +99,8 @@ class Unavailable implements Status {
 
 	@Override
 	public TimeSpan getTimeSpan(Task task) {
-		throw new IllegalStateException("Unavailable Task doesn't have timeSpan.");	
+		throw new IllegalStateException(
+				"Unavailable Task doesn't have timeSpan.");
 
 	}
 

@@ -4,32 +4,34 @@ import org.joda.time.DateTime;
 
 import taskman.model.time.TimeSpan;
 
-class Finished implements Status{
+class Finished implements Status {
 
 	private final String name = "FINISHED";
 
 	@Override
 	public String getName() {
-		
+
 		return name;
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) throws IllegalStateException{
+	public void addAlternative(Task task, Task alternative)
+			throws IllegalStateException {
 		throw new IllegalStateException("This task is already finished");
-		
+
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) throws IllegalStateException{
-		throw new IllegalStateException("This task is already finished");		
+	public void updateTaskAvailability(Task task, DateTime currentTime)
+			throws IllegalStateException {
+		throw new IllegalStateException("This task is already finished");
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) throws IllegalStateException{
+			DateTime endTime) throws IllegalStateException {
 		throw new IllegalStateException("This task is already finished");
-		
+
 	}
 
 	@Override
@@ -59,7 +61,8 @@ class Finished implements Status{
 
 	@Override
 	public boolean isAlternativeFinished(Task task) {
-		throw new IllegalStateException("The available task doesn't have alternative.");
+		throw new IllegalStateException(
+				"The available task doesn't have alternative.");
 	}
 
 	@Override
@@ -79,7 +82,7 @@ class Finished implements Status{
 
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
-		throw new IllegalStateException("Finished task can not be executed");		
+		throw new IllegalStateException("Finished task can not be executed");
 	}
 
 	@Override

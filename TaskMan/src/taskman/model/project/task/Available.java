@@ -21,16 +21,15 @@ class Available implements Status {
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task) throws IllegalStateException {
+	public void updateTaskAvailability(Task task, DateTime currentTime)
+			throws IllegalStateException {
 		if (task == null)
 			throw new IllegalStateException("Task cannot be null.");
 
 		if (task.dependenciesAreFinished() && task.isPlanned()) {
 			for (Reservation reservation : task.getReservations()) {
-				if (!reservation.getTimeSpan().isDuringTimeSpan(
-						clock.getSystemTime())
-						&& !task.developersAndResourceTypesAvailable(clock
-								.getSystemTime()))
+				if (!reservation.getTimeSpan().isDuringTimeSpan(currentTime)
+						&& !task.developersAndResourceTypesAvailable(currentTime))
 					task.performUpdateTaskAvailability(new Unavailable());
 			}
 		}

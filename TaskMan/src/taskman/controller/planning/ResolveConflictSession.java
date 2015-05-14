@@ -13,16 +13,18 @@ import taskman.model.project.task.Reservation;
 import taskman.model.project.task.Task;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 import taskman.view.IView;
 
 public class ResolveConflictSession extends Session {
 
-	UserHandler uh;
-	Task task = null;
-	TimeSpan timeSpan = null;
-	List<Reservable> reservables = null;
+	private UserHandler uh;
+	private Clock clock;
+	private Task task = null;
+	private TimeSpan timeSpan = null;
+	private List<Reservable> reservables = null;
 
 	/**
 	 * Creates the planning session using the given UI, ProjectHandler and
@@ -32,16 +34,32 @@ public class ResolveConflictSession extends Session {
 	 *            The command line interface.
 	 * @param ph
 	 *            The project handler.
+	 * @param uh
+	 *            The user handler.
+	 * @param clock
+	 *            The system clock.
+	 * @param task
+	 *            The task currently being planned.
+	 * @param reservables
+	 *            The reservables that are conflicting.
 	 * 
 	 * @throws IllegalArgumentException
+	 *             Both the given view and the project handler need to be valid.
+	 * @throws IllegalArgumentException
+	 *             The user handler and clock need to be valid.
 	 */
 	public ResolveConflictSession(IView cli, ProjectHandler ph, UserHandler uh,
-			Task task, TimeSpan timeSpan, List<Reservable> reservables) {
+			Clock clock, Task task, TimeSpan timeSpan,
+			List<Reservable> reservables) throws IllegalArgumentException {
 		super(cli, ph);
 		if (!isValidUserHandler(uh))
 			throw new IllegalArgumentException(
 					"The resolve conflict controller needs a UserHandler");
+		if (!isValidClock(clock))
+			throw new IllegalArgumentException(
+					"The resolve conflict controller needs a clock");
 		this.uh = uh;
+		this.clock = clock;
 		this.task = task;
 		this.timeSpan = timeSpan;
 		this.reservables = reservables;
@@ -62,6 +80,20 @@ public class ResolveConflictSession extends Session {
 	}
 
 	/**
+	 * Checks if the given clock is valid.
+	 * 
+	 * @param clock
+	 * 
+	 * @return Returns true if the clock is different from null.
+	 */
+	private boolean isValidClock(Clock clock) {
+		if (clock != null)
+			return true;
+		else
+			return false;
+	}
+
+	/**
 	 * This method ask the user which task to reschedule and start the planning
 	 * of that task all over again.
 	 * 
@@ -76,7 +108,7 @@ public class ResolveConflictSession extends Session {
 		Task taskToReschedule = getTaskToReschedule(getConflictingTasks());
 		Project project = getProject(taskToReschedule);
 		removeAllReservations(taskToReschedule);
-		new PlanTaskSession(getUI(), getPH(), uh, project, taskToReschedule)
+		new PlanTaskSession(getUI(), getPH(), uh, clock, project, taskToReschedule)
 				.run();
 	}
 
@@ -112,7 +144,7 @@ public class ResolveConflictSession extends Session {
 		return getUI().getResolveConflictForm().getTaskToRechedule(task,
 				conflictingTasks);
 	}
-	
+
 	private void removeAllReservations(Task task) {
 		for (Developer developer : task.getRequiredDevelopers()) {
 			for (Reservation reservation : developer.getReservations()) {
@@ -120,8 +152,9 @@ public class ResolveConflictSession extends Session {
 					developer.removeReservation(reservation);
 			}
 		}
-		
-		for(Entry<ResourceType, Integer> entry: task.getRequiredResourceTypes().entrySet()) {
+
+		for (Entry<ResourceType, Integer> entry : task
+				.getRequiredResourceTypes().entrySet()) {
 			for (Resource resource : entry.getKey().getResources()) {
 				for (Reservation reservation : resource.getReservations()) {
 					if (reservation.getTask().equals(task))

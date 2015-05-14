@@ -32,7 +32,7 @@ public class CreateTaskSession extends Session {
 	 *             The given view, the project handler and the resource handler
 	 *             need to be valid.
 	 */
-	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh) {
+	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh) throws IllegalArgumentException {
 		super(cli, ph);
 		if (!isValidResourceHandler(rh))
 			throw new IllegalArgumentException(

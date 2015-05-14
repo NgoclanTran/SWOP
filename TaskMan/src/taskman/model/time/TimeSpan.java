@@ -6,7 +6,7 @@ import taskman.exceptions.IllegalDateException;
 
 public class TimeSpan {
 
-	IClock clock = Clock.getInstance();
+	TimeService timeService = new TimeService();
 
 	/**
 	 * The constructor of time span
@@ -79,7 +79,7 @@ public class TimeSpan {
 		while (start.isBefore(end)) {
 			minutesSpent++;
 			start = start.plusMinutes(1);
-			start = clock.addBreaks(start);
+			start = timeService.addBreaks(start);
 		}
 
 		return minutesSpent;
