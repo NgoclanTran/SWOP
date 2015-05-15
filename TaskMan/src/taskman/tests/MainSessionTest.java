@@ -18,6 +18,8 @@ import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
+import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
 
@@ -30,6 +32,8 @@ public class MainSessionTest {
 	private String description;
 	private ArrayList<Task> dependencies;
 	private Project p;
+	private TaskFactory tf;
+	private Clock clock;
 
 	@Rule
 	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
@@ -39,32 +43,34 @@ public class MainSessionTest {
 
 	@Before
 	public void setup() {
+		clock = new Clock();
+		tf = new TaskFactory(clock);
 		cli = new View();
-		ph = new ProjectHandler();
+		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
 		uh = new UserHandler();
-		session = new MainSession(cli, ph, rh, uh);
+		session = new MainSession(cli, ph, rh, uh,clock);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void MainSession_nullRh() {
-		MainSession testSession = new MainSession(cli, ph, null, uh);
+		MainSession testSession = new MainSession(cli, ph, null, uh,clock);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void MainSession_nullPh() {
-		MainSession testSession = new MainSession(cli, null, rh, uh);
+		MainSession testSession = new MainSession(cli, null, rh, uh,clock);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void MainSession_nullUh() {
-		MainSession testSession = new MainSession(cli, ph, rh, null);
+		MainSession testSession = new MainSession(cli, ph, rh, null,clock);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void MainSession_nullCli() {
-		MainSession testSession = new MainSession(null, ph, rh, uh);
+		MainSession testSession = new MainSession(null, ph, rh, uh,clock);
 	}
 
 	@Test

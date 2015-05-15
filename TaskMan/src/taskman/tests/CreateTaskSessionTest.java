@@ -19,6 +19,8 @@ import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
+import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
 
@@ -32,6 +34,8 @@ public class CreateTaskSessionTest {
 	private int acceptableDeviation ;
 	private ArrayList<Task> dependencies;
 	private Project p;
+	private TaskFactory tf;
+	private Clock clock;
 
 	@Rule
 	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
@@ -41,9 +45,12 @@ public class CreateTaskSessionTest {
 
 	@Before
 	public void setup(){
+		
+		clock = new Clock();
+		tf = new TaskFactory(clock);
 		//cli = Mockito.mock(View.class);
 		cli = new View();
-		ph = new ProjectHandler();
+		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
 		session = new CreateTaskSession(cli, ph, rh);
 		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
