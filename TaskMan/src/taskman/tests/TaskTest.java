@@ -29,7 +29,7 @@ public class TaskTest {
 	private int acceptableDeviation;
 	private List<Task> dependencies;
 	private TimeSpan timespan;
-	private Clock clock = Clock.getInstance();
+	private Clock clock = new Clock();
 
 	@Before
 	public void setup() {
@@ -43,34 +43,34 @@ public class TaskTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void constructor1Test_FalseCase_DescriptionNull() {
-		Task t = new Task(null, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,null, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void constructor1Test_FalseCase_EstimatedDuration() {
-		Task t = new Task(description, -10, acceptableDeviation, dependencies,
+		Task t = new Task(clock,description, -10, acceptableDeviation, dependencies,
 				null, null);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void constructor1Test_FalseCase_acceptableDeviation() {
-		Task t = new Task(description, estimatedDuration, -10, dependencies,
+		Task t = new Task(clock,description, estimatedDuration, -10, dependencies,
 				null, null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void constructor2Test_FalseCase_DescriptionNull() {
-		Task t = new Task(null, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,null, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 
 	}
 
 	@Test
 	public void constructorTest_TrueCase() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -91,11 +91,11 @@ public class TaskTest {
 
 	@Test
 	public void constructorTest_WithDependencies() {
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		ArrayList<Task> l = new ArrayList<Task>();
 		l.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				l, null, null);
 		assertEquals(t2.getDescription(), description);
 		assertEquals(t2.getEstimatedDuration(), estimatedDuration);
@@ -115,7 +115,7 @@ public class TaskTest {
 		rt.addResource("2", new LocalTime(8, 0), new LocalTime(16, 0));
 		rt.addResource("3", new LocalTime(8, 0), new LocalTime(16, 0));
 		map.put(rt, 3);
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, map);
 		assertEquals(t.getDescription(), description);
 		assertEquals(t.getEstimatedDuration(), estimatedDuration);
@@ -130,7 +130,7 @@ public class TaskTest {
 
 	@Test
 	public void constructorTest_WithAlternativeFor() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -147,7 +147,7 @@ public class TaskTest {
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
 
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, t, null);
 		assertEquals(t.getAlternative(), t2);
 
@@ -155,9 +155,9 @@ public class TaskTest {
 
 	@Test
 	public void getDependenciesTest_TrueCase() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		dependencies.add(t2);
 
@@ -167,14 +167,14 @@ public class TaskTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void attachDependantTest_FalseCase_Null() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		t.attachDependant(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addTimeSpanTest_FalseCase_StartNull() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -189,7 +189,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addTimeSpanTest_FalseCase_EndNull() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -205,7 +205,7 @@ public class TaskTest {
 	@Test(expected = IllegalStateException.class)
 	public void addTimeSpanTest_StatusUNAVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
@@ -214,7 +214,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "FAILED");
 		ArrayList<Task> dep = new ArrayList<Task>();
 		dep.add(t);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dep, null, null);
 		assertEquals(t2.getStatusName(), "UNAVAILABLE");
 		assertFalse(t2.isAvailable());
@@ -224,7 +224,7 @@ public class TaskTest {
 
 	@Test
 	public void addTimeSpanTest_StatusAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -242,7 +242,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void addTimeSpanTest_StatusFAILED() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -263,7 +263,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void addTimeSpanTest_StatusFINISHED() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -284,7 +284,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addAlternativeTest_FalseCase_AlternativeNull() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -304,7 +304,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void addAlternativeTest_StatusAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -313,7 +313,7 @@ public class TaskTest {
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
 		t.updateTaskAvailability();
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		t.addAlternative(t2);
 
@@ -321,9 +321,9 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void addAlternativeTest_StatusUNAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		assertEquals(t.getStatusName(), "UNAVAILABLE");
 		t.addAlternative(t2);
@@ -332,7 +332,7 @@ public class TaskTest {
 	@Test
 	public void addAlternativeTest_StatusFAILED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -348,7 +348,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 
 		t.addAlternative(t2);
@@ -358,7 +358,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void addAlternativeTest_StatusFINISHED() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -374,7 +374,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "FINISHED");
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 
 		t.addAlternative(t2);
@@ -382,7 +382,7 @@ public class TaskTest {
 
 	@Test
 	public void isAvailableTest_StatusAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -399,7 +399,7 @@ public class TaskTest {
 	@Test
 	public void isAvailableTest_StatusUNAVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		assertEquals(t.getStatusName(), "UNAVAILABLE");
 		assertFalse(t.isAvailable());
@@ -407,7 +407,7 @@ public class TaskTest {
 
 	@Test
 	public void isAvailableTest_StatusFINISHED() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -428,7 +428,7 @@ public class TaskTest {
 
 	@Test
 	public void isAvailableTest_StatusFAILED() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -449,7 +449,7 @@ public class TaskTest {
 
 	@Test
 	public void isAvailableTest_StatusEXECUTING() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -468,7 +468,7 @@ public class TaskTest {
 
 	@Test
 	public void isFinishedTest_StatusAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -483,7 +483,7 @@ public class TaskTest {
 
 	@Test
 	public void isFinishedTest_StatusUNAVAILABLE() {
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 
 		assertFalse(t2.isFinished());
@@ -493,7 +493,7 @@ public class TaskTest {
 	@Test
 	public void isFinishedTest_StatusFINISHED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -516,7 +516,7 @@ public class TaskTest {
 	@Test
 	public void isFinishedTest_StatusFAILED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -538,7 +538,7 @@ public class TaskTest {
 	@Test
 	public void isFinishedTest_StatusEXECUTING() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -558,7 +558,7 @@ public class TaskTest {
 	@Test
 	public void isFailedTest_StatusAVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -576,7 +576,7 @@ public class TaskTest {
 	@Test
 	public void isFailedTest_StatusUNAVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		assertFalse(t.isFailed());
 		assertEquals(t.getStatusName(), "UNAVAILABLE");
@@ -585,7 +585,7 @@ public class TaskTest {
 	@Test
 	public void isFailedTest_StatusFINISHED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -608,7 +608,7 @@ public class TaskTest {
 	@Test
 	public void isFailedTest_StatusFAILED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -631,7 +631,7 @@ public class TaskTest {
 	@Test
 	public void isFailedTest_StatusEXECUTING() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -651,7 +651,7 @@ public class TaskTest {
 	@Test
 	public void isCompletedTest_StatusAVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -666,7 +666,7 @@ public class TaskTest {
 
 	@Test
 	public void isCompletedTest_StatusUNAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		assertFalse(t.isCompleted());
 	}
@@ -674,7 +674,7 @@ public class TaskTest {
 	@Test
 	public void isCompletedTest_StatusFAILED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -695,7 +695,7 @@ public class TaskTest {
 	@Test
 	public void isCompletedTest_StatusFINISHED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -716,7 +716,7 @@ public class TaskTest {
 	@Test
 	public void updateTaskAvailabilityTest_TrueCase_StatusAVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -735,7 +735,7 @@ public class TaskTest {
 	@Test(expected = IllegalStateException.class)
 	public void updateTaskAvailabilityTest_TrueCase_StatusFINISHED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -756,7 +756,7 @@ public class TaskTest {
 	@Test(expected = IllegalStateException.class)
 	public void updateTaskAvailabilityTest_FalseCase_StatusFAILED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -778,7 +778,7 @@ public class TaskTest {
 	@Test(expected = IllegalStateException.class)
 	public void updateTaskAvailabilityTest_FalseCase_StatusEXECUTING() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -798,11 +798,11 @@ public class TaskTest {
 
 	@Test
 	public void updateTaskAvailabitlityTest_DependantUpdate() {
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		ArrayList<Task> l = new ArrayList<Task>();
 		l.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				l, null, null);
 		Developer d1 = new Developer("name developer 1", new LocalTime(8, 0),
 				new LocalTime(23, 0));
@@ -827,7 +827,7 @@ public class TaskTest {
 
 	@Test
 	public void updateTaskAvailabilityTest_DeveloperAvailableTest() {
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name developer 1", new LocalTime(8, 0),
 				new LocalTime(23, 0));
@@ -851,7 +851,7 @@ public class TaskTest {
 
 		LinkedHashMap<ResourceType, Integer> l = new LinkedHashMap<ResourceType, Integer>();
 		l.put(rt, 2);
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, l);
 		rt.getResources()
 				.get(0)
@@ -870,7 +870,7 @@ public class TaskTest {
 
 	@Test
 	public void updateTaskAvailabilityTest_FAILEDTask_Update() {
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -886,7 +886,7 @@ public class TaskTest {
 				2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
 
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, t1, null);
 		Developer d2 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -901,7 +901,7 @@ public class TaskTest {
 
 		ArrayList<Task> listTasks = new ArrayList<Task>();
 		listTasks.add(t1);
-		Task t3 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t3 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				listTasks, null, null);
 		t3.updateTaskAvailability();
 
@@ -909,7 +909,7 @@ public class TaskTest {
 
 	@Test
 	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_NoAlternative() {
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -926,7 +926,7 @@ public class TaskTest {
 
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		t2.updateTaskAvailability();
 
@@ -934,7 +934,7 @@ public class TaskTest {
 
 	@Test
 	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFINISHED() {
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -949,7 +949,7 @@ public class TaskTest {
 				2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
 
-		Task t3 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t3 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, t1, null);
 		Developer d2 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -966,7 +966,7 @@ public class TaskTest {
 
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		t2.updateTaskAvailability();
 
@@ -974,7 +974,7 @@ public class TaskTest {
 
 	@Test
 	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFAILED() {
-		Task t1 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t1 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -989,7 +989,7 @@ public class TaskTest {
 				2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
 
-		Task t3 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t3 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, t1, null);
 		Developer d2 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -1006,7 +1006,7 @@ public class TaskTest {
 
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(t1);
-		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		t2.updateTaskAvailability();
 
@@ -1015,7 +1015,7 @@ public class TaskTest {
 	@Test
 	public void calculateTotalExecutionTimeTest_TrueCase() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1035,7 +1035,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void calculateTotalExecutionTimeTest_StatusUNAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		int time = t.getTotalExecutionTime();
 	}
@@ -1043,7 +1043,7 @@ public class TaskTest {
 	@Test
 	public void calculateTotalExecutionTimeTest_StatusFAILED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1064,7 +1064,7 @@ public class TaskTest {
 	@Test
 	public void calculateTotalExecutionTimeTest_StatusFINISHEED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1145,7 +1145,7 @@ public class TaskTest {
 
 	@Test
 	public void calculateOverduePercentageTest_TrueCase() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1168,7 +1168,7 @@ public class TaskTest {
 
 	@Test
 	public void isPlannedTest_TrueCase() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1183,7 +1183,7 @@ public class TaskTest {
 
 	@Test
 	public void isPlannedTest_FalseCase() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		assertFalse(t.isPlanned());
 	}
@@ -1195,7 +1195,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void isSeveralyOverDueTest_StatusAVAILABLE() {
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1209,7 +1209,7 @@ public class TaskTest {
 
 	@Test
 	public void isSeveralyOverDueTest_StatusFINISHED() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
@@ -1227,7 +1227,7 @@ public class TaskTest {
 
 	@Test
 	public void isSeveralyOverDueTest_StatusFAILED() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
@@ -1246,7 +1246,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void isSeveralyOverDueTest_StatusEXECUTING() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
@@ -1259,13 +1259,13 @@ public class TaskTest {
 
 	@Test
 	public void createMomentoTest() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		assertTrue(t.createMemento() instanceof TaskMemento);
 	}
 
 	@Test
 	public void getDevelopersTest() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		List<Developer> ld = t.getRequiredDevelopers();
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1275,13 +1275,13 @@ public class TaskTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addDeveloperTest_Null() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		t.addRequiredDeveloper(null);
 	}
 
 	@Test
 	public void addDeveloperTest_TrueCase() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		Developer developer = new Developer("1", new LocalTime(8, 0),
 				new LocalTime(16, 0));
 
@@ -1291,7 +1291,7 @@ public class TaskTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addDeveloperTest_AlreadyInTask() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		Developer developer = new Developer("1", new LocalTime(8, 0),
 				new LocalTime(16, 0));
 		t.addRequiredDeveloper(developer);
@@ -1301,20 +1301,20 @@ public class TaskTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void attachDependantTest_Null() {
-		Task t1 = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t1 = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		t1.attachDependant(null);
 	}
 
 	@Test
 	public void attachDependantTest() {
-		Task t1 = new Task(description, estimatedDuration, 0, null, null, null);
-		Task t2 = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t1 = new Task(clock,description, estimatedDuration, 0, null, null, null);
+		Task t2 = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		t1.attachDependant(t2);
 	}
 
 	@Test
 	public void gerRequiredResourceTest() {
-		Task t = new Task(description, estimatedDuration, 0, null, null, null);
+		Task t = new Task(clock,description, estimatedDuration, 0, null, null, null);
 		HashMap<ResourceType, Integer> l = (HashMap<ResourceType, Integer>) t
 				.getRequiredResourceTypes();
 		ResourceType r = new ResourceType("name", null, null, false);
@@ -1341,7 +1341,7 @@ public class TaskTest {
 
 		LinkedHashMap<ResourceType, Integer> map = new LinkedHashMap<ResourceType, Integer>();
 		map.put(r, 2);
-		new Task(description, estimatedDuration, 0, null, null, map);
+		new Task(clock,description, estimatedDuration, 0, null, null, map);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -1359,7 +1359,7 @@ public class TaskTest {
 		LinkedHashMap<ResourceType, Integer> map = new LinkedHashMap<ResourceType, Integer>();
 		map.put(r2, 1);
 		map.put(r1, 1);
-		new Task(description, estimatedDuration, 0, null, null, map);
+		new Task(clock,description, estimatedDuration, 0, null, null, map);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -1377,7 +1377,7 @@ public class TaskTest {
 		LinkedHashMap<ResourceType, Integer> map = new LinkedHashMap<ResourceType, Integer>();
 		map.put(r1, 1);
 		map.put(r2, 1);
-		new Task(description, estimatedDuration, 0, null, null, map);
+		new Task(clock,description, estimatedDuration, 0, null, null, map);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -1390,7 +1390,7 @@ public class TaskTest {
 
 		LinkedHashMap<ResourceType, Integer> map = new LinkedHashMap<ResourceType, Integer>();
 		map.put(r, 3);
-		new Task(description, estimatedDuration, 0, null, null, map);
+		new Task(clock,description, estimatedDuration, 0, null, null, map);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -1405,14 +1405,14 @@ public class TaskTest {
 
 		LinkedHashMap<ResourceType, Integer> map = new LinkedHashMap<ResourceType, Integer>();
 		map.put(t2, 1);
-		new Task(description, estimatedDuration, 0, null, null, map);
+		new Task(clock,description, estimatedDuration, 0, null, null, map);
 
 	}
 
 	@Test
 	public void setMomenToTest_Status_UNAVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		TaskMemento tm = t.createMemento();
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1435,7 +1435,7 @@ public class TaskTest {
 	@Test
 	public void setMomenToTest_Status_AVAILABLE() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1460,7 +1460,7 @@ public class TaskTest {
 	@Test
 	public void setMomenToTest_Status_FINISHED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1489,7 +1489,7 @@ public class TaskTest {
 	@Test
 	public void setMomenToTest_Status_FAILED() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1518,7 +1518,7 @@ public class TaskTest {
 	@Test
 	public void setMomenToTest_Status_EXECUTING() {
 
-		Task t = new Task(description, estimatedDuration, acceptableDeviation,
+		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(

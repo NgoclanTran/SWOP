@@ -27,7 +27,7 @@ public class ProjectTest {
 	String description = "Description";
 	DateTime creation = new DateTime(2014, 1, 1, 0, 0);
 	DateTime due = new DateTime(2014, 1, 1, 9, 0);
-	private Clock clock = Clock.getInstance();
+	private Clock clock = new Clock();
 
 	@Before
 	public void setUp() throws Exception {
@@ -142,7 +142,7 @@ public class ProjectTest {
 				dependencies, null, null);
 		assertEquals(1, project.getTasks().size());
 		List<Task> tasks = project.getTasks();
-		tasks.add(new Task(desc, estimatedDuration, acceptableDeviation,
+		tasks.add(new Task(clock,desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null));
 		assertEquals(1, project.getTasks().size());
 	}

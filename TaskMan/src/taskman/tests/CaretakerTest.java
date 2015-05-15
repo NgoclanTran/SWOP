@@ -13,10 +13,13 @@ import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.memento.TaskMemento;
 import taskman.model.project.task.Task;
+import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class CaretakerTest {
 	ClockMemento savedClockMemento;
+	private Clock clock = new Clock();
+	
 	ArrayList<ProjectMemento> savedProjectMementos = new ArrayList<ProjectMemento>();
 	ArrayList<ReservableMemento> savedDeveloperMementos = new ArrayList<ReservableMemento>();
 	ArrayList<ReservableMemento> savedResourceMementos = new ArrayList<ReservableMemento>();
@@ -25,7 +28,7 @@ public class CaretakerTest {
 
 	@Test
 	public void addProjectMementoTest() {
-		Task t = new Task("", 10, 10, null, null, null);
+		Task t = new Task(clock,"", 10, 10, null, null, null);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		ProjectMemento projectMemento = new ProjectMemento(tasks, "state");
 		c.addProjectMemento(projectMemento);
@@ -49,8 +52,8 @@ public class CaretakerTest {
 
 	@Test
 	public void addTaskMementoTest() {
-		Task t = new Task("", 10, 10, null, null, null);
-		Task t1 = new Task("", 10, 10, null, null, null);
+		Task t = new Task(clock,"", 10, 10, null, null, null);
+		Task t1 = new Task(clock,"", 10, 10, null, null, null);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		TaskMemento t2 = new TaskMemento(tasks, "name", new TimeSpan(
 				new DateTime(2015, 10, 12, 10, 0), new DateTime(2015, 10, 12,

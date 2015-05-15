@@ -17,6 +17,7 @@ import taskman.model.memento.ReservableMemento;
 import taskman.model.project.task.Reservable;
 import taskman.model.project.task.Reservation;
 import taskman.model.project.task.Task;
+import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class ReservableTest {
@@ -24,6 +25,7 @@ public class ReservableTest {
 	private LocalTime end;
 	private Task t;
 	private TimeSpan ts;
+	private Clock clock = new Clock();
 
 	@Before
 	public void setUp() throws Exception {
@@ -74,14 +76,14 @@ public class ReservableTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void addReservationTest_TimeSpan_Null() {
 		Reservable r = new Reservable(start, end);
-		Task task = new Task("d", 10, 1, null, null, null);
+		Task task = new Task(clock,"d", 10, 1, null, null, null);
 		r.addReservation(task, null);
 	}
 
 	@Test(expected = IllegalTimeException.class)
 	public void addReservationTest_TimeSpan_Invalid() {
 		Reservable r = new Reservable(start, end);
-		Task task = new Task("d", 10, 1, null, null, null);
+		Task task = new Task(clock,"d", 10, 1, null, null, null);
 		r.addReservation(task, ts);
 		r.addReservation(task, ts);
 	}
@@ -111,7 +113,7 @@ public class ReservableTest {
 	@Test
 	public void isAvailableTest_TrueCase2() {
 		Reservable r = new Reservable(start, end);
-		Task task = new Task("d", 10, 1, null, null, null);
+		Task task = new Task(clock,"d", 10, 1, null, null, null);
 		r.addReservation(task, ts);
 		assertFalse(r.isAvailableAt(ts));
 		// example with reservation
@@ -121,7 +123,7 @@ public class ReservableTest {
 	public void getReservationsTest() {
 		Reservable r = new Reservable(null, null);
 		List<Reservation> l = r.getReservations();
-		Task task = new Task("d", 10, 1, null, null, null);
+		Task task = new Task(clock,"d", 10, 1, null, null, null);
 		Reservation rv = new Reservation(task, ts);
 		l.add(rv);
 		assertNotEquals(r.getReservations(), rv);

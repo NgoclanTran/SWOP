@@ -17,6 +17,7 @@ import taskman.model.time.*;
 public class UserHandlerTest {
 
 	private UserHandler u;
+	private Clock clock = new Clock();
 	@Before
 	public void setUp() throws Exception {
 		u = new UserHandler();
@@ -60,7 +61,7 @@ public class UserHandlerTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10, 0), new DateTime(2015,10,12,11,0));
 		assertEquals(u.getAvailableDevelopers(timeSpan).size(),2);
 		
-		Task task = new Task("description", 10, 1, null, null, null);
+		Task task = new Task(clock,"description", 10, 1, null, null, null);
 		
 		Developer d = u.getDevelopers().get(0);
 		d.addReservation(task, timeSpan);
