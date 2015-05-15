@@ -14,37 +14,6 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task, DateTime currentTime) {
-		if (task == null)
-			throw new NullPointerException("The task is null.");
-
-		if (task.dependenciesAreFinished() && task.isPlanned()) {
-			for (Reservation reservation : task.getReservations()) {
-				if (reservation.getTimeSpan().isDuringTimeSpan(
-						timeService.getFirstPossibleStartTime(currentTime)))
-					task.performUpdateTaskAvailability(new Available());
-				else if (task.developersAndResourceTypesAvailable(timeService
-						.getFirstPossibleStartTime(currentTime)))
-					task.performUpdateTaskAvailability(new Available());
-			}
-		}
-	}
-
-	@Override
-	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) throws IllegalStateException {
-		throw new IllegalStateException("This task is unavailable");
-
-	}
-
-	@Override
-	public void addAlternative(Task task, Task alternative)
-			throws IllegalStateException {
-		throw new IllegalStateException("This task is unavailable");
-
-	}
-
-	@Override
 	public boolean isAvailable() {
 		return false;
 	}
@@ -60,6 +29,56 @@ class Unavailable implements Status {
 	}
 
 	@Override
+	public boolean isExecuting() {
+		return false;
+	}
+	
+	@Override
+	public boolean isPlanned() {
+		return false;
+	}
+
+	@Override
+	public void updateStatus(Task task, DateTime currentTime) {
+		if (task == null)
+			throw new NullPointerException("The task is null.");
+		
+		if (!task.getReservations().isEmpty())
+			task.performUpdateStatus(new Planned());
+	}
+
+	@Override
+	public TimeSpan getTimeSpan(Task task) {
+		throw new IllegalStateException(
+				"Unavailable Task doesn't have timeSpan.");
+	
+	}
+
+	@Override
+	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
+			DateTime endTime) throws IllegalStateException {
+		throw new IllegalStateException("This task is unavailable");
+	
+	}
+
+	@Override
+	public boolean isAlternativeFinished(Task task) {
+		throw new IllegalStateException("The task is unavailable");
+	}
+
+	@Override
+	public void addAlternative(Task task, Task alternative)
+			throws IllegalStateException {
+		throw new IllegalStateException("This task is unavailable");
+	
+	}
+
+	@Override
+	public boolean isSeverelyOverdue(Task task) {
+		throw new IllegalStateException("The task is unavailable");
+	}
+
+	@Override
 	public int calculateTotalExecutedTime(Task task)
 			throws IllegalStateException {
 		throw new IllegalStateException("The task is unavailable");
@@ -72,35 +91,8 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public boolean isAlternativeFinished(Task task) {
-		throw new IllegalStateException("The task is unavailable");
-	}
-
-	@Override
-	public boolean isSeverelyOverdue(Task task) {
-		throw new IllegalStateException("The task is unavailable");
-	}
-
-	@Override
-	public boolean isPlanned(Task task) {
-		return task.performIsPlanned();
-	}
-
-	@Override
-	public boolean isExecuting() {
-		return false;
-	}
-
-	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Unavailable task can not be executed");
-
-	}
-
-	@Override
-	public TimeSpan getTimeSpan(Task task) {
-		throw new IllegalStateException(
-				"Unavailable Task doesn't have timeSpan.");
 
 	}
 

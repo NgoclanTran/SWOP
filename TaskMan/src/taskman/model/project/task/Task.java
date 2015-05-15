@@ -95,7 +95,7 @@ public class Task extends TaskSubject implements Observer {
 		}
 
 		try {
-			updateTaskAvailability();
+			update();
 		} catch (IllegalStateException e) {
 
 		}
@@ -187,19 +187,10 @@ public class Task extends TaskSubject implements Observer {
 	private void notifyAllDependants() {
 		for (Task dependant : this.dependants) {
 			try {
-				dependant.updateTaskAvailability();
+				dependant.update();
 			} catch (IllegalStateException e) {
 			}
 		}
-	}
-
-	/**
-	 * Returns the status of the task
-	 * 
-	 * @return The status of the task
-	 */
-	public String getStatusName() {
-		return this.status.getName();
 	}
 
 	/**
@@ -456,6 +447,15 @@ public class Task extends TaskSubject implements Observer {
 	}
 
 	/**
+	 * Returns the status of the task
+	 * 
+	 * @return The status of the task
+	 */
+	public String getStatusName() {
+		return this.status.getName();
+	}
+
+	/**
 	 * Check if this task is available
 	 * 
 	 * @return True if the task has status available
@@ -503,14 +503,15 @@ public class Task extends TaskSubject implements Observer {
 			return false;
 	}
 
-	/**
-	 * Set to status available
-	 */
-	public void updateTaskAvailability() throws IllegalStateException {
-		this.status.updateTaskAvailability(this, clock.getSystemTime());
+	@Override
+	public void update() {
+		try {
+			this.status.updateStatus(this, clock.getSystemTime());
+		} catch (IllegalStateException ex) {
+		}
 	}
 
-	protected void performUpdateTaskAvailability(Status status) {
+	protected void performUpdateStatus(Status status) {
 		this.status = status;
 
 		this.notifyAllDependants(); // notify dependant task
@@ -670,14 +671,7 @@ public class Task extends TaskSubject implements Observer {
 	 *         not
 	 */
 	public boolean isPlanned() {
-		return status.isPlanned(this);
-	}
-
-	protected boolean performIsPlanned() {
-		if (getReservations().isEmpty())
-			return false;
-		else
-			return true;
+		return status.isPlanned();
 	}
 
 	/**
@@ -752,10 +746,5 @@ public class Task extends TaskSubject implements Observer {
 			}
 		}
 		this.status = status;
-	}
-
-	@Override
-	public void update() {
-		updateTaskAvailability();		
 	}
 }

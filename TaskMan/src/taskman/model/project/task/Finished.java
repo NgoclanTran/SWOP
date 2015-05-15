@@ -15,26 +15,6 @@ class Finished implements Status {
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative)
-			throws IllegalStateException {
-		throw new IllegalStateException("This task is already finished");
-
-	}
-
-	@Override
-	public void updateTaskAvailability(Task task, DateTime currentTime)
-			throws IllegalStateException {
-		throw new IllegalStateException("This task is already finished");
-	}
-
-	@Override
-	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) throws IllegalStateException {
-		throw new IllegalStateException("This task is already finished");
-
-	}
-
-	@Override
 	public boolean isAvailable() {
 		return false;
 	}
@@ -50,6 +30,52 @@ class Finished implements Status {
 	}
 
 	@Override
+	public boolean isExecuting() {
+		return false;
+	}
+	
+	@Override
+	public boolean isPlanned() {
+		return true;
+	}
+
+	@Override
+	public void updateStatus(Task task, DateTime currentTime)
+			throws IllegalStateException {
+		throw new IllegalStateException("This task is already finished");
+	}
+
+	@Override
+	public TimeSpan getTimeSpan(Task task) {
+		return task.performGetTimeSpan();
+	}
+
+	@Override
+	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
+			DateTime endTime) throws IllegalStateException {
+		throw new IllegalStateException("This task is already finished");
+	
+	}
+
+	@Override
+	public boolean isAlternativeFinished(Task task) {
+		throw new IllegalStateException(
+				"The available task doesn't have alternative.");
+	}
+
+	@Override
+	public void addAlternative(Task task, Task alternative)
+			throws IllegalStateException {
+		throw new IllegalStateException("This task is already finished");
+	
+	}
+
+	@Override
+	public boolean isSeverelyOverdue(Task task) {
+		return task.performIsSeverelyOverDue();
+	}
+
+	@Override
 	public int calculateTotalExecutedTime(Task task) {
 		return task.performGetTotalExecutionTime();
 	}
@@ -60,34 +86,8 @@ class Finished implements Status {
 	}
 
 	@Override
-	public boolean isAlternativeFinished(Task task) {
-		throw new IllegalStateException(
-				"The available task doesn't have alternative.");
-	}
-
-	@Override
-	public boolean isSeverelyOverdue(Task task) {
-		return task.performIsSeverelyOverDue();
-	}
-
-	@Override
-	public boolean isPlanned(Task task) {
-		return true;
-	}
-
-	@Override
-	public boolean isExecuting() {
-		return false;
-	}
-
-	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Finished task can not be executed");
-	}
-
-	@Override
-	public TimeSpan getTimeSpan(Task task) {
-		return task.performGetTimeSpan();
 	}
 
 }

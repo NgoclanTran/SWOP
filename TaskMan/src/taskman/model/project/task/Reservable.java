@@ -93,6 +93,7 @@ public class Reservable {
 
 		Reservation reservation = new Reservation(task, timeSpan);
 		reservations.add(reservation);
+		task.update();
 	}
 
 	/**

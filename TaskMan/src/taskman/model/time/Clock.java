@@ -39,6 +39,7 @@ public class Clock extends TimeSubject {
 		if (systemTime == null)
 			throw new IllegalArgumentException("The systemTime cannot be null.");
 		this.systemTime = systemTime;
+		notifyAllObservers();
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class Clock extends TimeSubject {
 			throw new IllegalArgumentException("The system time cannot be null.");
 		if (systemTime.isBefore(this.systemTime))
 			throw new IllegalArgumentException("The given system time is before the current system time.");
-		this.systemTime = systemTime;
+		setSystemTime(systemTime);
 	}
 
 	/**

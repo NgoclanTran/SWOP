@@ -313,7 +313,6 @@ public class PlanTaskSession extends Session {
 			for (Resource resource : resources) {
 				resource.addReservation(task, timeSpan);
 			}
-			task.updateTaskAvailability();
 			getUI().displayInfo("Task planned.");
 			return true;
 		} catch (Exception Ex) {

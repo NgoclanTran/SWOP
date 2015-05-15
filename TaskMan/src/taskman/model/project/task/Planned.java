@@ -2,11 +2,11 @@ package taskman.model.project.task;
 
 import org.joda.time.DateTime;
 
-import taskman.exceptions.IllegalDateException;
 import taskman.model.time.TimeSpan;
 
-class Executing implements Status {
-	private final String name = "EXECUTING";
+public class Planned implements Status {
+	
+	private final String name = "PLANNED";
 
 	@Override
 	public String getName() {
@@ -30,9 +30,9 @@ class Executing implements Status {
 
 	@Override
 	public boolean isExecuting() {
-		return true;
+		return false;
 	}
-	
+
 	@Override
 	public boolean isPlanned() {
 		return true;
@@ -41,32 +41,28 @@ class Executing implements Status {
 	@Override
 	public void updateStatus(Task task, DateTime currentTime)
 			throws IllegalStateException {
-		throw new IllegalStateException("This task is already executing");
+		if (task.dependenciesAreFinished()) {
+			for (Reservation reservation : task.getReservations()) {
+				if (reservation.getTimeSpan().isDuringTimeSpan(
+						timeService.getFirstPossibleStartTime(currentTime)))
+					task.performUpdateStatus(new Available());
+				else if (task.developersAndResourceTypesAvailable(timeService
+						.getFirstPossibleStartTime(currentTime)))
+					task.performUpdateStatus(new Available());
+			}
+		}
 	}
 
 	@Override
 	public TimeSpan getTimeSpan(Task task) {
-		throw new IllegalStateException("Executing Task doesn't have timeSpan.");
+		throw new IllegalStateException("Planned task doesn't have timeSpan.");
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) throws IllegalStateException {
-		if (task == null)
-			throw new NullPointerException("The task is null.");
-		if (startTime == null)
-			throw new NullPointerException("The startTime is null.");
-		if (endTime == null)
-			throw new NullPointerException("The endTime is null.");
-		if (startTime.compareTo(endTime) > 0)
-			throw new IllegalDateException(
-					"The startTime must start before endTime.");
-		task.performAddTimeSpan(startTime, endTime);
-		if (failed) {
-			task.performUpdateStatus(new Failed());
-		} else {
-			task.performUpdateStatus(new Finished());
-		}
+		throw new IllegalStateException(
+				"Planned task can not have a timespan.");
 	}
 
 	@Override
@@ -77,7 +73,8 @@ class Executing implements Status {
 	@Override
 	public void addAlternative(Task task, Task alternative)
 			throws IllegalStateException {
-		throw new IllegalStateException("This task is already executing");
+		throw new IllegalStateException(
+				"The task has not failed.");
 	}
 
 	@Override
@@ -88,18 +85,18 @@ class Executing implements Status {
 	@Override
 	public int calculateTotalExecutedTime(Task task)
 			throws IllegalStateException {
-		return task.performGetTotalExecutionTime();
+		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task)
 			throws IllegalStateException {
-		return task.performGetOverduePercentage();
+		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
-		throw new IllegalStateException("Executing task can not be executed.");
+		task.performExecuteTask(new Executing());
 	}
 
 }

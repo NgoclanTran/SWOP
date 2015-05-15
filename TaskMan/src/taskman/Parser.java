@@ -683,7 +683,7 @@ public class Parser {
 				d.addReservation(currentTask, timespan);
 				currentTask.addRequiredDeveloper(d);
 			}
-			currentTask.updateTaskAvailability();
+			currentTask.update();
 		}
 
 		if (!status.equals("")) {

@@ -14,12 +14,6 @@ class Failed implements Status {
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) {
-		task.performAddAlternative(alternative);
-
-	}
-
-	@Override
 	public boolean isAvailable() {
 		return false;
 	}
@@ -35,17 +29,47 @@ class Failed implements Status {
 	}
 
 	@Override
-	public void updateTaskAvailability(Task task, DateTime currentTime)
+	public boolean isExecuting() {
+		return false;
+	}
+	
+	@Override
+	public boolean isPlanned() {
+		return true;
+	}
+
+	@Override
+	public void updateStatus(Task task, DateTime currentTime)
 			throws IllegalStateException {
 		throw new IllegalStateException("This task is failed");
 
 	}
 
 	@Override
+	public TimeSpan getTimeSpan(Task task) {
+		return task.performGetTimeSpan();
+	}
+
+	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) throws IllegalStateException {
 		throw new IllegalStateException("This task is failed");
+	
+	}
 
+	@Override
+	public boolean isAlternativeFinished(Task task) {
+		return task.isAlternativeFinished();
+	}
+
+	@Override
+	public void addAlternative(Task task, Task alternative) {
+		task.performAddAlternative(alternative);
+	}
+
+	@Override
+	public boolean isSeverelyOverdue(Task task) {
+		return task.performIsSeverelyOverDue();
 	}
 
 	@Override
@@ -59,33 +83,8 @@ class Failed implements Status {
 	}
 
 	@Override
-	public boolean isAlternativeFinished(Task task) {
-		return task.isAlternativeFinished();
-	}
-
-	@Override
-	public boolean isSeverelyOverdue(Task task) {
-		return task.performIsSeverelyOverDue();
-	}
-
-	@Override
-	public boolean isPlanned(Task task) {
-		return true;
-	}
-
-	@Override
-	public boolean isExecuting() {
-		return false;
-	}
-
-	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Failed task can not be executed");
-	}
-
-	@Override
-	public TimeSpan getTimeSpan(Task task) {
-		return task.performGetTimeSpan();
 	}
 
 }
