@@ -17,6 +17,8 @@ import taskman.controller.planning.PlanTaskSession;
 import taskman.model.ProjectHandler;
 import taskman.model.UserHandler;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
+import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
 
@@ -26,6 +28,8 @@ public class PlanTaskSessionTest {
 	private ProjectHandler ph;
 	private PlanTaskSession session;
 	private UserHandler uh;
+	private Clock clock;
+	private TaskFactory tf;
 
 	@Rule
 	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
@@ -35,12 +39,13 @@ public class PlanTaskSessionTest {
 
 	@Before
 	public void setup() {
-
+		clock = new Clock();
+		tf = new TaskFactory(clock);
 		// Session with projects
 		cli = new View();
-		ph = new ProjectHandler();
+		ph = new ProjectHandler(tf);
 		uh = new UserHandler();
-		session = new PlanTaskSession(cli, ph, uh);
+		session = new PlanTaskSession(cli, ph, uh,clock);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),

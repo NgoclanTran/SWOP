@@ -10,14 +10,16 @@ import org.junit.Test;
 
 import taskman.model.project.task.Reservation;
 import taskman.model.project.task.Task;
+import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class ReservationTest {
 	private Task task;
 	private TimeSpan ts;
+	private Clock clock = new Clock();
 	@Before
 	public void setUp() throws Exception {
-		task = new Task("description", 10, 1,
+		task = new Task(clock,"description", 10, 1,
 				new ArrayList<Task>(), null, null);
 		ts = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,16,0));
 	}

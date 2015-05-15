@@ -10,17 +10,23 @@ import org.junit.Test;
 
 import taskman.model.ProjectHandler;
 import taskman.model.project.Project;
+import taskman.model.project.task.TaskFactory;
+import taskman.model.time.Clock;
 
 public class ProjectHandlerTest {
 
 	ProjectHandler ph;
 	Project project1;
+	private Clock clock;
+	private TaskFactory tf;
 
 	@Before
 	public void setUp() throws Exception {
-		ph = new ProjectHandler();
+		clock = new Clock();
+		tf = new TaskFactory(clock);
+		ph = new ProjectHandler(tf);
 		project1 = new Project("name", "description", new DateTime(),
-				new DateTime());
+				new DateTime(),tf);
 	}
 
 	@Test

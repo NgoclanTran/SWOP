@@ -18,6 +18,7 @@ import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 import taskman.view.IView;
@@ -32,7 +33,8 @@ public class UpdateTaskStatusSessionTest {
 	private UpdateTaskStatusSession session;
 	private TextFromStandardInputStream systemMock;
 	private IView cli;
-	private Clock clock = Clock.getInstance();
+	private Clock clock = new Clock();
+	private TaskFactory tf;
 	@Rule
 	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
 
@@ -41,9 +43,10 @@ public class UpdateTaskStatusSessionTest {
 
 	@Before
 	public void setup() {
+		tf = new TaskFactory(clock);
 		cli = new View();
 		clock.setSystemTime(new DateTime(2015, 10, 12, 8, 0));
-		ph = new ProjectHandler();
+		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
 		uh = new UserHandler();
 		session = new UpdateTaskStatusSession(cli, ph, uh);
@@ -74,7 +77,7 @@ public class UpdateTaskStatusSessionTest {
 	@Test
 	public void useCase_NoTask() {
 		IView cli = new View();
-		ProjectHandler ph = new ProjectHandler();
+		ProjectHandler ph = new ProjectHandler(tf);
 		ResourceHandler rh = new ResourceHandler();
 		systemInMock.provideText("1\n8\n");
 		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph,

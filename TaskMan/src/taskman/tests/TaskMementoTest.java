@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import taskman.model.memento.TaskMemento;
 import taskman.model.project.task.Task;
+import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class TaskMementoTest {
@@ -19,11 +20,12 @@ public class TaskMementoTest {
 	TimeSpan timeSpan = new TimeSpan(new DateTime(), new DateTime());
 	Task alternative;
 	private TaskMemento t;
+	private Clock clock = new Clock();
 
 	@Before
 	public void setup() {
-		Task t1 = new Task("", 10, 10, null, null, null);
-		alternative = new Task("", 10, 10, null, null, null);
+		Task t1 = new Task(clock,"", 10, 10, null, null, null);
+		alternative = new Task(clock,"", 10, 10, null, null, null);
 		dependants.add(t1);
 		t = new TaskMemento(dependants, "state", timeSpan, alternative);
 

@@ -16,6 +16,8 @@ import taskman.controller.project.ShowProjectSession;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
+import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
 
@@ -24,6 +26,8 @@ public class ShowProjectSessionTest {
 	private ProjectHandler ph, ph1;
 	private ResourceHandler rh;
 	private ShowProjectSession session, session1;
+	private Clock clock;
+	private TaskFactory tf;
 
 	@Rule
 	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
@@ -33,14 +37,15 @@ public class ShowProjectSessionTest {
 
 	@Before
 	public void setup() {
-
+		clock = new Clock();
+		tf = new TaskFactory(clock);
 		// Session with projects
 		cli = new View();
-		ph = new ProjectHandler();
+		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
 		session = new ShowProjectSession(cli, ph);
 		ArrayList<Task> dependencies = new ArrayList<Task>();
-		Task t1 = new Task("", 10, 10, null, null, null);
+		Task t1 = new Task(clock,"", 10, 10, null, null, null);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),
@@ -49,7 +54,7 @@ public class ShowProjectSessionTest {
 
 		// Session without projects
 		cli1 = new View();
-		ph1 = new ProjectHandler();
+		ph1 = new ProjectHandler(tf);
 		session1 = new ShowProjectSession(cli1, ph1);
 
 	}

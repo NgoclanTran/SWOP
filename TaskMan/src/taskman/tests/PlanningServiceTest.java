@@ -19,6 +19,7 @@ import taskman.model.PlanningService;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
@@ -33,12 +34,16 @@ public class PlanningServiceTest {
 	TimeSpan firstTimeSpan;
 	List<ResourceType> requires = new ArrayList<ResourceType>();
 	List<ResourceType> conflictsWith = new ArrayList<ResourceType>();
+	private TaskFactory tf;
+	private Clock clock;
 
 	@Before
 	public void setUp() throws Exception {
-		ph = new ProjectHandler();
+		clock = new Clock();
+		tf = new TaskFactory(clock);
+		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
-		planning = new PlanningService();
+		planning = new PlanningService(clock);
 
 		startTime = new DateTime(2015, 1, 1, 13, 0);
 
@@ -115,7 +120,7 @@ public class PlanningServiceTest {
 		int amount = 3;
 		Task task = ph.getProjects().get(0).getTasks().get(0);
 		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
-		Clock systemClock = Clock.getInstance();
+		Clock systemClock = new Clock();
 		DateTime systemTime = new DateTime(2015, 1, 1, 8, 0);
 		systemClock.setSystemTime(systemTime);
 		for (int i = 0; i < amount; i++) {

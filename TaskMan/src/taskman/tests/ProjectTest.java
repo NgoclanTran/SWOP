@@ -16,6 +16,7 @@ import taskman.exceptions.IllegalDateException;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
@@ -27,11 +28,13 @@ public class ProjectTest {
 	String description = "Description";
 	DateTime creation = new DateTime(2014, 1, 1, 0, 0);
 	DateTime due = new DateTime(2014, 1, 1, 9, 0);
-	private Clock clock = Clock.getInstance();
+	private Clock clock = new Clock();
+	private TaskFactory tf;
 
 	@Before
 	public void setUp() throws Exception {
-		project = new Project(name, description, creation, due);
+		tf = new TaskFactory(clock);
+		project = new Project(name, description, creation, due,tf);
 		clock.setSystemTime(new DateTime(2015,10,12,8,0));
 	}
 
@@ -47,33 +50,33 @@ public class ProjectTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createProjectNullName() {
-		new Project(null, description, creation, due);
+		new Project(null, description, creation, due,tf);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createProjectNullDescription() {
-		new Project(name, null, creation, due);
+		new Project(name, null, creation, due, tf);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createProjectNullCreationTime() {
-		new Project(name, description, null, due);
+		new Project(name, description, null, due, tf);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createProjectNullDueTime() {
-		new Project(name, description, creation, null);
+		new Project(name, description, creation, null, tf);
 	}
 
 	@Test(expected = IllegalDateException.class)
 	public void createProjectDueBeforeCreation() {
 		new Project(name, description, new DateTime(2014, 1, 2, 0, 0),
-				new DateTime(2014, 1, 1, 0, 0));
+				new DateTime(2014, 1, 1, 0, 0), tf);
 	}
 	
 	@Test
 	public void createTprojectTest_TrueCase(){
-		Project p = new Project(name, description, creation, due);
+		Project p = new Project(name, description, creation, due, tf);
 		assertEquals(p.getName(), name);
 		assertEquals(p.getDescription(), description);
 		assertEquals(p.getCreationTime(), creation);
@@ -142,7 +145,7 @@ public class ProjectTest {
 				dependencies, null, null);
 		assertEquals(1, project.getTasks().size());
 		List<Task> tasks = project.getTasks();
-		tasks.add(new Task(desc, estimatedDuration, acceptableDeviation,
+		tasks.add(new Task(clock,desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null));
 		assertEquals(1, project.getTasks().size());
 	}
@@ -440,13 +443,13 @@ public class ProjectTest {
 	
 	@Test
 	public void createMomenttoTest(){
-		Project p = new Project(name, description, creation, due);
+		Project p = new Project(name, description, creation, due, tf);
 		assertTrue(p.createMemento()instanceof ProjectMemento);
 	}
 	
 	@Test
 	public void toStringTest1(){
-		Project p = new Project(name, description, creation, due);
+		Project p = new Project(name, description, creation, due, tf);
 		project.addTask(description, 600, 0, null, null, null);
 		assertEquals(p.toString(),name +": ONGOING");
 	} 
