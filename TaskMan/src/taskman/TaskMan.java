@@ -1,6 +1,7 @@
 package taskman;
 
 import taskman.controller.MainSession;
+import taskman.model.MementoHandler;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
@@ -19,10 +20,13 @@ public class TaskMan {
 			ProjectHandler projectHandler = new ProjectHandler(taskFactory);
 			ResourceHandler resourceHandler = new ResourceHandler();
 			UserHandler userHandler = new UserHandler();
+			MementoHandler mementoHandler = new MementoHandler(clock,
+					projectHandler, resourceHandler, userHandler);
 			Parser parser = new Parser(projectHandler, resourceHandler,
 					userHandler, clock);
 			MainSession controller = new MainSession(commandLineInterface,
-					projectHandler, resourceHandler, userHandler, clock);
+					projectHandler, resourceHandler, userHandler,
+					mementoHandler, clock);
 			parser.parse();
 			controller.run();
 		} catch (IllegalArgumentException e) {

@@ -680,7 +680,7 @@ public class Task extends TaskSubject implements Observer {
 	 * @return Creates a new task memento that saves the state of the task.
 	 */
 	public TaskMemento createMemento() {
-		return new TaskMemento(dependants, status.getName(), timeSpan,
+		return new TaskMemento(this, dependants, status.getName(), timeSpan,
 				alternative);
 	}
 

@@ -1,40 +1,36 @@
 package taskman.controller.planning;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import taskman.controller.Session;
 import taskman.controller.project.CreateTaskSession;
 import taskman.controller.project.ShowProjectSession;
+import taskman.model.MementoHandler;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
-import taskman.model.memento.Caretaker;
-import taskman.model.project.Project;
-import taskman.model.project.task.Task;
-import taskman.model.resource.Resource;
-import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
-import taskman.model.user.Developer;
 import taskman.view.IView;
 
 public class SimulateSession extends Session {
 
+	private MementoHandler mh;
 	private ResourceHandler rh;
 	private UserHandler uh;
 	private Clock clock;
-	private Caretaker caretaker;
-	private HashMap<Integer, Integer> projectCounter = new HashMap<Integer, Integer>();
 
 	private final List<String> menu = Arrays.asList("Show projects",
 			"Create task", "Plan task", "End simulation and discard changes",
 			"End simulation and keep changes");
 
-	public SimulateSession(IView cli, ProjectHandler ph, ResourceHandler rh,
-			UserHandler uh, Clock clock) throws IllegalArgumentException {
+	public SimulateSession(IView cli, ProjectHandler ph, MementoHandler mh,
+			ResourceHandler rh, UserHandler uh, Clock clock)
+			throws IllegalArgumentException {
 		super(cli, ph);
+		if (!isValidMementoHandler(mh))
+			throw new IllegalArgumentException(
+					"The simulate session controller needs a MementoHandler");
 		if (!isValidResourceHandler(rh))
 			throw new IllegalArgumentException(
 					"The create task controller needs a ResourceHandler");
@@ -44,9 +40,24 @@ public class SimulateSession extends Session {
 		if (!isValidClock(clock))
 			throw new IllegalArgumentException(
 					"The create project controller needs a clock");
+		this.mh = mh;
 		this.rh = rh;
 		this.uh = uh;
 		this.clock = clock;
+	}
+
+	/**
+	 * Checks if the given memento handler is valid.
+	 * 
+	 * @param mh
+	 * 
+	 * @return Returns true if the memento handler is different from null.
+	 */
+	private boolean isValidMementoHandler(MementoHandler mh) {
+		if (mh != null)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -76,7 +87,7 @@ public class SimulateSession extends Session {
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Checks if the given clock is valid.
 	 * 
@@ -121,54 +132,12 @@ public class SimulateSession extends Session {
 	}
 
 	private void saveCurrentState() {
-		caretaker = new Caretaker();
-		caretaker.addClockMemento(clock.createMemento());
-		for (int i = 0; i < getPH().getProjects().size(); i++) {
-			Project project = getPH().getProjects().get(i);
-			caretaker.addProjectMemento(project.createMemento());
-			projectCounter.put(i, project.getTasks().size());
-			for (Task task : project.getTasks()) {
-				caretaker.addTaskMemento(task.createMemento());
-			}
-		}
-		for (Developer developer : uh.getDevelopers()) {
-			caretaker.addDeveloperMemento(developer.createMemento());
-		}
-		for (ResourceType resourceType : rh.getResourceTypes()) {
-			for (Resource resource : resourceType.getResources())
-				caretaker.addResourceMemento(resource.createMemento());
-		}
+		mh.saveState();
 		getUI().displayInfo("State saved.");
 	}
 
 	private void resetState() {
-		clock.setMemento(caretaker.getClockMemento());
-		for (int i = 0; i < uh.getDevelopers().size(); i++) {
-			uh.getDevelopers().get(i)
-					.setMemento(caretaker.getDeveloperMemento(i));
-		}
-		for (ResourceType resourceType : rh.getResourceTypes()) {
-			int i = 0;
-			for (Resource resource : resourceType.getResources()) {
-				resource.setMemento(caretaker.getResourceMemento(i));
-				i++;
-			}
-		}
-
-		int k = 0;
-		for (Entry<Integer, Integer> entry : projectCounter.entrySet()) {
-			int i = entry.getKey();
-			int j = 0;
-			Project project = getPH().getProjects().get(i);
-			while (j < entry.getValue()) {
-				project.getTasks().get(j)
-						.setMemento(caretaker.getTaskMemento(k));
-				j++;
-				k++;
-			}
-			project.setMemento(caretaker.getProjectMemento(i));
-		}
+		mh.resetState();
 		getUI().displayInfo("State reset.");
-
 	}
 }

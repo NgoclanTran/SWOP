@@ -286,7 +286,8 @@ public class Project implements Observer {
 	 *         project.
 	 */
 	public ProjectMemento createMemento() {
-		return new ProjectMemento(new ArrayList<Task>(tasks), state.getName());
+		return new ProjectMemento(this, new ArrayList<Task>(tasks),
+				state.getName());
 	}
 
 	/**

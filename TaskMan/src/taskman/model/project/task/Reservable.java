@@ -122,7 +122,8 @@ public class Reservable {
 	 *         reservations.
 	 */
 	public ReservableMemento createMemento() {
-		return new ReservableMemento(new ArrayList<Reservation>(reservations));
+		return new ReservableMemento(this, new ArrayList<Reservation>(
+				reservations));
 	}
 
 	/**

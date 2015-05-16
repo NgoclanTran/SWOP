@@ -10,6 +10,7 @@ import taskman.controller.project.CreateProjectSession;
 import taskman.controller.project.CreateTaskSession;
 import taskman.controller.project.ShowProjectSession;
 import taskman.controller.project.UpdateTaskStatusSession;
+import taskman.model.MementoHandler;
 import taskman.model.ProjectHandler;
 import taskman.model.ResourceHandler;
 import taskman.model.UserHandler;
@@ -22,6 +23,7 @@ public class MainSession extends Session {
 			"Create project", "Create task", "Update task", "Advance time",
 			"Plan task", "Start simulation", "Quit");
 
+	private MementoHandler mh;
 	private ResourceHandler rh;
 	private UserHandler uh;
 	private Clock clock;
@@ -38,6 +40,8 @@ public class MainSession extends Session {
 	 *            The resource handler.
 	 * @param uh
 	 *            The user handler.
+	 * @param mh
+	 *            The memento handler.
 	 * @param clock
 	 *            The system clock.
 	 * 
@@ -48,8 +52,12 @@ public class MainSession extends Session {
 	 *             valid.
 	 */
 	public MainSession(IView cli, ProjectHandler ph, ResourceHandler rh,
-			UserHandler uh, Clock clock) throws IllegalArgumentException {
+			UserHandler uh, MementoHandler mh, Clock clock)
+			throws IllegalArgumentException {
 		super(cli, ph);
+		if (!isValidMementoHandler(mh))
+			throw new IllegalArgumentException(
+					"The main controller needs a MementoHandler");
 		if (!isValidResourceHandler(rh))
 			throw new IllegalArgumentException(
 					"The main controller needs a ResourceHandler");
@@ -61,7 +69,22 @@ public class MainSession extends Session {
 					"The main controller needs a clock");
 		this.rh = rh;
 		this.uh = uh;
+		this.mh = mh;
 		this.clock = clock;
+	}
+
+	/**
+	 * Checks if the given memento handler is valid.
+	 * 
+	 * @param mh
+	 * 
+	 * @return Returns true if the memento handler is different from null.
+	 */
+	private boolean isValidMementoHandler(MementoHandler mh) {
+		if (mh != null)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -91,7 +114,7 @@ public class MainSession extends Session {
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Checks if the given clock is valid.
 	 * 
@@ -136,7 +159,7 @@ public class MainSession extends Session {
 				new PlanTaskSession(getUI(), getPH(), uh, clock).run();
 				break;
 			case 7:
-				new SimulateSession(getUI(), getPH(), rh, uh, clock).run();
+				new SimulateSession(getUI(), getPH(), mh, rh, uh, clock).run();
 				break;
 			case 8:
 				return;

@@ -42,14 +42,12 @@ public class Caretaker {
 	}
 
 	/**
-	 * Will return the project memento at the given index in the list
+	 * Returns the list of project mementos.
 	 * 
-	 * @param index
-	 *            The element in the list at this index will be used
-	 * @return returns the project memento at this index in the list
+	 * @return Returns the list of project mementos.
 	 */
-	public ProjectMemento getProjectMemento(int index) {
-		return savedProjectMementos.get(index);
+	public ArrayList<ProjectMemento> getProjectMementos() {
+		return new ArrayList<ProjectMemento>(savedProjectMementos);
 	}
 
 	/**
@@ -65,14 +63,12 @@ public class Caretaker {
 	}
 
 	/**
-	 * Will return the developper memento at the given index in the list
+	 * Returns the list of developer mementos.
 	 * 
-	 * @param index
-	 *            The element in the list at this index will be returned
-	 * @return the developper memento at the given index in the list
+	 * @return Returns the list of developer mementos.
 	 */
-	public ReservableMemento getDeveloperMemento(int index) {
-		return savedDeveloperMementos.get(index);
+	public ArrayList<ReservableMemento> getDeveloperMementos() {
+		return new ArrayList<ReservableMemento>(savedDeveloperMementos);
 	}
 
 	/**
@@ -87,14 +83,12 @@ public class Caretaker {
 	}
 
 	/**
-	 * Will return the resource memento at the given index
+	 * Returns the list of resource mementos.
 	 * 
-	 * @param index
-	 *            The element in the list at this index will be returned
-	 * @return returns the element in the list at this index
+	 * @return Returns the list of resource mementos.
 	 */
-	public ReservableMemento getResourceMemento(int index) {
-		return savedResourceMementos.get(index);
+	public ArrayList<ReservableMemento> getResourceMementos() {
+		return new ArrayList<ReservableMemento>(savedResourceMementos);
 	}
 
 	/**
@@ -109,14 +103,12 @@ public class Caretaker {
 	}
 
 	/**
-	 * Will return the taskmemento at the given index in the list
+	 * Returns the list of task mementos.
 	 * 
-	 * @param index
-	 *            The element in the list at this given index will be returned
-	 * @return the element at this index will be returned
+	 * @return Returns the list of task mementos.
 	 */
-	public TaskMemento getTaskMemento(int index) {
-		return savedTaskMementos.get(index);
+	public ArrayList<TaskMemento> getTaskMementos() {
+		return new ArrayList<TaskMemento>(savedTaskMementos);
 	}
 
 }

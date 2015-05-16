@@ -63,9 +63,13 @@ public class UpdateTaskStatusSession extends Session {
 	 */
 	@Override
 	public void run() {
-		Developer developer = getUI().getUpdateTaskForm().getDeveloper(
-				uh.getDevelopers());
-		showProjectsAndAvailableTasks(developer);
+		try {
+			Developer developer = getUI().getUpdateTaskForm().getDeveloper(
+					uh.getDevelopers());
+			showProjectsAndAvailableTasks(developer);
+		} catch (ShouldExitException e) {
+			return;
+		}
 	}
 
 	/**
