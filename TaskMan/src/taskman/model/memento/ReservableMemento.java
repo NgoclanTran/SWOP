@@ -2,8 +2,8 @@ package taskman.model.memento;
 
 import java.util.ArrayList;
 
-import taskman.model.project.task.Reservable;
-import taskman.model.project.task.Reservation;
+import taskman.model.task.Reservable;
+import taskman.model.task.Reservation;
 
 public class ReservableMemento {
 

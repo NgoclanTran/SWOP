@@ -3,7 +3,7 @@ package taskman.model.resource;
 import org.joda.time.LocalTime;
 
 import taskman.exceptions.IllegalTimeException;
-import taskman.model.project.task.Reservable;
+import taskman.model.task.Reservable;
 
 public class Resource extends Reservable {
 

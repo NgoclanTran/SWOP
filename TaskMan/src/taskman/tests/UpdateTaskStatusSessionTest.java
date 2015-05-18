@@ -13,12 +13,12 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
-import taskman.controller.project.UpdateTaskStatusSession;
-import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
-import taskman.model.UserHandler;
-import taskman.model.project.task.Task;
-import taskman.model.project.task.TaskFactory;
+import taskman.controller.branch.UpdateTaskStatusSession;
+import taskman.model.company.ProjectHandler;
+import taskman.model.company.ResourceHandler;
+import taskman.model.company.UserHandler;
+import taskman.model.task.Task;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 import taskman.view.IView;

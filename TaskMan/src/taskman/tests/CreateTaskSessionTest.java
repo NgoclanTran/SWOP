@@ -14,12 +14,12 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
-import taskman.controller.project.CreateTaskSession;
-import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
+import taskman.controller.branch.CreateTaskSession;
+import taskman.model.company.ProjectHandler;
+import taskman.model.company.ResourceHandler;
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
-import taskman.model.project.task.TaskFactory;
+import taskman.model.task.Task;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;

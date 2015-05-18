@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import taskman.exceptions.ShouldExitException;
-import taskman.model.ResourceHandler;
-import taskman.model.project.task.Task;
+import taskman.model.company.ResourceHandler;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.Task;
 
 public class CreateTaskForm implements ICreateTaskForm {
 

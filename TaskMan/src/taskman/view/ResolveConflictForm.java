@@ -3,7 +3,7 @@ package taskman.view;
 import java.util.List;
 
 import taskman.exceptions.ShouldExitException;
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 
 public class ResolveConflictForm implements IResolveConflictForm {
 

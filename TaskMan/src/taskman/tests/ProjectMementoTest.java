@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.memento.ProjectMemento;
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 import taskman.model.time.Clock;
 
 public class ProjectMementoTest {

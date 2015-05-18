@@ -12,11 +12,11 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
-import taskman.controller.project.ShowProjectSession;
-import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
-import taskman.model.project.task.Task;
-import taskman.model.project.task.TaskFactory;
+import taskman.controller.branch.ShowProjectsSession;
+import taskman.model.company.ProjectHandler;
+import taskman.model.company.ResourceHandler;
+import taskman.model.task.Task;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
@@ -25,7 +25,7 @@ public class ShowProjectSessionTest {
 	private IView cli, cli1;
 	private ProjectHandler ph, ph1;
 	private ResourceHandler rh;
-	private ShowProjectSession session, session1;
+	private ShowProjectsSession session, session1;
 	private Clock clock;
 	private TaskFactory tf;
 
@@ -43,7 +43,7 @@ public class ShowProjectSessionTest {
 		cli = new View();
 		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
-		session = new ShowProjectSession(cli, ph);
+		session = new ShowProjectsSession(cli, ph);
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		Task t1 = new Task(clock,"", 10, 10, null, null, null);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
@@ -55,7 +55,7 @@ public class ShowProjectSessionTest {
 		// Session without projects
 		cli1 = new View();
 		ph1 = new ProjectHandler(tf);
-		session1 = new ShowProjectSession(cli1, ph1);
+		session1 = new ShowProjectsSession(cli1, ph1);
 
 	}
 	

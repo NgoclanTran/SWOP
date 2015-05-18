@@ -9,9 +9,9 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.model.UserHandler;
-import taskman.model.project.task.Task;
 import taskman.model.user.*;
+import taskman.model.company.UserHandler;
+import taskman.model.task.Task;
 import taskman.model.time.*;
 
 public class UserHandlerTest {

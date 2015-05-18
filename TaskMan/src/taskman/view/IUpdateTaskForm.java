@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 import taskman.model.user.Developer;
 
 public interface IUpdateTaskForm {

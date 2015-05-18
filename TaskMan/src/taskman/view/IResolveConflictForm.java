@@ -2,7 +2,7 @@ package taskman.view;
 
 import java.util.List;
 
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 
 public interface IResolveConflictForm {
 	

@@ -1,11 +1,11 @@
 package taskman;
 
 import taskman.controller.MainSession;
-import taskman.model.MementoHandler;
-import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
-import taskman.model.UserHandler;
-import taskman.model.project.task.TaskFactory;
+import taskman.model.company.MementoHandler;
+import taskman.model.company.ProjectHandler;
+import taskman.model.company.ResourceHandler;
+import taskman.model.company.UserHandler;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
@@ -24,11 +24,11 @@ public class TaskMan {
 					projectHandler, resourceHandler, userHandler);
 			Parser parser = new Parser(projectHandler, resourceHandler,
 					userHandler, clock);
-			MainSession controller = new MainSession(commandLineInterface,
-					projectHandler, resourceHandler, userHandler,
-					mementoHandler, clock);
+			//MainSession controller = new MainSession(commandLineInterface,
+			//		projectHandler, resourceHandler, userHandler,
+			//		mementoHandler, clock);
 			parser.parse();
-			controller.run();
+			//controller.run();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}

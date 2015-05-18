@@ -3,7 +3,7 @@ package taskman.model.memento;
 import java.util.ArrayList;
 import java.util.List;
 
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 import taskman.model.time.TimeSpan;
 
 public class TaskMemento {

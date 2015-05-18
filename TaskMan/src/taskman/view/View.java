@@ -9,7 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 import taskman.view.commandline.Input;
 import taskman.view.commandline.Output;
 

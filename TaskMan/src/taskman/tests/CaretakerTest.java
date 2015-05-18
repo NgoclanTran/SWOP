@@ -12,7 +12,7 @@ import taskman.model.memento.ClockMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.memento.TaskMemento;
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
