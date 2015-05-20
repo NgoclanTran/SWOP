@@ -74,6 +74,7 @@ public class TimeService {
 	 *            The datetime to which these minutes will be added
 	 * @param minutesToAdd
 	 *            The amount of minutes to be added to the date time
+	 *            
 	 * @return the date time will be returned with the minutes added
 	 */
 	public DateTime addMinutes(DateTime time, int minutesToAdd) {
@@ -84,12 +85,15 @@ public class TimeService {
 		}
 		return time;
 	}
+	
+	//TODO subtractMinutes
 
 	/**
 	 * Will return the exact hour of the given date time
 	 * 
 	 * @param time
 	 *            The date time of which the exact hour will be calculated
+	 *            
 	 * @return the exact hour of the parameter
 	 */
 	public DateTime getExactHour(DateTime time) {
