@@ -78,7 +78,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		assertEquals(t.getDescription(), description);
 		assertEquals(t.getEstimatedDuration(), estimatedDuration);
 		assertEquals(t.getAcceptableDeviation(), acceptableDeviation);
@@ -138,7 +138,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		DateTime startTime = new DateTime(2015, 10, 12, 9, 0);
 		DateTime endTime = new DateTime(2015, 10, 12, 10, 0);
 
@@ -182,7 +182,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		DateTime endTime = new DateTime(2015, 1, 1, 1, 1);
 		t.addTimeSpan(false, null, endTime);
 	}
@@ -197,7 +197,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		DateTime startTime = new DateTime(2015, 1, 1, 1, 1);
 		t.addTimeSpan(true, startTime, null);
 	}
@@ -232,7 +232,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		assertEquals(t.getStatusName(), "AVAILABLE");
@@ -250,7 +250,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -271,7 +271,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -292,7 +292,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -312,7 +312,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		t.addAlternative(t2);
@@ -340,7 +340,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -366,7 +366,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -390,7 +390,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		assertTrue(t.isAvailable());
 
@@ -415,7 +415,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -436,7 +436,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -457,7 +457,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -476,7 +476,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		assertFalse(t.isFinished());
 
 	}
@@ -501,7 +501,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -524,7 +524,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -546,7 +546,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -566,7 +566,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertFalse(t.isFailed());
 		assertEquals(t.getStatusName(), "AVAILABLE");
@@ -593,7 +593,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -616,7 +616,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -639,7 +639,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -659,7 +659,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertFalse(t.isCompleted());
 	}
@@ -682,7 +682,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -703,7 +703,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -724,11 +724,11 @@ public class TaskTest {
 				new DateTime(2015, 10, 13, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 
-		t.updateTaskAvailability();
+		t.update();
 		assertEquals(t.getStatusName(), "AVAILABLE");
 	}
 
@@ -743,14 +743,14 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
-		t.updateTaskAvailability();
+		t.update();
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -764,14 +764,14 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(true, startTime, endTime);
-		t.updateTaskAvailability();
+		t.update();
 
 	}
 
@@ -786,13 +786,13 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "EXECUTING");
-		t.updateTaskAvailability();
+		t.update();
 
 	}
 
@@ -819,7 +819,7 @@ public class TaskTest {
 		assertEquals(t1.getStatusName(), "UNAVAILABLE");
 		assertEquals(t2.getStatusName(), "UNAVAILABLE");
 
-		t1.updateTaskAvailability();
+		t1.update();
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 		assertEquals(t2.getStatusName(), "UNAVAILABLE");
 
@@ -838,7 +838,7 @@ public class TaskTest {
 		Developer d2 = new Developer("name developer 1", new LocalTime(13, 0),
 				new LocalTime(23, 0));
 		t1.addRequiredDeveloper(d2);
-		t1.updateTaskAvailability();
+		t1.update();
 	}
 
 	@Test
@@ -865,7 +865,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d);
 
-		t1.updateTaskAvailability();
+		t1.update();
 	}
 
 	@Test
@@ -877,7 +877,7 @@ public class TaskTest {
 		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
-		t1.updateTaskAvailability();
+		t1.update();
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 
 		t1.executeTask();
@@ -893,7 +893,7 @@ public class TaskTest {
 		d2.addReservation(t2, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
 				new DateTime(2015, 10, 14, 10, 0)));
 		t2.addRequiredDeveloper(d2);
-		t2.updateTaskAvailability();
+		t2.update();
 		assertEquals(t2.getStatusName(), "AVAILABLE");
 
 		t2.executeTask();
@@ -903,7 +903,7 @@ public class TaskTest {
 		listTasks.add(t1);
 		Task t3 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				listTasks, null, null);
-		t3.updateTaskAvailability();
+		t3.update();
 
 	}
 
@@ -916,7 +916,7 @@ public class TaskTest {
 		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
-		t1.updateTaskAvailability();
+		t1.update();
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
@@ -928,7 +928,7 @@ public class TaskTest {
 		dependencies.add(t1);
 		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		t2.updateTaskAvailability();
+		t2.update();
 
 	}
 
@@ -941,7 +941,7 @@ public class TaskTest {
 		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
-		t1.updateTaskAvailability();
+		t1.update();
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
@@ -956,7 +956,7 @@ public class TaskTest {
 		d2.addReservation(t3, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
 				new DateTime(2015, 10, 14, 10, 0)));
 		t3.addRequiredDeveloper(d2);
-		t3.updateTaskAvailability();
+		t3.update();
 		assertEquals(t3.getStatusName(), "AVAILABLE");
 		t3.executeTask();
 		assertEquals(t3.getStatusName(), "EXECUTING");
@@ -968,7 +968,7 @@ public class TaskTest {
 		dependencies.add(t1);
 		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		t2.updateTaskAvailability();
+		t2.update();
 
 	}
 
@@ -981,7 +981,7 @@ public class TaskTest {
 		d1.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
-		t1.updateTaskAvailability();
+		t1.update();
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
@@ -996,7 +996,7 @@ public class TaskTest {
 		d2.addReservation(t3, new TimeSpan(new DateTime(2015, 10, 12, 8, 11),
 				new DateTime(2015, 10, 14, 10, 0)));
 		t3.addRequiredDeveloper(d2);
-		t3.updateTaskAvailability();
+		t3.update();
 		assertEquals(t3.getStatusName(), "AVAILABLE");
 		t3.executeTask();
 		assertEquals(t3.getStatusName(), "EXECUTING");
@@ -1008,7 +1008,7 @@ public class TaskTest {
 		dependencies.add(t1);
 		Task t2 = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		t2.updateTaskAvailability();
+		t2.update();
 
 	}
 
@@ -1023,7 +1023,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2015, 1, 1, 12, 1);
@@ -1051,7 +1051,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2015, 1, 1, 12, 1);
@@ -1072,7 +1072,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2015, 1, 1, 12, 1);
@@ -1153,7 +1153,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
 		DateTime endTime = new DateTime(2015, 1, 1, 11, 0);
@@ -1176,7 +1176,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertTrue(t.isPlanned());
 	}
@@ -1203,7 +1203,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		t.isSeverelyOverdue();
 	}
 
@@ -1216,7 +1216,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 9, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
 		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
 		t.executeTask();
@@ -1234,7 +1234,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 9, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
 		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
 		t.executeTask();
@@ -1253,7 +1253,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 12, 9, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		assertTrue(t.isSeverelyOverdue());
 	}
 
@@ -1421,7 +1421,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 13, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 
@@ -1444,9 +1444,9 @@ public class TaskTest {
 				new DateTime(2015, 10, 13, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 		TaskMemento tm = t.createMemento();
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
@@ -1469,7 +1469,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 13, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
@@ -1498,7 +1498,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 13, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
@@ -1527,7 +1527,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 13, 16, 0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();

@@ -273,7 +273,7 @@ public class ProjectTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -310,7 +310,7 @@ public class ProjectTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		assertFalse(project.isFinished());
 	}
 
@@ -333,7 +333,7 @@ public class ProjectTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
@@ -368,7 +368,7 @@ public class ProjectTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		
 		DateTime startTime = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime = new DateTime(2014, 1, 1, 8, 59);
@@ -391,7 +391,7 @@ public class ProjectTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		
 		DateTime startTime = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime = new DateTime(2014, 1, 1, 11, 00);
@@ -415,7 +415,7 @@ public class ProjectTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();		
+		t.update();		
 		DateTime startTime = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime = new DateTime(2014, 1, 1, 9, 30);
 		t.executeTask();
@@ -429,7 +429,7 @@ public class ProjectTest {
 		TimeSpan timeSpan2 = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d2.addReservation(t2, timeSpan2);
 		t2.addRequiredDeveloper(d2);
-		t2.updateTaskAvailability();
+		t2.update();
 		assertEquals(t2.getStatusName(),"AVAILABLE");
 		DateTime startTime2 = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime2 = new DateTime(2014, 1, 1, 10, 30);
@@ -467,7 +467,7 @@ public class ProjectTest {
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
-		t.updateTaskAvailability();
+		t.update();
 		
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);

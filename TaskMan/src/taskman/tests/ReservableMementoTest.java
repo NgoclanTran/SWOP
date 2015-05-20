@@ -16,7 +16,7 @@ public class ReservableMementoTest {
 
 	@Before
 	public void setup() {
-		r = new ReservableMemento(reservations);
+		r = new ReservableMemento(null, reservations);
 	}
 
 	@Test

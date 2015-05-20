@@ -67,7 +67,7 @@ public class UpdateTaskStatusSessionTest {
 						timeSpan);
 		ph.getProjects().get(0).getTasks().get(0)
 				.addRequiredDeveloper(uh.getDevelopers().get(0));
-		ph.getProjects().get(0).getTasks().get(0).updateTaskAvailability();
+		ph.getProjects().get(0).getTasks().get(0).update();
 		ph.getProjects()
 				.get(0)
 				.addTask("Task description", 10, 1, new ArrayList<Task>(),

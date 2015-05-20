@@ -27,7 +27,7 @@ public class TaskMementoTest {
 		Task t1 = new Task(clock,"", 10, 10, null, null, null);
 		alternative = new Task(clock,"", 10, 10, null, null, null);
 		dependants.add(t1);
-		t = new TaskMemento(dependants, "state", timeSpan, alternative);
+		t = new TaskMemento(t1, dependants, "state", timeSpan, alternative);
 
 	}
 

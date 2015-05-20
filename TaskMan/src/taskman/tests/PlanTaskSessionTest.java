@@ -61,12 +61,12 @@ public class PlanTaskSessionTest {
 
 	}
 	
-//	@Test
-//	public void useCaseTest_NoTask(){
-//		PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(), uh);
-//		s.run();
-//		assertEquals("No unplanned tasks.\r\n\r\n", log.getLog());
-//	}
+	@Test
+	public void useCaseTest_NoTask(){
+		PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(), uh);
+		s.run();
+		assertEquals("No unplanned tasks.\r\n\r\n", log.getLog());
+	}
 	
 	
 //	@Test 

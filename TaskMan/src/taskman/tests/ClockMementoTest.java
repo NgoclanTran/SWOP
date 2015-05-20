@@ -13,7 +13,7 @@ public class ClockMementoTest {
 	private DateTime SystemTime = new DateTime();
 	@Before
 	public void setup(){
-		c = new ClockMemento(SystemTime);
+		c = new ClockMemento(null, SystemTime);
 	}
 	@Test
 	public void testState(){

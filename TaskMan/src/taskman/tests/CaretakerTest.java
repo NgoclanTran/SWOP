@@ -12,7 +12,9 @@ import taskman.model.memento.ClockMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.memento.TaskMemento;
+import taskman.model.project.Project;
 import taskman.model.project.task.Task;
+import taskman.model.project.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
@@ -28,26 +30,26 @@ public class CaretakerTest {
 
 	@Test
 	public void addProjectMementoTest() {
-		Task t = new Task(clock,"", 10, 10, null, null, null);
-		ArrayList<Task> tasks = new ArrayList<Task>();
-		ProjectMemento projectMemento = new ProjectMemento(tasks, "state");
+		Project p = new Project("name", "description", new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,00), new TaskFactory(clock));
+		
+		ProjectMemento projectMemento = new ProjectMemento(p, (ArrayList<Task>) p.getTasks(), "state");
 		c.addProjectMemento(projectMemento);
-		assertEquals(c.getProjectMemento(0), projectMemento);
+		assertEquals(c.getProjectMementos().get(0), projectMemento);
 	}
 
 	@Test
 	public void addDeveloperMementoTest() {
 
-		ReservableMemento d = new ReservableMemento(null);
+		ReservableMemento d = new ReservableMemento(null, null);
 		c.addDeveloperMemento(d);
-		assertEquals(c.getDeveloperMemento(0), d);
+		assertEquals(c.getDeveloperMementos().get(0), d);
 	}
 
 	@Test
 	public void addResourceMementoTest() {
-		ReservableMemento r = new ReservableMemento(null);
+		ReservableMemento r = new ReservableMemento(null, null);
 		c.addResourceMemento(r);
-		assertEquals(c.getResourceMemento(0), r);
+		assertEquals(c.getResourceMementos().get(0), r);
 	}
 
 	@Test
@@ -55,16 +57,16 @@ public class CaretakerTest {
 		Task t = new Task(clock,"", 10, 10, null, null, null);
 		Task t1 = new Task(clock,"", 10, 10, null, null, null);
 		ArrayList<Task> tasks = new ArrayList<Task>();
-		TaskMemento t2 = new TaskMemento(tasks, "name", new TimeSpan(
+		TaskMemento t2 = new TaskMemento(t, tasks, "name", new TimeSpan(
 				new DateTime(2015, 10, 12, 10, 0), new DateTime(2015, 10, 12,
 						12, 0)), t1);
 		c.addTaskMemento(t2);
-		assertEquals(c.getTaskMemento(0), t2);
+		assertEquals(c.getTaskMementos().get(0), t2);
 	}
 
 	@Test
 	public void addClockMementoTest() {
-		ClockMemento clock = new ClockMemento(new DateTime());
+		ClockMemento clock = new ClockMemento(null, new DateTime());
 		c.addClockMemento(clock);
 		assertEquals(c.getClockMemento(), clock);
 	}
