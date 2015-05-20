@@ -1,5 +1,5 @@
 package taskman.tests;
-
+//TODO test for task without reservation -> UNAVAILABLE and AVAILABLE
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -86,7 +86,7 @@ public class TaskTest {
 		assertEquals(t.getRequiredDevelopers().get(0), d);
 		assertTrue(t.getRequiredResourceTypes().isEmpty());
 		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 	}
 
 	@Test
@@ -223,7 +223,7 @@ public class TaskTest {
 	}
 
 	@Test
-	public void addTimeSpanTest_StatusAVAILABLE() {
+	public void addTimeSpanTest_StatusPLANNED() {
 		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -235,7 +235,7 @@ public class TaskTest {
 		t.update();
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
 	}
@@ -381,7 +381,7 @@ public class TaskTest {
 	}
 
 	@Test
-	public void isAvailableTest_StatusAVAILABLE() {
+	public void isAvailableTest_StatusPLANNED() {
 		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -391,8 +391,8 @@ public class TaskTest {
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
 		t.update();
-		assertEquals(t.getStatusName(), "AVAILABLE");
-		assertTrue(t.isAvailable());
+		assertEquals(t.getStatusName(), "PLANNED");
+		assertTrue(t.isPlanned());
 
 	}
 
@@ -556,7 +556,7 @@ public class TaskTest {
 	}
 
 	@Test
-	public void isFailedTest_StatusAVAILABLE() {
+	public void isFailedTest_StatusPLANNED() {
 
 		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
@@ -569,7 +569,7 @@ public class TaskTest {
 		t.update();
 
 		assertFalse(t.isFailed());
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 
 	}
 
@@ -714,7 +714,7 @@ public class TaskTest {
 	}
 
 	@Test
-	public void updateTaskAvailabilityTest_TrueCase_StatusAVAILABLE() {
+	public void updateTaskAvailabilityTest_TrueCase_StatusPLANNED() {
 
 		Task t = new Task(clock,description, estimatedDuration, acceptableDeviation,
 				null, null, null);
@@ -726,7 +726,7 @@ public class TaskTest {
 		t.addRequiredDeveloper(d);
 		t.update();
 
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 
 		t.update();
 		assertEquals(t.getStatusName(), "AVAILABLE");
@@ -820,8 +820,8 @@ public class TaskTest {
 		assertEquals(t2.getStatusName(), "UNAVAILABLE");
 
 		t1.update();
-		assertEquals(t1.getStatusName(), "AVAILABLE");
-		assertEquals(t2.getStatusName(), "UNAVAILABLE");
+		assertEquals(t1.getStatusName(), "PLANNED");
+		assertEquals(t2.getStatusName(), "PLANNED");
 
 	}
 
@@ -878,7 +878,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
 		t1.update();
-		assertEquals(t1.getStatusName(), "AVAILABLE");
+		assertEquals(t1.getStatusName(), "PLANNED");
 
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
@@ -894,7 +894,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t2.addRequiredDeveloper(d2);
 		t2.update();
-		assertEquals(t2.getStatusName(), "AVAILABLE");
+		assertEquals(t2.getStatusName(), "PLANNED");
 
 		t2.executeTask();
 		assertEquals(t2.getStatusName(), "EXECUTING");
@@ -917,7 +917,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
 		t1.update();
-		assertEquals(t1.getStatusName(), "AVAILABLE");
+		assertEquals(t1.getStatusName(), "PLANNED");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
@@ -942,7 +942,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
 		t1.update();
-		assertEquals(t1.getStatusName(), "AVAILABLE");
+		assertEquals(t1.getStatusName(), "PLANNED");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
@@ -957,7 +957,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t3.addRequiredDeveloper(d2);
 		t3.update();
-		assertEquals(t3.getStatusName(), "AVAILABLE");
+		assertEquals(t3.getStatusName(), "PLANNED");
 		t3.executeTask();
 		assertEquals(t3.getStatusName(), "EXECUTING");
 		t3.addTimeSpan(false, new DateTime(2015, 10, 12, 8, 0), new DateTime(
@@ -982,7 +982,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t1.addRequiredDeveloper(d1);
 		t1.update();
-		assertEquals(t1.getStatusName(), "AVAILABLE");
+		assertEquals(t1.getStatusName(), "PLANNED");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
@@ -997,7 +997,7 @@ public class TaskTest {
 				new DateTime(2015, 10, 14, 10, 0)));
 		t3.addRequiredDeveloper(d2);
 		t3.update();
-		assertEquals(t3.getStatusName(), "AVAILABLE");
+		assertEquals(t3.getStatusName(), "PLANNED");
 		t3.executeTask();
 		assertEquals(t3.getStatusName(), "EXECUTING");
 		t3.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
@@ -1423,7 +1423,7 @@ public class TaskTest {
 		t.addRequiredDeveloper(d);
 		t.update();
 
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 
 		t.setMemento(tm);
 		assertEquals(t.getDependencies(), dependencies);
@@ -1450,10 +1450,11 @@ public class TaskTest {
 		TaskMemento tm = t.createMemento();
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		
 		t.setMemento(tm);
 		assertEquals(t.getDependencies(), dependencies);
 		assertNull(t.getAlternative());
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 
 	}
 
@@ -1471,7 +1472,7 @@ public class TaskTest {
 		t.addRequiredDeveloper(d);
 		t.update();
 
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
 
@@ -1500,7 +1501,7 @@ public class TaskTest {
 		t.addRequiredDeveloper(d);
 		t.update();
 
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
 
@@ -1529,7 +1530,7 @@ public class TaskTest {
 		t.addRequiredDeveloper(d);
 		t.update();
 
-		assertEquals(t.getStatusName(), "AVAILABLE");
+		assertEquals(t.getStatusName(), "PLANNED");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
 

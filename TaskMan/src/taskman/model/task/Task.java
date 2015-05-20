@@ -701,6 +701,8 @@ public class Task extends TaskSubject implements Observer {
 			status = new Executing();
 		} else if (m.getStateName().equals("FINISHED")) {
 			status = new Finished();
+		} else if (m.getStateName().equals("PLANNED")){
+			status = new Planned();
 		} else {
 			status = new Failed();
 		}
