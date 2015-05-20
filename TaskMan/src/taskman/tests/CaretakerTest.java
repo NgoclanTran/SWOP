@@ -12,13 +12,10 @@ import taskman.model.memento.ClockMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.memento.TaskMemento;
-<<<<<<< HEAD
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
-import taskman.model.project.task.TaskFactory;
-=======
 import taskman.model.task.Task;
->>>>>>> branch 'refactoring' of https://Minaris@bitbucket.org/BulletTime/swop.git
+import taskman.model.task.TaskFactory;
+import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 

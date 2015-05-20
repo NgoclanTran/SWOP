@@ -32,6 +32,6 @@ public class ClockTest {
 		
 		DateTime dt = new DateTime(2015,10,12,10,10);
 		clock.setSystemTime(dt);
-		assertEquals(clock.getSystemTime(), dt);ss
+		assertEquals(clock.getSystemTime(), dt);
 	}
 }

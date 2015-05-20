@@ -49,7 +49,7 @@ public class UpdateTaskStatusSessionTest {
 		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
 		uh = new UserHandler();
-		session = new UpdateTaskStatusSession(cli, ph, uh);
+		session = new UpdateTaskStatusSession(cli, ph);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),
@@ -80,8 +80,7 @@ public class UpdateTaskStatusSessionTest {
 		ProjectHandler ph = new ProjectHandler(tf);
 		ResourceHandler rh = new ResourceHandler();
 		systemInMock.provideText("1\n8\n");
-		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph,
-				uh);
+		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph);
 		session.run();
 		String output = "No available tasks.";
 		assertTrue(log.getLog().contains(output));

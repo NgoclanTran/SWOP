@@ -63,7 +63,7 @@ public class PlanTaskSessionTest {
 	
 	@Test
 	public void useCaseTest_NoTask(){
-		PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(), uh);
+		PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(tf), uh, clock);
 		s.run();
 		assertEquals("No unplanned tasks.\r\n\r\n", log.getLog());
 	}
