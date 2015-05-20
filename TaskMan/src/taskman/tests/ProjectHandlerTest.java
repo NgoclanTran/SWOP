@@ -8,9 +8,9 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.model.ProjectHandler;
+import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
-import taskman.model.project.task.TaskFactory;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 
 public class ProjectHandlerTest {

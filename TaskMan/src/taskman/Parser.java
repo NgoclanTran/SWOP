@@ -20,13 +20,13 @@ import javax.swing.JFileChooser;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
-import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
-import taskman.model.UserHandler;
+import taskman.model.company.ProjectHandler;
+import taskman.model.company.ResourceHandler;
+import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.DailyAvailability;
 import taskman.model.time.TimeService;

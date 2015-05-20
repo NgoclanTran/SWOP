@@ -9,9 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.memento.ProjectMemento;
+<<<<<<< HEAD
 import taskman.model.project.Project;
 import taskman.model.project.task.Task;
 import taskman.model.project.task.TaskFactory;
+=======
+import taskman.model.task.Task;
+>>>>>>> branch 'refactoring' of https://Minaris@bitbucket.org/BulletTime/swop.git
 import taskman.model.time.Clock;
 
 public class ProjectMementoTest {

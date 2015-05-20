@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.memento.TaskMemento;
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 

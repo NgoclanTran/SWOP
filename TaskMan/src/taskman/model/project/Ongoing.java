@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
-import taskman.model.project.task.Task;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.Task;
 
 class Ongoing implements State {
 

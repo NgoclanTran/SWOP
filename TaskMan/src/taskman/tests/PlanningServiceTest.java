@@ -15,14 +15,14 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.model.PlanningService;
-import taskman.model.ProjectHandler;
-import taskman.model.ResourceHandler;
-import taskman.model.project.task.Task;
-import taskman.model.project.task.TaskFactory;
+import taskman.model.company.ProjectHandler;
+import taskman.model.company.ResourceHandler;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.Task;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
+import taskman.model.time.PlanningService;
 import taskman.model.time.TimeSpan;
 
 public class PlanningServiceTest {

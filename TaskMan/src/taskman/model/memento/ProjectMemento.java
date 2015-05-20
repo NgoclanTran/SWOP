@@ -3,8 +3,7 @@ package taskman.model.memento;
 import java.util.ArrayList;
 
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
-import taskman.model.time.Clock;
+import taskman.model.task.Task;
 
 public class ProjectMemento {
 

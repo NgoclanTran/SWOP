@@ -14,9 +14,9 @@ import org.junit.Test;
 
 import taskman.exceptions.IllegalTimeException;
 import taskman.model.memento.ReservableMemento;
-import taskman.model.project.task.Reservable;
-import taskman.model.project.task.Reservation;
-import taskman.model.project.task.Task;
+import taskman.model.task.Reservable;
+import taskman.model.task.Reservation;
+import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 

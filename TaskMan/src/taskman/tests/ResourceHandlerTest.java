@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.model.ResourceHandler;
+import taskman.model.company.ResourceHandler;
 import taskman.model.resource.ResourceType;
 
 public class ResourceHandlerTest {

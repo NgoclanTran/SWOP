@@ -8,9 +8,9 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.Task;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 

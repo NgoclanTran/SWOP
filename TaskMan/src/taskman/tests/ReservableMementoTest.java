@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.memento.ReservableMemento;
-import taskman.model.project.task.Reservation;
+import taskman.model.task.Reservation;
 
 public class ReservableMementoTest {
 	private ReservableMemento r;

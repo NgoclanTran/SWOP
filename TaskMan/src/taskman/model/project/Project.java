@@ -9,9 +9,9 @@ import org.joda.time.DateTime;
 import taskman.exceptions.IllegalDateException;
 import taskman.model.Observer;
 import taskman.model.memento.ProjectMemento;
-import taskman.model.project.task.Task;
-import taskman.model.project.task.TaskFactory;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.Task;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.TimeService;
 
 public class Project implements Observer {

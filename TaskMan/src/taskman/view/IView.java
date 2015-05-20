@@ -4,7 +4,7 @@ import java.util.List;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.project.task.Task;
+import taskman.model.task.Task;
 
 public interface IView {
 
