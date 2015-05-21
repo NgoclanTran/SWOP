@@ -3,19 +3,24 @@ package taskman.tests;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.memento.Caretaker;
 import taskman.model.memento.ClockMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.memento.NormalTaskMemento;
 import taskman.model.project.Project;
-import taskman.model.task.Task2;
+import taskman.model.resource.ResourceType;
+import taskman.model.task.NormalTask;
+import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 import taskman.model.task.TaskFactory;
-import taskman.model.task.Task2;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
@@ -28,12 +33,15 @@ public class CaretakerTest {
 	ArrayList<ReservableMemento> savedResourceMementos = new ArrayList<ReservableMemento>();
 	ArrayList<NormalTaskMemento> savedTaskMementos = new ArrayList<NormalTaskMemento>();
 	Caretaker c = new Caretaker();
-
+	
+	
 	@Test
 	public void addProjectMementoTest() {
-		Project p = new Project("name", "description", new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,00), new TaskFactory(clock));
+		Company company = new Company();
+		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
+		Project p = new Project("name", "description", new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,00), new TaskFactory(new BranchOffice(company, "New York", resourceTypes ), clock));
 		
-		ProjectMemento projectMemento = new ProjectMemento(p, (ArrayList<Task2>) p.getTasks(), "state");
+		ProjectMemento projectMemento = new ProjectMemento(p, (ArrayList<NormalTask>) p.getTasks(), "state");
 		c.addProjectMemento(projectMemento);
 		assertEquals(c.getProjectMementos().get(0), projectMemento);
 	}
@@ -55,9 +63,9 @@ public class CaretakerTest {
 
 	@Test
 	public void addTaskMementoTest() {
-		Task2 t = new Task2(clock,"", 10, 10, null, null, null);
-		Task2 t1 = new Task2(clock,"", 10, 10, null, null, null);
-		ArrayList<Task2> tasks = new ArrayList<Task2>();
+		NormalTask t = new NormalTask(clock,"", 10, 10, null, null, null);
+		NormalTask t1 = new NormalTask(clock,"", 10, 10, null, null, null);
+		ArrayList<NormalTask> tasks = new ArrayList<NormalTask>();
 		NormalTaskMemento t2 = new NormalTaskMemento(t, tasks, "name", new TimeSpan(
 				new DateTime(2015, 10, 12, 10, 0), new DateTime(2015, 10, 12,
 						12, 0)), t1);
