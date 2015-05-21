@@ -15,11 +15,13 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task2;
+import taskman.model.task.NormalTask;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.PlanningService;
@@ -40,9 +42,10 @@ public class PlanningServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		clock = new Clock();
-		tf = new TaskFactory(clock);
+		Company company = new Company();
+		tf = new TaskFactory(new BranchOffice(company, "New York", new ArrayList<ResourceType>()), clock);
 		ph = new ProjectHandler(tf);
-		rh = new ResourceHandler();
+		rh = new ResourceHandler(null);
 		planning = new PlanningService(clock);
 
 		startTime = new DateTime(2015, 1, 1, 13, 0);
@@ -111,14 +114,14 @@ public class PlanningServiceTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetPossibleStartTimesNegativeAmount() {
-		Task2 task = ph.getProjects().get(0).getTasks().get(0);
+		NormalTask task = ph.getProjects().get(0).getTasks().get(0);
 		planning.getPossibleStartTimes(task, -3, new DateTime());
 	}
 
 	@Test
 	public void testGetPossibleStartTimes() {
 		int amount = 3;
-		Task2 task = ph.getProjects().get(0).getTasks().get(0);
+		NormalTask task = ph.getProjects().get(0).getTasks().get(0);
 		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
 		Clock systemClock = new Clock();
 		DateTime systemTime = new DateTime(2015, 1, 1, 8, 0);
@@ -159,7 +162,7 @@ public class PlanningServiceTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testIsValidTimeSpanNullTimeSpan() {
-		Task2 task = ph.getProjects().get(0).getTasks().get(0);
+		NormalTask task = ph.getProjects().get(0).getTasks().get(0);
 		planning.isValidTimeSpan(task, null, null);
 	}
 
@@ -173,7 +176,7 @@ public class PlanningServiceTest {
 
 	@Test
 	public void testIsValidTimeSpanAfter20150115() {
-		Task2 task = ph.getProjects().get(0).getTasks().get(0);
+		NormalTask task = ph.getProjects().get(0).getTasks().get(0);
 		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task
 				.getEstimatedDuration()));
 		assertFalse(planning.isValidTimeSpan(task, timeSpan, new DateTime(2015,
@@ -203,8 +206,8 @@ public class PlanningServiceTest {
 	//
 	@Test
 	public void testIsValidTimeSpanResourceFree() {
-		Task2 task3 = ph.getProjects().get(0).getTasks().get(2);
-		Task2 task4 = ph.getProjects().get(0).getTasks().get(3);
+		NormalTask task3 = ph.getProjects().get(0).getTasks().get(2);
+		NormalTask task4 = ph.getProjects().get(0).getTasks().get(3);
 		DateTime newStartTime = startTime.plusMinutes(task3
 				.getEstimatedDuration() + 1);
 		TimeSpan timeSpan = new TimeSpan(newStartTime,

@@ -2,12 +2,15 @@ package taskman.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.task.TaskFactory;
@@ -23,6 +26,7 @@ public class ProjectHandlerTest {
 	@Before
 	public void setUp() throws Exception {
 		clock = new Clock();
+		BranchOffice b = new BranchOffice(new Company(), "New York", new ArrayList<ResourceType>());
 		tf = new TaskFactory(clock);
 		ph = new ProjectHandler(tf);
 		project1 = new Project("name", "description", new DateTime(),
