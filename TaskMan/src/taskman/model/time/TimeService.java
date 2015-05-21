@@ -3,14 +3,14 @@ package taskman.model.time;
 import org.joda.time.DateTime;
 
 public class TimeService {
-	
+
 	/**
 	 * The constructor of the time service.
 	 */
 	public TimeService() {
-		
+
 	}
-	
+
 	/**
 	 * Returns the first possible starting time
 	 * 
@@ -74,6 +74,7 @@ public class TimeService {
 	 *            The datetime to which these minutes will be added
 	 * @param minutesToAdd
 	 *            The amount of minutes to be added to the date time
+	 * 
 	 * @return the date time will be returned with the minutes added
 	 */
 	public DateTime addMinutes(DateTime time, int minutesToAdd) {
@@ -86,10 +87,55 @@ public class TimeService {
 	}
 
 	/**
+	 * This method will remove breaks from the date time
+	 * 
+	 * @param time
+	 *            The date time from which the breaks will be removed
+	 * @return returns the date time with the removed breaks
+	 */
+	private DateTime removeBreaks(DateTime time) {
+		if (time == null)
+			throw new IllegalArgumentException("The time cannot be null.");
+		if (time.getHourOfDay() == 8 && time.getMinuteOfHour() == 0) {
+			time = time.minusHours(15);
+		}
+		if (time.getHourOfDay() < 8) {
+			time = time.minusMinutes(420 + time.getMinuteOfDay());
+		}
+		if (time.getDayOfWeek() > 5) {
+			time = time.minusDays(time.getDayOfWeek() - 5);
+		}
+		if (time.getHourOfDay() == 12 && time.getMinuteOfHour() == 0) {
+			time = time.minusHours(1);
+		}
+		return time;
+	}
+
+	/**
+	 * Removes a given amount of minutes from the date time
+	 * 
+	 * @param time
+	 *            The datetime from which these minutes will be removed
+	 * @param minutesToAdd
+	 *            The amount of minutes to be removed from the date time
+	 * 
+	 * @return the date time will be returned with the minutes removed
+	 */
+	public DateTime subtractMinutes(DateTime time, int minutesToSubtract) {
+		while (minutesToSubtract > 0) {
+			time = time.minusMinutes(1);
+			time = removeBreaks(time);
+			minutesToSubtract -= 1;
+		}
+		return time;
+	}
+
+	/**
 	 * Will return the exact hour of the given date time
 	 * 
 	 * @param time
 	 *            The date time of which the exact hour will be calculated
+	 * 
 	 * @return the exact hour of the parameter
 	 */
 	public DateTime getExactHour(DateTime time) {

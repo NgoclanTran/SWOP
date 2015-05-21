@@ -1,6 +1,5 @@
 package taskman;
 
-import taskman.controller.MainSession;
 import taskman.model.company.MementoHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
