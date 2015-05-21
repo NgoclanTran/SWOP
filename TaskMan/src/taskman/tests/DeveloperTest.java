@@ -54,4 +54,9 @@ public class DeveloperTest {
 	public void getNameTest(){
 		Developer d = new Developer(name, startTime, endTime);
 		assertEquals(d.getName(), name);
+<<<<<<< HEAD
 	}
+=======
+	}
+}
+>>>>>>> branch 'refactoring' of https://Minaris@bitbucket.org/BulletTime/swop.git
