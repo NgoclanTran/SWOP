@@ -25,7 +25,6 @@ public class DeveloperTest {
 	@Test
 	public void constructorTest_success() {
 		Developer d = new Developer(name, startTime, endTime);
-		assertEquals(d.getName(), name);
 		assertEquals(d.getDailyAvailability().getStartTime(), startTime);
 		assertEquals(d.getDailyAvailability().getEndTime(), endTime);
 		assertEquals(d.toString(), "name");
@@ -41,17 +40,18 @@ public class DeveloperTest {
 		Developer d = new Developer(name, endTime, startTime);
 
 	}
-	
 	@Test
 	public void isDeveloperTest(){
 		Developer d = new Developer(name, startTime, endTime);
 		assertTrue(d.isDeveloper());
 	}
-	
 	@Test
-	public void isProjectManagerTest(){
+	public void isProjectmanagerTest(){
 		Developer d = new Developer(name, startTime, endTime);
 		assertFalse(d.isProjectManager());
 	}
-	
-}
+	@Test
+	public void getNameTest(){
+		Developer d = new Developer(name, startTime, endTime);
+		assertEquals(d.getName(), name);
+	}
