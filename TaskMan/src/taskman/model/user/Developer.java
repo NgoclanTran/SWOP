@@ -5,17 +5,16 @@ import org.joda.time.LocalTime;
 import taskman.exceptions.IllegalTimeException;
 import taskman.model.task.Reservable;
 
-public class Developer extends Reservable {
-
-	String name;
+public class Developer extends Reservable implements User {
+	
 	/**
-	 * The constructor of the developper class
+	 * The constructor of the developer class
 	 * @param name
-	 * 			The name of the developper
+	 * 			The name of the developer
 	 * @param startTime
-	 * 			The start time for this developper in terms of daily availability
+	 * 			The start time for this developer in terms of daily availability
 	 * @param endTime
-	 * 			The end time for this developper in terms of availability
+	 * 			The end time for this developer in terms of availability
 	 * @throws IllegalTimeException
 	 * @throws IllegalArgumentException
 	 */
@@ -26,11 +25,28 @@ public class Developer extends Reservable {
 			throw new IllegalArgumentException("Name can not be null.");
 		this.name = name;
 	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	
+	private final String name;
 
 	@Override
+	public boolean isDeveloper() {
+		return true;
+	}
+	
+	@Override
+	public boolean isProjectManager() {
+		return false;
+	}
+	
+	@Override
 	/**
-	 * Will return the name of the developper
-	 * @returns the name of the developper
+	 * Will return the name of the developer
+	 * @returns the name of the developer
 	 */
 	public String toString() {
 		return name;

@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
 import taskman.model.Observer;
-import taskman.model.memento.NormalTaskMemento;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;

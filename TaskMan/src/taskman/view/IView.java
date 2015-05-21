@@ -112,5 +112,10 @@ public interface IView {
 	 * This method will return a new resolve conflict form.
 	 */
 	public IResolveConflictForm getResolveConflictForm();
+	
+	/**
+	 * This method will return a new login form.
+	 */
+	public ILoginForm getLoginForm();
 
 }

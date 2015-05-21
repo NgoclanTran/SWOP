@@ -89,5 +89,10 @@ public class BranchOffice implements Observer {
 				company.announceCompletion(task);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return location;
+	}
 
 }

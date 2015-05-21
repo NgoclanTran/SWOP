@@ -533,4 +533,12 @@ public class View implements IView {
 		return new ResolveConflictForm(this);
 	}
 
+	/**
+	 * This method will return a new login form.
+	 */
+	@Override
+	public ILoginForm getLoginForm() {
+		return new LoginForm(this);
+	}
+
 }

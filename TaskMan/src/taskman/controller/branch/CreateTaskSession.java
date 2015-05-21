@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.NormalTask;
-import taskman.model.task.Task;
 import taskman.view.IView;
 
-public class CreateTaskSession extends AbstractProjectHandlerSession {
+public class CreateTaskSession extends Session {
 
+	private ProjectHandler ph;
 	private ResourceHandler rh;
 
 	/**
@@ -29,14 +30,18 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 	 *            The resource handler.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             The given resource handler needs to be valid.
+	 *             The given project handler and resource handler need to be valid.
 	 */
 	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh)
 			throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli);
+		if (ph == null)
+			throw new IllegalArgumentException(
+					"The create task controller needs a ProjectHandler");
 		if (rh == null)
 			throw new IllegalArgumentException(
 					"The create task controller needs a ResourceHandler");
+		this.ph = ph;
 		this.rh = rh;
 	}
 
@@ -58,7 +63,7 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 			try {
 				Project project = getProject();
 				List<NormalTask> tasks = project.getTasks();
-				List<Task> failedTasks = getFailedTasks(tasks);
+				List<NormalTask> failedTasks = getFailedTasks(tasks);
 
 				String description = getUI().getNewTaskForm()
 						.getNewTaskDescription();
@@ -66,11 +71,11 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 						.getNewTaskEstimatedDuration();
 				int acceptableDeviation = getUI().getNewTaskForm()
 						.getNewTaskAcceptableDeviation();
-				List<Task> dependencies = new ArrayList<Task>();
+				List<NormalTask> dependencies = new ArrayList<NormalTask>();
 				if (tasks.size() > 0)
 					dependencies = getUI().getNewTaskForm()
 							.getNewTaskDependencies(tasks);
-				Task alternativeFor = null;
+				NormalTask alternativeFor = null;
 				if (failedTasks.size() > 0)
 					alternativeFor = getUI().getNewTaskForm()
 							.getNewTaskAlternativeFor(tasks);
@@ -106,7 +111,7 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 	 */
 	private boolean isValidTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor,
+			List<NormalTask> dependencies, NormalTask alternativeFor,
 			Map<ResourceType, Integer> resourceTypes) {
 		try {
 			project.addTask(description, estimatedDuration,
@@ -133,7 +138,7 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 	 * @return The project as chosen by the user in the UI.
 	 */
 	private Project getProject() throws ShouldExitException {
-		List<Project> projects = getPH().getProjects();
+		List<Project> projects = ph.getProjects();
 
 		if (projects.size() == 0) {
 			getUI().displayError("No projects.");
@@ -151,9 +156,9 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 	 * 
 	 * @return Returns a list of failed tasks.
 	 */
-	private List<Task> getFailedTasks(List<Task> tasks) {
-		ArrayList<Task> failedTasks = new ArrayList<Task>();
-		for (Task task : tasks) {
+	private List<NormalTask> getFailedTasks(List<NormalTask> tasks) {
+		ArrayList<NormalTask> failedTasks = new ArrayList<NormalTask>();
+		for (NormalTask task : tasks) {
 			if (task.isFailed())
 				failedTasks.add(task);
 		}
