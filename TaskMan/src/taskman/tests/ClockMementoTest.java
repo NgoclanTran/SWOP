@@ -7,6 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.memento.ClockMemento;
+import taskman.model.memento.ReservableMemento;
+import taskman.model.task.Reservable;
+import taskman.model.time.Clock;
 
 public class ClockMementoTest {
 	private ClockMemento c;
@@ -18,5 +21,12 @@ public class ClockMementoTest {
 	@Test
 	public void testState(){
 		assertEquals(SystemTime, c.getState());
+	}
+	
+	@Test
+	public void getObjectTest(){
+		Clock c = new Clock();
+		ClockMemento c1 = new ClockMemento(c, SystemTime);
+		assertEquals(c1.getObject(), c);
 	}
 }

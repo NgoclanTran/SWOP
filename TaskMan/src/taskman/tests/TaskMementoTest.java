@@ -8,26 +8,38 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.memento.NormalTaskMemento;
+import taskman.model.memento.ProjectMemento;
+import taskman.model.project.Project;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class TaskMementoTest {
 
-	ArrayList<Task> dependants = new ArrayList<Task>();
+	ArrayList<NormalTask> dependants = new ArrayList<NormalTask>();
 	String stateName;
-	TimeSpan timeSpan = new TimeSpan(new DateTime(), new DateTime());
-	Task alternative;
+	TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 11, 0), new DateTime(2015,
+			10, 12, 15, 0));
+	NormalTask alternative;
 	private NormalTaskMemento t;
 	private Clock clock = new Clock();
+	private Company company;
+	private BranchOffice branchOffice = new BranchOffice(company, "", null);
 
 	@Before
 	public void setup() {
-		Task t1 = new Task(clock,"", 10, 10, null, null, null);
-		alternative = new Task(clock,"", 10, 10, null, null, null);
-		dependants.add(t1);
-		t = new NormalTaskMemento(t1, dependants, "state", timeSpan, alternative);
+		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask("", 10, 1, null, null, null);
+		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
+		p.addTask("aze", 10, 1, null, null, null);
+		dependants.add(branchOffice.getPh().getProjects().get(0).getTasks().get(1));
+		t = new NormalTaskMemento(branchOffice.getPh().getProjects().get(0).getTasks().get(0), dependants, "state", timeSpan, alternative);
 
 	}
 
@@ -49,6 +61,12 @@ public class TaskMementoTest {
 	@Test
 	public void getAlternativeTest() {
 		assertEquals(t.getAlternative(), alternative);
+	}
+	@Test
+	public void getObjectTest(){
+		NormalTask t1 = new NormalTask(clock, "", 10, 1, null, null, null);
+		t = new NormalTaskMemento(t1, dependants, "state", timeSpan, alternative);
+		assertEquals(t1, t.getObject());
 	}
 
 }
