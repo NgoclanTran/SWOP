@@ -37,6 +37,11 @@ public class Planned implements Status {
 	public boolean isPlanned() {
 		return true;
 	}
+	
+	@Override
+	public boolean isDelegated() {
+		return false;
+	}
 
 	@Override
 	public void updateStatus(Task task, DateTime currentTime)
@@ -71,7 +76,7 @@ public class Planned implements Status {
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative)
+	public void addAlternative(NormalTask task, NormalTask alternative)
 			throws IllegalStateException {
 		throw new IllegalStateException(
 				"The task has not failed.");
@@ -97,6 +102,11 @@ public class Planned implements Status {
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		task.performExecuteTask(new Executing());
+	}
+	
+	@Override
+	public void delegateTask(Task task) throws IllegalStateException {
+		throw new IllegalStateException("Planned task can not be delegated.");
 	}
 
 }

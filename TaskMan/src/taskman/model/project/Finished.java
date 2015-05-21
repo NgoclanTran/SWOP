@@ -6,7 +6,7 @@ import java.util.Map;
 import org.joda.time.DateTime;
 
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 
 public class Finished implements State {
 
@@ -25,7 +25,7 @@ public class Finished implements State {
 	@Override
 	public void addTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor,
+			List<NormalTask> dependencies, NormalTask alternativeFor,
 			Map<ResourceType, Integer> resourceTypes)
 			throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");

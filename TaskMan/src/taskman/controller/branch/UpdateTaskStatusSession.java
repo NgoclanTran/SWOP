@@ -32,7 +32,7 @@ public class UpdateTaskStatusSession extends AbstractProjectHandlerSession {
 	public UpdateTaskStatusSession(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {
 		super(cli, ph);
-		//TODO: Give the user to constructor.
+		// TODO: Give the user to constructor.
 	}
 
 	/**

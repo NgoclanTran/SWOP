@@ -10,6 +10,7 @@ import taskman.exceptions.IllegalDateException;
 import taskman.model.Observer;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.TimeService;
@@ -51,7 +52,7 @@ public class Project implements Observer {
 		this.creationTime = creationTime;
 		this.dueTime = dueTime;
 		this.taskFactory = taskFactory;
-		this.tasks = new ArrayList<Task>();
+		this.tasks = new ArrayList<NormalTask>();
 	}
 
 	/**
@@ -103,8 +104,8 @@ public class Project implements Observer {
 	 * 
 	 * @return Returns the list of tasks of the project.
 	 */
-	public List<Task> getTasks() {
-		return new ArrayList<Task>(this.tasks);
+	public List<NormalTask> getTasks() {
+		return new ArrayList<NormalTask>(this.tasks);
 	}
 
 	/**
@@ -118,8 +119,8 @@ public class Project implements Observer {
 	 * @throws IllegalStateException
 	 */
 	public void addTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			int acceptableDeviation, List<NormalTask> dependencies,
+			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
 			throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor,
@@ -127,17 +128,17 @@ public class Project implements Observer {
 	}
 
 	protected void performAddTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			int acceptableDeviation, List<NormalTask> dependencies,
+			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
 			throws IllegalArgumentException {
-		Task task = taskFactory.makeTask(description, estimatedDuration,
-				acceptableDeviation, dependencies, alternativeFor,
-				resourceTypes);
+		NormalTask task = taskFactory.makeNormalTask(description,
+				estimatedDuration, acceptableDeviation, dependencies,
+				alternativeFor, resourceTypes);
 		this.tasks.add(task);
 		task.attach(this);
 	}
 
-	private ArrayList<Task> tasks;
+	private ArrayList<NormalTask> tasks;
 
 	/**
 	 * Returns the name of the state of the project.
@@ -286,7 +287,7 @@ public class Project implements Observer {
 	 *         project.
 	 */
 	public ProjectMemento createMemento() {
-		return new ProjectMemento(this, new ArrayList<Task>(tasks),
+		return new ProjectMemento(this, new ArrayList<NormalTask>(tasks),
 				state.getName());
 	}
 

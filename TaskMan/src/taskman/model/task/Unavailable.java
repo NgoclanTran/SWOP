@@ -32,9 +32,14 @@ class Unavailable implements Status {
 	public boolean isExecuting() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isPlanned() {
+		return false;
+	}
+
+	@Override
+	public boolean isDelegated() {
 		return false;
 	}
 
@@ -42,7 +47,7 @@ class Unavailable implements Status {
 	public void updateStatus(Task task, DateTime currentTime) {
 		if (task == null)
 			throw new NullPointerException("The task is null.");
-		
+
 		if (!task.getReservations().isEmpty())
 			task.performUpdateStatus(new Planned());
 	}
@@ -51,14 +56,14 @@ class Unavailable implements Status {
 	public TimeSpan getTimeSpan(Task task) {
 		throw new IllegalStateException(
 				"Unavailable Task doesn't have timeSpan.");
-	
+
 	}
 
 	@Override
 	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
 			DateTime endTime) throws IllegalStateException {
 		throw new IllegalStateException("This task is unavailable");
-	
+
 	}
 
 	@Override
@@ -67,10 +72,10 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative)
+	public void addAlternative(NormalTask task, NormalTask alternative)
 			throws IllegalStateException {
 		throw new IllegalStateException("This task is unavailable");
-	
+
 	}
 
 	@Override
@@ -94,6 +99,11 @@ class Unavailable implements Status {
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Unavailable task can not be executed");
 
+	}
+
+	@Override
+	public void delegateTask(Task task) throws IllegalStateException {
+		task.performDelegateTask(new Delegated());
 	}
 
 }

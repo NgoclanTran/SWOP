@@ -16,7 +16,7 @@ import taskman.controller.branch.CreateProjectSession;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.view.IView;
@@ -28,7 +28,7 @@ public class CreateProjectSessionTest {
 	private ResourceHandler rh;
 	private CreateProjectSession session;
 	private String description;
-	private ArrayList<Task> dependencies;
+	private ArrayList<Task2> dependencies;
 	private Project p;
 	private TaskFactory tf;
 	private Clock clock ;

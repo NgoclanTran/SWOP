@@ -3,12 +3,12 @@ package taskman.model.memento;
 import java.util.ArrayList;
 
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 
 public class ProjectMemento {
 
 	private Project project;
-	private ArrayList<Task> tasks;
+	private ArrayList<NormalTask> tasks;
 	private String stateName;
 
 	/**
@@ -22,7 +22,7 @@ public class ProjectMemento {
 	 *            The state of the project memento.
 	 * 
 	 */
-	public ProjectMemento(Project project, ArrayList<Task> tasks,
+	public ProjectMemento(Project project, ArrayList<NormalTask> tasks,
 			String stateName) {
 		this.project = project;
 		this.tasks = tasks;
@@ -52,8 +52,8 @@ public class ProjectMemento {
 	 * 
 	 * @return returns a copy ofthe list of tasks of the project memento
 	 */
-	public ArrayList<Task> getTasks() {
-		return new ArrayList<Task>(tasks);
+	public ArrayList<NormalTask> getTasks() {
+		return new ArrayList<NormalTask>(tasks);
 	}
 
 }

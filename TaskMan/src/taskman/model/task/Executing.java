@@ -32,10 +32,15 @@ class Executing implements Status {
 	public boolean isExecuting() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isPlanned() {
 		return true;
+	}
+	
+	@Override
+	public boolean isDelegated() {
+		return false;
 	}
 
 	@Override
@@ -45,7 +50,7 @@ class Executing implements Status {
 	}
 
 	@Override
-	public TimeSpan getTimeSpan(Task task) {
+	public TimeSpan getTimeSpan(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Executing Task doesn't have timeSpan.");
 	}
 
@@ -75,7 +80,7 @@ class Executing implements Status {
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative)
+	public void addAlternative(NormalTask task, NormalTask alternative)
 			throws IllegalStateException {
 		throw new IllegalStateException("This task is already executing");
 	}
@@ -88,18 +93,23 @@ class Executing implements Status {
 	@Override
 	public int calculateTotalExecutedTime(Task task)
 			throws IllegalStateException {
-		return task.performGetTotalExecutionTime();
+		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
 	public int calculateOverDuePercentage(Task task)
 			throws IllegalStateException {
-		return task.performGetOverduePercentage();
+		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Executing task can not be executed.");
+	}
+	
+	@Override
+	public void delegateTask(Task task) throws IllegalStateException {
+		throw new IllegalStateException("Executing task can not be delegated.");
 	}
 
 }

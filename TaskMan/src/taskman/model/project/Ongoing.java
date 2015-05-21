@@ -6,7 +6,7 @@ import java.util.Map;
 import org.joda.time.DateTime;
 
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 
 class Ongoing implements State {
 
@@ -25,9 +25,9 @@ class Ongoing implements State {
 	@Override
 	public void addTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor,
+			List<NormalTask> dependencies, NormalTask alternativeFor,
 			Map<ResourceType, Integer> resourceTypes)
-			throws IllegalStateException,IllegalArgumentException {
+			throws IllegalStateException, IllegalArgumentException {
 		project.performAddTask(description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor,
 				resourceTypes);

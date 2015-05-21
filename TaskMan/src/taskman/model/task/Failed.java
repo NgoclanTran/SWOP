@@ -37,6 +37,11 @@ class Failed implements Status {
 	public boolean isPlanned() {
 		return true;
 	}
+	
+	@Override
+	public boolean isDelegated() {
+		return false;
+	}
 
 	@Override
 	public void updateStatus(Task task, DateTime currentTime)
@@ -63,7 +68,7 @@ class Failed implements Status {
 	}
 
 	@Override
-	public void addAlternative(Task task, Task alternative) {
+	public void addAlternative(NormalTask task, NormalTask alternative) {
 		task.performAddAlternative(alternative);
 	}
 
@@ -85,6 +90,11 @@ class Failed implements Status {
 	@Override
 	public void executeTask(Task task) throws IllegalStateException {
 		throw new IllegalStateException("Failed task can not be executed");
+	}
+	
+	@Override
+	public void delegateTask(Task task) throws IllegalStateException {
+		throw new IllegalStateException("Failed task can not be delegated.");
 	}
 
 }

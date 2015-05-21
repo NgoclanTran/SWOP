@@ -9,7 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.view.commandline.Input;
 import taskman.view.commandline.Output;
 
@@ -178,7 +178,7 @@ public class View implements IView {
 	 * 
 	 * @return Returns a string with basic information about the given task.
 	 */
-	private String getStringTask(Task task, int index) {
+	private String getStringTask(Task2 task, int index) {
 		StringBuilder taskInfo = new StringBuilder();
 		taskInfo.append("Task ");
 		taskInfo.append(index);
@@ -203,7 +203,7 @@ public class View implements IView {
 	 * 
 	 * @return Returns a string with detailed information about the given task.
 	 */
-	private String getStringTaskDetails(Task task) {
+	private String getStringTaskDetails(Task2 task) {
 		StringBuilder taskInfo = new StringBuilder();
 		taskInfo.append("Task:");
 		taskInfo.append("\n");
@@ -447,7 +447,7 @@ public class View implements IView {
 	 *             The choice of the user is to stop.
 	 */
 	@Override
-	public Task getTask(List<Task> tasks) throws ShouldExitException {
+	public Task2 getTask(List<Task2> tasks) throws ShouldExitException {
 		displayTaskList(tasks, 1, true);
 		int taskId = getListChoice(tasks, "Select a task:");
 		return tasks.get(taskId - 1);
@@ -460,7 +460,7 @@ public class View implements IView {
 	 * @param task
 	 */
 	@Override
-	public void displayTaskDetails(Task task) {
+	public void displayTaskDetails(Task2 task) {
 		displayInfo(output.indentStringWithNewLines(getStringTaskDetails(task),
 				1));
 		output.displayEmptyLine();
@@ -475,7 +475,7 @@ public class View implements IView {
 	 * @param tabs
 	 * @param printReturn
 	 */
-	protected void displayTaskList(List<Task> tasks, int tabs,
+	protected void displayTaskList(List<Task2> tasks, int tabs,
 			boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {

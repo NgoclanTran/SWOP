@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.user.Developer;
 
 public interface IUpdateTaskForm {
@@ -53,6 +53,6 @@ public interface IUpdateTaskForm {
 	 * @throws ShouldExitException
 	 */
 	public Project getProjectWithAvailableTasks(List<Project> projects,
-			List<List<Task>> availableTasks);
+			List<List<Task2>> availableTasks);
 
 }

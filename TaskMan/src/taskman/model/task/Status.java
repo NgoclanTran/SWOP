@@ -50,6 +50,13 @@ interface Status {
 	 * @return boolean depending on whether the status is planned or not
 	 */
 	public boolean isPlanned();
+	
+	/**
+	 * Returns whether the status is delegated or not
+	 * 
+	 * @return boolean depending on whether the status is delegated or not
+	 */
+	public boolean isDelegated();
 
 	/**
 	 * Will update the task status if possible
@@ -66,7 +73,7 @@ interface Status {
 	 * 
 	 * @return The timespan of the task
 	 */
-	public TimeSpan getTimeSpan(Task task);
+	public TimeSpan getTimeSpan(Task task) throws IllegalStateException;
 
 	/**
 	 * Will add a time span to the given task if possible
@@ -93,7 +100,8 @@ interface Status {
 	 * @return a boolean indicating whether a task's alternatives have been
 	 *         completed or not
 	 */
-	public boolean isAlternativeFinished(Task task);
+	public boolean isAlternativeFinished(Task task)
+			throws IllegalStateException;
 
 	/**
 	 * Will add an alternative task to the given task
@@ -104,7 +112,7 @@ interface Status {
 	 *            the alternative to be added to the given task
 	 * @throws IllegalStateException
 	 */
-	public void addAlternative(Task task, Task alternative)
+	public void addAlternative(NormalTask task, NormalTask alternative)
 			throws IllegalStateException;
 
 	/**
@@ -117,7 +125,7 @@ interface Status {
 	 * @return returns a boolean indicating whether the task is serverly overdue
 	 *         or not
 	 */
-	public boolean isSeverelyOverdue(Task task);
+	public boolean isSeverelyOverdue(Task task) throws IllegalStateException;
 
 	/**
 	 * Will calculate the total executed time if possible
@@ -142,4 +150,6 @@ interface Status {
 			throws IllegalStateException;
 
 	public void executeTask(Task task) throws IllegalStateException;
+	
+	public void delegateTask(Task task) throws IllegalStateException;
 }

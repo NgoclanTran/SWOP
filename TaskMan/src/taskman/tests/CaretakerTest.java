@@ -11,11 +11,11 @@ import taskman.model.memento.Caretaker;
 import taskman.model.memento.ClockMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
-import taskman.model.memento.TaskMemento;
+import taskman.model.memento.NormalTaskMemento;
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.task.TaskFactory;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
@@ -26,14 +26,14 @@ public class CaretakerTest {
 	ArrayList<ProjectMemento> savedProjectMementos = new ArrayList<ProjectMemento>();
 	ArrayList<ReservableMemento> savedDeveloperMementos = new ArrayList<ReservableMemento>();
 	ArrayList<ReservableMemento> savedResourceMementos = new ArrayList<ReservableMemento>();
-	ArrayList<TaskMemento> savedTaskMementos = new ArrayList<TaskMemento>();
+	ArrayList<NormalTaskMemento> savedTaskMementos = new ArrayList<NormalTaskMemento>();
 	Caretaker c = new Caretaker();
 
 	@Test
 	public void addProjectMementoTest() {
 		Project p = new Project("name", "description", new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,00), new TaskFactory(clock));
 		
-		ProjectMemento projectMemento = new ProjectMemento(p, (ArrayList<Task>) p.getTasks(), "state");
+		ProjectMemento projectMemento = new ProjectMemento(p, (ArrayList<Task2>) p.getTasks(), "state");
 		c.addProjectMemento(projectMemento);
 		assertEquals(c.getProjectMementos().get(0), projectMemento);
 	}
@@ -55,10 +55,10 @@ public class CaretakerTest {
 
 	@Test
 	public void addTaskMementoTest() {
-		Task t = new Task(clock,"", 10, 10, null, null, null);
-		Task t1 = new Task(clock,"", 10, 10, null, null, null);
-		ArrayList<Task> tasks = new ArrayList<Task>();
-		TaskMemento t2 = new TaskMemento(t, tasks, "name", new TimeSpan(
+		Task2 t = new Task2(clock,"", 10, 10, null, null, null);
+		Task2 t1 = new Task2(clock,"", 10, 10, null, null, null);
+		ArrayList<Task2> tasks = new ArrayList<Task2>();
+		NormalTaskMemento t2 = new NormalTaskMemento(t, tasks, "name", new TimeSpan(
 				new DateTime(2015, 10, 12, 10, 0), new DateTime(2015, 10, 12,
 						12, 0)), t1);
 		c.addTaskMemento(t2);

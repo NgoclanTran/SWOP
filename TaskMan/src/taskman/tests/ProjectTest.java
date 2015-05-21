@@ -15,7 +15,7 @@ import org.junit.Test;
 import taskman.exceptions.IllegalDateException;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
@@ -123,7 +123,7 @@ public class ProjectTest {
 	public void testGetTasks() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		assertEquals(0, project.getTasks().size());
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
@@ -139,13 +139,13 @@ public class ProjectTest {
 	public void testChangeGetTasks() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		assertEquals(0, project.getTasks().size());
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		assertEquals(1, project.getTasks().size());
-		List<Task> tasks = project.getTasks();
-		tasks.add(new Task(clock,desc, estimatedDuration, acceptableDeviation,
+		List<Task2> tasks = project.getTasks();
+		tasks.add(new Task2(clock,desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null));
 		assertEquals(1, project.getTasks().size());
 	}
@@ -154,7 +154,7 @@ public class ProjectTest {
 	public void testAddTask() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		assertEquals(1, project.getTasks().size());
@@ -169,7 +169,7 @@ public class ProjectTest {
 	@Test (expected = IllegalArgumentException.class)
 	public void testAddTask_Name_Null(){
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(null, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 	}
@@ -178,7 +178,7 @@ public class ProjectTest {
 	public void testAddTask_EstimatedDuration_Neg(){
 		String desc = "desc";
 		int acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, -1, acceptableDeviation,
 				dependencies, null, null);
 	}
@@ -187,7 +187,7 @@ public class ProjectTest {
 	public void testAddTask_AcceptableDeviation_Null(){
 		String desc = "desc";
 		int estimatedDuration = 500;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, -1,
 				dependencies, null, null);
 	}
@@ -196,7 +196,7 @@ public class ProjectTest {
 	public void testAddTaskFinishedProject() {
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null,null);
 		project.getTasks()
@@ -213,7 +213,7 @@ public class ProjectTest {
 		String desc = "desc", desc2 = "desc2";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		dependencies.add(project.getTasks().get(0));
@@ -240,7 +240,7 @@ public class ProjectTest {
 		String desc = "desc", desc2 = "desc2";
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		project.getTasks()
@@ -265,10 +265,10 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		Task t = project.getTasks().get(0);
+		Task2 t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);
@@ -289,7 +289,7 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		assertFalse(project.isFinished());
@@ -300,12 +300,12 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		Task t = project.getTasks().get(0);
+		Task2 t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);
@@ -325,10 +325,10 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		Task t = project.getTasks().get(0);
+		Task2 t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);
@@ -349,7 +349,7 @@ public class ProjectTest {
 	public void testGetEstimatedFinishTime() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, 120, 0, dependencies, null, null);
 		assertEquals(new DateTime(2014, 1, 1, 10, 0),
 				project.getEstimatedFinishTime());
@@ -361,9 +361,9 @@ public class ProjectTest {
 	public void testGetTotalDelay() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, 600, 0, dependencies, null, null);
-		Task t = project.getTasks().get(0);
+		Task2 t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d.addReservation(t, timeSpan);
@@ -384,9 +384,9 @@ public class ProjectTest {
 	public void testGetEstimatedFinishTime3() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, 600, 0, dependencies, null, null);
-		Task t = project.getTasks().get(0);
+		Task2 t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d.addReservation(t, timeSpan);
@@ -407,10 +407,10 @@ public class ProjectTest {
 	public void testGetTotalDelay2() {
 		assertFalse(project.isFinished());
 		String desc = "desc";
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, 600, 0, dependencies, null, null);
 		project.addTask(desc, 10, 0, null, null, null);
-		Task t = project.getTasks().get(0);
+		Task2 t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d.addReservation(t, timeSpan);
@@ -424,7 +424,7 @@ public class ProjectTest {
 		assertEquals(t.getStatusName(),"FINISHED");
 		
 		
-		Task t2 = project.getTasks().get(1);
+		Task2 t2 = project.getTasks().get(1);
 		Developer d2 = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan2 = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
 		d2.addReservation(t2, timeSpan2);
@@ -459,10 +459,10 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		int estimatedDuration = 500, acceptableDeviation = 50;
-		List<Task> dependencies = new ArrayList<Task>();
+		List<Task2> dependencies = new ArrayList<Task2>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
 				dependencies, null, null);
-		Task t = project.getTasks().get(0);
+		Task2 t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
 		d.addReservation(t, timeSpan);

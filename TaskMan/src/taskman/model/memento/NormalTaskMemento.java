@@ -3,16 +3,16 @@ package taskman.model.memento;
 import java.util.ArrayList;
 import java.util.List;
 
-import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 import taskman.model.time.TimeSpan;
 
-public class TaskMemento {
+public class NormalTaskMemento {
 
-	Task task;
-	List<Task> dependants;
+	NormalTask task;
+	List<NormalTask> dependants;
 	String stateName;
 	TimeSpan timeSpan;
-	Task alternative;
+	NormalTask alternative;
 
 	/**
 	 * The constructor of the task memento class
@@ -28,8 +28,8 @@ public class TaskMemento {
 	 * @param alternative
 	 *            The alternative task for the task memento
 	 */
-	public TaskMemento(Task task, List<Task> dependants, String stateName,
-			TimeSpan timeSpan, Task alternative) {
+	public NormalTaskMemento(NormalTask task, List<NormalTask> dependants, String stateName,
+			TimeSpan timeSpan, NormalTask alternative) {
 		this.task = task;
 		this.dependants = dependants;
 		this.stateName = stateName;
@@ -42,7 +42,7 @@ public class TaskMemento {
 	 * 
 	 * @return Returns the task the memento is made for.
 	 */
-	public Task getObject() {
+	public NormalTask getObject() {
 		return this.task;
 	}
 
@@ -51,8 +51,8 @@ public class TaskMemento {
 	 * 
 	 * @return returns a copy of the list of dependants for the task memento
 	 */
-	public ArrayList<Task> getDependants() {
-		return new ArrayList<Task>(dependants);
+	public List<NormalTask> getDependants() {
+		return new ArrayList<NormalTask>(dependants);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class TaskMemento {
 	 * 
 	 * @return returns the alternative task of this task memento.
 	 */
-	public Task getAlternative() {
+	public NormalTask getAlternative() {
 		return alternative;
 	}
 

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.joda.time.DateTime;
 
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 
 interface State {
 
@@ -36,7 +36,7 @@ interface State {
 	 */
 	abstract void addTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor,
+			List<NormalTask> dependencies, NormalTask alternativeFor,
 			Map<ResourceType, Integer> resourceTypes)
 			throws IllegalStateException;
 

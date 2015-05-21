@@ -19,7 +19,7 @@ import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.PlanningService;
@@ -111,14 +111,14 @@ public class PlanningServiceTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetPossibleStartTimesNegativeAmount() {
-		Task task = ph.getProjects().get(0).getTasks().get(0);
+		Task2 task = ph.getProjects().get(0).getTasks().get(0);
 		planning.getPossibleStartTimes(task, -3, new DateTime());
 	}
 
 	@Test
 	public void testGetPossibleStartTimes() {
 		int amount = 3;
-		Task task = ph.getProjects().get(0).getTasks().get(0);
+		Task2 task = ph.getProjects().get(0).getTasks().get(0);
 		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
 		Clock systemClock = new Clock();
 		DateTime systemTime = new DateTime(2015, 1, 1, 8, 0);
@@ -159,7 +159,7 @@ public class PlanningServiceTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testIsValidTimeSpanNullTimeSpan() {
-		Task task = ph.getProjects().get(0).getTasks().get(0);
+		Task2 task = ph.getProjects().get(0).getTasks().get(0);
 		planning.isValidTimeSpan(task, null, null);
 	}
 
@@ -173,7 +173,7 @@ public class PlanningServiceTest {
 
 	@Test
 	public void testIsValidTimeSpanAfter20150115() {
-		Task task = ph.getProjects().get(0).getTasks().get(0);
+		Task2 task = ph.getProjects().get(0).getTasks().get(0);
 		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task
 				.getEstimatedDuration()));
 		assertFalse(planning.isValidTimeSpan(task, timeSpan, new DateTime(2015,
@@ -203,8 +203,8 @@ public class PlanningServiceTest {
 	//
 	@Test
 	public void testIsValidTimeSpanResourceFree() {
-		Task task3 = ph.getProjects().get(0).getTasks().get(2);
-		Task task4 = ph.getProjects().get(0).getTasks().get(3);
+		Task2 task3 = ph.getProjects().get(0).getTasks().get(2);
+		Task2 task4 = ph.getProjects().get(0).getTasks().get(3);
 		DateTime newStartTime = startTime.plusMinutes(task3
 				.getEstimatedDuration() + 1);
 		TimeSpan timeSpan = new TimeSpan(newStartTime,

@@ -16,7 +16,7 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import taskman.controller.branch.PlanTaskSession;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.UserHandler;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.view.IView;
@@ -52,11 +52,11 @@ public class PlanTaskSessionTest {
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<Task2>(),
 						null, null);
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<Task2>(),
 						null, null);
 
 	}

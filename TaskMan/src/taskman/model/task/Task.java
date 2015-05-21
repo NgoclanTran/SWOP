@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import org.joda.time.DateTime;
 
 import taskman.exceptions.IllegalDateException;
 import taskman.model.Observer;
-import taskman.model.memento.TaskMemento;
+import taskman.model.memento.NormalTaskMemento;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
@@ -18,115 +19,74 @@ import taskman.model.time.TimeService;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 
-public class Task extends TaskSubject implements Observer {
+public abstract class Task extends TaskSubject implements Observer {
 
-	private Clock clock;
+	private final Clock clock;
 	private TimeService timeService = new TimeService();
 
-	/**
-	 * The first constructor of task. This will create a task with the given
-	 * parameters
-	 * 
-	 * @param clock
-	 *            The system clock.
-	 * @param description
-	 *            The description of the task
-	 * @param estimatedDuration
-	 *            The estimated duration of the task
-	 * @param acceptableDeviation
-	 *            The acceptable deviation of the task
-	 * @param dependencies
-	 *            The list of dependencies of the task
-	 * @param alternativeFor
-	 *            The task for which this task is the alternative.
-	 * @param resourcetypes
-	 *            The resource types and their amount accordingly.
-	 * 
-	 * @post The new description is equal to the given description
-	 * @post The new estimatedDuration is equal to the given estimatedDuration
-	 * @post The new acceptableDeviation is equal to the given
-	 *       acceptableDevaition
-	 * @post The status of this task is Unavailable
-	 * @post The new dependencies is equal to the given dependencies
-	 * 
-	 * @throws IllegalArgumentException
-	 *             The description cannot be null
-	 * @throws IllegalArgumentException
-	 *             The estimatedDuration is negative
-	 * @throws IllegalArgumentException
-	 *             The acceptableDeviation is negative
-	 */
 	public Task(Clock clock, String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
-			throws IllegalStateException, IllegalArgumentException {
-		if (!isValidClock(clock))
-			throw new IllegalArgumentException(
-					"The create project controller needs a clock");
+			int acceptableDeviation, Map<ResourceType, Integer> resourceTypes)
+			throws IllegalArgumentException {
+		if (clock == null)
+			throw new IllegalArgumentException("A task needs a clock.");
 		if (description == null)
-			throw new IllegalArgumentException("Description is null");
+			throw new IllegalArgumentException("A task needs a description");
 		if (estimatedDuration <= 0)
 			throw new IllegalArgumentException(
-					"The estimated duration cannot be negative.");
+					"The estimated duration of a task cannot be negative.");
 		if (acceptableDeviation < 0)
 			throw new IllegalArgumentException(
-					"The deviation cannot be negative.");
+					"The acceptable deviation of a task cannot be negative.");
+		this.id = UUID.randomUUID();
 		this.clock = clock;
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
 		this.acceptableDeviation = acceptableDeviation;
-		this.status = new Unavailable();
-		if (dependencies != null)
-			this.dependencies.addAll(dependencies);
 
-		for (Task subject : this.dependencies) {
-
-			subject.attachDependant(this);
-
-		}
-
-		if (alternativeFor != null)
-			alternativeFor.addAlternative(this);
-
+		setStatus(new Unavailable());
+		
 		if (resourceTypes != null) {
 			for (Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
 				addRequiredResourceType(entry.getKey(), entry.getValue());
 			}
 		}
-
+		
 		try {
 			update();
 		} catch (IllegalStateException e) {
-
 		}
-
 	}
 
 	/**
-	 * Checks if the given clock is valid.
+	 * Returns the unique identifier of the task
 	 * 
-	 * @param clock
-	 * 
-	 * @return Returns true if the clock is different from null.
+	 * @return The unique identifier of the task
 	 */
-	private boolean isValidClock(Clock clock) {
-		if (clock != null)
-			return true;
-		else
-			return false;
+	public UUID getID() {
+		return id;
 	}
 
-	private final String description;
-	private final int estimatedDuration;
-	private final int acceptableDeviation;
-	private List<Task> dependencies = new ArrayList<Task>();
-	// Tasks that are looking to me
-	private List<Task> dependants = new ArrayList<Task>();
-	private Status status;
-	private TimeSpan timeSpan;
-	private Task alternative = null;
-	private LinkedHashMap<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
-	private List<Developer> requiredDevelopers = new ArrayList<Developer>();
+	private final UUID id;
+	
+	/**
+	 * Returns the unique identifier of the parent of the task
+	 * 
+	 * @return The unique identifier of the parent of the task
+	 */
+	public UUID getParentID() {
+		return parentId;
+	}
+	
+	/**
+	 * This method will set the new parent id.
+	 * 
+	 * @param newId
+	 */
+	public void setParentID(UUID newId) {
+		parentId = newId;
+	}
+	
+	private UUID parentId = null;
 
 	/**
 	 * Returns the description of the task
@@ -137,6 +97,8 @@ public class Task extends TaskSubject implements Observer {
 		return description;
 	}
 
+	private final String description;
+
 	/**
 	 * Returns the estimated duration of the task
 	 * 
@@ -145,6 +107,8 @@ public class Task extends TaskSubject implements Observer {
 	public int getEstimatedDuration() {
 		return estimatedDuration;
 	}
+
+	private final int estimatedDuration;
 
 	/**
 	 * Returns the acceptable deviation of the task
@@ -155,42 +119,197 @@ public class Task extends TaskSubject implements Observer {
 		return acceptableDeviation;
 	}
 
+	private final int acceptableDeviation;
+
 	/**
-	 * Returns the list of dependencies of the task
+	 * Returns the status of the task
 	 * 
-	 * @return The list of dependencies of the task
+	 * @return The status of the task
 	 */
-	public List<Task> getDependencies() {
-		return new ArrayList<Task>(dependencies);
+	public String getStatusName() {
+		return status.getName();
+	}
+	
+	/**
+	 * Returns the status of the task
+	 * 
+	 * @return The status of the task
+	 */
+	protected Status getStatus() {
+		return status;
 	}
 
 	/**
-	 * Add dependant task
+	 * This method will set the status to the given status.
 	 * 
-	 * @param dependant
-	 * @throws IllegalArgumentException
-	 *             The dependant task is null
-	 * @post The list of depandants contains the given dependant task
+	 * @param status
 	 */
-	public void attachDependant(Task dependant) {
-		if (dependant == null)
-			throw new IllegalArgumentException(
-					"the dependant observer is null.");
-		this.dependants.add(dependant);
+	protected void setStatus(Status newStatus) {
+		status = newStatus;
+	}
+
+	private Status status;
+
+	/**
+	 * Check if this task is available
+	 * 
+	 * @return True if the task has status available
+	 */
+	public boolean isAvailable() {
+		return status.isAvailable();
 	}
 
 	/**
-	 * When this task changed his status to Finished or failed, notify his
-	 * dependants
+	 * Check if this task is delegated
 	 * 
+	 * @return True if the task has status delegated
 	 */
-	private void notifyAllDependants() {
-		for (Task dependant : this.dependants) {
-			try {
-				dependant.update();
-			} catch (IllegalStateException e) {
+	public boolean isDelegated() {
+		return status.isDelegated();
+	}
+
+	/**
+	 * Returns a boolean indicating whether this task is planned or not
+	 * 
+	 * @return Returns true or false depending on whether the task is planned or
+	 *         not
+	 */
+	public boolean isPlanned() {
+		return status.isPlanned();
+	}
+
+	/**
+	 * Check if this task is executing
+	 * 
+	 * @return True if the task has status executing
+	 */
+	public boolean isExecuting() {
+		return status.isExecuting();
+	}
+
+	/**
+	 * Check if this task is failed
+	 * 
+	 * @return True if the task has status failed
+	 */
+	public boolean isFailed() {
+		return status.isFailed();
+	}
+
+	/**
+	 * Check if this task is finished
+	 * 
+	 * @return True if the task has status finished
+	 */
+	public boolean isFinished() {
+		return status.isFinished();
+	}
+
+	/**
+	 * Check if this task has completed (either finished or failed).
+	 * 
+	 * @return True if the task is finished or failed.
+	 */
+	public boolean isCompleted() {
+		if (isFinished() || isFailed())
+			return true;
+		else
+			return false;
+	}
+
+	public void executeTask() {
+		status.executeTask(this);
+	}
+
+	protected void performExecuteTask(Status status) {
+		DateTime reservationStart = null;
+		for (Developer d : requiredDevelopers) {
+			for (Reservation r : d.getReservations()) {
+				if (r.getTask().equals(this)) {
+					reservationStart = r.getTimeSpan().getStartTime();
+				}
+				if (reservationStart != null) {
+					break;
+				}
+			}
+			if (reservationStart != null) {
+				break;
 			}
 		}
+		if (clock.getSystemTime().isBefore(reservationStart)) {
+			TimeSpan ts = new TimeSpan(
+					timeService
+							.getFirstPossibleStartTime(clock.getSystemTime()),
+					timeService.addMinutes(timeService
+							.getFirstPossibleStartTime(clock.getSystemTime()),
+							estimatedDuration));
+			for (Developer d : requiredDevelopers) {
+				d.addReservation(this, ts);
+			}
+
+			for (Entry<ResourceType, Integer> entry : requiredResourceTypes
+					.entrySet()) {
+				List<Resource> availableResources = entry.getKey()
+						.getAvailableResources(ts);
+				for (int i = 0; i < entry.getValue(); i++) {
+					availableResources.get(i).addReservation(this, ts);
+				}
+			}
+		}
+		setStatus(status);
+	}
+
+	public void delegateTask() {
+		status.delegateTask(this);
+	}
+
+	protected void performDelegateTask(Status status) {
+		setStatus(status);
+	}
+	
+	public abstract void completeTask(boolean failed, DateTime startTime, DateTime endTime);
+
+	/**
+	 * Returns the total execution time for the task
+	 * 
+	 * @return The total execution time for the task
+	 */
+	public int getTotalExecutionTime() throws IllegalStateException {
+		return status.calculateTotalExecutedTime(this);
+	}
+
+	protected int performGetTotalExecutionTime() throws IllegalStateException {
+		return timeSpan.calculatePerformedTime();
+	}
+
+	/**
+	 * Calculate the overdue percentage
+	 * 
+	 * @return Calculate the overdue percentage
+	 */
+	public int getOverduePercentage() throws IllegalStateException {
+		return status.calculateOverDuePercentage(this);
+	}
+
+	protected int performGetOverduePercentage() throws IllegalStateException {
+		int totalExecutedTime = getTotalExecutionTime();
+		return (totalExecutedTime - estimatedDuration) * 100
+				/ estimatedDuration;
+	}
+
+	/**
+	 * Returns a boolean depending on whether the task is severely overdue or
+	 * not
+	 * 
+	 * @return Returns true or false depending on whether the task is severely
+	 *         overdue or not
+	 */
+	public boolean isSeverelyOverdue() {
+		return status.isSeverelyOverdue(this);
+	}
+
+	protected boolean performIsSeverelyOverDue() {
+		return getOverduePercentage() > getAcceptableDeviation();
 	}
 
 	/**
@@ -199,12 +318,15 @@ public class Task extends TaskSubject implements Observer {
 	 * @return The timespan of the task
 	 */
 	public TimeSpan getTimeSpan() {
-		return this.status.getTimeSpan(this);
+		return status.getTimeSpan(this);
 	}
 
 	protected TimeSpan performGetTimeSpan() {
-		return new TimeSpan(this.timeSpan.getStartTime(),
-				this.timeSpan.getEndTime());
+		return new TimeSpan(timeSpan.getStartTime(), timeSpan.getEndTime());
+	}
+	
+	protected void setTimeSpan(TimeSpan newTimeSpan) {
+		timeSpan = newTimeSpan;
 	}
 
 	/**
@@ -230,81 +352,15 @@ public class Task extends TaskSubject implements Observer {
 		if (endTime == null)
 			throw new IllegalArgumentException("The endTime is null.");
 
-		this.status.addTimeSpan(this, failed, startTime, endTime);
-		for (Developer d : getRequiredDevelopers()) {
-			for (Reservation r : d.getReservations()) {
-				if (r.getTask().equals(this)) {
-					if (r.getTimeSpan().getEndTime().isAfter(endTime)) {
-						if (r.getTimeSpan().getStartTime().isAfter(endTime)) {
-							d.removeReservation(r);
-						} else {
-							DateTime start = r.getTimeSpan().getStartTime();
-							DateTime end = endTime;
-							d.removeReservation(r);
-							d.addReservation(this, new TimeSpan(start, end));
-						}
-					}
-				}
-			}
-		}
-		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
-				.entrySet()) {
-			for (Resource r : entry.getKey().getResources()) {
-				for (Reservation res : r.getReservations()) {
-					if (res.getTask().equals(this)) {
-						if (res.getTimeSpan().getEndTime().isAfter(endTime)) {
-							if (res.getTimeSpan().getStartTime()
-									.isAfter(endTime)) {
-								r.removeReservation(res);
-							} else {
-								DateTime start = res.getTimeSpan()
-										.getStartTime();
-								DateTime end = endTime;
-								r.removeReservation(res);
-								r.addReservation(this, new TimeSpan(start, end));
-							}
-						}
-					}
-				}
-			}
-		}
+		status.addTimeSpan(this, failed, startTime, endTime);
 	}
 
 	protected void performAddTimeSpan(DateTime startTime, DateTime endTime)
 			throws IllegalDateException {
-
-		this.timeSpan = new TimeSpan(startTime, endTime);
+		timeSpan = new TimeSpan(startTime, endTime);
 	}
 
-	/**
-	 * Returns the alternative task for the task
-	 * 
-	 * @return The alternative task for the task
-	 */
-	public Task getAlternative() {
-		return alternative;
-	}
-
-	/**
-	 * Add the alternative task for the task
-	 *
-	 * @param task
-	 *            The new alternative task for this task
-	 * @throws IllegalArgumentException
-	 *             The alternative task is equal to null
-	 * 
-	 */
-	public void addAlternative(Task task) throws IllegalStateException {
-		if (task == null)
-			throw new IllegalArgumentException("The alternative is null.");
-
-		this.status.addAlternative(this, task);
-
-	}
-
-	protected void performAddAlternative(Task task) {
-		this.alternative = task;
-	}
+	private TimeSpan timeSpan;
 
 	/**
 	 * Returns the map of required resource types for the task.
@@ -337,6 +393,8 @@ public class Task extends TaskSubject implements Observer {
 			throw new IllegalArgumentException("Not enough resources.");
 		requiredResourceTypes.put(resourceType, amount);
 	}
+
+	private LinkedHashMap<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 
 	/**
 	 * Returns true or false depending on whether the task has a certain amount
@@ -403,12 +461,12 @@ public class Task extends TaskSubject implements Observer {
 
 	/**
 	 * Returns true or false whether the resource type requirements are
-	 * fullfilled or not
+	 * fulfilled or not
 	 * 
 	 * @param resourceType
 	 *            The resource type to be checked
 	 * @return Returns true or false whether the resource type requirements are
-	 *         fullfilled or not
+	 *         fulfilled or not
 	 */
 	private boolean checkResourceTypeRequirements(ResourceType resourceType) {
 		List<ResourceType> requirements = resourceType.getRequires();
@@ -446,85 +504,15 @@ public class Task extends TaskSubject implements Observer {
 		requiredDevelopers.add(developer);
 	}
 
-	/**
-	 * Returns the status of the task
-	 * 
-	 * @return The status of the task
-	 */
-	public String getStatusName() {
-		return this.status.getName();
-	}
+	private List<Developer> requiredDevelopers = new ArrayList<Developer>();
 
 	/**
-	 * Check if this task is available
-	 * 
-	 * @return True if the task has status available
-	 */
-	public boolean isAvailable() {
-		return this.status.isAvailable();
-	}
-
-	/**
-	 * Check if this task is executing
-	 * 
-	 * @return True if the task has status executing
-	 */
-	public boolean isExecuting() {
-		return this.status.isExecuting();
-	}
-
-	/**
-	 * Check if this task is failed
-	 * 
-	 * @return True if the task has status failed
-	 */
-	public boolean isFailed() {
-		return this.status.isFailed();
-	}
-
-	/**
-	 * Check if this task is finished
-	 * 
-	 * @return True if the task has status finished
-	 */
-	public boolean isFinished() {
-		return this.status.isFinished();
-	}
-
-	/**
-	 * Check if this task has completed (either finished or failed).
-	 * 
-	 * @return True if the task is finished or failed.
-	 */
-	public boolean isCompleted() {
-		if (isFinished() || isFailed())
-			return true;
-		else
-			return false;
-	}
-
-	@Override
-	public void update() {
-		try {
-			this.status.updateStatus(this, clock.getSystemTime());
-		} catch (IllegalStateException ex) {
-		}
-	}
-
-	protected void performUpdateStatus(Status status) {
-		this.status = status;
-
-		this.notifyAllDependants(); // notify dependant task
-		this.notifyAllObservers(); // observer pattern for project
-	}
-
-	/**
-	 * Returns a boolean whether the developpers and resource types are
-	 * available for this task or not
+	 * Returns a boolean whether the developers and resource types are available
+	 * for this task or not
 	 * 
 	 * @param time
 	 *            The date time for which this will be checked
-	 * @return Returns true or false depending on whether the developpers and
+	 * @return Returns true or false depending on whether the developers and
 	 *         resource types are available for this task or not
 	 */
 	protected boolean developersAndResourceTypesAvailable(DateTime time) {
@@ -538,27 +526,6 @@ public class Task extends TaskSubject implements Observer {
 			for (Resource resource : entry.getKey().getResources()) {
 				if (!resource.isAvailableAt(new TimeSpan(time, timeService
 						.addMinutes(time, getEstimatedDuration()))))
-					return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Returns a boolean indicating whether the dependencies for this task are
-	 * fulfilled or not
-	 * 
-	 * @return Returns true or false depending on whether the dependencies are
-	 *         fulfilled or not
-	 */
-	protected boolean dependenciesAreFinished() {
-		for (Task task : this.dependencies) {
-			try {
-				if (!task.status.isAlternativeFinished(task))
-					return false;
-
-			} catch (IllegalStateException e) {
-				if (!task.isFinished())
 					return false;
 			}
 		}
@@ -589,6 +556,57 @@ public class Task extends TaskSubject implements Observer {
 		}
 		return reservations;
 	}
+	
+	protected void endReservations(DateTime endTime) {
+		if (endTime == null)
+			throw new IllegalArgumentException("The endTime is null.");
+		for (Developer d : getRequiredDevelopers()) {
+			for (Reservation r : d.getReservations()) {
+				if (r.getTask().equals(this)) {
+					if (r.getTimeSpan().getEndTime().isAfter(endTime)) {
+						if (r.getTimeSpan().getStartTime().isAfter(endTime)) {
+							d.removeReservation(r);
+						} else {
+							DateTime start = r.getTimeSpan().getStartTime();
+							DateTime end = endTime;
+							d.removeReservation(r);
+							d.addReservation(this, new TimeSpan(start, end));
+						}
+					}
+				}
+			}
+		}
+		for (Entry<ResourceType, Integer> entry : getRequiredResourceTypes()
+				.entrySet()) {
+			for (Resource r : entry.getKey().getResources()) {
+				for (Reservation res : r.getReservations()) {
+					if (res.getTask().equals(this)) {
+						if (res.getTimeSpan().getEndTime().isAfter(endTime)) {
+							if (res.getTimeSpan().getStartTime()
+									.isAfter(endTime)) {
+								r.removeReservation(res);
+							} else {
+								DateTime start = res.getTimeSpan()
+										.getStartTime();
+								DateTime end = endTime;
+								r.removeReservation(res);
+								r.addReservation(this, new TimeSpan(start, end));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns a boolean indicating whether the dependencies for this task are
+	 * fulfilled or not
+	 * 
+	 * @return Returns true or false depending on whether the dependencies are
+	 *         fulfilled or not
+	 */
+	public abstract boolean dependenciesAreFinished();
 
 	/**
 	 * Returns a boolean whether the alternative task is finished or not
@@ -596,157 +614,29 @@ public class Task extends TaskSubject implements Observer {
 	 * @return Returns true or false depending on whether the alternative task
 	 *         is finished or not
 	 */
-	protected boolean isAlternativeFinished() {
-		if (this.alternative == null)
-			return false;
-		if (this.alternative.isFinished())
-			return true;
-		if (this.alternative.isFailed())
-			return this.alternative.status.isAlternativeFinished(alternative);
-		return false;
-
-	}
-
-	/**
-	 * Returns the total execution time for the task
-	 * 
-	 * @return The total execution time for the task
-	 */
-
-	public int getTotalExecutionTime() throws IllegalStateException {
-
-		int time = this.status.calculateTotalExecutedTime(this);
-
-		return time;
-
-	}
-
-	protected int performGetTotalExecutionTime() throws IllegalStateException {
-
-		int time = this.timeSpan.calculatePerformedTime();
-
-		// if (this.alternative != null)
-		// try {
-		// time = time + this.alternative.getTotalExecutionTime();
-		// } catch (IllegalStateException e) {
-		// }
-		return time;
-	}
-
-	/**
-	 * Calculate the overdue percentage
-	 * 
-	 * @return Calculate the overdue percentage
-	 */
-	public int getOverduePercentage() throws IllegalStateException {
-		return this.status.calculateOverDuePercentage(this);
-	}
-
-	protected int performGetOverduePercentage() throws IllegalStateException {
-
-		int totalExecutedTime = this.getTotalExecutionTime();
-
-		return (totalExecutedTime - this.estimatedDuration) * 100
-				/ this.estimatedDuration;
-	}
-
-	/**
-	 * Returns a boolean depending on whether the task is severly overdue or not
-	 * 
-	 * @return Returns true or false depending on whether the task is serverly
-	 *         overdue or not
-	 */
-	public boolean isSeverelyOverdue() {
-		return this.status.isSeverelyOverdue(this);
-	}
-
-	protected boolean performIsSeverelyOverDue() {
-		return getOverduePercentage() > getAcceptableDeviation();
-	}
-
-	/**
-	 * Returns a boolean indicating whether this task is planned or not
-	 * 
-	 * @return Returns true or false depending on whether the task is planned or
-	 *         not
-	 */
-	public boolean isPlanned() {
-		return status.isPlanned();
-	}
+	public abstract boolean isAlternativeFinished();
 
 	/**
 	 * Creates a new task memento that saves the state of task.
 	 * 
 	 * @return Creates a new task memento that saves the state of the task.
 	 */
-	public TaskMemento createMemento() {
-		return new TaskMemento(this, dependants, status.getName(), timeSpan,
-				alternative);
-	}
+	public abstract NormalTaskMemento createMemento();
 
 	/**
 	 * Returns the state of task to that saved in the task memento.
 	 * 
 	 * @param m
 	 */
-	public void setMemento(TaskMemento m) {
-		dependants = m.getDependants();
-		timeSpan = m.getTimeSpan();
-		alternative = m.getAlternative();
-		if (m.getStateName().equals("UNAVAILABLE")) {
-			status = new Unavailable();
-		} else if (m.getStateName().equals("AVAILABLE")) {
-			status = new Available();
-		} else if (m.getStateName().equals("EXECUTING")) {
-			status = new Executing();
-		} else if (m.getStateName().equals("FINISHED")) {
-			status = new Finished();
-		} else if (m.getStateName().equals("PLANNED")){
-			status = new Planned();
-		} else {
-			status = new Failed();
+	public abstract void setMemento(NormalTaskMemento m);
+
+	@Override
+	public void update() {
+		try {
+			status.updateStatus(this, clock.getSystemTime());
+		} catch (IllegalStateException ex) {
 		}
 	}
 
-	public void executeTask() {
-		this.status.executeTask(this);
-	}
-
-	protected void performExecuteTask(Status status) {
-		DateTime reservationStart = null;
-		for (Developer d : requiredDevelopers) {
-			for (Reservation r : d.getReservations()) {
-				if (r.getTask().equals(this)) {
-					reservationStart = r.getTimeSpan().getStartTime();
-				}
-				if (reservationStart != null) {
-					break;
-				}
-			}
-			if (reservationStart != null) {
-				break;
-			}
-		}
-		if (clock.getSystemTime().isBefore(reservationStart)) {
-			TimeSpan ts = new TimeSpan(
-					timeService
-							.getFirstPossibleStartTime(clock.getSystemTime()),
-					timeService.addMinutes(timeService
-							.getFirstPossibleStartTime(clock.getSystemTime()),
-							estimatedDuration));
-			for (Developer d : requiredDevelopers) {
-				d.addReservation(this, ts);
-			}
-
-			for (Entry<ResourceType, Integer> entry : requiredResourceTypes
-					.entrySet()) {
-				List<Resource> availableResources = entry.getKey()
-						.getAvailableResources(ts);
-				for (int i = 0; i < entry.getValue(); i++) {
-					availableResources.get(i).addReservation(this, ts);
-				}
-			}
-		}
-		this.status = status;
-	}
+	protected abstract void performUpdateStatus(Status status);
 }

@@ -17,7 +17,7 @@ import taskman.controller.branch.UpdateTaskStatusSession;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
@@ -56,7 +56,7 @@ public class UpdateTaskStatusSessionTest {
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<Task2>(),
 						null, null);
 		uh.addDeveloper("developer");
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
@@ -70,7 +70,7 @@ public class UpdateTaskStatusSessionTest {
 		ph.getProjects().get(0).getTasks().get(0).update();
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<Task2>(),
 						null, null);
 	}
 
@@ -181,9 +181,9 @@ public class UpdateTaskStatusSessionTest {
 	@Test
 	public void useCase_SelectStatus_Cancel() {
 		// ------------- Before running ---------------
-		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<Task2> tasksOfProject1 = (ArrayList<Task2>) ph.getProjects()
 				.get(0).getTasks();
-		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<Task2> tasksOfProject2 = (ArrayList<Task2>) ph.getProjects()
 				.get(1).getTasks();
 
 		// System has one task
@@ -199,7 +199,7 @@ public class UpdateTaskStatusSessionTest {
 				tasksOfProject1);
 		assertEquals(session.getPH().getProjects().get(1).getTasks(),
 				tasksOfProject2);
-		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
+		Task2 updatedTask = ph.getProjects().get(0).getTasks().get(0);
 		assertEquals(updatedTask.getStatusName(), "AVAILABLE");
 
 	}
@@ -210,9 +210,9 @@ public class UpdateTaskStatusSessionTest {
 	@Test
 	public void useCaseTest_IncorrectDateWorkingDay() {
 		// ------------- Before running ---------------
-		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<Task2> tasksOfProject1 = (ArrayList<Task2>) ph.getProjects()
 				.get(0).getTasks();
-		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<Task2> tasksOfProject2 = (ArrayList<Task2>) ph.getProjects()
 				.get(1).getTasks();
 
 		// System has one task
@@ -235,7 +235,7 @@ public class UpdateTaskStatusSessionTest {
 				tasksOfProject1);
 		assertEquals(session.getPH().getProjects().get(1).getTasks(),
 				tasksOfProject2);
-		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
+		Task2 updatedTask = ph.getProjects().get(0).getTasks().get(0);
 		assertEquals(updatedTask.getStatusName(), "AVAILABLE");
 
 	}

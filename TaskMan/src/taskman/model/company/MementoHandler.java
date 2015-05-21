@@ -1,13 +1,13 @@
 package taskman.model.company;
 
 import taskman.model.memento.Caretaker;
+import taskman.model.memento.NormalTaskMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
-import taskman.model.memento.TaskMemento;
 import taskman.model.project.Project;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 import taskman.model.time.Clock;
 import taskman.model.user.Developer;
 
@@ -34,7 +34,7 @@ public class MementoHandler {
 		for (int i = 0; i < ph.getProjects().size(); i++) {
 			Project project = ph.getProjects().get(i);
 			caretaker.addProjectMemento(project.createMemento());
-			for (Task task : project.getTasks()) {
+			for (NormalTask task : project.getTasks()) {
 				caretaker.addTaskMemento(task.createMemento());
 			}
 		}
@@ -65,7 +65,7 @@ public class MementoHandler {
 			pm.getObject().setMemento(pm);
 		}
 
-		for (TaskMemento tm : caretaker.getTaskMementos()) {
+		for (NormalTaskMemento tm : caretaker.getTaskMementos()) {
 			tm.getObject().setMemento(tm);
 		}
 	}

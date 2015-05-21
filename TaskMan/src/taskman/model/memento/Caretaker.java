@@ -8,7 +8,7 @@ public class Caretaker {
 	ArrayList<ProjectMemento> savedProjectMementos = new ArrayList<ProjectMemento>();
 	ArrayList<ReservableMemento> savedDeveloperMementos = new ArrayList<ReservableMemento>();
 	ArrayList<ReservableMemento> savedResourceMementos = new ArrayList<ReservableMemento>();
-	ArrayList<TaskMemento> savedTaskMementos = new ArrayList<TaskMemento>();
+	ArrayList<NormalTaskMemento> savedTaskMementos = new ArrayList<NormalTaskMemento>();
 
 	/**
 	 * Adds the clockmemento parameter to the arraylist
@@ -98,7 +98,7 @@ public class Caretaker {
 	 *            The task memento to be added to the list
 	 * @post the task memento will be added to the list
 	 */
-	public void addTaskMemento(TaskMemento m) {
+	public void addTaskMemento(NormalTaskMemento m) {
 		savedTaskMementos.add(m);
 	}
 
@@ -107,8 +107,8 @@ public class Caretaker {
 	 * 
 	 * @return Returns the list of task mementos.
 	 */
-	public ArrayList<TaskMemento> getTaskMementos() {
-		return new ArrayList<TaskMemento>(savedTaskMementos);
+	public ArrayList<NormalTaskMemento> getTaskMementos() {
+		return new ArrayList<NormalTaskMemento>(savedTaskMementos);
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 
 public interface IView {
 
@@ -73,7 +73,7 @@ public interface IView {
 	 * @throws ShouldExitException
 	 *             The choice of the user is to stop.
 	 */
-	public Task getTask(List<Task> tasks) throws ShouldExitException;
+	public Task2 getTask(List<Task2> tasks) throws ShouldExitException;
 
 	/**
 	 * This method will print the task details of a given task to the command
@@ -81,7 +81,7 @@ public interface IView {
 	 * 
 	 * @param task
 	 */
-	public void displayTaskDetails(Task task);
+	public void displayTaskDetails(Task2 task);
 
 	/**
 	 * This method will return a new create project form.

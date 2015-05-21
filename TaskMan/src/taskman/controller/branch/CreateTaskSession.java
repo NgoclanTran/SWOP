@@ -9,7 +9,7 @@ import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.project.Project;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.view.IView;
 
 public class CreateTaskSession extends AbstractProjectHandlerSession {
@@ -56,8 +56,8 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 		while (true) {
 			try {
 				Project project = getProject();
-				List<Task> tasks = project.getTasks();
-				List<Task> failedTasks = getFailedTasks(tasks);
+				List<Task2> tasks = project.getTasks();
+				List<Task2> failedTasks = getFailedTasks(tasks);
 
 				String description = getUI().getNewTaskForm()
 						.getNewTaskDescription();
@@ -65,11 +65,11 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 						.getNewTaskEstimatedDuration();
 				int acceptableDeviation = getUI().getNewTaskForm()
 						.getNewTaskAcceptableDeviation();
-				List<Task> dependencies = new ArrayList<Task>();
+				List<Task2> dependencies = new ArrayList<Task2>();
 				if (tasks.size() > 0)
 					dependencies = getUI().getNewTaskForm()
 							.getNewTaskDependencies(tasks);
-				Task alternativeFor = null;
+				Task2 alternativeFor = null;
 				if (failedTasks.size() > 0)
 					alternativeFor = getUI().getNewTaskForm()
 							.getNewTaskAlternativeFor(tasks);
@@ -105,7 +105,7 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 	 */
 	private boolean isValidTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
-			List<Task> dependencies, Task alternativeFor,
+			List<Task2> dependencies, Task2 alternativeFor,
 			Map<ResourceType, Integer> resourceTypes) {
 		try {
 			project.addTask(description, estimatedDuration,
@@ -150,9 +150,9 @@ public class CreateTaskSession extends AbstractProjectHandlerSession {
 	 * 
 	 * @return Returns a list of failed tasks.
 	 */
-	private List<Task> getFailedTasks(List<Task> tasks) {
-		ArrayList<Task> failedTasks = new ArrayList<Task>();
-		for (Task task : tasks) {
+	private List<Task2> getFailedTasks(List<Task2> tasks) {
+		ArrayList<Task2> failedTasks = new ArrayList<Task2>();
+		for (Task2 task : tasks) {
 			if (task.isFailed())
 				failedTasks.add(task);
 		}

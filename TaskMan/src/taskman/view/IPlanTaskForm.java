@@ -9,7 +9,7 @@ import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 
@@ -29,7 +29,7 @@ public interface IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	public Project getProjectWithUnplannedTasks(List<Project> projects,
-			List<List<Task>> unplannedTasks) throws ShouldExitException;
+			List<List<Task2>> unplannedTasks) throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to select to appropriate start time or

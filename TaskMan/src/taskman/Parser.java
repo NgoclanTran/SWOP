@@ -20,12 +20,15 @@ import javax.swing.JFileChooser;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.DailyAvailability;
@@ -37,6 +40,7 @@ public class Parser {
 
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private TimeService timeService = new TimeService();
+	private Company company;
 
 	private ProjectHandler projectHandler;
 	private ResourceHandler resourceHandler;
@@ -48,17 +52,14 @@ public class Parser {
 	private Map<Integer, DailyAvailability> rtda = new HashMap<Integer, DailyAvailability>();
 	private int resourceTypeNumber = 0;
 
-	public Parser(ProjectHandler ph, ResourceHandler rh, UserHandler uh,
-			Clock clock) {
-		projectHandler = ph;
-		resourceHandler = rh;
-		userHandler = uh;
-		systemClock = clock;
+	public Parser(Company company) {
+		this.company = company;
 	}
 
 	public void parse() {
 		List<String> file = readFile();
 		int declaring = 0;
+		ArrayList<String> branchOffice = new ArrayList<String>();
 		ArrayList<String> dailyAvailabilities = new ArrayList<String>();
 		ArrayList<String> resourceTypes = new ArrayList<String>();
 		ArrayList<String> resources = new ArrayList<String>();
@@ -78,6 +79,22 @@ public class Parser {
 			}
 
 			if (declaring == 0) {
+				if (line.startsWith("systemTime")) {
+					declaring++;
+				} else if (line.startsWith("location")) {
+					int descriptionStart = line.indexOf("\"") + 1;
+					int descriptionEnd = line.length() - 1;
+					String location = line.substring(descriptionStart,
+							descriptionEnd);
+					BranchOffice bo = new BranchOffice(company, location);
+					projectHandler = bo.getPh();
+					resourceHandler = bo.getRh();
+					userHandler = bo.getUh();
+					systemClock = bo.getClock();
+				}
+			}
+
+			if (declaring == 1) {
 				if (line.startsWith("dailyAvailability")) {
 					declaring++;
 				} else if (line.startsWith("systemTime")) {
@@ -90,7 +107,7 @@ public class Parser {
 				}
 			}
 
-			if (declaring == 1) {
+			if (declaring == 2) {
 				if (line.startsWith("resourceTypes")) {
 					declaring++;
 				} else {
@@ -98,7 +115,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 2) {
+			if (declaring == 3) {
 				if (line.startsWith("resources")) {
 					declaring++;
 				} else {
@@ -106,7 +123,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 3) {
+			if (declaring == 4) {
 				if (line.startsWith("developers")) {
 					declaring++;
 				} else {
@@ -114,7 +131,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 4) {
+			if (declaring == 5) {
 				if (line.startsWith("projects")) {
 					declaring++;
 				} else {
@@ -122,7 +139,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 5) {
+			if (declaring == 6) {
 				if (line.startsWith("plannings")) {
 					declaring++;
 				} else {
@@ -130,7 +147,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 6) {
+			if (declaring == 7) {
 				if (line.startsWith("tasks")) {
 					declaring++;
 				} else {
@@ -138,7 +155,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 7) {
+			if (declaring == 8) {
 				if (line.startsWith("reservations")) {
 					declaring++;
 				} else {
@@ -146,19 +163,22 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 8) {
-				reservations.add(line);
+			if (declaring == 9) {
+				if (line.startsWith("branchOffice")) {
+					declaring = 0;
+				} else {
+					reservations.add(line);
+				}
+				parseDailyAvailability(dailyAvailabilities);
+				parseResourceTypes(resourceTypes);
+				parseResources(resources);
+				parseDevelopers(developers);
+				parseProjects(projects);
+				parsePlannings(plannings);
+				parseTasks(tasks);
+				parseReservations(reservations);
 			}
-
 		}
-		parseDailyAvailability(dailyAvailabilities);
-		parseResourceTypes(resourceTypes);
-		parseResources(resources);
-		parseDevelopers(developers);
-		parseProjects(projects);
-		parsePlannings(plannings);
-		parseTasks(tasks);
-		parseReservations(reservations);
 	}
 
 	private List<String> readFile() {
@@ -582,8 +602,8 @@ public class Parser {
 		String status = "";
 		Date startTime = null, endTime = null;
 		Map<ResourceType, Integer> resourceTypes = new LinkedHashMap<ResourceType, Integer>();
-		List<Task> dependencies = new ArrayList<Task>();
-		Task alternativeForTask = null;
+		List<NormalTask> dependencies = new ArrayList<NormalTask>();
+		NormalTask alternativeForTask = null;
 		int help = 0;
 		int currentProject = 0;
 		for (String line : description) {
@@ -641,8 +661,8 @@ public class Parser {
 		}
 
 		if (alternativeFor != -1) {
-			Task alt = projectHandler.getProjects().get(project).getTasks()
-					.get(alternativeFor - help);
+			NormalTask alt = projectHandler.getProjects().get(project)
+					.getTasks().get(alternativeFor - help);
 			if (alt.getStatusName().equals("FAILED")) {
 				alternativeForTask = alt;
 			}

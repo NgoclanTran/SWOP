@@ -3,12 +3,14 @@ package taskman.model.task;
 import java.util.List;
 import java.util.Map;
 
+import taskman.model.company.BranchOffice;
 import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 
 public class TaskFactory {
 
-	private Clock clock;
+	private final Clock clock;
+	private final BranchOffice branchOffice;
 
 	/**
 	 * Creates the task factory.
@@ -19,29 +21,20 @@ public class TaskFactory {
 	 * @throws IllegalArgumentException
 	 *             The clock needs to be valid.
 	 */
-	public TaskFactory(Clock clock) {
-		if (!isValidClock(clock))
+	public TaskFactory(BranchOffice branchOffice, Clock clock) {
+		if (branchOffice == null)
 			throw new IllegalArgumentException(
-					"The create project controller needs a clock");
+					"The task factory needs a branch office.");
+		if (clock == null)
+			throw new IllegalArgumentException(
+					"The task factory needs a clock.");
+		this.branchOffice = branchOffice;
 		this.clock = clock;
 	}
 
 	/**
-	 * Checks if the given clock is valid.
-	 * 
-	 * @param clock
-	 * 
-	 * @return Returns true if the clock is different from null.
-	 */
-	private boolean isValidClock(Clock clock) {
-		if (clock != null)
-			return true;
-		else
-			return false;
-	}
-
-	/**
-	 * This method will make a new task, attach the task to the clock and return the task.
+	 * This method will make a new task, attach the task to the clock and return
+	 * the task.
 	 * 
 	 * @param description
 	 * @param estimatedDuration
@@ -54,14 +47,27 @@ public class TaskFactory {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public Task makeTask(String description, int estimatedDuration,
-			int acceptableDeviation, List<Task> dependencies,
-			Task alternativeFor, Map<ResourceType, Integer> resourceTypes)
+	public NormalTask makeNormalTask(String description, int estimatedDuration,
+			int acceptableDeviation, List<NormalTask> dependencies,
+			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
 			throws IllegalArgumentException {
-		Task task =  new Task(clock, description, estimatedDuration, acceptableDeviation,
-				dependencies, alternativeFor, resourceTypes);
-		//TODO: Moet deze attach hier gebeuren of in taak zelf?
+		NormalTask task = new NormalTask(clock, description, estimatedDuration,
+				acceptableDeviation, dependencies, alternativeFor,
+				resourceTypes);
 		clock.attach(task);
+		task.attach(branchOffice);
+		return task;
+	}
+
+	public DelegatedTask makeDelegatedTask(String description,
+			int estimatedDuration, int acceptableDeviation,
+			Map<ResourceType, Integer> resourceTypes,
+			boolean dependenciesFinished) {
+		DelegatedTask task = new DelegatedTask(clock, description,
+				estimatedDuration, acceptableDeviation, resourceTypes,
+				dependenciesFinished);
+		clock.attach(task);
+		task.attach(branchOffice);
 		return task;
 	}
 

@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.task.Task;
+import taskman.model.task.Task2;
 import taskman.model.user.Developer;
 
 public class UpdateTaskForm implements IUpdateTaskForm {
@@ -119,7 +119,7 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 	 * @throws ShouldExitException
 	 */
 	private void displayProjectsWithAvailableTasksList(List<Project> projects,
-			List<List<Task>> availableTasks) throws ShouldExitException {
+			List<List<Task2>> availableTasks) throws ShouldExitException {
 		if (projects.size() != availableTasks.size()) {
 			view.displayError("Error occured while creating the available tasks list.");
 			throw new ShouldExitException();
@@ -146,7 +146,7 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 	 */
 	@Override
 	public Project getProjectWithAvailableTasks(List<Project> projects,
-			List<List<Task>> availableTasks) throws ShouldExitException {
+			List<List<Task2>> availableTasks) throws ShouldExitException {
 		try {
 			displayProjectsWithAvailableTasksList(projects, availableTasks);
 			int projectId = view.getListChoice(projects, "Select a project:");
