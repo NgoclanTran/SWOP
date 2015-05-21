@@ -55,7 +55,7 @@ public class MainSessionTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void MainSession_nullRh() {
-		MainSession testSession = new MainSession(cli, ph, null, uh,clock);
+		MainSession testSession = new MainSession(cli, null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
