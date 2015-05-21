@@ -1,6 +1,6 @@
 package taskman.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.joda.time.LocalTime;
 import org.junit.Before;
@@ -25,6 +25,7 @@ public class DeveloperTest {
 	@Test
 	public void constructorTest_success() {
 		Developer d = new Developer(name, startTime, endTime);
+		assertEquals(d.getName(), name);
 		assertEquals(d.getDailyAvailability().getStartTime(), startTime);
 		assertEquals(d.getDailyAvailability().getEndTime(), endTime);
 		assertEquals(d.toString(), "name");
@@ -40,4 +41,17 @@ public class DeveloperTest {
 		Developer d = new Developer(name, endTime, startTime);
 
 	}
+	
+	@Test
+	public void isDeveloperTest(){
+		Developer d = new Developer(name, startTime, endTime);
+		assertTrue(d.isDeveloper());
+	}
+	
+	@Test
+	public void isProjectManagerTest(){
+		Developer d = new Developer(name, startTime, endTime);
+		assertFalse(d.isProjectManager());
+	}
+	
 }
