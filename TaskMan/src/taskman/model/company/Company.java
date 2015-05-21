@@ -5,9 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.joda.time.DateTime;
+
+import taskman.model.project.Project;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
+import taskman.model.time.TimeService;
 
 public class Company {
 
@@ -36,14 +40,30 @@ public class Company {
 		for (BranchOffice branchOffice : branchOffices) {
 			for (DelegatedTask delegatedTask : branchOffice.getDth()
 					.getDelegatedTasks()) {
-				if (delegatedTask.getParentID() == id) {
+				if (delegatedTask.getParentID().equals(id)) {
 					delegatedTask.setDependenciesAreFinished(true);
 				}
 			}
 		}
 	}
 
-	public void delegateTask(NormalTask task, BranchOffice toBranchOffice) throws IllegalStateException {
+	public void announceCompletion(DelegatedTask task) {
+		UUID parent = task.getParentID();
+		for (BranchOffice branchOffice : branchOffices) {
+			for (Project project : branchOffice.getPh().getProjects()) {
+				for (NormalTask normalTask : project.getTasks()) {
+					if (!normalTask.isCompleted() && normalTask.getID().equals(parent)) {
+						DateTime endTime = branchOffice.getClock().getSystemTime();
+						DateTime startTime = new TimeService().subtractMinutes(endTime, task.getTotalExecutionTime());
+						normalTask.completeTask(task.isFailed(), startTime, endTime);
+					}
+				}
+			}
+		}
+	}
+
+	public void delegateTask(NormalTask task, BranchOffice toBranchOffice)
+			throws IllegalStateException {
 		UUID id = task.getID();
 		String description = task.getDescription();
 		int estimatedDuration = task.getEstimatedDuration();

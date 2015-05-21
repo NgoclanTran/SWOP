@@ -8,7 +8,7 @@ import java.util.TreeSet;
 import org.joda.time.DateTime;
 
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 import taskman.model.user.Developer;
 
 public class PlanningService {
@@ -37,7 +37,7 @@ public class PlanningService {
 	 * 
 	 * @return Returns a set of possible starting times for the task.
 	 */
-	public Set<DateTime> getPossibleStartTimes(Task2 task, int amount,
+	public Set<DateTime> getPossibleStartTimes(Task task, int amount,
 			DateTime earliestPossibleStartTime) {
 		if (task == null)
 			throw new IllegalArgumentException("Task can not be null.");
@@ -78,7 +78,7 @@ public class PlanningService {
 	 * 
 	 * @return Returns whether or not the timespan is valid for the task.
 	 */
-	public boolean isValidTimeSpan(Task2 task, TimeSpan timeSpan,
+	public boolean isValidTimeSpan(Task task, TimeSpan timeSpan,
 			DateTime earliestPossibleStartTime) {
 		if (task == null)
 			throw new IllegalArgumentException("Task can not be null.");

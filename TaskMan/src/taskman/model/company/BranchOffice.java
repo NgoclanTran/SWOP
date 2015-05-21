@@ -5,6 +5,7 @@ import java.util.List;
 import taskman.model.Observer;
 import taskman.model.project.Project;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
@@ -80,6 +81,11 @@ public class BranchOffice implements Observer {
 				if (task.isDelegated() && task.dependenciesAreFinished())
 					company.setDependenciesFinished(task.getID());
 			}
+		}
+		
+		for (DelegatedTask task : dth.getDelegatedTasks()) {
+			if (task.isCompleted())
+				company.announceCompletion(task);
 		}
 	}
 

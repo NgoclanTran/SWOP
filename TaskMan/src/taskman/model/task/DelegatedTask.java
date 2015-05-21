@@ -29,7 +29,7 @@ public class DelegatedTask extends Task {
 		addTimeSpan(failed, startTime, endTime);
 		endReservations(endTime);
 		
-		//TODO: send duration to normal task
+		notifyAllObservers();
 	}
 	
 	@Override
