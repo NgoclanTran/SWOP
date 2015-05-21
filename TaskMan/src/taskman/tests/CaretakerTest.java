@@ -70,7 +70,7 @@ public class CaretakerTest {
 				new DateTime(2015, 10, 12, 10, 0), new DateTime(2015, 10, 12,
 						12, 0)), t1);
 		c.addTaskMemento(t2);
-		assertEquals(c.getTaskMementos().get(0), t2);
+		assertEquals(c.getNormalTaskMementos().get(0), t2);
 	}
 
 	@Test
