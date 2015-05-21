@@ -12,11 +12,14 @@ import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.memento.Caretaker;
 import taskman.model.memento.ClockMemento;
+import taskman.model.memento.DelegatedTaskHandlerMemento;
+import taskman.model.memento.DelegatedTaskMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.memento.NormalTaskMemento;
 import taskman.model.project.Project;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
 import taskman.model.task.NormalTask;
@@ -78,5 +81,21 @@ public class CaretakerTest {
 		ClockMemento clock = new ClockMemento(null, new DateTime());
 		c.addClockMemento(clock);
 		assertEquals(c.getClockMemento(), clock);
+	}
+	
+	@Test
+	public void addDelegatedTaskHandlerMemento_True(){
+		DelegatedTaskHandlerMemento m = new DelegatedTaskHandlerMemento(null, null);
+		c.addDelegatedTaskHandlerMemento(m);
+		assertEquals(c.getDelegatedTaskHandlerMemento(), m);
+		
+	}
+	
+	@Test
+	public void addDelegateTaskMemento_True(){
+		DelegatedTask delegatedTask = new DelegatedTask(clock, "description", 10, 1, null, true);
+		DelegatedTaskMemento m = new DelegatedTaskMemento(delegatedTask , true, "task 1", new TimeSpan(new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,10)));
+		c.addDelegatedTaskMemento(m);
+		assertEquals(c.getDelegatedTaskMementos().get(0), m);
 	}
 }
