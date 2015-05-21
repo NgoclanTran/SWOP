@@ -6,11 +6,11 @@ import org.joda.time.DateTime;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 import taskman.model.user.Developer;
 
 public interface IUpdateTaskForm {
-	
+
 	/**
 	 * This method will ask the user to select the developer to update a task
 	 * and it will return the developer.
@@ -53,6 +53,6 @@ public interface IUpdateTaskForm {
 	 * @throws ShouldExitException
 	 */
 	public Project getProjectWithAvailableTasks(List<Project> projects,
-			List<List<Task2>> availableTasks);
+			List<List<Task>> availableTasks);
 
 }

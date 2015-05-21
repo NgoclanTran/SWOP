@@ -16,11 +16,12 @@ public class NormalTask extends Task {
 			int acceptableDeviation, List<NormalTask> dependencies,
 			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
 			throws IllegalStateException, IllegalArgumentException {
-		super(clock, description, estimatedDuration, acceptableDeviation, resourceTypes);
-		
+		super(clock, description, estimatedDuration, acceptableDeviation,
+				resourceTypes);
+
 		if (dependencies != null)
 			this.dependencies.addAll(dependencies);
-		
+
 		for (NormalTask subject : this.dependencies) {
 			subject.attachDependant(this);
 		}
@@ -28,7 +29,7 @@ public class NormalTask extends Task {
 		if (alternativeFor != null)
 			alternativeFor.addAlternative(this);
 	}
-	
+
 	/**
 	 * Returns the list of dependencies of the task
 	 * 
@@ -45,7 +46,7 @@ public class NormalTask extends Task {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             The dependant task is null
-	 *             
+	 * 
 	 * @post The list of depandants contains the given dependant task
 	 */
 	public void attachDependant(NormalTask dependant) {
@@ -54,7 +55,7 @@ public class NormalTask extends Task {
 					"the dependant observer is null.");
 		this.dependants.add(dependant);
 	}
-	
+
 	/**
 	 * When this task changed his status to Finished or failed, notify his
 	 * dependants
@@ -68,10 +69,10 @@ public class NormalTask extends Task {
 			}
 		}
 	}
-	
+
 	private List<NormalTask> dependencies = new ArrayList<NormalTask>();
 	private List<NormalTask> dependants = new ArrayList<NormalTask>();
-	
+
 	/**
 	 * Returns the alternative task for the task
 	 * 
@@ -100,11 +101,12 @@ public class NormalTask extends Task {
 	protected void performAddAlternative(NormalTask task) {
 		alternative = task;
 	}
-	
+
 	private NormalTask alternative = null;
-	
+
 	@Override
-	public void completeTask(boolean failed, DateTime startTime, DateTime endTime) {
+	public void completeTask(boolean failed, DateTime startTime,
+			DateTime endTime) {
 		if (startTime == null)
 			throw new IllegalArgumentException("The startTime is null.");
 		if (endTime == null)
@@ -140,17 +142,14 @@ public class NormalTask extends Task {
 		return false;
 	}
 
-	@Override
 	public NormalTaskMemento createMemento() {
-		return new NormalTaskMemento(this, dependants, getStatus().getName(), getTimeSpan(),
-				alternative);
+		return new NormalTaskMemento(this, dependants, getStatus().getName(),
+				getTimeSpan(), alternative);
 	}
 
-	@Override
 	public void setMemento(NormalTaskMemento m) {
 		dependants = m.getDependants();
 		alternative = m.getAlternative();
-		setTimeSpan(m.getTimeSpan());
 		if (m.getStateName().equals("UNAVAILABLE")) {
 			setStatus(new Unavailable());
 		} else if (m.getStateName().equals("AVAILABLE")) {
@@ -158,19 +157,21 @@ public class NormalTask extends Task {
 		} else if (m.getStateName().equals("EXECUTING")) {
 			setStatus(new Executing());
 		} else if (m.getStateName().equals("FINISHED")) {
-			//TODO add delegated to memento
 			setStatus(new Finished());
-		} else if (m.getStateName().equals("PLANNED")){
+		} else if (m.getStateName().equals("PLANNED")) {
 			setStatus(new Planned());
+		} else if (m.getStateName().equals("DELEGATED")) {
+			setStatus(new Delegated());
 		} else {
 			setStatus(new Failed());
 		}
+		setTimeSpan(m.getTimeSpan());
 	}
 
 	@Override
 	protected void performUpdateStatus(Status status) {
 		setStatus(status);
-		
+
 		notifyAllDependants();
 		notifyAllObservers();
 	}

@@ -17,7 +17,7 @@ import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.view.IView;
@@ -30,7 +30,7 @@ public class MainSessionTest {
 	private UserHandler uh;
 	private MainSession session;
 	private String description;
-	private ArrayList<Task2> dependencies;
+	private ArrayList<Task> dependencies;
 	private Project p;
 	private TaskFactory tf;
 	private Clock clock;

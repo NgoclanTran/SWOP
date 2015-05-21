@@ -8,7 +8,7 @@ import java.util.Map;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ResourceHandler;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 
 public class CreateTaskForm implements ICreateTaskForm {
 
@@ -77,7 +77,8 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * This method will ask the user to enter a task acceptable deviation in
 	 * percents and returns it.
 	 * 
-	 * @return Returns an integer with the task acceptable deviation in percents.
+	 * @return Returns an integer with the task acceptable deviation in
+	 *         percents.
 	 * 
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
@@ -111,7 +112,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 *             The user cancelled the task creation.
 	 */
 	@Override
-	public List<Task2> getNewTaskDependencies(List<Task2> tasks)
+	public List<Task> getNewTaskDependencies(List<Task> tasks)
 			throws ShouldExitException {
 		try {
 			view.displayInfo("Does this task have dependencies? (Y/N or cancel):");
@@ -126,14 +127,14 @@ public class CreateTaskForm implements ICreateTaskForm {
 			}
 
 			if (view.isValidYesAnswer(hasDependencies)) {
-				List<Task2> list = parseDependecies(tasks);
+				List<Task> list = parseDependecies(tasks);
 				while (list == null) {
 					view.displayError("Incorrect input.");
 					list = parseDependecies(tasks);
 				}
 				return list;
 			} else {
-				return new ArrayList<Task2>();
+				return new ArrayList<Task>();
 			}
 		} catch (ShouldExitException e) {
 			view.output.displayEmptyLine();
@@ -152,9 +153,9 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
 	 */
-	private List<Task2> parseDependecies(List<Task2> tasks)
+	private List<Task> parseDependecies(List<Task> tasks)
 			throws ShouldExitException {
-		ArrayList<Task2> list = new ArrayList<Task2>();
+		ArrayList<Task> list = new ArrayList<Task>();
 		view.output.displayEmptyLine();
 		view.displayTaskList(tasks, 0, true);
 		view.displayInfo("Select the dependencies seperated by a comma (e.g. 1,2,3 and 'cancel' or 0 to return):");
@@ -191,7 +192,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 *             The user cancelled the task creation.
 	 */
 	@Override
-	public Task2 getNewTaskAlternativeFor(List<Task2> tasks)
+	public Task getNewTaskAlternativeFor(List<Task> tasks)
 			throws ShouldExitException {
 		try {
 			view.displayInfo("Is this task an alternative for a failed task? (Y/N or cancel):");

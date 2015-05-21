@@ -15,7 +15,7 @@ public class NormalTaskMemento {
 	NormalTask alternative;
 
 	/**
-	 * The constructor of the task memento class
+	 * The constructor of the normal task memento class
 	 * 
 	 * @param task
 	 *            The object the memento is made for.
@@ -28,8 +28,8 @@ public class NormalTaskMemento {
 	 * @param alternative
 	 *            The alternative task for the task memento
 	 */
-	public NormalTaskMemento(NormalTask task, List<NormalTask> dependants, String stateName,
-			TimeSpan timeSpan, NormalTask alternative) {
+	public NormalTaskMemento(NormalTask task, List<NormalTask> dependants,
+			String stateName, TimeSpan timeSpan, NormalTask alternative) {
 		this.task = task;
 		this.dependants = dependants;
 		this.stateName = stateName;

@@ -15,7 +15,7 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import taskman.controller.branch.ShowProjectsSession;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.view.IView;
@@ -44,8 +44,8 @@ public class ShowProjectSessionTest {
 		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler();
 		session = new ShowProjectsSession(cli, ph);
-		ArrayList<Task2> dependencies = new ArrayList<Task2>();
-		Task2 t1 = new Task2(clock,"", 10, 10, null, null, null);
+		ArrayList<Task> dependencies = new ArrayList<Task>();
+		Task t1 = new Task(clock,"", 10, 10, null, null, null);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),

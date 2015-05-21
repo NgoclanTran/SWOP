@@ -22,15 +22,11 @@ import org.joda.time.LocalTime;
 
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
-import taskman.model.company.ProjectHandler;
-import taskman.model.company.ResourceHandler;
-import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
-import taskman.model.time.Clock;
 import taskman.model.time.DailyAvailability;
 import taskman.model.time.TimeService;
 import taskman.model.time.TimeSpan;
@@ -42,12 +38,8 @@ public class Parser {
 	private TimeService timeService = new TimeService();
 	private Company company;
 
-	private ProjectHandler projectHandler;
-	private ResourceHandler resourceHandler;
-	private UserHandler userHandler;
-	private Clock systemClock;
-
 	private List<DailyAvailability> dailyAvailability = new ArrayList<DailyAvailability>();
+	private List<ResourceType> resourceTypeList = new ArrayList<ResourceType>();
 	private List<Planning> planning = new ArrayList<Planning>();
 	private Map<Integer, DailyAvailability> rtda = new HashMap<Integer, DailyAvailability>();
 	private int resourceTypeNumber = 0;
@@ -59,7 +51,8 @@ public class Parser {
 	public void parse() {
 		List<String> file = readFile();
 		int declaring = 0;
-		ArrayList<String> branchOffice = new ArrayList<String>();
+		ArrayList<String> branchOffices = new ArrayList<String>();
+		ArrayList<String> clocks = new ArrayList<String>();
 		ArrayList<String> dailyAvailabilities = new ArrayList<String>();
 		ArrayList<String> resourceTypes = new ArrayList<String>();
 		ArrayList<String> resources = new ArrayList<String>();
@@ -81,30 +74,25 @@ public class Parser {
 			if (declaring == 0) {
 				if (line.startsWith("systemTime")) {
 					declaring++;
-				} else if (line.startsWith("location")) {
-					int descriptionStart = line.indexOf("\"") + 1;
-					int descriptionEnd = line.length() - 1;
-					String location = line.substring(descriptionStart,
-							descriptionEnd);
-					BranchOffice bo = new BranchOffice(company, location);
-					projectHandler = bo.getPh();
-					resourceHandler = bo.getRh();
-					userHandler = bo.getUh();
-					systemClock = bo.getClock();
+				} else {
+					branchOffices.add(line);
 				}
 			}
 
 			if (declaring == 1) {
 				if (line.startsWith("dailyAvailability")) {
 					declaring++;
-				} else if (line.startsWith("systemTime")) {
-					int descriptionStart = line.indexOf("\"") + 1;
-					int descriptionEnd = line.length() - 1;
-					DateTime systemTime = new DateTime(
-							parseDate(line.substring(descriptionStart,
-									descriptionEnd)));
-					systemClock.setSystemTime(systemTime);
+				} else {
+					clocks.add(line);
 				}
+				// } else if (line.startsWith("systemTime")) {
+				// int descriptionStart = line.indexOf("\"") + 1;
+				// int descriptionEnd = line.length() - 1;
+				// DateTime systemTime = new DateTime(
+				// parseDate(line.substring(descriptionStart,
+				// descriptionEnd)));
+				// systemClock.setSystemTime(systemTime);
+				// }
 			}
 
 			if (declaring == 2) {
@@ -164,21 +152,19 @@ public class Parser {
 
 			}
 			if (declaring == 9) {
-				if (line.startsWith("branchOffice")) {
-					declaring = 0;
-				} else {
-					reservations.add(line);
-				}
-				parseDailyAvailability(dailyAvailabilities);
-				parseResourceTypes(resourceTypes);
-				parseResources(resources);
-				parseDevelopers(developers);
-				parseProjects(projects);
-				parsePlannings(plannings);
-				parseTasks(tasks);
-				parseReservations(reservations);
+				reservations.add(line);
 			}
 		}
+		parseDailyAvailability(dailyAvailabilities);
+		parseResourceTypes(resourceTypes);
+		parseBranchOffices(branchOffices);
+		parseClock(clocks);
+		parseResources(resources);
+		parseDevelopers(developers);
+		parseProjects(projects);
+		parsePlannings(plannings);
+		parseTasks(tasks);
+		parseReservations(reservations);
 	}
 
 	private List<String> readFile() {
@@ -357,22 +343,21 @@ public class Parser {
 
 		if (requires != null) {
 			for (int i : requires) {
-				requiredTypes.add(resourceHandler.getResourceTypes().get(i));
+				requiredTypes.add(resourceTypeList.get(i));
 			}
 		}
 		if (conflictsWith != null) {
-			if (conflictsWith.contains(resourceHandler.getResourceTypes()
-					.size())) {
+			if (conflictsWith.contains(resourceTypeList.size())) {
 				conflictsWith.remove(conflictsWith.size() - 1);
 				conflictsWithSelf = true;
 			}
 			for (int i : conflictsWith) {
-				conflictingTypes.add(resourceHandler.getResourceTypes().get(i));
+				conflictingTypes.add(resourceTypeList.get(i));
 			}
 		}
 
-		resourceHandler.addResourceType(name, requiredTypes, conflictingTypes,
-				conflictsWithSelf);
+		resourceTypeList.add(new ResourceType(name, requiredTypes,
+				conflictingTypes, conflictsWithSelf));
 
 		if (dailyAvailability != -1) {
 			rtda.put(resourceTypeNumber,
@@ -381,10 +366,44 @@ public class Parser {
 		resourceTypeNumber++;
 	}
 
+	private void parseBranchOffices(ArrayList<String> branchOffices) {
+		for (String line : branchOffices) {
+			if (line.startsWith("-") || line.equals("")) {
+				line = line.replace("-", "");
+				line = line.trim();
+			}
+			if (line.startsWith("location")) {
+				int descriptionStart = line.indexOf("\"") + 1;
+				int descriptionEnd = line.length() - 1;
+				String location = line.substring(descriptionStart,
+						descriptionEnd);
+				BranchOffice bo = new BranchOffice(company, location,
+						resourceTypeList);
+				company.addBranchOffice(bo);
+			}
+		}
+	}
+
+	private void parseClock(ArrayList<String> clocks) {
+		DateTime systemTime = null;
+		for (String line : clocks) {
+			if (line.startsWith("systemTime")) {
+				int descriptionStart = line.indexOf("\"") + 1;
+				int descriptionEnd = line.length() - 1;
+				systemTime = new DateTime(parseDate(line.substring(
+						descriptionStart, descriptionEnd)));
+			}
+		}
+		for (BranchOffice branchOffice : company.getBranchOffices()) {
+			branchOffice.getClock().setSystemTime(systemTime);
+		}
+	}
+
 	private void parseResources(ArrayList<String> resources) {
 		boolean describing = false;
 		List<String> description = new ArrayList<String>();
 		for (String line : resources) {
+
 			if (line.startsWith("developers")) {
 				describing = false;
 				description.clear();
@@ -408,7 +427,7 @@ public class Parser {
 		int descriptionStart;
 		int descriptionEnd;
 		String name = null;
-		int type = -1;
+		int type = -1, branch = -1;
 		for (String line : description) {
 			if (line.startsWith("name")) {
 				descriptionStart = line.indexOf("\"") + 1;
@@ -418,6 +437,11 @@ public class Parser {
 				descriptionStart = line.indexOf(":") + 2;
 				descriptionEnd = line.length();
 				type = Integer.parseInt(line.substring(descriptionStart,
+						descriptionEnd));
+			} else if (line.startsWith("branchOffice")) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+				branch = Integer.parseInt(line.substring(descriptionStart,
 						descriptionEnd));
 			}
 		}
@@ -431,8 +455,8 @@ public class Parser {
 			startTime = new LocalTime("00:00");
 			endTime = new LocalTime("23:59");
 		}
-		resourceHandler.getResourceTypes().get(type)
-				.addResource(name, startTime, endTime);
+		company.getBranchOffices().get(branch).getRh().getResourceTypes()
+				.get(type).addResource(name, startTime, endTime);
 	}
 
 	private void parseDevelopers(ArrayList<String> developers) {
@@ -462,14 +486,20 @@ public class Parser {
 		int descriptionStart;
 		int descriptionEnd;
 		String name = null;
+		int branch = -1;
 		for (String line : description) {
 			if (line.startsWith("name")) {
 				descriptionStart = line.indexOf("\"") + 1;
 				descriptionEnd = line.length() - 1;
 				name = line.substring(descriptionStart, descriptionEnd);
+			} else if (line.startsWith("branchOffice")) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+				branch = Integer.parseInt(line.substring(descriptionStart,
+						descriptionEnd));
 			}
 		}
-		userHandler.addDeveloper(name);
+		company.getBranchOffices().get(branch).getUh().addDeveloper(name);
 	}
 
 	private void parseProjects(ArrayList<String> projects) {
@@ -500,6 +530,7 @@ public class Parser {
 		String name = "";
 		String projectDescription = "";
 		Date creationTime = null, dueTime = null;
+		int branch = -1;
 		for (String line : description) {
 			descriptionStart = line.indexOf("\"") + 1;
 			descriptionEnd = line.length() - 1;
@@ -514,10 +545,18 @@ public class Parser {
 			} else if (line.startsWith("dueTime")) {
 				dueTime = parseDate(line.substring(descriptionStart,
 						descriptionEnd));
+			} else if (line.startsWith("branchOffice")) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+				branch = Integer.parseInt(line.substring(descriptionStart,
+						descriptionEnd));
 			}
 		}
-		projectHandler.addProject(name, projectDescription, new DateTime(
-				creationTime), new DateTime(dueTime));
+		company.getBranchOffices()
+				.get(branch)
+				.getPh()
+				.addProject(name, projectDescription,
+						new DateTime(creationTime), new DateTime(dueTime));
 	}
 
 	private void parsePlannings(ArrayList<String> plannings) {
@@ -606,6 +645,7 @@ public class Parser {
 		NormalTask alternativeForTask = null;
 		int help = 0;
 		int currentProject = 0;
+		int branch = -1;
 		for (String line : description) {
 			descriptionStart = line.indexOf("\"") + 1;
 			if (descriptionStart == 0) {
@@ -643,26 +683,32 @@ public class Parser {
 				} else if (line.startsWith("endTime")) {
 					endTime = parseDate(line.substring(descriptionStart,
 							descriptionEnd));
+				} else if (line.startsWith("branchOffice")) {
+					descriptionStart = line.indexOf(":") + 2;
+					descriptionEnd = line.length();
+					branch = Integer.parseInt(line.substring(descriptionStart,
+							descriptionEnd));
 				}
 			}
 		}
 
 		while (currentProject < project) {
-			help += projectHandler.getProjects().get(currentProject).getTasks()
-					.size();
+			help += company.getBranchOffices().get(branch).getPh()
+					.getProjects().get(currentProject).getTasks().size();
 			currentProject++;
 		}
 
 		if (!prerequisiteTasks.isEmpty()) {
 			for (int i : prerequisiteTasks) {
-				dependencies.add(projectHandler.getProjects().get(project)
-						.getTasks().get(i - help));
+				dependencies.add(company.getBranchOffices().get(branch).getPh()
+						.getProjects().get(project).getTasks().get(i - help));
 			}
 		}
 
 		if (alternativeFor != -1) {
-			NormalTask alt = projectHandler.getProjects().get(project)
-					.getTasks().get(alternativeFor - help);
+			NormalTask alt = company.getBranchOffices().get(branch).getPh()
+					.getProjects().get(project).getTasks()
+					.get(alternativeFor - help);
 			if (alt.getStatusName().equals("FAILED")) {
 				alternativeForTask = alt;
 			}
@@ -672,14 +718,17 @@ public class Parser {
 			Planning planning = this.planning.get(planningNumber);
 			for (Entry<Integer, Integer> entry : planning.getResources()
 					.entrySet()) {
-				ResourceType resourceType = resourceHandler.getResourceTypes()
+				ResourceType resourceType = company.getBranchOffices()
+						.get(branch).getRh().getResourceTypes()
 						.get(entry.getKey());
 				int amount = entry.getValue();
 				resourceTypes.put(resourceType, amount);
 			}
 		}
 
-		projectHandler
+		company.getBranchOffices()
+				.get(branch)
+				.getPh()
 				.getProjects()
 				.get(project)
 				.addTask(taskDescription, estimatedDuration,
@@ -688,14 +737,18 @@ public class Parser {
 
 		if (planningNumber != -1) {
 			Planning planning = this.planning.get(planningNumber);
-			Task currentTask = projectHandler
+			Task currentTask = company
+					.getBranchOffices()
+					.get(branch)
+					.getPh()
 					.getProjects()
 					.get(project)
 					.getTasks()
-					.get(projectHandler.getProjects().get(project).getTasks()
-							.size() - 1);
+					.get(company.getBranchOffices().get(branch).getPh()
+							.getProjects().get(project).getTasks().size() - 1);
 			for (int i : planning.getDevelopers()) {
-				Developer d = userHandler.getDevelopers().get(i);
+				Developer d = company.getBranchOffices().get(branch).getUh()
+						.getDevelopers().get(i);
 				DateTime start = new DateTime(planning.getPlannedStartTime());
 				start = timeService.getFirstPossibleStartTime(start);
 				DateTime end = timeService.addMinutes(start, estimatedDuration);
@@ -708,12 +761,15 @@ public class Parser {
 
 		if (!status.equals("")) {
 			boolean failed = status.equals("failed");
-			Task currentTask = projectHandler
+			Task currentTask = company
+					.getBranchOffices()
+					.get(branch)
+					.getPh()
 					.getProjects()
 					.get(project)
 					.getTasks()
-					.get(projectHandler.getProjects().get(project).getTasks()
-							.size() - 1);
+					.get(company.getBranchOffices().get(branch).getPh()
+							.getProjects().get(project).getTasks().size() - 1);
 			if (currentTask.getStatusName().equals("AVAILABLE")) {
 				currentTask.executeTask();
 				currentTask.addTimeSpan(failed, new DateTime(startTime),
@@ -744,7 +800,7 @@ public class Parser {
 
 	private void addReservation(List<String> description) {
 		int descriptionStart, descriptionEnd;
-		int resource = 0, task = 0;
+		int resource = 0, task = 0, branch = -1;
 		Date startTime = null, endTime = null;
 		for (String line : description) {
 			if (line.startsWith("resource")) {
@@ -765,11 +821,17 @@ public class Parser {
 				descriptionEnd = line.length() - 1;
 				endTime = parseDate(line.substring(descriptionStart,
 						descriptionEnd));
+			} else if (line.startsWith("branchOffice")) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+				branch = Integer.parseInt(line.substring(descriptionStart,
+						descriptionEnd));
 			}
 		}
 		Resource res = null;
 		int i = 0;
-		for (ResourceType rt : resourceHandler.getResourceTypes()) {
+		for (ResourceType rt : company.getBranchOffices().get(branch).getRh()
+				.getResourceTypes()) {
 			for (Resource r : rt.getResources()) {
 				if (i == resource) {
 					res = r;
@@ -779,7 +841,8 @@ public class Parser {
 		}
 		Task tsk = null;
 		i = 0;
-		for (Project project : projectHandler.getProjects()) {
+		for (Project project : company.getBranchOffices().get(branch).getPh()
+				.getProjects()) {
 			for (Task t : project.getTasks()) {
 				if (i == task) {
 					tsk = t;

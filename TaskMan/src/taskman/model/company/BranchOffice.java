@@ -11,10 +11,11 @@ import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 
 public class BranchOffice implements Observer {
-	
+
 	private final TaskFactory factory;
 
-	public BranchOffice(Company company, String location, List<ResourceType> resourceTypes) {
+	public BranchOffice(Company company, String location,
+			List<ResourceType> resourceTypes) {
 		this.company = company;
 		this.location = location;
 		clock = new Clock();
@@ -23,7 +24,7 @@ public class BranchOffice implements Observer {
 		dth = new DelegatedTaskHandler(factory);
 		rh = new ResourceHandler(resourceTypes);
 		uh = new UserHandler();
-		mh = new MementoHandler(clock, ph, rh, uh);
+		mh = new MementoHandler(clock, ph, rh, uh, dth);
 	}
 
 	public Company getCompany() {
@@ -82,7 +83,7 @@ public class BranchOffice implements Observer {
 					company.setDependenciesFinished(task.getID());
 			}
 		}
-		
+
 		for (DelegatedTask task : dth.getDelegatedTasks()) {
 			if (task.isCompleted())
 				company.announceCompletion(task);

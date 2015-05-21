@@ -2,10 +2,10 @@ package taskman.view;
 
 import java.util.List;
 
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 
 public interface IResolveConflictForm {
-	
+
 	/**
 	 * This method will show all the conflicting tasks and ask the user to
 	 * either reschedule the task currently being planned or one of the
@@ -17,6 +17,6 @@ public interface IResolveConflictForm {
 	 * 
 	 * @return Returns the task the user wants to reschedule.
 	 */
-	public Task2 getTaskToRechedule(Task2 task, List<Task2> conflictingTasks);
+	public Task getTaskToRechedule(Task task, List<Task> conflictingTasks);
 
 }

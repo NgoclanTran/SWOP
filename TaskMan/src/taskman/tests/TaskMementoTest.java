@@ -9,23 +9,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.memento.NormalTaskMemento;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class TaskMementoTest {
 
-	ArrayList<Task2> dependants = new ArrayList<Task2>();
+	ArrayList<Task> dependants = new ArrayList<Task>();
 	String stateName;
 	TimeSpan timeSpan = new TimeSpan(new DateTime(), new DateTime());
-	Task2 alternative;
+	Task alternative;
 	private NormalTaskMemento t;
 	private Clock clock = new Clock();
 
 	@Before
 	public void setup() {
-		Task2 t1 = new Task2(clock,"", 10, 10, null, null, null);
-		alternative = new Task2(clock,"", 10, 10, null, null, null);
+		Task t1 = new Task(clock,"", 10, 10, null, null, null);
+		alternative = new Task(clock,"", 10, 10, null, null, null);
 		dependants.add(t1);
 		t = new NormalTaskMemento(t1, dependants, "state", timeSpan, alternative);
 

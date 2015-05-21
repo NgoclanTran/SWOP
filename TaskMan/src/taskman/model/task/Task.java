@@ -44,13 +44,13 @@ public abstract class Task extends TaskSubject implements Observer {
 		this.acceptableDeviation = acceptableDeviation;
 
 		setStatus(new Unavailable());
-		
+
 		if (resourceTypes != null) {
 			for (Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
 				addRequiredResourceType(entry.getKey(), entry.getValue());
 			}
 		}
-		
+
 		try {
 			update();
 		} catch (IllegalStateException e) {
@@ -67,7 +67,7 @@ public abstract class Task extends TaskSubject implements Observer {
 	}
 
 	private final UUID id;
-	
+
 	/**
 	 * Returns the unique identifier of the parent of the task
 	 * 
@@ -76,7 +76,7 @@ public abstract class Task extends TaskSubject implements Observer {
 	public UUID getParentID() {
 		return parentId;
 	}
-	
+
 	/**
 	 * This method will set the new parent id.
 	 * 
@@ -85,7 +85,7 @@ public abstract class Task extends TaskSubject implements Observer {
 	public void setParentID(UUID newId) {
 		parentId = newId;
 	}
-	
+
 	private UUID parentId = null;
 
 	/**
@@ -129,7 +129,7 @@ public abstract class Task extends TaskSubject implements Observer {
 	public String getStatusName() {
 		return status.getName();
 	}
-	
+
 	/**
 	 * Returns the status of the task
 	 * 
@@ -266,8 +266,9 @@ public abstract class Task extends TaskSubject implements Observer {
 	protected void performDelegateTask(Status status) {
 		setStatus(status);
 	}
-	
-	public abstract void completeTask(boolean failed, DateTime startTime, DateTime endTime);
+
+	public abstract void completeTask(boolean failed, DateTime startTime,
+			DateTime endTime);
 
 	/**
 	 * Returns the total execution time for the task
@@ -324,7 +325,7 @@ public abstract class Task extends TaskSubject implements Observer {
 	protected TimeSpan performGetTimeSpan() {
 		return new TimeSpan(timeSpan.getStartTime(), timeSpan.getEndTime());
 	}
-	
+
 	protected void setTimeSpan(TimeSpan newTimeSpan) {
 		timeSpan = newTimeSpan;
 	}
@@ -556,7 +557,7 @@ public abstract class Task extends TaskSubject implements Observer {
 		}
 		return reservations;
 	}
-	
+
 	protected void endReservations(DateTime endTime) {
 		if (endTime == null)
 			throw new IllegalArgumentException("The endTime is null.");
@@ -615,20 +616,6 @@ public abstract class Task extends TaskSubject implements Observer {
 	 *         is finished or not
 	 */
 	public abstract boolean isAlternativeFinished();
-
-	/**
-	 * Creates a new task memento that saves the state of task.
-	 * 
-	 * @return Creates a new task memento that saves the state of the task.
-	 */
-	public abstract NormalTaskMemento createMemento();
-
-	/**
-	 * Returns the state of task to that saved in the task memento.
-	 * 
-	 * @param m
-	 */
-	public abstract void setMemento(NormalTaskMemento m);
 
 	@Override
 	public void update() {

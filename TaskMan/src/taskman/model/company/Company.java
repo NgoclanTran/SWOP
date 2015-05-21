@@ -2,6 +2,7 @@ package taskman.model.company;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -30,6 +31,10 @@ public class Company {
 		branchOffices.add(branchOffice);
 	}
 
+	public List<BranchOffice> getBranchOffices() {
+		return new ArrayList<BranchOffice>(branchOffices);
+	}
+
 	/**
 	 * Sets the dependencies status of the delegated task with the given id to
 	 * true.
@@ -52,10 +57,14 @@ public class Company {
 		for (BranchOffice branchOffice : branchOffices) {
 			for (Project project : branchOffice.getPh().getProjects()) {
 				for (NormalTask normalTask : project.getTasks()) {
-					if (!normalTask.isCompleted() && normalTask.getID().equals(parent)) {
-						DateTime endTime = branchOffice.getClock().getSystemTime();
-						DateTime startTime = new TimeService().subtractMinutes(endTime, task.getTotalExecutionTime());
-						normalTask.completeTask(task.isFailed(), startTime, endTime);
+					if (!normalTask.isCompleted()
+							&& normalTask.getID().equals(parent)) {
+						DateTime endTime = branchOffice.getClock()
+								.getSystemTime();
+						DateTime startTime = new TimeService().subtractMinutes(
+								endTime, task.getTotalExecutionTime());
+						normalTask.completeTask(task.isFailed(), startTime,
+								endTime);
 					}
 				}
 			}

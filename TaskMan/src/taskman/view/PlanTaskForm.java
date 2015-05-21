@@ -10,7 +10,7 @@ import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 
@@ -43,7 +43,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 */
 	@Override
 	public Project getProjectWithUnplannedTasks(List<Project> projects,
-			List<List<Task2>> unplannedTasks) throws ShouldExitException {
+			List<List<Task>> unplannedTasks) throws ShouldExitException {
 		try {
 			displayProjectsWithUnplannedTasksList(projects, unplannedTasks);
 			int projectId = view.getListChoice(projects, "Select a project:");
@@ -64,7 +64,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	private void displayProjectsWithUnplannedTasksList(List<Project> projects,
-			List<List<Task2>> unplannedTasks) throws ShouldExitException {
+			List<List<Task>> unplannedTasks) throws ShouldExitException {
 		if (projects.size() != unplannedTasks.size()) {
 			view.displayError("Error occured while creating the available tasks list.");
 			throw new ShouldExitException();

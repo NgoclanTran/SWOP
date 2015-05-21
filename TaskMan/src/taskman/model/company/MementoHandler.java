@@ -1,12 +1,14 @@
 package taskman.model.company;
 
 import taskman.model.memento.Caretaker;
+import taskman.model.memento.DelegatedTaskMemento;
 import taskman.model.memento.NormalTaskMemento;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.project.Project;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
 import taskman.model.time.Clock;
 import taskman.model.user.Developer;
@@ -16,14 +18,16 @@ public class MementoHandler {
 	private ProjectHandler ph;
 	private ResourceHandler rh;
 	private UserHandler uh;
+	private DelegatedTaskHandler dth;
 	private Caretaker caretaker;
 	private Clock clock;
 
 	public MementoHandler(Clock clock, ProjectHandler ph, ResourceHandler rh,
-			UserHandler uh) {
+			UserHandler uh, DelegatedTaskHandler dth) {
 		this.ph = ph;
 		this.rh = rh;
 		this.uh = uh;
+		this.dth = dth;
 		this.clock = clock;
 		caretaker = new Caretaker();
 	}
@@ -47,6 +51,12 @@ public class MementoHandler {
 			for (Resource resource : resourceType.getResources())
 				caretaker.addResourceMemento(resource.createMemento());
 		}
+
+		caretaker.addDelegatedTaskHandlerMemento(dth.createMemento());
+
+		for (DelegatedTask delegatedTask : dth.getDelegatedTasks()) {
+			caretaker.addDelegatedTaskMemento(delegatedTask.createMemento());
+		}
 	}
 
 	public void resetState() {
@@ -65,8 +75,15 @@ public class MementoHandler {
 			pm.getObject().setMemento(pm);
 		}
 
-		for (NormalTaskMemento tm : caretaker.getTaskMementos()) {
-			tm.getObject().setMemento(tm);
+		for (NormalTaskMemento ntm : caretaker.getNormalTaskMementos()) {
+			ntm.getObject().setMemento(ntm);
+		}
+
+		caretaker.getDelegatedTaskHandlerMemento().getObject()
+				.setMemento(caretaker.getDelegatedTaskHandlerMemento());
+
+		for (DelegatedTaskMemento dtm : caretaker.getDelegatedTaskMementos()) {
+			dtm.getObject().setMemento(dtm);
 		}
 	}
 }

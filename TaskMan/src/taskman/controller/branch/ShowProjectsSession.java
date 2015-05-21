@@ -5,7 +5,7 @@ import java.util.List;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 import taskman.view.IView;
 
 public class ShowProjectsSession extends AbstractProjectHandlerSession {
@@ -63,13 +63,13 @@ public class ShowProjectsSession extends AbstractProjectHandlerSession {
 	 *            The project to show the details of.
 	 */
 	private void showProjectDetails(Project project) {
-		List<Task2> tasks = project.getTasks();
+		List<Task> tasks = project.getTasks();
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
 			return;
 
-		Task2 task;
+		Task task;
 		try {
 			task = getUI().getTask(tasks);
 		} catch (ShouldExitException e) {
@@ -85,7 +85,7 @@ public class ShowProjectsSession extends AbstractProjectHandlerSession {
 	 * @param task
 	 *            The task to show the details of.
 	 */
-	private void showTaskDetails(Task2 task) {
+	private void showTaskDetails(Task task) {
 		getUI().displayTaskDetails(task);
 	}
 

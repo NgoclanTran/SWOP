@@ -14,7 +14,7 @@ public class TaskMan {
 
 	public static void main(String[] args) {
 		try {
-			IView commandLineInterface = new View();
+			//IView commandLineInterface = new View();
 			Company company = new Company();
 			Parser parser = new Parser(company);
 			parser.parse();

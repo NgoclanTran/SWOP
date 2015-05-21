@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import taskman.model.memento.DelegatedTaskHandlerMemento;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.DelegatedTask;
 import taskman.model.task.TaskFactory;
@@ -14,6 +15,13 @@ public class DelegatedTaskHandler {
 	private TaskFactory factory;
 	private List<DelegatedTask> delegatedTasks;
 
+	/**
+	 * The constructor of the delegated task handler class
+	 * 
+	 * @param factory
+	 * 
+	 * @throws IllegalArgumentException
+	 */
 	public DelegatedTaskHandler(TaskFactory factory)
 			throws IllegalArgumentException {
 		if (factory == null)
@@ -38,10 +46,25 @@ public class DelegatedTaskHandler {
 
 	public void addDelegatedTask(UUID id, String description,
 			int estimatedDuration, int acceptableDeviation,
-			Map<ResourceType, Integer> resourceTypes, boolean dependenciesFinished) {
+			Map<ResourceType, Integer> resourceTypes,
+			boolean dependenciesFinished) {
 		DelegatedTask taskToAdd = factory.makeDelegatedTask(description,
 				estimatedDuration, acceptableDeviation, resourceTypes,
 				dependenciesFinished);
 		addDelegatedTask(taskToAdd);
+	}
+
+	public DelegatedTaskHandlerMemento createMemento() {
+		return new DelegatedTaskHandlerMemento(this,
+				new ArrayList<DelegatedTask>(delegatedTasks));
+	}
+
+	/**
+	 * Returns the state of project to that saved in the project memento.
+	 * 
+	 * @param m
+	 */
+	public void setMemento(DelegatedTaskHandlerMemento m) {
+		delegatedTasks = m.getDelegatedTasks();
 	}
 }

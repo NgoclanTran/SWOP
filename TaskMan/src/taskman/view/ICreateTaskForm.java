@@ -6,7 +6,7 @@ import java.util.Map;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ResourceHandler;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 
 public interface ICreateTaskForm {
 
@@ -35,7 +35,8 @@ public interface ICreateTaskForm {
 	 * This method will ask the user to enter a task acceptable deviation in
 	 * percents and returns it.
 	 * 
-	 * @return Returns an integer with the task acceptable deviation in percents.
+	 * @return Returns an integer with the task acceptable deviation in
+	 *         percents.
 	 * 
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
@@ -51,7 +52,8 @@ public interface ICreateTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
 	 */
-	public List<Task2> getNewTaskDependencies(List<Task2> tasks) throws ShouldExitException;
+	public List<Task> getNewTaskDependencies(List<Task> tasks)
+			throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to enter the task for which this task is an
@@ -64,8 +66,9 @@ public interface ICreateTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
 	 */
-	public Task2 getNewTaskAlternativeFor(List<Task2> tasks) throws ShouldExitException;
-	
+	public Task getNewTaskAlternativeFor(List<Task> tasks)
+			throws ShouldExitException;
+
 	/**
 	 * This method will ask the user to enter the required resource types and
 	 * their amount and return them as a map of resource types and integers.
@@ -78,6 +81,7 @@ public interface ICreateTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
 	 */
-	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh) throws ShouldExitException;
+	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh)
+			throws ShouldExitException;
 
 }

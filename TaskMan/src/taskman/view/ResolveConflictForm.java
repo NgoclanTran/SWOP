@@ -3,7 +3,7 @@ package taskman.view;
 import java.util.List;
 
 import taskman.exceptions.ShouldExitException;
-import taskman.model.task.Task2;
+import taskman.model.task.Task;
 
 public class ResolveConflictForm implements IResolveConflictForm {
 
@@ -31,7 +31,7 @@ public class ResolveConflictForm implements IResolveConflictForm {
 	 * @return Returns the task the user wants to reschedule.
 	 */
 	@Override
-	public Task2 getTaskToRechedule(Task2 task, List<Task2> conflictingTasks) {
+	public Task getTaskToRechedule(Task task, List<Task> conflictingTasks) {
 		try {
 			view.displayInfo("Conflicting tasks:");
 			view.displayTaskList(conflictingTasks, 0, false);
@@ -61,7 +61,7 @@ public class ResolveConflictForm implements IResolveConflictForm {
 	 * 
 	 * @return Returns the selected conflicting task.
 	 */
-	private Task2 getConflictingTaskToReschedule(List<Task2> conflictingTasks) {
+	private Task getConflictingTaskToReschedule(List<Task> conflictingTasks) {
 		try {
 			view.displayTaskList(conflictingTasks, 0, false);
 			int taskId = view.getListChoice(conflictingTasks,
