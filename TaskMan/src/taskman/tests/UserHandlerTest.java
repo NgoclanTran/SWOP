@@ -10,7 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.user.*;
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.UserHandler;
+import taskman.model.project.Project;
 import taskman.model.task.Task;
 import taskman.model.time.*;
 
@@ -18,6 +21,8 @@ public class UserHandlerTest {
 
 	private UserHandler u;
 	private Clock clock = new Clock();
+	private Company company;
+	private BranchOffice branchOffice = new BranchOffice(company, "", null);
 	@Before
 	public void setUp() throws Exception {
 		u = new UserHandler();
@@ -60,11 +65,13 @@ public class UserHandlerTest {
 		// --------------------- Developers don't have planning --------------------
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,10, 0), new DateTime(2015,10,12,11,0));
 		assertEquals(u.getAvailableDevelopers(timeSpan).size(),2);
-		
-		Task task = new Task(clock,"description", 10, 1, null, null, null);
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask("", 10, 1, null, null, null);
+		//Task task = new Task(clock,"description", 10, 1, null, null, null);
 		
 		Developer d = u.getDevelopers().get(0);
-		d.addReservation(task, timeSpan);
+		d.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), timeSpan);
 		
 		// ----------------------- One developer has a planning ----------------
 		assertEquals(u.getAvailableDevelopers(timeSpan).size(),1);
