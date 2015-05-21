@@ -86,6 +86,7 @@ public class Clock extends TimeSubject {
 	 *       memento object.
 	 */
 	public void setMemento(ClockMemento m) {
+		if(m == null) throw new IllegalArgumentException("The memento cannot be null.");
 		systemTime = m.getState();
 	}
 }
