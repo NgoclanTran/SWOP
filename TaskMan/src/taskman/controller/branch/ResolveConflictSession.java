@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import taskman.controller.Session;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
@@ -17,8 +18,9 @@ import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 import taskman.view.IView;
 
-public class ResolveConflictSession extends AbstractProjectHandlerSession {
+public class ResolveConflictSession extends Session {
 
+	private ProjectHandler ph;
 	private UserHandler uh;
 	private Clock clock;
 	private Task task = null;
@@ -43,20 +45,24 @@ public class ResolveConflictSession extends AbstractProjectHandlerSession {
 	 *            The reservables that are conflicting.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             Both the given view and the project handler need to be valid.
+	 *             The given view needs to be valid.
 	 * @throws IllegalArgumentException
-	 *             The user handler and clock need to be valid.
+	 *             The project handler, user handler and clock need to be valid.
 	 */
 	public ResolveConflictSession(IView cli, ProjectHandler ph, UserHandler uh,
 			Clock clock, Task task, TimeSpan timeSpan,
 			List<Reservable> reservables) throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli);
+		if (ph == null)
+			throw new IllegalArgumentException(
+					"The resolve conflict controller needs a ProjectHandler");
 		if (uh == null)
 			throw new IllegalArgumentException(
 					"The resolve conflict controller needs a UserHandler");
 		if (clock == null)
 			throw new IllegalArgumentException(
 					"The resolve conflict controller needs a clock");
+		this.ph = ph;
 		this.uh = uh;
 		this.clock = clock;
 		this.task = task;
@@ -79,12 +85,12 @@ public class ResolveConflictSession extends AbstractProjectHandlerSession {
 		Task taskToReschedule = getTaskToReschedule(getConflictingTasks());
 		Project project = getProject(taskToReschedule);
 		removeAllReservations(taskToReschedule);
-		new PlanTaskSession(getUI(), getPH(), uh, clock, project, taskToReschedule)
+		new PlanTaskSession(getUI(), ph, uh, clock, project, taskToReschedule)
 				.run();
 	}
 
 	private Project getProject(Task task) {
-		for (Project project : getPH().getProjects()) {
+		for (Project project : ph.getProjects()) {
 			if (project.getTasks().contains(task))
 				return project;
 		}

@@ -2,14 +2,16 @@ package taskman.controller.branch;
 
 import org.joda.time.DateTime;
 
+import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ProjectHandler;
 import taskman.model.time.Clock;
 import taskman.view.IView;
 
-public class CreateProjectSession extends AbstractProjectHandlerSession {
+public class CreateProjectSession extends Session {
 
+	private ProjectHandler ph;
 	private Clock clock;
 
 	/**
@@ -27,10 +29,14 @@ public class CreateProjectSession extends AbstractProjectHandlerSession {
 	 */
 	public CreateProjectSession(IView cli, ProjectHandler ph, Clock clock)
 			throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli);
+		if (ph == null)
+			throw new IllegalArgumentException(
+					"The create project controller needs a ProjectHandler");
 		if (clock == null)
 			throw new IllegalArgumentException(
 					"The create project controller needs a clock");
+		this.ph = ph;
 		this.clock = clock;
 	}
 
@@ -80,7 +86,7 @@ public class CreateProjectSession extends AbstractProjectHandlerSession {
 	private boolean isValidProject(String name, String description,
 			DateTime creationTime, DateTime dueTime) {
 		try {
-			getPH().addProject(name, description, creationTime, dueTime);
+			ph.addProject(name, description, creationTime, dueTime);
 			getUI().displayInfo("Project created");
 			return true;
 		} catch (IllegalDateException dateEx) {

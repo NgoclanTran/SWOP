@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.joda.time.DateTime;
 
+import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.UserHandler;
@@ -21,8 +22,9 @@ import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 import taskman.view.IView;
 
-public class PlanTaskSession extends AbstractProjectHandlerSession {
+public class PlanTaskSession extends Session {
 
+	private ProjectHandler ph;
 	private UserHandler uh;
 	private Clock clock;
 	private PlanningService planning;
@@ -45,19 +47,23 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 	 *            The system clock.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             Both the given view and the project handler need to be valid.
+	 *             The given view needs to be valid.
 	 * @throws IllegalArgumentException
-	 *             The user handler and clock need to be valid.
+	 *             The project handler, user handler and clock need to be valid.
 	 */
 	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
 			Clock clock) throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli);
+		if (ph == null)
+			throw new IllegalArgumentException(
+					"The plan task controller needs a ProjectHandler");
 		if (uh == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
 		if (clock == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a clock");
+		this.ph = ph;
 		this.uh = uh;
 		this.clock = clock;
 		this.planning = new PlanningService(clock);
@@ -81,20 +87,24 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 	 *            The task.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             Both the given view and the project handler need to be valid.
+	 *             The given view needs to be valid.
 	 * @throws IllegalArgumentException
-	 *             The user handler and clock need to be valid.
+	 *             The project handler, user handler and clock need to be valid.
 	 */
 	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
 			Clock clock, Project project, Task task)
 			throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli);
+		if (ph == null)
+			throw new IllegalArgumentException(
+					"The plan task controller needs a ProjectHandler");
 		if (uh != null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
 		if (clock != null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a clock");
+		this.ph = ph;
 		this.uh = uh;
 		this.clock = clock;
 		this.planning = new PlanningService(clock);
@@ -144,7 +154,7 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 	}
 
 	private void showProjectsAndUnplannedTasks() throws IllegalStateException {
-		List<Project> projects = getPH().getProjects();
+		List<Project> projects = ph.getProjects();
 		List<List<Task>> unplannedTasksList = getUnplannedTasksAllProjects(projects);
 
 		if (unplannedTasksList.size() == 0) {
@@ -168,7 +178,7 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 		if (project == null)
 			throw new IllegalStateException(
 					"Plan task should have a project by now.");
-		List<Task> tasks = getUnplannedTasks(project.getTasks());
+		List<Task> tasks = getUnplannedTasks(new ArrayList<Task>(project.getTasks()));
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
@@ -203,7 +213,7 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 				if (!isValidStartTime(timeSpan)) {
 					reservables = new ArrayList<Reservable>(
 							getSuggestedResources(timeSpan));
-					new ResolveConflictSession(getUI(), getPH(), uh, clock,
+					new ResolveConflictSession(getUI(), ph, uh, clock,
 							task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
@@ -219,7 +229,7 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 
 				if (!isValidResource(resources, timeSpan)) {
 					reservables = new ArrayList<Reservable>(resources);
-					new ResolveConflictSession(getUI(), getPH(), uh, clock,
+					new ResolveConflictSession(getUI(), ph, uh, clock,
 							task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
@@ -235,7 +245,7 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 
 				if (!isvalidDeveloper(developers, timeSpan)) {
 					reservables = new ArrayList<Reservable>(developers);
-					new ResolveConflictSession(getUI(), getPH(), uh, clock,
+					new ResolveConflictSession(getUI(), ph, uh, clock,
 							task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
@@ -299,12 +309,14 @@ public class PlanTaskSession extends AbstractProjectHandlerSession {
 		boolean noUnplannedTasks = true;
 
 		for (Project p : projects) {
-			unplannedTasks = getUnplannedTasks(p.getTasks());
+			unplannedTasks = getUnplannedTasks(new ArrayList<Task>(p.getTasks()));
 			unplannedTasksList.add(unplannedTasks);
 
 			if (noUnplannedTasks && unplannedTasks.size() > 0)
 				noUnplannedTasks = false;
 		}
+		
+		//TODO: Add the delegated tasks
 
 		if (noUnplannedTasks)
 			return new ArrayList<>();

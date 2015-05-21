@@ -2,12 +2,12 @@ package taskman.controller.branch;
 
 import org.joda.time.DateTime;
 
+import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
-import taskman.model.company.ProjectHandler;
 import taskman.model.time.Clock;
 import taskman.view.IView;
 
-public class AdvanceTimeSession extends AbstractProjectHandlerSession {
+public class AdvanceTimeSession extends Session {
 
 	private Clock clock;
 
@@ -16,19 +16,17 @@ public class AdvanceTimeSession extends AbstractProjectHandlerSession {
 	 * 
 	 * @param cli
 	 *            The command line interface.
-	 * @param ph
-	 *            The project handler.
 	 * @param clock
 	 *            The system clock.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             Both the given view and the project handler need to be valid.
+	 *             The view needs to be valid.
 	 * @throws IllegalArgumentException
-	 *             The clock needs to be valid.
+	 *             The given clock needs to be valid.
 	 */
-	public AdvanceTimeSession(IView cli, ProjectHandler ph, Clock clock)
+	public AdvanceTimeSession(IView cli, Clock clock)
 			throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli);
 		if (clock == null)
 			throw new IllegalArgumentException(
 					"The advance time controller needs a clock");

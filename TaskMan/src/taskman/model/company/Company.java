@@ -21,6 +21,12 @@ public class Company {
 	public Company() {
 		branchOffices = new ArrayList<BranchOffice>();
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	private final String name = "SWOP";
 
 	/**
 	 * Adds a branch office to the list of branch offices in the company

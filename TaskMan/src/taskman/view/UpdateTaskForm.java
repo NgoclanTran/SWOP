@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
-import taskman.model.user.Developer;
 
 public class UpdateTaskForm implements IUpdateTaskForm {
 
@@ -15,33 +14,6 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 
 	public UpdateTaskForm(View view) {
 		this.view = view;
-	}
-
-	/**
-	 * This method will ask the user to select the developer to update a task
-	 * and it will return the developer.
-	 * 
-	 * @param developers
-	 * 
-	 * @return Returns the selected developer.
-	 * 
-	 * @throws ShouldExitException
-	 *             The user cancelled the updating of the task.
-	 */
-	@Override
-	public Developer getDeveloper(List<Developer> developers)
-			throws ShouldExitException {
-		try {
-			view.displayInfo("List of developers:");
-			view.output.displayList(developers, 0, true);
-			view.output.displayEmptyLine();
-			int developerId = view.getListChoice(developers,
-					"Select a developer:");
-			return developers.get(developerId - 1);
-		} catch (ShouldExitException e) {
-			view.output.displayEmptyLine();
-			throw new ShouldExitException();
-		}
 	}
 
 	/**
