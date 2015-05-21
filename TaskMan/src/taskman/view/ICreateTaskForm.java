@@ -6,7 +6,7 @@ import java.util.Map;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ResourceHandler;
 import taskman.model.resource.ResourceType;
-import taskman.model.task.Task;
+import taskman.model.task.NormalTask;
 
 public interface ICreateTaskForm {
 
@@ -52,7 +52,7 @@ public interface ICreateTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
 	 */
-	public List<Task> getNewTaskDependencies(List<Task> tasks)
+	public List<NormalTask> getNewTaskDependencies(List<NormalTask> tasks)
 			throws ShouldExitException;
 
 	/**
@@ -66,7 +66,7 @@ public interface ICreateTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
 	 */
-	public Task getNewTaskAlternativeFor(List<Task> tasks)
+	public NormalTask getNewTaskAlternativeFor(List<NormalTask> tasks)
 			throws ShouldExitException;
 
 	/**

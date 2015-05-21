@@ -9,14 +9,17 @@ import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ProjectHandler;
-import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Reservation;
 import taskman.model.task.Task;
 import taskman.model.user.Developer;
 import taskman.view.IView;
 
-public class UpdateTaskStatusSession extends AbstractProjectHandlerSession {
+public class UpdateTaskStatusSession extends Session {
+
+	private ProjectHandler ph;
+	private Developer developer;
 
 	/**
 	 * Creates the update task session using the given UI, ProjectHandler and
@@ -29,9 +32,17 @@ public class UpdateTaskStatusSession extends AbstractProjectHandlerSession {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public UpdateTaskStatusSession(IView cli, ProjectHandler ph)
-			throws IllegalArgumentException {
-		super(cli, ph);
+	public UpdateTaskStatusSession(IView cli, ProjectHandler ph,
+			Developer developer) throws IllegalArgumentException {
+		super(cli);
+		if (ph == null)
+			throw new IllegalArgumentException(
+					"The update task status controller needs a ProjectHandler");
+		if (developer == null)
+			throw new IllegalArgumentException(
+					"The update task status controller needs a developer.");
+		this.ph = ph;
+		this.developer = developer;
 		// TODO: Give the user to constructor.
 	}
 
@@ -42,13 +53,7 @@ public class UpdateTaskStatusSession extends AbstractProjectHandlerSession {
 	 */
 	@Override
 	public void run() {
-		try {
-			Developer developer = getUI().getUpdateTaskForm().getDeveloper(
-					uh.getDevelopers());
-			showProjectsAndAvailableTasks(developer);
-		} catch (ShouldExitException e) {
-			return;
-		}
+		showProjectsAndAvailableTasks(developer);
 	}
 
 	/**
@@ -59,7 +64,7 @@ public class UpdateTaskStatusSession extends AbstractProjectHandlerSession {
 	 * @param developer
 	 */
 	private void showProjectsAndAvailableTasks(Developer developer) {
-		List<Project> projects = getPH().getProjects();
+		List<Project> projects = ph.getProjects();
 		List<List<Task>> availableTasksList = getAvailableTasksAllProjects(
 				developer, projects);
 
@@ -123,12 +128,13 @@ public class UpdateTaskStatusSession extends AbstractProjectHandlerSession {
 	private List<Task> getAvailableTasksProject(Developer developer,
 			Project project) {
 		List<Task> availableTasks = new ArrayList<Task>();
-		List<Task> tasks = project.getTasks();
+		List<NormalTask> tasks = project.getTasks();
 		for (Task t : tasks) {
 			if ((t.isAvailable() || t.isExecuting())
 					&& t.getRequiredDevelopers().contains(developer))
 				availableTasks.add(t);
 		}
+		//TODO: Add delegated tasks?
 		return availableTasks;
 	}
 

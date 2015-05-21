@@ -13,6 +13,8 @@ import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.branch.CreateProjectSession;
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.project.Project;
@@ -38,14 +40,16 @@ public class CreateProjectSessionTest {
 
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+	private Company company;
+	private BranchOffice bo = new BranchOffice(company, "", null);
 
 	@Before
 	public void setup() {
 		clock = new Clock();
-		tf = new TaskFactory(clock);
+		tf = new TaskFactory(bo, clock);
 		cli = new View();
 		ph = new ProjectHandler(tf);
-		rh = new ResourceHandler();
+		rh = new ResourceHandler(null);
 		session = new CreateProjectSession(cli, ph, clock);
 
 	}

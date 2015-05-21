@@ -8,6 +8,7 @@ import java.util.Map;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ResourceHandler;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
 
 public class CreateTaskForm implements ICreateTaskForm {
@@ -112,7 +113,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 *             The user cancelled the task creation.
 	 */
 	@Override
-	public List<Task> getNewTaskDependencies(List<Task> tasks)
+	public List<NormalTask> getNewTaskDependencies(List<NormalTask> tasks)
 			throws ShouldExitException {
 		try {
 			view.displayInfo("Does this task have dependencies? (Y/N or cancel):");
@@ -127,14 +128,14 @@ public class CreateTaskForm implements ICreateTaskForm {
 			}
 
 			if (view.isValidYesAnswer(hasDependencies)) {
-				List<Task> list = parseDependecies(tasks);
+				List<NormalTask> list = parseDependecies(tasks);
 				while (list == null) {
 					view.displayError("Incorrect input.");
 					list = parseDependecies(tasks);
 				}
 				return list;
 			} else {
-				return new ArrayList<Task>();
+				return new ArrayList<NormalTask>();
 			}
 		} catch (ShouldExitException e) {
 			view.output.displayEmptyLine();
@@ -153,11 +154,11 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the task creation.
 	 */
-	private List<Task> parseDependecies(List<Task> tasks)
+	private List<NormalTask> parseDependecies(List<NormalTask> tasks)
 			throws ShouldExitException {
-		ArrayList<Task> list = new ArrayList<Task>();
+		ArrayList<NormalTask> list = new ArrayList<NormalTask>();
 		view.output.displayEmptyLine();
-		view.displayTaskList(tasks, 0, true);
+		view.displayTaskList(new ArrayList<Task>(tasks), 0, true);
 		view.displayInfo("Select the dependencies seperated by a comma (e.g. 1,2,3 and 'cancel' or 0 to return):");
 		String dependencies = view.input.getInput();
 		view.output.displayEmptyLine();
@@ -192,7 +193,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 	 *             The user cancelled the task creation.
 	 */
 	@Override
-	public Task getNewTaskAlternativeFor(List<Task> tasks)
+	public NormalTask getNewTaskAlternativeFor(List<NormalTask> tasks)
 			throws ShouldExitException {
 		try {
 			view.displayInfo("Is this task an alternative for a failed task? (Y/N or cancel):");
@@ -207,7 +208,7 @@ public class CreateTaskForm implements ICreateTaskForm {
 			}
 
 			if (view.isValidYesAnswer(hasAlternativeFor)) {
-				view.displayTaskList(tasks, 0, true);
+				view.displayTaskList(new ArrayList<Task>(tasks), 0, true);
 				int taskId = view
 						.getListChoice(tasks,
 								"Select a task for which this task will be the alternative (or cancel):");

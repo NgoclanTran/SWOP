@@ -1,14 +1,18 @@
 package taskman.controller.branch;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
 import taskman.view.IView;
 
-public class ShowProjectsSession extends AbstractProjectHandlerSession {
+public class ShowProjectsSession extends Session {
+	
+	private ProjectHandler ph;
 
 	/**
 	 * Constructor of the show projects controller.
@@ -20,7 +24,11 @@ public class ShowProjectsSession extends AbstractProjectHandlerSession {
 	 */
 	public ShowProjectsSession(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {
-		super(cli, ph);
+		super(cli);
+		if (ph == null)
+			throw new IllegalArgumentException(
+					"The show projects controller needs a ProjectHandler");
+		this.ph = ph;
 	}
 
 	/**
@@ -37,7 +45,7 @@ public class ShowProjectsSession extends AbstractProjectHandlerSession {
 	 * project.
 	 */
 	private void showProjects() {
-		List<Project> projects = getPH().getProjects();
+		List<Project> projects = ph.getProjects();
 
 		if (projects.size() == 0) {
 			getUI().displayError("No projects.");
@@ -63,7 +71,7 @@ public class ShowProjectsSession extends AbstractProjectHandlerSession {
 	 *            The project to show the details of.
 	 */
 	private void showProjectDetails(Project project) {
-		List<Task> tasks = project.getTasks();
+		List<Task> tasks = new ArrayList<Task>(project.getTasks());
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
@@ -75,6 +83,8 @@ public class ShowProjectsSession extends AbstractProjectHandlerSession {
 		} catch (ShouldExitException e) {
 			return;
 		}
+		
+		//TODO: Add delegated tasks
 
 		showTaskDetails(task);
 	}
