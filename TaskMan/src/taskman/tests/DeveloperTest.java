@@ -55,4 +55,5 @@ public class DeveloperTest {
 		Developer d = new Developer(name, startTime, endTime);
 		assertEquals(d.getName(), name);
 	}
+	
 }
