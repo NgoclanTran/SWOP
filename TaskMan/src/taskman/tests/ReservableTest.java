@@ -13,10 +13,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.exceptions.IllegalTimeException;
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.memento.ReservableMemento;
+import taskman.model.project.Project;
 import taskman.model.task.Reservable;
 import taskman.model.task.Reservation;
 import taskman.model.task.Task;
+import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
@@ -26,6 +30,8 @@ public class ReservableTest {
 	private Task t;
 	private TimeSpan ts;
 	private Clock clock = new Clock();
+	Company company = new Company();
+	private BranchOffice branchOffice = new BranchOffice(company, "", null);
 
 	@Before
 	public void setUp() throws Exception {
@@ -76,16 +82,20 @@ public class ReservableTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void addReservationTest_TimeSpan_Null() {
 		Reservable r = new Reservable(start, end);
-		Task task = new Task(clock,"d", 10, 1, null, null, null);
-		r.addReservation(task, null);
+		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask("", 10, 1, null, null, null);
+		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), null);
 	}
 
 	@Test(expected = IllegalTimeException.class)
 	public void addReservationTest_TimeSpan_Invalid() {
 		Reservable r = new Reservable(start, end);
-		Task task = new Task(clock,"d", 10, 1, null, null, null);
-		r.addReservation(task, ts);
-		r.addReservation(task, ts);
+		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask("", 10, 1, null, null, null);
+		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
+		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -113,8 +123,10 @@ public class ReservableTest {
 	@Test
 	public void isAvailableTest_TrueCase2() {
 		Reservable r = new Reservable(start, end);
-		Task task = new Task(clock,"d", 10, 1, null, null, null);
-		r.addReservation(task, ts);
+		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask("", 10, 1, null, null, null);
+		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
 		assertFalse(r.isAvailableAt(ts));
 		// example with reservation
 	}
@@ -123,8 +135,11 @@ public class ReservableTest {
 	public void getReservationsTest() {
 		Reservable r = new Reservable(null, null);
 		List<Reservation> l = r.getReservations();
-		Task task = new Task(clock,"d", 10, 1, null, null, null);
-		Reservation rv = new Reservation(task, ts);
+		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask("", 10, 1, null, null, null);
+		
+		Reservation rv = new Reservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
 		l.add(rv);
 		assertNotEquals(r.getReservations(), rv);
 		// create reservation and add to l, if nothing change then Ok
@@ -134,5 +149,12 @@ public class ReservableTest {
 	public void createMomentoTest() {
 		Reservable r = new Reservable(null, null);
 		assertTrue(r.createMemento() instanceof ReservableMemento);
+	}
+	
+	@Test
+	public void getObjectTest(){
+		Reservable r = new Reservable(null, null);
+		ReservableMemento r1 = new ReservableMemento(r, null);
+		assertEquals(r1.getObject(), r);
 	}
 }
