@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import taskman.exceptions.ShouldExitException;
+import taskman.model.company.BranchOffice;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
 import taskman.view.commandline.Input;
@@ -134,15 +135,19 @@ public class View implements IView {
 	 * This method will generate a string with detailed information about the
 	 * given project.
 	 * 
+	 * @param branchOffice
 	 * @param project
 	 * 
 	 * @return Returns a string with detailed information about the given
 	 *         project.
 	 */
-	private String getStringProjectDetails(Project project) {
+	private String getStringProjectDetails(BranchOffice branchOffice,
+			Project project) {
 		StringBuilder projectDetails = new StringBuilder();
 		projectDetails.append(project.getName());
 		projectDetails.append(":\n");
+		projectDetails.append(branchOffice.getLocation());
+		projectDetails.append("\n");
 		projectDetails.append(project.getDescription());
 		projectDetails.append("\n");
 		projectDetails.append(getStringDate(project.getCreationTime()));
@@ -228,6 +233,16 @@ public class View implements IView {
 			taskInfo.append("\n");
 			taskInfo.append("Required resource types: ");
 			taskInfo.append(task.getRequiredResourceTypes().toString());
+		}
+		if (task.isPlanned()) {
+			taskInfo.append("\n");
+			taskInfo.append("Planned start time: ");
+			taskInfo.append(getStringDate(task.getRequiredDevelopers().get(0)
+					.getReservations().get(0).getTimeSpan().getStartTime()));
+			taskInfo.append("\n");
+			taskInfo.append("Planned end time: ");
+			taskInfo.append(getStringDate(task.getRequiredDevelopers().get(0)
+					.getReservations().get(0).getTimeSpan().getEndTime()));
 		}
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
@@ -411,12 +426,13 @@ public class View implements IView {
 	 * This method will print the project details of a given project to the
 	 * command line.
 	 * 
+	 * @param branchOffice
 	 * @param project
 	 */
 	@Override
-	public void displayProjectDetails(Project project) {
+	public void displayProjectDetails(BranchOffice branchOffice, Project project) {
 		displayInfo(output.indentStringWithNewLines(
-				getStringProjectDetails(project), 1));
+				getStringProjectDetails(branchOffice, project), 1));
 		output.displayEmptyLine();
 	}
 
@@ -483,6 +499,13 @@ public class View implements IView {
 		}
 		output.displayList(tasksInfo, tabs, printReturn);
 		output.displayEmptyLine();
+	}
+
+	/**
+	 * This method will return a new login form.
+	 */
+	public IShowAllBranchesForm getShowAllBranchesForm() {
+		return new ShowAllBranchesForm(this);
 	}
 
 	/**
