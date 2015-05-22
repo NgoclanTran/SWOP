@@ -187,7 +187,7 @@ public class View implements IView {
 		taskInfo.append(": ");
 		taskInfo.append(task.getStatusName());
 		taskInfo.append("\n");
-		taskInfo.append("Responsible branch office:");
+		taskInfo.append("Responsible branch office: ");
 		taskInfo.append(task.getResponsibleBranchOffice());
 		taskInfo.append("\n");
 		if (task.isCompleted()) {

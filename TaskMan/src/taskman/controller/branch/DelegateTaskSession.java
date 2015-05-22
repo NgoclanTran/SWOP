@@ -45,7 +45,6 @@ public class DelegateTaskSession extends Session {
 			if (branchOffice.getPh().equals(ph))
 				branchOffices.remove(branchOffice);
 		}
-		
 	}
 	
 	private Task getUnplannedTask() throws ShouldExitException {
