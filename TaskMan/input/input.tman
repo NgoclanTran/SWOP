@@ -84,6 +84,10 @@ developers:
     branchOffice	: 0
   - name 			: "Bob Grylls"
     branchOffice	: 0
+  - name			: "Quinten Tarantino"
+  	branchOffice	: 1
+  - name			: "Michael Bay"
+  	branchOffice	: 1
 
 projects:
   - name         : "project x"
@@ -132,6 +136,7 @@ tasks:
     # These time stamps are only required if a task is finished of failed
     startTime          : "2014-01-01 10:00"
     endTime            : "2014-01-02 17:00"
+    developers		   : 1
     branchOffice 	   : 0
 
   - project            : 1
@@ -142,6 +147,7 @@ tasks:
     prerequisiteTasks  :
     planning           :
     status             :
+    developers		   : 1
     branchOffice 	   : 0
 
   - project            : 1
@@ -152,6 +158,7 @@ tasks:
     prerequisiteTasks  :
     planning           :
     status             :
+    developers		   : 1
     branchOffice 	   : 0
 
   - project            : 1
@@ -164,6 +171,7 @@ tasks:
     status             : failed
     startTime          : "2014-01-02 09:00"
     endTime            : "2014-03-25 18:00"
+    developers		   : 1
     branchOffice 	   : 0
 
   - project            : 1
@@ -174,6 +182,7 @@ tasks:
     prerequisiteTasks  : [ 1, 2 ]
     planning           : 2
     status             : executing
+    developers		   : 1
     branchOffice 	   : 0
 
   - project            : 2
@@ -184,6 +193,7 @@ tasks:
     prerequisiteTasks  :
     planning           :
     status             :
+    developers		   : 1
     branchOffice 	   : 0
 
   - project            : 2
@@ -194,6 +204,7 @@ tasks:
     prerequisiteTasks  :
     planning           :
     status             :
+    developers		   : 1
     branchOffice 	   : 0
 
 reservations:

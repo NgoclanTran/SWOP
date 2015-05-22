@@ -13,9 +13,10 @@ public class DelegatedTask extends Task {
 	public DelegatedTask(Clock clock, String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
-			boolean dependenciesFinished) throws IllegalArgumentException {
+			boolean dependenciesFinished, int developerAmount)
+			throws IllegalArgumentException {
 		super(clock, description, estimatedDuration, acceptableDeviation,
-				resourceTypes);
+				resourceTypes, developerAmount);
 		this.dependenciesFinished = dependenciesFinished;
 	}
 

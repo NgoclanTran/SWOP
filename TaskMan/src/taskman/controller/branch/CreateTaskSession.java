@@ -30,7 +30,8 @@ public class CreateTaskSession extends Session {
 	 *            The resource handler.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             The given project handler and resource handler need to be valid.
+	 *             The given project handler and resource handler need to be
+	 *             valid.
 	 */
 	public CreateTaskSession(IView cli, ProjectHandler ph, ResourceHandler rh)
 			throws IllegalArgumentException {
@@ -71,6 +72,8 @@ public class CreateTaskSession extends Session {
 						.getNewTaskEstimatedDuration();
 				int acceptableDeviation = getUI().getNewTaskForm()
 						.getNewTaskAcceptableDeviation();
+				int developerAmount = getUI().getNewTaskForm()
+						.getNewTaskRequiredAmountOfDevelopers();
 				List<NormalTask> dependencies = new ArrayList<NormalTask>();
 				if (tasks.size() > 0)
 					dependencies = getUI().getNewTaskForm()
@@ -86,7 +89,7 @@ public class CreateTaskSession extends Session {
 
 				if (isValidTask(project, description, estimatedDuration,
 						acceptableDeviation, dependencies, alternativeFor,
-						resourceTypes))
+						resourceTypes, developerAmount))
 					break;
 
 			} catch (ShouldExitException e) {
@@ -112,11 +115,11 @@ public class CreateTaskSession extends Session {
 	private boolean isValidTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
 			List<NormalTask> dependencies, NormalTask alternativeFor,
-			Map<ResourceType, Integer> resourceTypes) {
+			Map<ResourceType, Integer> resourceTypes, int developerAmount) {
 		try {
 			project.addTask(description, estimatedDuration,
 					acceptableDeviation, dependencies, alternativeFor,
-					resourceTypes);
+					resourceTypes, developerAmount);
 			getUI().displayInfo("Task created");
 			return true;
 		} catch (NullPointerException nullEx) {

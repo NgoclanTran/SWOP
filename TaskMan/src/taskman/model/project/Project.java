@@ -120,20 +120,22 @@ public class Project implements Observer {
 	 */
 	public void addTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<NormalTask> dependencies,
-			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			NormalTask alternativeFor,
+			Map<ResourceType, Integer> resourceTypes, int developerAmount)
 			throws IllegalStateException {
 		this.state.addTask(this, description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor,
-				resourceTypes);
+				resourceTypes, developerAmount);
 	}
 
 	protected void performAddTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<NormalTask> dependencies,
-			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			NormalTask alternativeFor,
+			Map<ResourceType, Integer> resourceTypes, int developerAmount)
 			throws IllegalArgumentException {
 		NormalTask task = taskFactory.makeNormalTask(description,
 				estimatedDuration, acceptableDeviation, dependencies,
-				alternativeFor, resourceTypes);
+				alternativeFor, resourceTypes, developerAmount);
 		this.tasks.add(task);
 		task.attach(this);
 	}

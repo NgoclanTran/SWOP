@@ -26,7 +26,7 @@ public class Finished implements State {
 	public void addTask(Project project, String description,
 			int estimatedDuration, int acceptableDeviation,
 			List<NormalTask> dependencies, NormalTask alternativeFor,
-			Map<ResourceType, Integer> resourceTypes)
+			Map<ResourceType, Integer> resourceTypes, int developerAmount)
 			throws IllegalStateException {
 		throw new IllegalStateException("Project already finished.");
 	}

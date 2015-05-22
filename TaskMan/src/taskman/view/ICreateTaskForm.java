@@ -84,4 +84,16 @@ public interface ICreateTaskForm {
 	public Map<ResourceType, Integer> getNewTaskResourceTypes(ResourceHandler rh)
 			throws ShouldExitException;
 
+	/**
+	 * This method will ask the user for the amount of developers needed and
+	 * return it.
+	 * 
+	 * @return Returns the amount of developers needed.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the task creation.
+	 */
+	public int getNewTaskRequiredAmountOfDevelopers()
+			throws ShouldExitException;
+
 }
