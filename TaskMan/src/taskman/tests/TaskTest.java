@@ -54,7 +54,7 @@ public class TaskTest {
 	public void constructor1Test_FalseCase_DescriptionNull() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(null, 10, 1, dependencies, null, null);
+		p.addTask(null, 10, 1, dependencies, null, null, 1);
 		//Task t = new Task(clock,null, estimatedDuration, acceptableDeviation,
 		//		dependencies, null, null);
 
@@ -64,7 +64,7 @@ public class TaskTest {
 	public void constructor1Test_FalseCase_EstimatedDuration() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, -10, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, -10, acceptableDeviation, dependencies, null, null, 1);
 		//Task t = new Task(clock,description, -10, acceptableDeviation, dependencies,
 		//		null, null);
 
@@ -74,7 +74,7 @@ public class TaskTest {
 	public void constructor1Test_FalseCase_acceptableDeviation() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, -10, dependencies, null, null);
+		p.addTask(description, estimatedDuration, -10, dependencies, null, null, 1);
 		//Task t = new Task(clock,description, estimatedDuration, -10, dependencies,
 		//		null, null);
 	}
@@ -83,7 +83,7 @@ public class TaskTest {
 	public void constructor2Test_FalseCase_DescriptionNull() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(null, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(null, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 
 	}
 
@@ -91,7 +91,7 @@ public class TaskTest {
 	public void constructorTest_TrueCase() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		Task t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -114,11 +114,11 @@ public class TaskTest {
 	public void constructorTest_WithDependencies() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		ArrayList<NormalTask> l = new ArrayList<NormalTask>();
 		l.add(t1);
-		p.addTask(description, estimatedDuration, acceptableDeviation,l,null,null);
+		p.addTask(description, estimatedDuration, acceptableDeviation,l,null,null, 1);
 		Task t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		assertEquals(t2.getDescription(), description);
 		assertEquals(t2.getEstimatedDuration(), estimatedDuration);
@@ -140,7 +140,7 @@ public class TaskTest {
 		map.put(rt, 3);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, map);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, map, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		assertEquals(t.getDescription(), description);
 		assertEquals(t.getEstimatedDuration(), estimatedDuration);
@@ -157,7 +157,7 @@ public class TaskTest {
 	public void constructorTest_WithAlternativeFor() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -173,7 +173,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, t, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, t, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		assertEquals(t.getAlternative(), t2);
 
@@ -183,9 +183,9 @@ public class TaskTest {
 	public void getDependenciesTest_TrueCase() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		dependencies.add(t2);
 
@@ -197,7 +197,7 @@ public class TaskTest {
 	public void attachDependantTest_FalseCase_Null() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null,1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		t.attachDependant(null);
 	}
@@ -206,7 +206,7 @@ public class TaskTest {
 	public void addTimeSpanTest_FalseCase_StartNull() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -224,7 +224,7 @@ public class TaskTest {
 	public void addTimeSpanTest_FalseCase_EndNull() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -242,7 +242,7 @@ public class TaskTest {
 	public void addTimeSpanTest_StatusUNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
@@ -251,7 +251,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "FAILED");
 		ArrayList<NormalTask> dep = new ArrayList<NormalTask>();
 		dep.add(t);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dep, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dep, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		assertEquals(t2.getStatusName(), "UNAVAILABLE");
 		assertFalse(t2.isAvailable());
@@ -263,7 +263,7 @@ public class TaskTest {
 	public void addTimeSpanTest_StatusPLANNED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -283,7 +283,7 @@ public class TaskTest {
 	public void addTimeSpanTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -306,7 +306,7 @@ public class TaskTest {
 	public void addTimeSpanTest_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -330,7 +330,7 @@ public class TaskTest {
 	public void addAlternativeTest_FalseCase_AlternativeNull() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -352,7 +352,7 @@ public class TaskTest {
 	public void addAlternativeTest_StatusAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -361,7 +361,7 @@ public class TaskTest {
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
 		t.update();
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		t.addAlternative(t2);
 
@@ -371,9 +371,9 @@ public class TaskTest {
 	public void addAlternativeTest_StatusUNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		assertEquals(t.getStatusName(), "UNAVAILABLE");
 		t.addAlternative(t2);
@@ -383,7 +383,7 @@ public class TaskTest {
 	public void addAlternativeTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -399,7 +399,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 
 		t.addAlternative(t2);
@@ -411,7 +411,7 @@ public class TaskTest {
 	public void addAlternativeTest_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -427,7 +427,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "FINISHED");
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 
 		t.addAlternative(t2);
@@ -437,7 +437,7 @@ public class TaskTest {
 	public void isAvailableTest_StatusPLANNED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -456,7 +456,7 @@ public class TaskTest {
 	public void isAvailableTest_StatusUNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		assertEquals(t.getStatusName(), "UNAVAILABLE");
 		assertFalse(t.isAvailable());
@@ -466,7 +466,7 @@ public class TaskTest {
 	public void isAvailableTest_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -490,7 +490,7 @@ public class TaskTest {
 	public void isAvailableTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -514,7 +514,7 @@ public class TaskTest {
 	public void isAvailableTest_StatusEXECUTING() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -536,7 +536,7 @@ public class TaskTest {
 	public void isFinishedTest_StatusAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -554,7 +554,7 @@ public class TaskTest {
 	public void isFinishedTest_StatusUNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 
@@ -566,7 +566,7 @@ public class TaskTest {
 	public void isFinishedTest_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -591,7 +591,7 @@ public class TaskTest {
 	public void isFinishedTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -615,7 +615,7 @@ public class TaskTest {
 	public void isFinishedTest_StatusEXECUTING() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -637,7 +637,7 @@ public class TaskTest {
 	public void isFailedTest_StatusPLANNED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -657,7 +657,7 @@ public class TaskTest {
 	public void isFailedTest_StatusUNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		assertFalse(t.isFailed());
@@ -668,7 +668,7 @@ public class TaskTest {
 	public void isFailedTest_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -693,7 +693,7 @@ public class TaskTest {
 	public void isFailedTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -718,7 +718,7 @@ public class TaskTest {
 	public void isFailedTest_StatusEXECUTING() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -740,7 +740,7 @@ public class TaskTest {
 	public void isCompletedTest_StatusAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -758,7 +758,7 @@ public class TaskTest {
 	public void isCompletedTest_StatusUNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		assertFalse(t.isCompleted());
 	}
@@ -767,7 +767,7 @@ public class TaskTest {
 	public void isCompletedTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -789,7 +789,7 @@ public class TaskTest {
 	public void isCompletedTest_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -812,7 +812,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_TrueCase_StatusPLANNED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -833,7 +833,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_TrueCase_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -856,7 +856,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_FalseCase_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -880,7 +880,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_FalseCase_StatusEXECUTING() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -902,12 +902,12 @@ public class TaskTest {
 	public void updateTaskAvailabitlityTest_DependantUpdate() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		ArrayList<NormalTask> l = new ArrayList<NormalTask>();
 		l.add(t1);
-		p.addTask(description, estimatedDuration, acceptableDeviation, l, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, l, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		Developer d1 = new Developer("name developer 1", new LocalTime(8, 0),
 				new LocalTime(23, 0));
@@ -934,7 +934,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_DeveloperAvailableTest() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name developer 1", new LocalTime(8, 0),
@@ -961,7 +961,7 @@ public class TaskTest {
 		l.put(rt, 2);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, l);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, l, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		rt.getResources()
 				.get(0)
@@ -982,7 +982,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_FAILEDTask_Update() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -997,7 +997,7 @@ public class TaskTest {
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
 				2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 
 		Developer d2 = new Developer("name", new LocalTime(8, 0),
@@ -1013,7 +1013,7 @@ public class TaskTest {
 
 		ArrayList<NormalTask> listTasks = new ArrayList<NormalTask>();
 		listTasks.add(t1);
-		p.addTask(description, estimatedDuration, acceptableDeviation, listTasks, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, listTasks, null, null, 1);
 		NormalTask t3 = branchOffice.getPh().getProjects().get(0).getTasks().get(2);
 		t3.update();
 
@@ -1023,7 +1023,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_NoAlternative() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
@@ -1041,7 +1041,7 @@ public class TaskTest {
 
 		ArrayList<NormalTask> dependencies = new ArrayList<NormalTask>();
 		dependencies.add(t1);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		t2.update();
 
@@ -1051,7 +1051,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -1065,7 +1065,7 @@ public class TaskTest {
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
 				2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null, 1);
 		NormalTask t3 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		Developer d2 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -1082,7 +1082,7 @@ public class TaskTest {
 
 		ArrayList<NormalTask> dependencies = new ArrayList<NormalTask>();
 		dependencies.add(t1);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(2);
 		t2.update();
 
@@ -1092,7 +1092,7 @@ public class TaskTest {
 	public void updateTaskAvailabilityTest_isAlternativeFinishedTest_AlternativeFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d1 = new Developer("name", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -1106,7 +1106,7 @@ public class TaskTest {
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(
 				2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null, 1);
 		NormalTask t3 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 
 		Developer d2 = new Developer("name", new LocalTime(8, 0),
@@ -1124,7 +1124,7 @@ public class TaskTest {
 
 		ArrayList<NormalTask> dependencies = new ArrayList<NormalTask>();
 		dependencies.add(t1);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		t2.update();
 
@@ -1134,7 +1134,7 @@ public class TaskTest {
 	public void calculateTotalExecutionTimeTest_TrueCase() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1157,7 +1157,7 @@ public class TaskTest {
 	public void calculateTotalExecutionTimeTest_StatusUNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		int time = t.getTotalExecutionTime();
@@ -1167,7 +1167,7 @@ public class TaskTest {
 	public void calculateTotalExecutionTimeTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1190,7 +1190,7 @@ public class TaskTest {
 	public void calculateTotalExecutionTimeTest_StatusFINISHEED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1274,7 +1274,7 @@ public class TaskTest {
 	public void calculateOverduePercentageTest_TrueCase() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1300,7 +1300,7 @@ public class TaskTest {
 	public void isPlannedTest_TrueCase() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1318,7 +1318,7 @@ public class TaskTest {
 	public void isPlannedTest_FalseCase() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		assertFalse(t.isPlanned());
@@ -1333,7 +1333,7 @@ public class TaskTest {
 	public void isSeveralyOverDueTest_StatusAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1350,7 +1350,7 @@ public class TaskTest {
 	public void isSeveralyOverDueTest_StatusFINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1371,7 +1371,7 @@ public class TaskTest {
 	public void isSeveralyOverDueTest_StatusFAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1393,7 +1393,7 @@ public class TaskTest {
 	public void isSeveralyOverDueTest_StatusEXECUTING() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
@@ -1409,7 +1409,7 @@ public class TaskTest {
 	public void createMomentoTest() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		assertTrue(t.createMemento() instanceof NormalTaskMemento);
 	}
@@ -1418,7 +1418,7 @@ public class TaskTest {
 	public void getDevelopersTest() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		List<Developer> ld = t.getRequiredDevelopers();
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1431,7 +1431,7 @@ public class TaskTest {
 	public void addDeveloperTest_Null() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		t.addRequiredDeveloper(null);
 	}
@@ -1440,7 +1440,7 @@ public class TaskTest {
 	public void addDeveloperTest_TrueCase() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer developer = new Developer("1", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -1453,7 +1453,7 @@ public class TaskTest {
 	public void addDeveloperTest_AlreadyInTask() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		Developer developer = new Developer("1", new LocalTime(8, 0),
 				new LocalTime(16, 0));
@@ -1466,7 +1466,7 @@ public class TaskTest {
 	public void attachDependantTest_Null() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		t1.attachDependant(null);
 	}
@@ -1475,9 +1475,9 @@ public class TaskTest {
 	public void attachDependantTest() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
 		NormalTask t2 = branchOffice.getPh().getProjects().get(0).getTasks().get(1);
 		t1.attachDependant(t2);
 	}
@@ -1486,7 +1486,7 @@ public class TaskTest {
 	public void gerRequiredResourceTest() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, null);
+		p.addTask(description, estimatedDuration, 0, null, null, null,1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		HashMap<ResourceType, Integer> l = (HashMap<ResourceType, Integer>) t
 				.getRequiredResourceTypes();
@@ -1516,7 +1516,7 @@ public class TaskTest {
 		map.put(r, 2);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, map);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, map, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 	}
 
@@ -1537,7 +1537,7 @@ public class TaskTest {
 		map.put(r1, 1);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, map);
+		p.addTask(description, estimatedDuration, 0, null, null, map, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 	}
 
@@ -1558,7 +1558,7 @@ public class TaskTest {
 		map.put(r2, 1);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, map);
+		p.addTask(description, estimatedDuration, 0, null, null, map, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 	}
 
@@ -1574,7 +1574,7 @@ public class TaskTest {
 		map.put(r, 3);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, map);
+		p.addTask(description, estimatedDuration, 0, null, null, map, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 	}
 
@@ -1592,7 +1592,7 @@ public class TaskTest {
 		map.put(t2, 1);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, 0, null, null, map);
+		p.addTask(description, estimatedDuration, 0, null, null, map, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 	}
@@ -1601,7 +1601,7 @@ public class TaskTest {
 	public void setMomenToTest_Status_UNAVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		NormalTaskMemento tm = t.createMemento();
@@ -1626,7 +1626,7 @@ public class TaskTest {
 	public void setMomenToTest_Status_AVAILABLE() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
@@ -1653,7 +1653,7 @@ public class TaskTest {
 	public void setMomenToTest_Status_FINISHED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 
@@ -1684,7 +1684,7 @@ public class TaskTest {
 	public void setMomenToTest_Status_FAILED() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 
@@ -1715,7 +1715,7 @@ public class TaskTest {
 	public void setMomenToTest_Status_EXECUTING() {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
 
