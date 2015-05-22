@@ -107,7 +107,7 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 			view.displayInfo(project);
 			view.displayTaskList(availableTasks.get(i - 1), 1, false);
 		}
-		displayDelegatedTasks(availableTasks.size(), delegatedTasks);
+		displayDelegatedTasks(availableTasks.size() + 1, delegatedTasks);
 	}
 
 	private void displayDelegatedTasks(int startIndex, List<Task> tasks) {

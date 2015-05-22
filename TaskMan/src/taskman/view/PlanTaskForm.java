@@ -82,7 +82,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 			view.displayInfo(project);
 			view.displayTaskList(unplannedTasks.get(i - 1), 1, false);
 		}
-		displayDelegatedTasks(unplannedTasks.size(), delegatedTasks);
+		displayDelegatedTasks(unplannedTasks.size() + 1, delegatedTasks);
 	}
 	
 	private void displayDelegatedTasks(int startIndex, List<Task> tasks) {
