@@ -123,5 +123,10 @@ public interface IView {
 	 * This method will return a new login form.
 	 */
 	public ILoginForm getLoginForm();
+	
+	/**
+	 * This method will return a new delegate task form.
+	 */
+	public IDelegateTaskForm getDelegateTaskForm();
 
 }
