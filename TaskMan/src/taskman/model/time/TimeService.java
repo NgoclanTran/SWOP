@@ -78,6 +78,7 @@ public class TimeService {
 	 * @return the date time will be returned with the minutes added
 	 */
 	public DateTime addMinutes(DateTime time, int minutesToAdd) {
+		if(time == null) throw new IllegalArgumentException("The time cannot be null.");
 		while (minutesToAdd > 0) {
 			time = time.plusMinutes(1);
 			time = addBreaks(time);
@@ -122,6 +123,7 @@ public class TimeService {
 	 * @return the date time will be returned with the minutes removed
 	 */
 	public DateTime subtractMinutes(DateTime time, int minutesToSubtract) {
+		if(time == null) throw new IllegalArgumentException("The time cannot be null.");
 		while (minutesToSubtract > 0) {
 			time = time.minusMinutes(1);
 			time = removeBreaks(time);
@@ -139,6 +141,7 @@ public class TimeService {
 	 * @return the exact hour of the parameter
 	 */
 	public DateTime getExactHour(DateTime time) {
+		if(time == null) throw new IllegalArgumentException("The time cannot be null.");
 		time = time.plusMinutes((60 - time.getMinuteOfHour()) % 60);
 		return resetSecondsAndMilliSeconds(time);
 	}

@@ -57,18 +57,21 @@ public class TaskFactory {
 				resourceTypes, developerAmount);
 		clock.attach(task);
 		task.attach(branchOffice);
+		task.setResponsibleBranchOffice(branchOffice.getLocation());
 		return task;
 	}
 
 	public DelegatedTask makeDelegatedTask(String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
-			boolean dependenciesFinished, int developerAmount) throws IllegalArgumentException {
+			boolean dependenciesFinished, int developerAmount)
+			throws IllegalArgumentException {
 		DelegatedTask task = new DelegatedTask(clock, description,
 				estimatedDuration, acceptableDeviation, resourceTypes,
 				dependenciesFinished, developerAmount);
 		clock.attach(task);
 		task.attach(branchOffice);
+		task.setResponsibleBranchOffice(branchOffice.getLocation());
 		return task;
 	}
 
