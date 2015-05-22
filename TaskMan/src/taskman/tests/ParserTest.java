@@ -19,7 +19,7 @@ import taskman.model.time.Clock;
 import taskman.view.IView;
 import taskman.view.View;
 
-public class PlanTaskTestInputfile {
+public class ParserTest {
 	private Company company;
 	private IView cli, cli1;
 	private TaskFactory tf;
@@ -34,21 +34,12 @@ public class PlanTaskTestInputfile {
 		clock = new Clock();
 		cli = new View();
 		company = new Company();
-		Parser parser = new Parser(company);
-		parser.parse();
+
 	}
 	@Test
-	public void dummy(){
-		tf = new TaskFactory(company.getBranchOffices().get(0), clock);
-		for( Task t :company.getBranchOffices().get(0).getPh().getProjects().get(1).getTasks()){
-			t.update();
-			System.out.println(t.getDescription());
-			System.out.println(t.getStatusName());
-		}
-		PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(tf), company.getBranchOffices().get(0).getUh(), clock);
-		s.run();
-
-		assertTrue(log.getLog().contains("No unplanned tasks.\r\n\r\n"));
+	public void parseTestNoException(){
+		Parser parser = new Parser(company);
+		parser.parse();
 	}
 	
 }
