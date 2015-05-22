@@ -566,5 +566,61 @@ public class ProjectTest {
 		project.addTask(description, 600, 0, null, null, null);
 		project.getTotalDelay();
 	}
+	
+	@Test
+	public void testgetEstimatedFinishTime_2(){
+		Project p = new Project(name, description, creation, due,tf);
+		p.addTask("task 1", 10, 1, null, null, null);
+		p.addTask("description 2", 10, 1, null, null, null);
+		assertEquals(p.getTasks().get(1).getStatusName(), "UNAVAILABLE");
+		assertEquals(p.getTasks().get(0).getStatusName(), "UNAVAILABLE");
+		NormalTask task = p.getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(10,0), new LocalTime(11,0));
+		d.addReservation(task, new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0)));
+		task.addRequiredDeveloper(d);
+		clock.advanceSystemTime(new DateTime(2015,10,12,10,1));
+		task.update();
+		assertEquals(task.getStatusName(), "AVAILABLE");
+		task.executeTask();
+		assertEquals(task.getStatusName(), "EXECUTING");
+		task.addTimeSpan(false, new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,12,0));
+		assertEquals(task.getStatusName(), "FINISHED");
+		assertEquals(p.getEstimatedFinishTime(), new DateTime(2015,10,12,12,10));
+		
+	}
+	
+	@Test
+	public void setMementoTest_StatusONGOING(){
+		ProjectMemento pm = project.createMemento();
+		assertEquals(project.getTasks().size(),0);
+		project.addTask(description, 10, 1, null, null, null);
+		assertEquals(project.getTasks().size(),1);
+		
+		project.setMemento(pm);
+		assertEquals(project.getTasks().size(),0);
+	}
+	
+	@Test
+	public void setMementoTest_StatusFINISHED(){
+		Project p = new Project(name, description, creation, due,tf);
+		p.addTask("task 1", 10, 1, null, null, null);
+		assertEquals(p.getTasks().get(0).getStatusName(), "UNAVAILABLE");
+		NormalTask task = p.getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(10,0), new LocalTime(11,0));
+		d.addReservation(task, new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0)));
+		task.addRequiredDeveloper(d);
+		clock.advanceSystemTime(new DateTime(2015,10,12,10,1));
+		task.update();
+		assertEquals(task.getStatusName(), "AVAILABLE");
+		task.executeTask();
+		assertEquals(task.getStatusName(), "EXECUTING");
+		task.addTimeSpan(false, new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,12,0));
+		assertEquals(task.getStatusName(), "FINISHED");
+		
+		ProjectMemento pm = p.createMemento();
+		assertEquals(p.getTasks().size(),1);
+		p.setMemento(pm);
+		assertEquals(p.getTasks().size(),1);
+	}
 
 }
