@@ -43,7 +43,6 @@ public class UpdateTaskStatusSession extends Session {
 					"The update task status controller needs a developer.");
 		this.ph = ph;
 		this.developer = developer;
-		// TODO: Give the user to constructor.
 	}
 
 	/**

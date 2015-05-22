@@ -186,7 +186,7 @@ public class Parser {
 			JFileChooser fc = new JFileChooser();
 			Path path = null;
 			try {
-				path = Paths.get(System.getProperty("user.dir") + "../input")
+				path = Paths.get(System.getProperty("user.dir") + "/input")
 						.toRealPath();
 				File start = new File(path.toString());
 				fc.setCurrentDirectory(start);

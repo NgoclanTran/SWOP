@@ -3,6 +3,7 @@ package taskman.view;
 import java.util.List;
 
 import taskman.exceptions.ShouldExitException;
+import taskman.model.company.BranchOffice;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
 
@@ -58,9 +59,10 @@ public interface IView {
 	 * This method will print the project details of a given project to the
 	 * command line.
 	 * 
+	 * @param branchOffice
 	 * @param project
 	 */
-	public void displayProjectDetails(Project project);
+	public void displayProjectDetails(BranchOffice branchOffice, Project project);
 
 	/**
 	 * This method will print the given list of tasks to the command line and
@@ -82,6 +84,11 @@ public interface IView {
 	 * @param task
 	 */
 	public void displayTaskDetails(Task task);
+	
+	/**
+	 * This method will return a new login form.
+	 */
+	public IShowAllBranchesForm getShowAllBranchesForm();
 
 	/**
 	 * This method will return a new create project form.
