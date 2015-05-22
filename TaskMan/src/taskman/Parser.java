@@ -88,14 +88,6 @@ public class Parser {
 				} else {
 					clocks.add(line);
 				}
-				// } else if (line.startsWith("systemTime")) {
-				// int descriptionStart = line.indexOf("\"") + 1;
-				// int descriptionEnd = line.length() - 1;
-				// DateTime systemTime = new DateTime(
-				// parseDate(line.substring(descriptionStart,
-				// descriptionEnd)));
-				// systemClock.setSystemTime(systemTime);
-				// }
 			}
 
 			if (declaring == 2) {

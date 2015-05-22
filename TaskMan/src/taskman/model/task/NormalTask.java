@@ -16,7 +16,7 @@ public class NormalTask extends Task {
 			int acceptableDeviation, List<NormalTask> dependencies,
 			NormalTask alternativeFor,
 			Map<ResourceType, Integer> resourceTypes, int developerAmount)
-					throws IllegalStateException, IllegalArgumentException {
+			throws IllegalStateException, IllegalArgumentException {
 		super(clock, description, estimatedDuration, acceptableDeviation,
 				resourceTypes, developerAmount);
 
@@ -144,13 +144,13 @@ public class NormalTask extends Task {
 	}
 
 	public NormalTaskMemento createMemento() {
-		try{
-			return new NormalTaskMemento(this, dependants, getStatus().getName(),
-					getTimeSpan(), alternative);
-		}
-		catch(IllegalStateException e){
-			return new NormalTaskMemento(this, dependants, getStatus().getName(),
-					null, alternative);
+		try {
+			return new NormalTaskMemento(this, dependants, getStatus()
+					.getName(), getTimeSpan(), alternative,
+					getResponsibleBranchOffice());
+		} catch (IllegalStateException e) {
+			return new NormalTaskMemento(this, dependants, getStatus()
+					.getName(), null, alternative, getResponsibleBranchOffice());
 		}
 	}
 
@@ -173,6 +173,7 @@ public class NormalTask extends Task {
 			setStatus(new Failed());
 		}
 		setTimeSpan(m.getTimeSpan());
+		setResponsibleBranchOffice(m.getResponsibleBranch());
 	}
 
 	@Override

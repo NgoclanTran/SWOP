@@ -25,8 +25,8 @@ public class TaskMementoTest {
 
 	ArrayList<NormalTask> dependants = new ArrayList<NormalTask>();
 	String stateName;
-	TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 11, 0), new DateTime(2015,
-			10, 12, 15, 0));
+	TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 11, 0),
+			new DateTime(2015, 10, 12, 15, 0));
 	NormalTask alternative;
 	private NormalTaskMemento t;
 	private Clock clock = new Clock();
@@ -41,8 +41,11 @@ public class TaskMementoTest {
 		p.addTask("", 10, 1, null, null, null, 1);
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		p.addTask("aze", 10, 1, null, null, null, 1);
-		dependants.add(branchOffice.getPh().getProjects().get(0).getTasks().get(1));
-		t = new NormalTaskMemento(branchOffice.getPh().getProjects().get(0).getTasks().get(0), dependants, "state", timeSpan, alternative);
+		dependants.add(branchOffice.getPh().getProjects().get(0).getTasks()
+				.get(1));
+		t = new NormalTaskMemento(branchOffice.getPh().getProjects().get(0)
+				.getTasks().get(0), dependants, "state", timeSpan, alternative,
+				"");
 
 	}
 
@@ -65,10 +68,12 @@ public class TaskMementoTest {
 	public void getAlternativeTest() {
 		assertEquals(t.getAlternative(), alternative);
 	}
+
 	@Test
-	public void getObjectTest(){
+	public void getObjectTest() {
 		NormalTask t1 = new NormalTask(clock, "", 10, 1, null, null, null, 1);
-		t = new NormalTaskMemento(t1, dependants, "state", timeSpan, alternative);
+		t = new NormalTaskMemento(t1, dependants, "state", timeSpan,
+				alternative, "");
 		assertEquals(t1, t.getObject());
 	}
 

@@ -42,7 +42,7 @@ public class DelegatedTaskMementoTest {
 				10, 1, null, true, 1);
 		DelegatedTaskMemento dtm = new DelegatedTaskMemento(delegatedTask,
 				true, "name", new TimeSpan(new DateTime(2015, 10, 12, 10, 0),
-						new DateTime(2015, 10, 12, 14, 0)));
+						new DateTime(2015, 10, 12, 14, 0)), "");
 
 	}
 
@@ -53,7 +53,7 @@ public class DelegatedTaskMementoTest {
 		TimeSpan ts = new TimeSpan(new DateTime(2015, 10, 12, 10, 0),
 				new DateTime(2015, 10, 12, 14, 0));
 		DelegatedTaskMemento dtm = new DelegatedTaskMemento(delegatedTask,
-				true, "name", ts);
+				true, "name", ts, "");
 		assertTrue(dtm.getDependenciesFinished());
 		assertEquals(dtm.getStateName(), "name");
 		assertEquals(dtm.getTimeSpan(), ts);

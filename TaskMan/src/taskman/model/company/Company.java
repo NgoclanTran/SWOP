@@ -19,10 +19,18 @@ public class Company {
 
 	ArrayList<BranchOffice> branchOffices;
 
+	/**
+	 * The constructor of a company
+	 */
 	public Company() {
 		branchOffices = new ArrayList<BranchOffice>();
 	}
-
+	/**
+	 * Return the name of the company
+	 * 
+	 * @return
+	 * 			return name of the company
+	 */
 	public String getName() {
 		return name;
 	}
@@ -32,8 +40,8 @@ public class Company {
 	/**
 	 * Adds a branch office to the list of branch offices in the company
 	 * 
-	 * @param 	branchOffice
-	 * 			The branch office that is part of the company
+	 * @param branchOffice
+	 *            The branch office that is part of the company
 	 */
 	public void addBranchOffice(BranchOffice branchOffice) {
 		if (branchOffice == null)
@@ -41,11 +49,11 @@ public class Company {
 					"The branche office cannot be null.");
 		branchOffices.add(branchOffice);
 	}
-	
+
 	/**
-	 * 	Return all branch offices of this company
+	 * Return all branch offices of this company
 	 * 
-	 * 	@return List of branch offices of this company
+	 * @return List of branch offices of this company
 	 */
 	public List<BranchOffice> getBranchOffices() {
 		return new ArrayList<BranchOffice>(branchOffices);
@@ -55,8 +63,8 @@ public class Company {
 	 * Sets the dependencies status of the delegated task with the given id to
 	 * true.
 	 * 
-	 * @param	id
-	 * 			id of the delegated task
+	 * @param id
+	 *            id of the delegated task
 	 */
 	public void setDependenciesFinished(UUID id) {
 		for (BranchOffice branchOffice : branchOffices) {
@@ -72,8 +80,8 @@ public class Company {
 	/**
 	 * Announce to parent task that the delegated task is completed
 	 * 
-	 * @param 	task
-	 * 			The delegated task
+	 * @param task
+	 *            The delegated task
 	 */
 	public void announceCompletion(DelegatedTask task) {
 		if (task == null)
@@ -95,17 +103,18 @@ public class Company {
 			}
 		}
 	}
+
 	/**
 	 * Delegate a task to another branch office
-	 * 	
-	 * @param 	task
-	 * 			The task to delegate
-	 * @param 	toBranchOffice
-	 * 			The branch office where the task is delegated to
-	 * @throws 	IllegalStateException
-	 * 			if the task is null
-	 * @throws 	IllegalStateException
-	 * 			if the branch office is null
+	 * 
+	 * @param task
+	 *            The task to delegate
+	 * @param toBranchOffice
+	 *            The branch office where the task is delegated to
+	 * @throws IllegalStateException
+	 *             if the task is null
+	 * @throws IllegalStateException
+	 *             if the branch office is null
 	 */
 	public void delegateTask(Task task, BranchOffice toBranchOffice)
 			throws IllegalStateException {
@@ -141,14 +150,15 @@ public class Company {
 				estimatedDuration, acceptableDeviation, requiredResourceTypes,
 				dependenciesFinished, developerAmount);
 		task.delegateTask();
-		announceDelegate(task, toBranchOffice.toString());
+		announceDelegate(task, toBranchOffice.toString(), false);
 	}
 
-	private void announceDelegate(Task task, String toBranchOffice) {
+	public void announceDelegate(Task task, String toBranchOffice,
+			boolean simulation) {
 		task.setResponsibleBranchOffice(toBranchOffice);
-		if (task.getParentID() != null) {
+		if (task.getParentID() != null && !simulation) {
 			Task toUpdate = findTask(task.getParentID());
-			announceDelegate(toUpdate, toBranchOffice);
+			announceDelegate(toUpdate, toBranchOffice, false);
 		}
 	}
 

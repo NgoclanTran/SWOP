@@ -14,7 +14,7 @@ public class DelegatedTask extends Task {
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
 			boolean dependenciesFinished, int developerAmount)
-					throws IllegalArgumentException {
+			throws IllegalArgumentException {
 		super(clock, description, estimatedDuration, acceptableDeviation,
 				resourceTypes, developerAmount);
 		this.dependenciesFinished = dependenciesFinished;
@@ -51,13 +51,13 @@ public class DelegatedTask extends Task {
 	}
 
 	public DelegatedTaskMemento createMemento() {
-		try{
-			return new DelegatedTaskMemento(this, dependenciesFinished, getStatus()
-					.getName(), getTimeSpan());
-		}
-		catch(IllegalStateException e){
-			return new DelegatedTaskMemento(this, dependenciesFinished, getStatus()
-					.getName(), null);
+		try {
+			return new DelegatedTaskMemento(this, dependenciesFinished,
+					getStatus().getName(), getTimeSpan(),
+					getResponsibleBranchOffice());
+		} catch (IllegalStateException e) {
+			return new DelegatedTaskMemento(this, dependenciesFinished,
+					getStatus().getName(), null, getResponsibleBranchOffice());
 		}
 	}
 
@@ -79,6 +79,7 @@ public class DelegatedTask extends Task {
 			setStatus(new Failed());
 		}
 		setTimeSpan(m.getTimeSpan());
+		setResponsibleBranchOffice(m.getResponsibleBranch());
 	}
 
 	@Override
