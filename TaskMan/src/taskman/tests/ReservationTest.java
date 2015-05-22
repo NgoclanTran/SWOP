@@ -8,6 +8,9 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
+import taskman.model.project.Project;
 import taskman.model.task.Reservation;
 import taskman.model.task.Task;
 import taskman.model.time.Clock;
@@ -17,10 +20,13 @@ public class ReservationTest {
 	private Task task;
 	private TimeSpan ts;
 	private Clock clock = new Clock();
+	private Company company;
+	private BranchOffice branchOffice = new BranchOffice(company, "", null);
 	@Before
 	public void setUp() throws Exception {
-		task = new Task(clock,"description", 10, 1,
-				new ArrayList<Task>(), null, null);
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask("", 10, 1, null, null, null);
 		ts = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,16,0));
 	}
 
@@ -31,13 +37,13 @@ public class ReservationTest {
 	
 	@Test (expected = NullPointerException.class)
 	public void constructorTest_TimeSpan_Null(){
-		Reservation r = new Reservation(task, null);	
+		Reservation r = new Reservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), null);	
 	}
 	
 	@Test 
 	public void constructorTest_TrueCase(){
-		Reservation r = new Reservation(task, ts);
-		assertEquals(r.getTask(), task);
+		Reservation r = new Reservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
+		assertEquals(r.getTask(), branchOffice.getPh().getProjects().get(0).getTasks().get(0));
 		assertEquals(r.getTimeSpan(), ts);
 	}
 

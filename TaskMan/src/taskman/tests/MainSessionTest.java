@@ -12,11 +12,15 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
-import taskman.controller.MainSession;
+import taskman.controller.LoginSession;
+import taskman.controller.Session;
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
@@ -28,7 +32,7 @@ public class MainSessionTest {
 	private ProjectHandler ph;
 	private ResourceHandler rh;
 	private UserHandler uh;
-	private MainSession session;
+	private Session session;
 	private String description;
 	private ArrayList<Task> dependencies;
 	private Project p;
@@ -40,37 +44,24 @@ public class MainSessionTest {
 
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+	private Company company = new Company();
+	private BranchOffice branchOffice = new BranchOffice(company, "", null);
 
 	@Before
 	public void setup() {
 		clock = new Clock();
-		tf = new TaskFactory(clock);
+		tf = new TaskFactory(branchOffice , clock);
 		cli = new View();
-		ph = new ProjectHandler(tf);
-		rh = new ResourceHandler();
-		uh = new UserHandler();
-		session = new MainSession(cli, ph, rh, uh,clock);
+		ph = branchOffice.getPh();
+		rh = branchOffice.getRh();
+		uh = branchOffice.getUh();
+		session = new LoginSession(cli, company);
 
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void MainSession_nullRh() {
-		MainSession testSession = new MainSession(cli, null);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void MainSession_nullPh() {
-		MainSession testSession = new MainSession(cli, null, rh, uh,clock);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void MainSession_nullUh() {
-		MainSession testSession = new MainSession(cli, ph, rh, null,clock);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void MainSession_nullCli() {
-		MainSession testSession = new MainSession(null, ph, rh, uh,clock);
+		Session testSession = new LoginSession(null, company);
 	}
 
 	@Test

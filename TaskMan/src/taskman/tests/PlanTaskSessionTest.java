@@ -14,8 +14,11 @@ import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.branch.PlanTaskSession;
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.UserHandler;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
@@ -36,11 +39,13 @@ public class PlanTaskSessionTest {
 
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+	private Company company;
+	private BranchOffice BranchOffice = new BranchOffice(company, "", null);
 
 	@Before
 	public void setup() {
 		clock = new Clock();
-		tf = new TaskFactory(clock);
+		tf = new TaskFactory(BranchOffice , clock);
 		// Session with projects
 		cli = new View();
 		ph = new ProjectHandler(tf);
@@ -52,11 +57,11 @@ public class PlanTaskSessionTest {
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
 						null, null);
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
 						null, null);
 
 	}
