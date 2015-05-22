@@ -7,6 +7,7 @@ import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emp
 import java.util.ArrayList;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,13 +15,18 @@ import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.branch.UpdateTaskStatusSession;
+import taskman.model.company.BranchOffice;
+import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
+import taskman.model.resource.ResourceType;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 import taskman.view.IView;
 import taskman.view.View;
 
@@ -40,23 +46,27 @@ public class UpdateTaskStatusSessionTest {
 
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+	private Company company;
+	private BranchOffice branchOffice = new BranchOffice(company, "", null);
 
 	@Before
 	public void setup() {
-		tf = new TaskFactory(clock);
+		tf = new TaskFactory(branchOffice , clock);
 		cli = new View();
 		clock.setSystemTime(new DateTime(2015, 10, 12, 8, 0));
-		ph = new ProjectHandler(tf);
-		rh = new ResourceHandler();
+		//ph = new ProjectHandler(tf);
+		ph = branchOffice.getPh();
+		rh = new ResourceHandler(new ArrayList<ResourceType>());
 		uh = new UserHandler();
-		session = new UpdateTaskStatusSession(cli, ph);
+		Developer d = new Developer("", new LocalTime(), new LocalTime());
+		session = new UpdateTaskStatusSession(cli, ph, d);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
 						null, null);
 		uh.addDeveloper("developer");
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
@@ -70,7 +80,7 @@ public class UpdateTaskStatusSessionTest {
 		ph.getProjects().get(0).getTasks().get(0).update();
 		ph.getProjects()
 				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<Task>(),
+				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
 						null, null);
 	}
 
@@ -78,9 +88,11 @@ public class UpdateTaskStatusSessionTest {
 	public void useCase_NoTask() {
 		IView cli = new View();
 		ProjectHandler ph = new ProjectHandler(tf);
-		ResourceHandler rh = new ResourceHandler();
+		ResourceHandler rh = new ResourceHandler(new ArrayList<ResourceType>());
 		systemInMock.provideText("1\n8\n");
-		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph);
+		Developer d = new Developer("", new LocalTime(), new LocalTime());
+
+		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph, d);
 		session.run();
 		String output = "No available tasks.";
 		assertTrue(log.getLog().contains(output));
@@ -181,9 +193,9 @@ public class UpdateTaskStatusSessionTest {
 	@Test
 	public void useCase_SelectStatus_Cancel() {
 		// ------------- Before running ---------------
-		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) ph.getProjects()
 				.get(0).getTasks();
-		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) ph.getProjects()
 				.get(1).getTasks();
 
 		// System has one task
@@ -195,12 +207,12 @@ public class UpdateTaskStatusSessionTest {
 		session.run();
 
 		// -------------- Check if task has been updated ---------
-		assertEquals(session.getPH().getProjects().get(0).getTasks(),
+		assertEquals(branchOffice.getPh().getProjects().get(0).getTasks(),
 				tasksOfProject1);
-		assertEquals(session.getPH().getProjects().get(1).getTasks(),
+		assertEquals(branchOffice.getPh().getProjects().get(1).getTasks(),
 				tasksOfProject2);
 		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
-		assertEquals(updatedTask.getStatusName(), "AVAILABLE");
+		assertEquals(updatedTask.getStatusName(), "PLANNED");
 
 	}
 
@@ -210,9 +222,9 @@ public class UpdateTaskStatusSessionTest {
 	@Test
 	public void useCaseTest_IncorrectDateWorkingDay() {
 		// ------------- Before running ---------------
-		ArrayList<Task> tasksOfProject1 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) ph.getProjects()
 				.get(0).getTasks();
-		ArrayList<Task> tasksOfProject2 = (ArrayList<Task>) ph.getProjects()
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) ph.getProjects()
 				.get(1).getTasks();
 
 		// System has one task
@@ -231,12 +243,13 @@ public class UpdateTaskStatusSessionTest {
 		session.run();
 
 		// -------------- Check if nothing has changed or created ---------
-		assertEquals(session.getPH().getProjects().get(0).getTasks(),
+
+		assertEquals(branchOffice.getPh().getProjects().get(0).getTasks(),
 				tasksOfProject1);
-		assertEquals(session.getPH().getProjects().get(1).getTasks(),
+		assertEquals(branchOffice.getPh().getProjects().get(1).getTasks(),
 				tasksOfProject2);
 		Task updatedTask = ph.getProjects().get(0).getTasks().get(0);
-		assertEquals(updatedTask.getStatusName(), "AVAILABLE");
+		assertEquals(updatedTask.getStatusName(), "PLANNED");
 
 	}
 
