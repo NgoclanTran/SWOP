@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -17,6 +18,7 @@ import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.project.Project;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.NormalTask;
 import taskman.model.task.Reservable;
 import taskman.model.task.Reservation;
@@ -32,7 +34,8 @@ public class ReservableTest {
 	private TimeSpan ts;
 	private Clock clock = new Clock();
 	Company company = new Company();
-	private BranchOffice branchOffice = new BranchOffice(company, "", null);
+	List<ResourceType> list = new ArrayList<ResourceType>();
+	private BranchOffice branchOffice = new BranchOffice(company, "", list);
 
 	@Before
 	public void setUp() throws Exception {

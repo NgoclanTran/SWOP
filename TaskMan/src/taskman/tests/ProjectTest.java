@@ -17,6 +17,7 @@ import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.memento.ProjectMemento;
 import taskman.model.project.Project;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.NormalTask;
 import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
@@ -33,8 +34,9 @@ public class ProjectTest {
 	DateTime due = new DateTime(2014, 1, 1, 9, 0);
 	private Clock clock = new Clock();
 	private TaskFactory tf;
-	private Company company;
-	private BranchOffice branchOffice = new BranchOffice(company, "", null);
+	private Company company = new Company();
+	List<ResourceType> list = new ArrayList<ResourceType>();
+	private BranchOffice branchOffice = new BranchOffice(company, "", list);
 
 	@Before
 	public void setUp() throws Exception {

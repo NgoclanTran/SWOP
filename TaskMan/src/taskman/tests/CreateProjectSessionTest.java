@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,6 +19,7 @@ import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.project.Project;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.Task;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
@@ -40,8 +42,9 @@ public class CreateProjectSessionTest {
 
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
-	private Company company;
-	private BranchOffice bo = new BranchOffice(company, "", null);
+	private Company company = new Company();
+	List<ResourceType> list = new ArrayList<ResourceType>();
+	private BranchOffice bo = new BranchOffice(company, "", list);
 
 	@Before
 	public void setup() {
@@ -49,7 +52,7 @@ public class CreateProjectSessionTest {
 		tf = new TaskFactory(bo, clock);
 		cli = new View();
 		ph = new ProjectHandler(tf);
-		rh = new ResourceHandler(null);
+		rh = new ResourceHandler(list);
 		session = new CreateProjectSession(cli, ph, clock);
 
 	}

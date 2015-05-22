@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -45,7 +46,8 @@ public class MainSessionTest {
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
 	private Company company = new Company();
-	private BranchOffice branchOffice = new BranchOffice(company, "", null);
+	List<ResourceType> list = new ArrayList<ResourceType>();
+	private BranchOffice branchOffice = new BranchOffice(company, "", list);
 
 	@Before
 	public void setup() {

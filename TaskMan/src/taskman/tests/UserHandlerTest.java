@@ -2,6 +2,7 @@ package taskman.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -14,6 +15,7 @@ import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.Task;
 import taskman.model.time.*;
 
@@ -22,10 +24,13 @@ public class UserHandlerTest {
 	private UserHandler u;
 	private Clock clock = new Clock();
 	private Company company;
-	private BranchOffice branchOffice = new BranchOffice(company, "", null);
+	private BranchOffice branchOffice;
 	@Before
 	public void setUp() throws Exception {
 		u = new UserHandler();
+		company = new Company();
+		List<ResourceType> list =  new ArrayList<ResourceType>();
+		branchOffice = new BranchOffice(company, "",list);
 	}
 
 	@Test

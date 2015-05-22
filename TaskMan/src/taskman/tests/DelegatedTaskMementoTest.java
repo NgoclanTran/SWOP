@@ -3,6 +3,7 @@ package taskman.tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import taskman.model.company.Company;
 import taskman.model.memento.DelegatedTaskMemento;
 import taskman.model.memento.NormalTaskMemento;
 import taskman.model.project.Project;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
 import taskman.model.time.Clock;
@@ -27,8 +29,9 @@ public class DelegatedTaskMementoTest {
 	NormalTask alternative;
 	private NormalTaskMemento t;
 	private Clock clock = new Clock();
-	private Company company;
-	private BranchOffice branchOffice = new BranchOffice(company, "", null);
+	private Company company = new Company();
+	List<ResourceType> list = new ArrayList<ResourceType>();
+	private BranchOffice branchOffice = new BranchOffice(company, "", list);
 	@Before
 	public void setup() {
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
