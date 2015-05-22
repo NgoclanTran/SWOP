@@ -1,8 +1,10 @@
 package taskman;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -172,11 +174,22 @@ public class Parser {
 		try {
 			System.out.println("Open the input file.");
 			JFileChooser fc = new JFileChooser();
+			Path path = null;
+			try {
+				path = Paths.get(System.getProperty("user.dir") + "../input")
+						.toRealPath();
+				File start = new File(path.toString());
+				fc.setCurrentDirectory(start);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			int returnVal = fc.showOpenDialog(null);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				file = Files.readAllLines(
 						Paths.get(fc.getSelectedFile().getAbsolutePath()),
 						Charset.defaultCharset());
+			} else if (returnVal == JFileChooser.CANCEL_OPTION) {
+				System.exit(0);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -636,7 +649,7 @@ public class Parser {
 	private void addTask(List<String> description) {
 		int descriptionStart, descriptionEnd;
 		String taskDescription = "";
-		int project = 0, estimatedDuration = 0, acceptableDeviation = 0, alternativeFor = -1, planningNumber = -1;
+		int project = 0, estimatedDuration = 0, acceptableDeviation = 0, alternativeFor = -1, planningNumber = -1, developers = -1;
 		ArrayList<Integer> prerequisiteTasks = new ArrayList<Integer>();
 		String status = "";
 		Date startTime = null, endTime = null;
@@ -683,6 +696,9 @@ public class Parser {
 				} else if (line.startsWith("endTime")) {
 					endTime = parseDate(line.substring(descriptionStart,
 							descriptionEnd));
+				} else if (line.startsWith("developers")) {
+					developers = Integer.parseInt(line.substring(
+							descriptionStart, descriptionEnd));
 				} else if (line.startsWith("branchOffice")) {
 					descriptionStart = line.indexOf(":") + 2;
 					descriptionEnd = line.length();
@@ -733,7 +749,7 @@ public class Parser {
 				.get(project)
 				.addTask(taskDescription, estimatedDuration,
 						acceptableDeviation, dependencies, alternativeForTask,
-						resourceTypes);
+						resourceTypes, developers);
 
 		if (planningNumber != -1) {
 			Planning planning = this.planning.get(planningNumber);

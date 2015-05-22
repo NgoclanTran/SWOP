@@ -24,8 +24,8 @@ public abstract class Task extends TaskSubject implements Observer {
 	private TimeService timeService = new TimeService();
 
 	public Task(Clock clock, String description, int estimatedDuration,
-			int acceptableDeviation, Map<ResourceType, Integer> resourceTypes)
-			throws IllegalArgumentException {
+			int acceptableDeviation, Map<ResourceType, Integer> resourceTypes,
+			int requiredAmountOfDevelopers) throws IllegalArgumentException {
 		if (clock == null)
 			throw new IllegalArgumentException("A task needs a clock.");
 		if (description == null)
@@ -41,6 +41,7 @@ public abstract class Task extends TaskSubject implements Observer {
 		this.description = description;
 		this.estimatedDuration = estimatedDuration;
 		this.acceptableDeviation = acceptableDeviation;
+		this.requiredAmountOfDevelopers = requiredAmountOfDevelopers;
 
 		setStatus(new Unavailable());
 
@@ -119,6 +120,12 @@ public abstract class Task extends TaskSubject implements Observer {
 	}
 
 	private final int acceptableDeviation;
+
+	public int getRequiredAmountOfDevelopers() {
+		return requiredAmountOfDevelopers;
+	}
+
+	private final int requiredAmountOfDevelopers;
 
 	/**
 	 * Returns the status of the task

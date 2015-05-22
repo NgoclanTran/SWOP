@@ -317,4 +317,25 @@ public class CreateTaskForm implements ICreateTaskForm {
 		view.output.displayEmptyLine();
 	}
 
+	/**
+	 * This method will ask the user for the amount of developers needed and
+	 * return it.
+	 * 
+	 * @return Returns the amount of developers needed.
+	 * 
+	 * @throws ShouldExitException
+	 *             The user cancelled the task creation.
+	 */
+	@Override
+	public int getNewTaskRequiredAmountOfDevelopers()
+			throws ShouldExitException {
+		int number = Integer.MIN_VALUE;
+		while (number < 0) {
+			view.displayInfo("How many developers do you need (or cancel):");
+			number = view.input.getNumberInput();
+			view.output.displayEmptyLine();
+		}
+		return number;
+	}
+
 }

@@ -49,11 +49,12 @@ public class TaskFactory {
 	 */
 	public NormalTask makeNormalTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<NormalTask> dependencies,
-			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			NormalTask alternativeFor,
+			Map<ResourceType, Integer> resourceTypes, int developerAmount)
 			throws IllegalArgumentException {
 		NormalTask task = new NormalTask(clock, description, estimatedDuration,
 				acceptableDeviation, dependencies, alternativeFor,
-				resourceTypes);
+				resourceTypes, developerAmount);
 		clock.attach(task);
 		task.attach(branchOffice);
 		return task;
@@ -62,10 +63,10 @@ public class TaskFactory {
 	public DelegatedTask makeDelegatedTask(String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
-			boolean dependenciesFinished) {
+			boolean dependenciesFinished, int developerAmount) {
 		DelegatedTask task = new DelegatedTask(clock, description,
 				estimatedDuration, acceptableDeviation, resourceTypes,
-				dependenciesFinished);
+				dependenciesFinished, developerAmount);
 		clock.attach(task);
 		task.attach(branchOffice);
 		return task;

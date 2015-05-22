@@ -47,10 +47,10 @@ public class DelegatedTaskHandler {
 	public void addDelegatedTask(UUID id, String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
-			boolean dependenciesFinished) {
+			boolean dependenciesFinished, int developerAmount) {
 		DelegatedTask taskToAdd = factory.makeDelegatedTask(description,
 				estimatedDuration, acceptableDeviation, resourceTypes,
-				dependenciesFinished);
+				dependenciesFinished, developerAmount);
 		addDelegatedTask(taskToAdd);
 	}
 

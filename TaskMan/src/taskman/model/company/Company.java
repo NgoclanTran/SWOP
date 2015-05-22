@@ -21,11 +21,11 @@ public class Company {
 	public Company() {
 		branchOffices = new ArrayList<BranchOffice>();
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	private final String name = "SWOP";
 
 	/**
@@ -34,7 +34,9 @@ public class Company {
 	 * @param branchOffice
 	 */
 	public void addBranchOffice(BranchOffice branchOffice) {
-		if(branchOffice == null) throw new IllegalArgumentException("The branche office cannot be null.");
+		if (branchOffice == null)
+			throw new IllegalArgumentException(
+					"The branche office cannot be null.");
 		branchOffices.add(branchOffice);
 	}
 
@@ -80,13 +82,17 @@ public class Company {
 
 	public void delegateTask(NormalTask task, BranchOffice toBranchOffice)
 			throws IllegalStateException {
-		if(task == null) throw new IllegalArgumentException("The task cannot be null.");
-		if(toBranchOffice == null) throw new IllegalArgumentException("The branch office cannot be null.");
-		
+		if (task == null)
+			throw new IllegalArgumentException("The task cannot be null.");
+		if (toBranchOffice == null)
+			throw new IllegalArgumentException(
+					"The branch office cannot be null.");
+
 		UUID id = task.getID();
 		String description = task.getDescription();
 		int estimatedDuration = task.getEstimatedDuration();
 		int acceptableDeviation = task.getAcceptableDeviation();
+		int developerAmount = task.getRequiredAmountOfDevelopers();
 		LinkedHashMap<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 		boolean dependenciesFinished = task.dependenciesAreFinished();
 
@@ -106,7 +112,7 @@ public class Company {
 
 		toBranchOffice.getDth().addDelegatedTask(id, description,
 				estimatedDuration, acceptableDeviation, requiredResourceTypes,
-				dependenciesFinished);
+				dependenciesFinished, developerAmount);
 		task.delegateTask();
 	}
 

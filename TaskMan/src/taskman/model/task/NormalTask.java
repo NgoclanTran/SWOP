@@ -14,10 +14,11 @@ public class NormalTask extends Task {
 
 	public NormalTask(Clock clock, String description, int estimatedDuration,
 			int acceptableDeviation, List<NormalTask> dependencies,
-			NormalTask alternativeFor, Map<ResourceType, Integer> resourceTypes)
+			NormalTask alternativeFor,
+			Map<ResourceType, Integer> resourceTypes, int developerAmount)
 			throws IllegalStateException, IllegalArgumentException {
 		super(clock, description, estimatedDuration, acceptableDeviation,
-				resourceTypes);
+				resourceTypes, developerAmount);
 
 		if (dependencies != null)
 			this.dependencies.addAll(dependencies);
