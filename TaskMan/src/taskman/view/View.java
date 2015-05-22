@@ -146,6 +146,7 @@ public class View implements IView {
 		StringBuilder projectDetails = new StringBuilder();
 		projectDetails.append(project.getName());
 		projectDetails.append(":\n");
+		projectDetails.append("Branch office: ");
 		projectDetails.append(branchOffice.getLocation());
 		projectDetails.append("\n");
 		projectDetails.append(project.getDescription());
@@ -183,12 +184,15 @@ public class View implements IView {
 	 * 
 	 * @return Returns a string with basic information about the given task.
 	 */
-	private String getStringTask(Task task, int index) {
+	private String getStringTask(BranchOffice branchOffice, Task task, int index) {
 		StringBuilder taskInfo = new StringBuilder();
 		taskInfo.append("Task ");
 		taskInfo.append(index);
 		taskInfo.append(": ");
 		taskInfo.append(task.getStatusName());
+		taskInfo.append("\n");
+		taskInfo.append("Branch office: ");
+		taskInfo.append(branchOffice.getLocation());
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
 			taskInfo.append("Percentage of overdueness: ");
@@ -463,8 +467,8 @@ public class View implements IView {
 	 *             The choice of the user is to stop.
 	 */
 	@Override
-	public Task getTask(List<Task> tasks) throws ShouldExitException {
-		displayTaskList(tasks, 1, true);
+	public Task getTask(BranchOffice branchOffice, List<Task> tasks) throws ShouldExitException {
+		displayTaskList(branchOffice, tasks, 1, true);
 		int taskId = getListChoice(tasks, "Select a task:");
 		return tasks.get(taskId - 1);
 	}
@@ -491,11 +495,11 @@ public class View implements IView {
 	 * @param tabs
 	 * @param printReturn
 	 */
-	protected void displayTaskList(List<Task> tasks, int tabs,
+	protected void displayTaskList(BranchOffice branchOffice, List<Task> tasks, int tabs,
 			boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
-			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
+			tasksInfo.add(getStringTask(branchOffice, tasks.get(i - 1), i));
 		}
 		output.displayList(tasksInfo, tabs, printReturn);
 		output.displayEmptyLine();

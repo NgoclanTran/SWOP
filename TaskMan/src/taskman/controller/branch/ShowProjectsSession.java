@@ -80,7 +80,7 @@ public class ShowProjectsSession extends Session {
 
 		Task task;
 		try {
-			task = getUI().getTask(tasks);
+			task = getUI().getTask(branchOffice, tasks);
 		} catch (ShouldExitException e) {
 			return;
 		}

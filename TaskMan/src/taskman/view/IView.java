@@ -75,7 +75,7 @@ public interface IView {
 	 * @throws ShouldExitException
 	 *             The choice of the user is to stop.
 	 */
-	public Task getTask(List<Task> tasks) throws ShouldExitException;
+	public Task getTask(BranchOffice branchOffice, List<Task> tasks) throws ShouldExitException;
 
 	/**
 	 * This method will print the task details of a given task to the command
