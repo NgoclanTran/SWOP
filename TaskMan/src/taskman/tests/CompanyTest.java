@@ -32,7 +32,7 @@ public class CompanyTest {
 	public void constructorTest() {
 		Company c = new Company();
 		assertEquals(c.getBranchOffices().size(), 0);
-		assertEquals(c.getName(), "SWOP");
+		assertEquals(c.getName(), "SWOP15");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
