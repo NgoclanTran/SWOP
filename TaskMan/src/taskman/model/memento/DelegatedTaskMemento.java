@@ -9,6 +9,7 @@ public class DelegatedTaskMemento {
 	boolean dependenciesFinished;
 	String stateName;
 	TimeSpan timeSpan;
+	String responsibleBranch;
 
 	/**
 	 * The constructor of the delegated task memento class
@@ -19,11 +20,13 @@ public class DelegatedTaskMemento {
 	 * @param timeSpan
 	 */
 	public DelegatedTaskMemento(DelegatedTask delegatedTask,
-			boolean dependenciesFinished, String name, TimeSpan timeSpan) {
+			boolean dependenciesFinished, String name, TimeSpan timeSpan,
+			String responsibleBranch) {
 		this.task = delegatedTask;
 		this.dependenciesFinished = dependenciesFinished;
 		this.stateName = name;
 		this.timeSpan = timeSpan;
+		this.responsibleBranch = responsibleBranch;
 	}
 
 	/**
@@ -60,6 +63,10 @@ public class DelegatedTaskMemento {
 	 */
 	public TimeSpan getTimeSpan() {
 		return timeSpan;
+	}
+
+	public String getResponsibleBranch() {
+		return responsibleBranch;
 	}
 
 }

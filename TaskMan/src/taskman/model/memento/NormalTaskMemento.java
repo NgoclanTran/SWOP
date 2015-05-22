@@ -13,6 +13,7 @@ public class NormalTaskMemento {
 	String stateName;
 	TimeSpan timeSpan;
 	NormalTask alternative;
+	String responsibleBranch;
 
 	/**
 	 * The constructor of the normal task memento class
@@ -29,12 +30,14 @@ public class NormalTaskMemento {
 	 *            The alternative task for the task memento
 	 */
 	public NormalTaskMemento(NormalTask task, List<NormalTask> dependants,
-			String stateName, TimeSpan timeSpan, NormalTask alternative) {
+			String stateName, TimeSpan timeSpan, NormalTask alternative,
+			String responsibleBranch) {
 		this.task = task;
 		this.dependants = dependants;
 		this.stateName = stateName;
 		this.timeSpan = timeSpan;
 		this.alternative = alternative;
+		this.responsibleBranch = responsibleBranch;
 	}
 
 	/**
@@ -80,6 +83,10 @@ public class NormalTaskMemento {
 	 */
 	public NormalTask getAlternative() {
 		return alternative;
+	}
+
+	public String getResponsibleBranch() {
+		return responsibleBranch;
 	}
 
 }
