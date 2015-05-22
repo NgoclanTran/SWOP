@@ -8,6 +8,7 @@ import taskman.controller.branch.CreateProjectSession;
 import taskman.controller.branch.CreateTaskSession;
 import taskman.controller.branch.DelegateTaskSession;
 import taskman.controller.branch.PlanTaskSession;
+import taskman.controller.branch.SimulateSession;
 import taskman.controller.branch.UpdateTaskStatusSession;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.BranchOffice;
@@ -105,7 +106,6 @@ public class LoginSession extends Session {
 		} catch (ShouldExitException e) {
 			return;
 		}
-		
 
 		if (user.isDeveloper())
 			showOptions((Developer) user, branchOffice);
@@ -119,13 +119,13 @@ public class LoginSession extends Session {
 		while (true) {
 			int menuId = getUI().getMainMenuID(menuDevelopers);
 
-			// TODO
 			switch (menuId) {
 			case 1:
 				new ShowAllProjectsSession(getUI(), company).run();
 				break;
 			case 2:
-				new UpdateTaskStatusSession(getUI(), branchOffice.getPh(), user).run();
+				new UpdateTaskStatusSession(getUI(), branchOffice.getPh(), user)
+						.run();
 				break;
 			case 3:
 				new AdvanceTimeSession(getUI(), branchOffice.getClock()).run();
@@ -140,27 +140,36 @@ public class LoginSession extends Session {
 		while (true) {
 			int menuId = getUI().getMainMenuID(menuProjectManagers);
 
-			// TODO
 			switch (menuId) {
 			case 1:
-				new ShowAllProjectsSession(getUI(), company).run();;
+				new ShowAllProjectsSession(getUI(), company).run();
+				;
 				break;
 			case 2:
-				new CreateProjectSession(getUI(), branchOffice.getPh(), branchOffice.getClock()).run();
+				new CreateProjectSession(getUI(), branchOffice.getPh(),
+						branchOffice.getClock()).run();
 				break;
 			case 3:
-				new CreateTaskSession(getUI(), branchOffice.getPh(), branchOffice.getRh()).run();;
+				new CreateTaskSession(getUI(), branchOffice.getPh(),
+						branchOffice.getRh()).run();
+				;
 				break;
 			case 4:
-				new PlanTaskSession(getUI(), branchOffice.getPh(), branchOffice.getUh(), branchOffice.getClock()).run();;
+				new PlanTaskSession(getUI(), branchOffice.getPh(),
+						branchOffice.getUh(), branchOffice.getClock()).run();
+				;
 				break;
 			case 5:
-				new DelegateTaskSession(getUI(), branchOffice.getPh(), company).run();
+				new DelegateTaskSession(getUI(), branchOffice.getPh(), company)
+						.run();
 				break;
 			case 6:
 				new AdvanceTimeSession(getUI(), branchOffice.getClock()).run();
 				break;
 			case 7:
+				new SimulateSession(getUI(), branchOffice.getPh(),
+						branchOffice.getMh(), branchOffice.getRh(),
+						branchOffice.getUh(), branchOffice.getClock(), company).run();
 				break;
 			case 8:
 				return;
