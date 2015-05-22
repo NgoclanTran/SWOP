@@ -35,6 +35,10 @@ public class ProjectHandlerTest {
 				new DateTime(),tf);
 	}
 
+	@Test (expected = IllegalArgumentException.class)
+	public void constructorTest_TaskFactoryNull(){
+		ProjectHandler ph = new ProjectHandler(null);
+	}
 	@Test
 	public void testGetProjects() {
 		String name = "name", description = "description";
