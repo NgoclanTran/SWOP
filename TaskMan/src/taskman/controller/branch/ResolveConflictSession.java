@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import taskman.controller.Session;
+import taskman.model.company.DelegatedTaskHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.UserHandler;
-import taskman.model.project.Project;
 import taskman.model.resource.Resource;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.Reservable;
@@ -22,6 +22,7 @@ public class ResolveConflictSession extends Session {
 
 	private ProjectHandler ph;
 	private UserHandler uh;
+	private DelegatedTaskHandler dth;
 	private Clock clock;
 	private Task task = null;
 	private TimeSpan timeSpan = null;
@@ -49,7 +50,7 @@ public class ResolveConflictSession extends Session {
 	 * @throws IllegalArgumentException
 	 *             The project handler, user handler and clock need to be valid.
 	 */
-	public ResolveConflictSession(IView cli, ProjectHandler ph, UserHandler uh,
+	public ResolveConflictSession(IView cli, ProjectHandler ph, UserHandler uh, DelegatedTaskHandler dth,
 			Clock clock, Task task, TimeSpan timeSpan,
 			List<Reservable> reservables) throws IllegalArgumentException {
 		super(cli);
@@ -59,11 +60,15 @@ public class ResolveConflictSession extends Session {
 		if (uh == null)
 			throw new IllegalArgumentException(
 					"The resolve conflict controller needs a UserHandler");
+		if (dth == null)
+			throw new IllegalArgumentException(
+					"The resolve conflict controller needs a DelegatedTaskHandler");
 		if (clock == null)
 			throw new IllegalArgumentException(
 					"The resolve conflict controller needs a clock");
 		this.ph = ph;
 		this.uh = uh;
+		this.dth = dth;
 		this.clock = clock;
 		this.task = task;
 		this.timeSpan = timeSpan;
@@ -83,19 +88,9 @@ public class ResolveConflictSession extends Session {
 					"A conflict cannot have an empty reservable list.");
 
 		Task taskToReschedule = getTaskToReschedule(getConflictingTasks());
-		Project project = getProject(taskToReschedule);
 		removeAllReservations(taskToReschedule);
-		new PlanTaskSession(getUI(), ph, uh, clock, project, taskToReschedule)
+		new PlanTaskSession(getUI(), ph, uh, dth, clock, taskToReschedule)
 				.run();
-	}
-
-	private Project getProject(Task task) {
-		for (Project project : ph.getProjects()) {
-			if (project.getTasks().contains(task))
-				return project;
-		}
-		throw new IllegalStateException(
-				"A task cannot exists without a project.");
 	}
 
 	private List<Task> getConflictingTasks() {

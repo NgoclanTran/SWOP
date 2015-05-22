@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
+import taskman.model.company.DelegatedTaskHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.UserHandler;
 import taskman.model.project.Project;
@@ -26,6 +27,7 @@ public class PlanTaskSession extends Session {
 
 	private ProjectHandler ph;
 	private UserHandler uh;
+	private DelegatedTaskHandler dth;
 	private Clock clock;
 	private PlanningService planning;
 	private TimeService timeService = new TimeService();
@@ -52,7 +54,8 @@ public class PlanTaskSession extends Session {
 	 *             The project handler, user handler and clock need to be valid.
 	 */
 	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
-			Clock clock) throws IllegalArgumentException {
+			DelegatedTaskHandler dth, Clock clock)
+			throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
 			throw new IllegalArgumentException(
@@ -60,11 +63,15 @@ public class PlanTaskSession extends Session {
 		if (uh == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
+		if (dth == null)
+			throw new IllegalArgumentException(
+					"The plan task controller needs a DelegatedTaskHandler");
 		if (clock == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a clock");
 		this.ph = ph;
 		this.uh = uh;
+		this.dth = dth;
 		this.clock = clock;
 		this.planning = new PlanningService(clock);
 	}
@@ -92,7 +99,7 @@ public class PlanTaskSession extends Session {
 	 *             The project handler, user handler and clock need to be valid.
 	 */
 	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
-			Clock clock, Project project, Task task)
+			DelegatedTaskHandler dth, Clock clock, Task task)
 			throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
@@ -101,41 +108,18 @@ public class PlanTaskSession extends Session {
 		if (uh != null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
+		if (dth == null)
+			throw new IllegalArgumentException(
+					"The plan task controller needs a DelegatedTaskHandler");
 		if (clock != null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a clock");
 		this.ph = ph;
 		this.uh = uh;
+		this.dth = dth;
 		this.clock = clock;
 		this.planning = new PlanningService(clock);
-	}
-
-	/**
-	 * Checks if the given project is valid.
-	 * 
-	 * @param project
-	 * 
-	 * @return Returns true if the project is different from null.
-	 */
-	private boolean isValidProject(Project project) {
-		if (project != null)
-			return true;
-		else
-			return false;
-	}
-
-	/**
-	 * Checks if the given task is valid.
-	 * 
-	 * @param task
-	 * 
-	 * @return Returns true if the task is different from null.
-	 */
-	private boolean isValidTask(Task task) {
-		if (task != null)
-			return true;
-		else
-			return false;
+		this.task = task;
 	}
 
 	/**
@@ -145,10 +129,8 @@ public class PlanTaskSession extends Session {
 	 */
 	@Override
 	public void run() throws IllegalStateException {
-		if (!isValidProject(project))
+		if (task == null)
 			showProjectsAndUnplannedTasks();
-		else if (!isValidTask(task))
-			showUnplannedTasks();
 		else
 			planTask();
 	}
@@ -165,7 +147,8 @@ public class PlanTaskSession extends Session {
 		Project project;
 		try {
 			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(
-					projects, unplannedTasksList);
+					projects, unplannedTasksList,
+					new ArrayList<Task>(dth.getDelegatedTasks()));
 		} catch (ShouldExitException e) {
 			return;
 		}
@@ -174,11 +157,14 @@ public class PlanTaskSession extends Session {
 		showUnplannedTasks();
 	}
 
-	private void showUnplannedTasks() throws IllegalStateException {
-		if (project == null)
-			throw new IllegalStateException(
-					"Plan task should have a project by now.");
-		List<Task> tasks = getUnplannedTasks(new ArrayList<Task>(project.getTasks()));
+	private void showUnplannedTasks() {
+		List<Task> tasks;
+		if (project == null) {
+			tasks = getUnplannedTasks(new ArrayList<Task>(project.getTasks()));
+		} else {
+			tasks = new ArrayList<Task>(dth.getDelegatedTasks());
+		}
+
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
@@ -213,8 +199,8 @@ public class PlanTaskSession extends Session {
 				if (!isValidStartTime(timeSpan)) {
 					reservables = new ArrayList<Reservable>(
 							getSuggestedResources(timeSpan));
-					new ResolveConflictSession(getUI(), ph, uh, clock,
-							task, timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task,
+							timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -229,8 +215,8 @@ public class PlanTaskSession extends Session {
 
 				if (!isValidResource(resources, timeSpan)) {
 					reservables = new ArrayList<Reservable>(resources);
-					new ResolveConflictSession(getUI(), ph, uh, clock,
-							task, timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task,
+							timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -245,8 +231,8 @@ public class PlanTaskSession extends Session {
 
 				if (!isvalidDeveloper(developers, timeSpan)) {
 					reservables = new ArrayList<Reservable>(developers);
-					new ResolveConflictSession(getUI(), ph, uh, clock,
-							task, timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task,
+							timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -315,8 +301,8 @@ public class PlanTaskSession extends Session {
 			if (noUnplannedTasks && unplannedTasks.size() > 0)
 				noUnplannedTasks = false;
 		}
-		
-		//TODO: Add the delegated tasks
+
+		// TODO: Add the delegated tasks
 
 		if (noUnplannedTasks)
 			return new ArrayList<>();
