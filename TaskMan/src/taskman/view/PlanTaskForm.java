@@ -43,14 +43,17 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 */
 	@Override
 	public Project getProjectWithUnplannedTasks(List<Project> projects,
-			List<List<Task>> unplannedTasks) throws ShouldExitException {
+			List<List<Task>> unplannedTasks, List<Task> delegatedTasks) throws ShouldExitException {
 		try {
-			displayProjectsWithUnplannedTasksList(projects, unplannedTasks);
+			displayProjectsWithUnplannedTasksList(projects, unplannedTasks,
+					delegatedTasks);
 			int projectId = view.getListChoice(projects, "Select a project:");
 			return projects.get(projectId - 1);
 		} catch (ShouldExitException e) {
 			view.output.displayEmptyLine();
 			throw new ShouldExitException();
+		} catch (IndexOutOfBoundsException e2) {
+			return null;
 		}
 	}
 
@@ -64,7 +67,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	private void displayProjectsWithUnplannedTasksList(List<Project> projects,
-			List<List<Task>> unplannedTasks) throws ShouldExitException {
+			List<List<Task>> unplannedTasks, List<Task> delegatedTasks) throws ShouldExitException {
 		if (projects.size() != unplannedTasks.size()) {
 			view.displayError("Error occured while creating the available tasks list.");
 			throw new ShouldExitException();
@@ -79,6 +82,12 @@ public class PlanTaskForm implements IPlanTaskForm {
 			view.displayInfo(project);
 			view.displayTaskList(unplannedTasks.get(i - 1), 1, false);
 		}
+		displayDelegatedTasks(unplannedTasks.size(), delegatedTasks);
+	}
+	
+	private void displayDelegatedTasks(int startIndex, List<Task> tasks) {
+		view.displayInfo(startIndex + ". Delegated tasks");
+		view.displayTaskList(tasks, 1, false);
 	}
 
 	/**

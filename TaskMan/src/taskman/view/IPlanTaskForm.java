@@ -29,7 +29,8 @@ public interface IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	public Project getProjectWithUnplannedTasks(List<Project> projects,
-			List<List<Task>> unplannedTasks) throws ShouldExitException;
+			List<List<Task>> unplannedTasks, List<Task> delegatedTasks)
+			throws ShouldExitException;
 
 	/**
 	 * This method will ask the user to select to appropriate start time or

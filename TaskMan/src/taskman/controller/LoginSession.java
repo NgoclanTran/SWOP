@@ -156,7 +156,8 @@ public class LoginSession extends Session {
 				break;
 			case 4:
 				new PlanTaskSession(getUI(), branchOffice.getPh(),
-						branchOffice.getUh(), branchOffice.getClock()).run();
+						branchOffice.getUh(), branchOffice.getDth(),
+						branchOffice.getClock()).run();
 				;
 				break;
 			case 5:
