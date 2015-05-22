@@ -1,15 +1,19 @@
 package taskman.tests;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Test;
 
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.company.DelegatedTaskHandler;
+import taskman.model.company.MementoHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
@@ -49,17 +53,26 @@ public class MementoHandlerTest {
 		dth.addDelegatedTask(new UUID(100, 120), "desc", 10, 0, null, true, 1);
 	}
 
-	// @Test
-	// public void TestSaveANDReset(){
-	// MementoHandler m = new MementoHandler(clock,ph, rh, uh, dth);
-	// m.saveState();
-	// uh.addDeveloper("name");
-	// List<User> list = uh.getUsers();
-	// m.resetState();
-	// assertNotEquals(uh.getUsers(), list);
-	// //TODO
-	//
-	//
-	// }
+	@Test
+	public void TestSaveANDReset(){
+	
+		MementoHandler m = new MementoHandler(clock, ph, rh, uh, dth);
+		
+		
+		ph.addProject("n", "d", new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
+		uh.addDeveloper("name");
+		
+		assertEquals(ph.getProjects().size(),2);
+		assertEquals(uh.getDevelopers().size(),1);
+		
+		ph.getProjects().get(0).addTask("d", 10, 0, null, null, null, 1);
+		assertEquals(ph.getProjects().get(0).getTasks().size(), 1);
+		
+		m.saveState();
+		
+		
+		
+
+	}
 
 }

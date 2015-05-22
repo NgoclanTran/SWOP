@@ -5,14 +5,14 @@ import java.util.List;
 
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
-import taskman.model.company.BranchOffice;
+import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
 import taskman.view.IView;
 
 public class ShowProjectsSession extends Session {
 
-	private BranchOffice branchOffice;
+	private ProjectHandler ph;
 
 	/**
 	 * Constructor of the show projects controller.
@@ -22,13 +22,13 @@ public class ShowProjectsSession extends Session {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public ShowProjectsSession(IView cli, BranchOffice branchOffice)
+	public ShowProjectsSession(IView cli, ProjectHandler ph)
 			throws IllegalArgumentException {
 		super(cli);
-		if (branchOffice == null)
+		if (ph == null)
 			throw new IllegalArgumentException(
-					"The show projects controller needs a branch office");
-		this.branchOffice = branchOffice;
+					"The show projects controller needs a project handler");
+		this.ph = ph;
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class ShowProjectsSession extends Session {
 	 * project.
 	 */
 	private void showProjects() {
-		List<Project> projects = branchOffice.getPh().getProjects();
+		List<Project> projects = ph.getProjects();
 
 		if (projects.size() == 0) {
 			getUI().displayError("No projects.");
@@ -73,14 +73,14 @@ public class ShowProjectsSession extends Session {
 	 */
 	private void showProjectDetails(Project project) {
 		List<Task> tasks = new ArrayList<Task>(project.getTasks());
-		getUI().displayProjectDetails(branchOffice, project);
+		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
 			return;
 
 		Task task;
 		try {
-			task = getUI().getTask(branchOffice, tasks);
+			task = getUI().getTask(tasks);
 		} catch (ShouldExitException e) {
 			return;
 		}

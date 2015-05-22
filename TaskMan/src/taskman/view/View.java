@@ -8,7 +8,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import taskman.exceptions.ShouldExitException;
-import taskman.model.company.BranchOffice;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
 import taskman.view.commandline.Input;
@@ -141,13 +140,12 @@ public class View implements IView {
 	 * @return Returns a string with detailed information about the given
 	 *         project.
 	 */
-	private String getStringProjectDetails(BranchOffice branchOffice,
-			Project project) {
+	private String getStringProjectDetails(Project project) {
 		StringBuilder projectDetails = new StringBuilder();
 		projectDetails.append(project.getName());
 		projectDetails.append(":\n");
 		projectDetails.append("Branch office: ");
-		projectDetails.append(branchOffice.getLocation());
+		//TODO: Add branch office name
 		projectDetails.append("\n");
 		projectDetails.append(project.getDescription());
 		projectDetails.append("\n");
@@ -184,7 +182,7 @@ public class View implements IView {
 	 * 
 	 * @return Returns a string with basic information about the given task.
 	 */
-	private String getStringTask(BranchOffice branchOffice, Task task, int index) {
+	private String getStringTask(Task task, int index) {
 		StringBuilder taskInfo = new StringBuilder();
 		taskInfo.append("Task ");
 		taskInfo.append(index);
@@ -192,7 +190,7 @@ public class View implements IView {
 		taskInfo.append(task.getStatusName());
 		taskInfo.append("\n");
 		taskInfo.append("Branch office: ");
-		taskInfo.append(branchOffice.getLocation());
+		//TODO: Add branch office location
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
 			taskInfo.append("Percentage of overdueness: ");
@@ -434,9 +432,9 @@ public class View implements IView {
 	 * @param project
 	 */
 	@Override
-	public void displayProjectDetails(BranchOffice branchOffice, Project project) {
+	public void displayProjectDetails(Project project) {
 		displayInfo(output.indentStringWithNewLines(
-				getStringProjectDetails(branchOffice, project), 1));
+				getStringProjectDetails(project), 1));
 		output.displayEmptyLine();
 	}
 
@@ -467,8 +465,8 @@ public class View implements IView {
 	 *             The choice of the user is to stop.
 	 */
 	@Override
-	public Task getTask(BranchOffice branchOffice, List<Task> tasks) throws ShouldExitException {
-		displayTaskList(branchOffice, tasks, 1, true);
+	public Task getTask(List<Task> tasks) throws ShouldExitException {
+		displayTaskList(tasks, 1, true);
 		int taskId = getListChoice(tasks, "Select a task:");
 		return tasks.get(taskId - 1);
 	}
@@ -495,11 +493,11 @@ public class View implements IView {
 	 * @param tabs
 	 * @param printReturn
 	 */
-	protected void displayTaskList(BranchOffice branchOffice, List<Task> tasks, int tabs,
+	protected void displayTaskList(List<Task> tasks, int tabs,
 			boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
-			tasksInfo.add(getStringTask(branchOffice, tasks.get(i - 1), i));
+			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
 		}
 		output.displayList(tasksInfo, tabs, printReturn);
 		output.displayEmptyLine();
