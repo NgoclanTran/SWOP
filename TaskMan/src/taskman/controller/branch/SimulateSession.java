@@ -18,11 +18,9 @@ public class SimulateSession extends Session {
 	private ResourceHandler rh;
 	private UserHandler uh;
 	private Clock clock;
-	private boolean simulatedDelegation;
 
 	private final List<String> menu = Arrays.asList("Show projects",
-			"Create task", "Plan task", "Delegate task",
-			"End simulation and discard changes",
+			"Create task", "Plan task", "End simulation and discard changes",
 			"End simulation and keep changes");
 
 	public SimulateSession(IView cli, ProjectHandler ph, MementoHandler mh,
@@ -49,7 +47,6 @@ public class SimulateSession extends Session {
 		this.rh = rh;
 		this.uh = uh;
 		this.clock = clock;
-		this.simulatedDelegation = false;
 	}
 
 	@Override
@@ -73,16 +70,9 @@ public class SimulateSession extends Session {
 				new PlanTaskSession(getUI(), ph, uh, clock).run();
 				break;
 			case 4:
-				new SimulateDelegationSession().run();
-				simulatedDelegation = true;
-				break;
-			case 5:
 				resetState();
 				return;
-			case 6:
-				if (simulatedDelegation) {
-					performSimulatedDelegation();
-				}
+			case 5:
 				return;
 			}
 		}
@@ -96,9 +86,5 @@ public class SimulateSession extends Session {
 	private void resetState() {
 		mh.resetState();
 		getUI().displayInfo("State reset.");
-	}
-
-	private void performSimulatedDelegation() {
-
 	}
 }

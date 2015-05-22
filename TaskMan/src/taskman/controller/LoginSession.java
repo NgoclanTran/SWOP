@@ -12,7 +12,8 @@ import taskman.view.IView;
 public class LoginSession extends Session {
 
 	private final Company company;
-	private final List<String> menuMain = Arrays.asList("Login", "Exit");
+	private final List<String> menuMain = Arrays.asList("Login",
+			"Exit");
 	private final List<String> menuDevelopers = Arrays.asList("Show projects",
 			"Update task status", "Advance time", "Return");
 	private final List<String> menuProjectManagers = Arrays.asList(
@@ -49,7 +50,7 @@ public class LoginSession extends Session {
 	private void showCompany() {
 		getUI().getLoginForm().displayCompany(company.getName());
 	}
-
+	
 	private void showMainMenu() {
 		while (true) {
 			getUI().displayInfo("Main menu:");
@@ -111,7 +112,7 @@ public class LoginSession extends Session {
 		while (true) {
 			int menuId = getUI().getMainMenuID(menuDevelopers);
 
-			// TODO
+			//TODO
 			switch (menuId) {
 			case 1:
 				break;
@@ -129,7 +130,7 @@ public class LoginSession extends Session {
 		while (true) {
 			int menuId = getUI().getMainMenuID(menuProjectManagers);
 
-			// TODO
+			//TODO
 			switch (menuId) {
 			case 1:
 				break;

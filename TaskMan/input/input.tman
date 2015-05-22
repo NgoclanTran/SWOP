@@ -136,7 +136,7 @@ tasks:
     # These time stamps are only required if a task is finished of failed
     startTime          : "2014-01-01 10:00"
     endTime            : "2014-01-02 17:00"
-    developers		   : 2
+    developers		   : 1
     branchOffice 	   : 0
 
   - project            : 1

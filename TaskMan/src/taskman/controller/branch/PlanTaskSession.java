@@ -178,8 +178,7 @@ public class PlanTaskSession extends Session {
 		if (project == null)
 			throw new IllegalStateException(
 					"Plan task should have a project by now.");
-		List<Task> tasks = getUnplannedTasks(new ArrayList<Task>(
-				project.getTasks()));
+		List<Task> tasks = getUnplannedTasks(new ArrayList<Task>(project.getTasks()));
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
@@ -214,8 +213,8 @@ public class PlanTaskSession extends Session {
 				if (!isValidStartTime(timeSpan)) {
 					reservables = new ArrayList<Reservable>(
 							getSuggestedResources(timeSpan));
-					new ResolveConflictSession(getUI(), ph, uh, clock, task,
-							timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, clock,
+							task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -230,8 +229,8 @@ public class PlanTaskSession extends Session {
 
 				if (!isValidResource(resources, timeSpan)) {
 					reservables = new ArrayList<Reservable>(resources);
-					new ResolveConflictSession(getUI(), ph, uh, clock, task,
-							timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, clock,
+							task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -246,8 +245,8 @@ public class PlanTaskSession extends Session {
 
 				if (!isvalidDeveloper(developers, timeSpan)) {
 					reservables = new ArrayList<Reservable>(developers);
-					new ResolveConflictSession(getUI(), ph, uh, clock, task,
-							timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, clock,
+							task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -316,8 +315,8 @@ public class PlanTaskSession extends Session {
 			if (noUnplannedTasks && unplannedTasks.size() > 0)
 				noUnplannedTasks = false;
 		}
-
-		// TODO: Add the delegated tasks
+		
+		//TODO: Add the delegated tasks
 
 		if (noUnplannedTasks)
 			return new ArrayList<>();
@@ -326,12 +325,12 @@ public class PlanTaskSession extends Session {
 	}
 
 	/**
-	 * This method returns the list of unplanned tasks.
+	 * This method returns the list of planned tasks.
 	 * 
 	 * @param tasks
 	 *            The list of all tasks
 	 * 
-	 * @return Returns a list of unplanned tasks.
+	 * @return Returns a list of planned tasks.
 	 */
 	private List<Task> getUnplannedTasks(List<Task> tasks) {
 		ArrayList<Task> unplannedTasks = new ArrayList<Task>();
