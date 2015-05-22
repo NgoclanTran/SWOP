@@ -58,12 +58,18 @@ public class MementoHandlerTest {
 	
 		MementoHandler m = new MementoHandler(clock, ph, rh, uh, dth);
 		
-		m.saveState();
+		
 		ph.addProject("n", "d", new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0));
-		uh.addProjectManager("n");
+		uh.addDeveloper("name");
 		
 		assertEquals(ph.getProjects().size(),2);
-		assertEquals(uh.getProjectManagers().size(),2);
+		assertEquals(uh.getDevelopers().size(),1);
+		
+		ph.getProjects().get(0).addTask("d", 10, 0, null, null, null, 1);
+		assertEquals(ph.getProjects().get(0).getTasks().size(), 1);
+		
+		m.saveState();
+		
 		
 		
 
