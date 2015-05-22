@@ -83,7 +83,7 @@ public class SimulateSession extends Session {
 				new CreateTaskSession(getUI(), ph, rh).run();
 				break;
 			case 3:
-				new PlanTaskSession(getUI(), ph, uh, clock).run();
+				new PlanTaskSession(getUI(), ph, uh, dth, clock).run();
 				break;
 			case 4:
 				simulateDelegation();
