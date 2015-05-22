@@ -54,6 +54,6 @@ public class DeveloperTest {
 	public void getNameTest(){
 		Developer d = new Developer(name, startTime, endTime);
 		assertEquals(d.getName(), name);
-
 	}
+	
 }
