@@ -67,6 +67,8 @@ projectManagers:
   	branchOffice	: 0
   - name			: "Jim Carrey"
   	branchOffice	: 1
+  - name			: "Jimmeke Carrey"
+  	branchOffice	: 2
 
 developers:
   - name 			: "John Deere"
@@ -83,6 +85,8 @@ developers:
     branchOffice	: 0
   - name 			: "Bob Grylssls"
     branchOffice	: 0
+  - name 			: "Bobby"
+    branchOffice	: 2
 
 projects:
   - name         : "project x"
@@ -102,6 +106,30 @@ projects:
     creationTime : "2015-04-25 09:00"
     dueTime      : "2015-04-30 18:00"
     branchOffice : 1
+    
+  - name         : "project a"
+    description  : "yet another project description"
+    creationTime : "2015-04-25 09:00"
+    dueTime      : "2015-04-30 18:00"
+    branchOffice : 2
+    
+  - name         : "project b"
+    description  : "yet another project description"
+    creationTime : "2015-04-25 09:00"
+    dueTime      : "2015-04-30 18:00"
+    branchOffice : 2
+  
+  - name         : "project c"
+    description  : "yet another project description"
+    creationTime : "2015-04-25 09:00"
+    dueTime      : "2015-04-30 18:00"
+    branchOffice : 2
+    
+  - name         : "project d"
+    description  : "yet another project description"
+    creationTime : "2015-04-25 09:00"
+    dueTime      : "2015-04-30 18:00"
+    branchOffice : 2
 
 plannings:
   - plannedStartTime	: "2014-01-01 09:00"
@@ -178,6 +206,18 @@ tasks:
     planning           : 2
     status             : executing
     developers		   : 1
+    branchOffice 	   : 0
+
+    
+  - project            : 1
+    description        : "yet another task description"
+    estimatedDuration  : 10000
+    acceptableDeviation: 10
+    alternativeFor     :
+    prerequisiteTasks  :
+    planning           :
+    status             :
+    developers		   : 7
     branchOffice 	   : 0
 
 reservations:
