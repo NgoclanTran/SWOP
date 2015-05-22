@@ -45,7 +45,7 @@ public class ShowAllProjectsSession extends Session {
 			return;
 		}
 		
-		new ShowProjectsSession(getUI(), branchOffice).run();
+		new ShowProjectsSession(getUI(), branchOffice.getPh()).run();
 	}
 
 	private List<List<Project>> getAllProjects(List<BranchOffice> branchOffices) {

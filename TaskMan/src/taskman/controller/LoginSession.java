@@ -3,6 +3,7 @@ package taskman.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import taskman.controller.branch.CreateProjectSession;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
@@ -101,7 +102,7 @@ public class LoginSession extends Session {
 		if (user.isDeveloper())
 			showDeveloperOptions();
 		else if (user.isProjectManager())
-			showProjectManagerOptions();
+			showProjectManagerOptions(branchOffice);
 		else
 			return;
 	}
@@ -125,7 +126,7 @@ public class LoginSession extends Session {
 		}
 	}
 
-	private void showProjectManagerOptions() {
+	private void showProjectManagerOptions(BranchOffice branchOffice) {
 		while (true) {
 			int menuId = getUI().getMainMenuID(menuProjectManagers);
 
@@ -135,6 +136,7 @@ public class LoginSession extends Session {
 				new ShowAllProjectsSession(getUI(), company).run();;
 				break;
 			case 2:
+				new CreateProjectSession(getUI(), branchOffice.getPh(), branchOffice.getClock()).run();
 				break;
 			case 3:
 				break;
@@ -147,8 +149,6 @@ public class LoginSession extends Session {
 			case 7:
 				break;
 			case 8:
-				break;
-			case 9:
 				return;
 			}
 		}

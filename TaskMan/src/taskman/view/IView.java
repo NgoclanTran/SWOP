@@ -3,7 +3,6 @@ package taskman.view;
 import java.util.List;
 
 import taskman.exceptions.ShouldExitException;
-import taskman.model.company.BranchOffice;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
 
@@ -62,7 +61,7 @@ public interface IView {
 	 * @param branchOffice
 	 * @param project
 	 */
-	public void displayProjectDetails(BranchOffice branchOffice, Project project);
+	public void displayProjectDetails(Project project);
 
 	/**
 	 * This method will print the given list of tasks to the command line and

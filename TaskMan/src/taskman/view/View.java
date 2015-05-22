@@ -8,7 +8,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import taskman.exceptions.ShouldExitException;
-import taskman.model.company.BranchOffice;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
 import taskman.view.commandline.Input;
@@ -141,12 +140,12 @@ public class View implements IView {
 	 * @return Returns a string with detailed information about the given
 	 *         project.
 	 */
-	private String getStringProjectDetails(BranchOffice branchOffice,
-			Project project) {
+	private String getStringProjectDetails(Project project) {
 		StringBuilder projectDetails = new StringBuilder();
 		projectDetails.append(project.getName());
 		projectDetails.append(":\n");
-		projectDetails.append(branchOffice.getLocation());
+		projectDetails.append("Branch office: ");
+		//TODO: Add branch office name
 		projectDetails.append("\n");
 		projectDetails.append(project.getDescription());
 		projectDetails.append("\n");
@@ -189,6 +188,9 @@ public class View implements IView {
 		taskInfo.append(index);
 		taskInfo.append(": ");
 		taskInfo.append(task.getStatusName());
+		taskInfo.append("\n");
+		taskInfo.append("Branch office: ");
+		//TODO: Add branch office location
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
 			taskInfo.append("Percentage of overdueness: ");
@@ -430,9 +432,9 @@ public class View implements IView {
 	 * @param project
 	 */
 	@Override
-	public void displayProjectDetails(BranchOffice branchOffice, Project project) {
+	public void displayProjectDetails(Project project) {
 		displayInfo(output.indentStringWithNewLines(
-				getStringProjectDetails(branchOffice, project), 1));
+				getStringProjectDetails(project), 1));
 		output.displayEmptyLine();
 	}
 
