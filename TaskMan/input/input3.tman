@@ -209,7 +209,7 @@ tasks:
     branchOffice 	   : 0
 
     
-  - project            : 1
+  - project            : 3
     description        : "yet another task description"
     estimatedDuration  : 10000
     acceptableDeviation: 10
@@ -218,7 +218,7 @@ tasks:
     planning           :
     status             :
     developers		   : 7
-    branchOffice 	   : 0
+    branchOffice 	   : 2
 
 reservations:
   - resource		: 0
