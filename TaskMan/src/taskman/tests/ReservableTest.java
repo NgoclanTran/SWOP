@@ -17,6 +17,7 @@ import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.memento.ReservableMemento;
 import taskman.model.project.Project;
+import taskman.model.task.NormalTask;
 import taskman.model.task.Reservable;
 import taskman.model.task.Reservation;
 import taskman.model.task.Task;
@@ -130,6 +131,14 @@ public class ReservableTest {
 		assertFalse(r.isAvailableAt(ts));
 		// example with reservation
 	}
+	
+	@Test
+	public void isAvailableTest_FalseCAse(){
+		Reservable r = new Reservable(start, end);
+		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null);
+		r.addReservation(task, new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,11, 30)));
+		assertFalse(r.isAvailableAt(new TimeSpan(new DateTime(2015,10,12,11,10), new DateTime(2015,10,12,11, 40))));
+	}
 
 	@Test
 	public void getReservationsTest() {
@@ -156,5 +165,33 @@ public class ReservableTest {
 		Reservable r = new Reservable(null, null);
 		ReservableMemento r1 = new ReservableMemento(r, null);
 		assertEquals(r1.getObject(), r);
+	}
+	
+	@Test
+	public void removeReservationTest(){
+		Reservable r = new Reservable(start, end);
+		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null);
+		r.addReservation(task, new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,11, 30)));
+		
+		Reservation reservation = r.getReservations().get(0);
+		assertEquals(r.getReservations().size(),1);
+		r.removeReservation(reservation);
+		assertEquals(r.getReservations().size(),0);
+	}
+	
+	@Test
+	public void setMementoTest(){
+		Reservable r = new Reservable(start, end);
+		
+		ReservableMemento rm = r.createMemento();
+		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null);
+		r.addReservation(task, new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,11, 30)));
+		
+		assertEquals(r.getReservations().size(),1);
+		
+		r.setMemento(rm);
+		
+		assertEquals(r.getReservations().size(),0);
+		
 	}
 }
