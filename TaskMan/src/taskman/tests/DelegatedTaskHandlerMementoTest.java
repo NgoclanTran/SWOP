@@ -12,6 +12,7 @@ import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.company.DelegatedTaskHandler;
 import taskman.model.memento.DelegatedTaskHandlerMemento;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.DelegatedTask;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
@@ -23,7 +24,8 @@ public class DelegatedTaskHandlerMementoTest {
 	public void setUp() throws Exception {
 		Clock clock = new Clock();
 		Company company = new Company();
-		BranchOffice branchOffice = new BranchOffice(company, "New York", null);
+		List<ResourceType> list = new ArrayList<ResourceType>();
+		BranchOffice branchOffice = new BranchOffice(company, "", list);
 		TaskFactory factory = new TaskFactory(branchOffice, clock);
 		dth = new DelegatedTaskHandler(factory );
 		delegatedTasks = new ArrayList<DelegatedTask>();

@@ -35,7 +35,8 @@ public class TaskTest {
 	private TimeSpan timespan;
 	private Clock clock = new Clock();
 	private Company company;
-	private BranchOffice branchOffice = new BranchOffice(company, "", null);
+	List<ResourceType> list =  new ArrayList<ResourceType>();
+	private BranchOffice branchOffice;
 
 	@Before
 	public void setup() {
@@ -44,6 +45,8 @@ public class TaskTest {
 		acceptableDeviation = 1;
 		dependencies = new ArrayList<NormalTask>();
 		clock.setSystemTime(new DateTime(2015, 10, 12, 8, 0));
+		company = new Company();
+		branchOffice = new BranchOffice(company, "", list);
 
 	}
 
