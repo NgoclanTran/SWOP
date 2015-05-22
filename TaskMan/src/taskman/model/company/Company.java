@@ -12,6 +12,7 @@ import taskman.model.project.Project;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
+import taskman.model.task.Task;
 import taskman.model.time.TimeService;
 
 public class Company {
@@ -82,7 +83,7 @@ public class Company {
 		}
 	}
 
-	public void delegateTask(NormalTask task, BranchOffice toBranchOffice)
+	public void delegateTask(Task task, BranchOffice toBranchOffice)
 			throws IllegalStateException {
 		if (task == null)
 			throw new IllegalArgumentException("The task cannot be null.");
@@ -116,6 +117,33 @@ public class Company {
 				estimatedDuration, acceptableDeviation, requiredResourceTypes,
 				dependenciesFinished, developerAmount);
 		task.delegateTask();
+		announceDelegate(task, toBranchOffice.toString());
 	}
 
+	private void announceDelegate(Task task, String toBranchOffice) {
+		task.setResponsibleBranchOffice(toBranchOffice);
+		if (task.getParentID() != null) {
+			Task toUpdate = findTask(task.getParentID());
+			announceDelegate(toUpdate, toBranchOffice);
+		}
+	}
+
+	private Task findTask(UUID id) {
+		for (BranchOffice branchOffice : branchOffices) {
+			for (Project project : branchOffice.getPh().getProjects()) {
+				for (NormalTask normalTask : project.getTasks()) {
+					if (normalTask.getID().equals(id)) {
+						return normalTask;
+					}
+				}
+			}
+			for (DelegatedTask delegatedTask : branchOffice.getDth()
+					.getDelegatedTasks()) {
+				if (delegatedTask.getID().equals(id)) {
+					return delegatedTask;
+				}
+			}
+		}
+		return null;
+	}
 }

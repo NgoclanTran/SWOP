@@ -808,17 +808,22 @@ public class Parser {
 						acceptableDeviation, dependencies, alternativeForTask,
 						resourceTypes, developers);
 
+		Task currentTask = company
+				.getBranchOffices()
+				.get(branch)
+				.getPh()
+				.getProjects()
+				.get(project)
+				.getTasks()
+				.get(company.getBranchOffices().get(branch).getPh()
+						.getProjects().get(project).getTasks().size() - 1);
+
+		String responsibleBranchOffice = company.getBranchOffices().get(branch)
+				.getLocation();
+		currentTask.setResponsibleBranchOffice(responsibleBranchOffice);
+
 		if (planningNumber != -1) {
 			Planning planning = this.planning.get(planningNumber);
-			Task currentTask = company
-					.getBranchOffices()
-					.get(branch)
-					.getPh()
-					.getProjects()
-					.get(project)
-					.getTasks()
-					.get(company.getBranchOffices().get(branch).getPh()
-							.getProjects().get(project).getTasks().size() - 1);
 			for (int i : planning.getDevelopers()) {
 				Developer d = company.getBranchOffices().get(branch).getUh()
 						.getDevelopers().get(i);
@@ -834,15 +839,6 @@ public class Parser {
 
 		if (!status.equals("")) {
 			boolean failed = status.equals("failed");
-			Task currentTask = company
-					.getBranchOffices()
-					.get(branch)
-					.getPh()
-					.getProjects()
-					.get(project)
-					.getTasks()
-					.get(company.getBranchOffices().get(branch).getPh()
-							.getProjects().get(project).getTasks().size() - 1);
 			if (currentTask.getStatusName().equals("AVAILABLE")) {
 				currentTask.executeTask();
 				currentTask.addTimeSpan(failed, new DateTime(startTime),
