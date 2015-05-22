@@ -130,6 +130,7 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 		try {
 			displayProjectsWithAvailableTasksList(projects, availableTasks,
 					delegatedTasks);
+			projects.add(null);
 			int projectId = view.getListChoice(projects, "Select a project:");
 			return projects.get(projectId - 1);
 		} catch (ShouldExitException e) {
