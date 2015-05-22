@@ -41,7 +41,7 @@ public class TaskFactoryTest {
 	public void makeTaskTest(){
 
 		TaskFactory t = new TaskFactory(branchOffice, clock);
-		NormalTask task = t.makeNormalTask("description", 10, 0, null, null, null);
+		NormalTask task = t.makeNormalTask("description", 10, 0, null, null, null, 1);
 		assertEquals(task.getDescription(), "description");
 		assertEquals(task.getEstimatedDuration(),10);
 		assertEquals(task.getAcceptableDeviation(),0);
@@ -54,7 +54,7 @@ public class TaskFactoryTest {
 	public void makeDelegatedTaskTest(){
 
 		TaskFactory t = new TaskFactory(branchOffice, clock);
-		DelegatedTask task = t.makeDelegatedTask("description", 10, 0, null, true);
+		DelegatedTask task = t.makeDelegatedTask("description", 10, 0, null, true, 1);
 		assertEquals(task.getDescription(), "description");
 		assertEquals(task.getEstimatedDuration(),10);
 		assertEquals(task.getAcceptableDeviation(),0);

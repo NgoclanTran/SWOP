@@ -36,7 +36,7 @@ public class ProjectMementoTest {
 		clock = new Clock();
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		tasks.add(p.getTasks().get(0));
 		Project project = new Project("name", "description", new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,10), new TaskFactory(branchOffice, clock));
 		pm = new ProjectMemento(project, tasks, stateName);

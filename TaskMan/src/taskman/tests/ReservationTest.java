@@ -29,7 +29,7 @@ public class ReservationTest {
 	public void setUp() throws Exception {
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		ts = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,16,0));
 	}
 

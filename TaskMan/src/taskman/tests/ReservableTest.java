@@ -88,7 +88,7 @@ public class ReservableTest {
 		Reservable r = new Reservable(start, end);
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), null);
 	}
 
@@ -97,7 +97,7 @@ public class ReservableTest {
 		Reservable r = new Reservable(start, end);
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
 		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
 	}
@@ -129,7 +129,7 @@ public class ReservableTest {
 		Reservable r = new Reservable(start, end);
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		r.addReservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
 		assertFalse(r.isAvailableAt(ts));
 		// example with reservation
@@ -138,7 +138,7 @@ public class ReservableTest {
 	@Test
 	public void isAvailableTest_FalseCAse(){
 		Reservable r = new Reservable(start, end);
-		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null);
+		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null, 1);
 		r.addReservation(task, new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,11, 30)));
 		assertFalse(r.isAvailableAt(new TimeSpan(new DateTime(2015,10,12,11,10), new DateTime(2015,10,12,11, 40))));
 	}
@@ -149,7 +149,7 @@ public class ReservableTest {
 		List<Reservation> l = r.getReservations();
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		
 		Reservation rv = new Reservation(branchOffice.getPh().getProjects().get(0).getTasks().get(0), ts);
 		l.add(rv);
@@ -173,7 +173,7 @@ public class ReservableTest {
 	@Test
 	public void removeReservationTest(){
 		Reservable r = new Reservable(start, end);
-		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null);
+		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null, 1);
 		r.addReservation(task, new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,11, 30)));
 		
 		Reservation reservation = r.getReservations().get(0);
@@ -187,7 +187,7 @@ public class ReservableTest {
 		Reservable r = new Reservable(start, end);
 		
 		ReservableMemento rm = r.createMemento();
-		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null);
+		NormalTask task = new NormalTask(clock, "description", 10, 0, null, null, null, 1);
 		r.addReservation(task, new TimeSpan(new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,11, 30)));
 		
 		assertEquals(r.getReservations().size(),1);

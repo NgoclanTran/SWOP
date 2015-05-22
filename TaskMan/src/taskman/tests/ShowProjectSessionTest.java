@@ -55,12 +55,12 @@ public class ShowProjectSessionTest {
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
-		ph.getProjects().get(1).addTask("", 10, 10, null, null, null);
+		ph.getProjects().get(1).addTask("", 10, 10, null, null, null, 1);
 
 		// Session without projects
 		cli1 = new View();

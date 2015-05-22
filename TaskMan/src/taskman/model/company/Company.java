@@ -62,6 +62,7 @@ public class Company {
 	}
 
 	public void announceCompletion(DelegatedTask task) {
+		if(task == null) throw new IllegalArgumentException("The task cannot be null.");
 		UUID parent = task.getParentID();
 		for (BranchOffice branchOffice : branchOffices) {
 			for (Project project : branchOffice.getPh().getProjects()) {

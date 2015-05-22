@@ -38,9 +38,9 @@ public class TaskMementoTest {
 	public void setup() {
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
-		p.addTask("aze", 10, 1, null, null, null);
+		p.addTask("aze", 10, 1, null, null, null, 1);
 		dependants.add(branchOffice.getPh().getProjects().get(0).getTasks().get(1));
 		t = new NormalTaskMemento(branchOffice.getPh().getProjects().get(0).getTasks().get(0), dependants, "state", timeSpan, alternative);
 
@@ -67,7 +67,7 @@ public class TaskMementoTest {
 	}
 	@Test
 	public void getObjectTest(){
-		NormalTask t1 = new NormalTask(clock, "", 10, 1, null, null, null);
+		NormalTask t1 = new NormalTask(clock, "", 10, 1, null, null, null, 1);
 		t = new NormalTaskMemento(t1, dependants, "state", timeSpan, alternative);
 		assertEquals(t1, t.getObject());
 	}

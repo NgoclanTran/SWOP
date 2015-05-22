@@ -72,7 +72,7 @@ public class UserHandlerTest {
 		assertEquals(u.getAvailableDevelopers(timeSpan).size(),2);
 		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
+		p.addTask("", 10, 1, null, null, null, 1);
 		//Task task = new Task(clock,"description", 10, 1, null, null, null);
 		
 		Developer d = u.getDevelopers().get(0);

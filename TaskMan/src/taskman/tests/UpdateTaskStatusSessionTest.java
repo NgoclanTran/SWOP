@@ -69,7 +69,7 @@ public class UpdateTaskStatusSessionTest {
 		ph.getProjects()
 				.get(0)
 				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null);
+						null, null, 1);
 		uh.addDeveloper("developer");
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
 				new DateTime(2015, 10, 12, 16, 0));
@@ -83,7 +83,7 @@ public class UpdateTaskStatusSessionTest {
 		ph.getProjects()
 				.get(0)
 				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null);
+						null, null, 1);
 	}
 
 	@Test

@@ -69,11 +69,11 @@ public class CreateTaskSessionTest {
 		ph.getProjects()
 				.get(0)
 				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null);
+						null, null, 1);
 		ph.getProjects()
 				.get(0)
 				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null);
+						null, null, 1);
 		description = "description";
 		estimatedDuration = 10;
 		acceptableDeviation = 11;

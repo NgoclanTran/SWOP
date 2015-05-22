@@ -137,7 +137,7 @@ public class ProjectTest {
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		assertEquals(0, project.getTasks().size());
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		assertEquals(1, project.getTasks().size());
 		assertEquals(desc, project.getTasks().get(0).getDescription());
 		assertEquals(estimatedDuration, project.getTasks().get(0)
@@ -167,7 +167,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		assertEquals(1, project.getTasks().size());
 		assertEquals(desc, project.getTasks().get(0).getDescription());
 		assertEquals(estimatedDuration, project.getTasks().get(0)
@@ -182,7 +182,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(null, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -191,7 +191,7 @@ public class ProjectTest {
 		int acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, -1, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -200,7 +200,7 @@ public class ProjectTest {
 		int estimatedDuration = 500;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, -1,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -209,14 +209,14 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null,null);
+				dependencies, null,null, 1);
 		project.getTasks()
 				.get(0)
 				.addTimeSpan(false, new DateTime(2014, 1, 1, 8, 0),
 						new DateTime(2014, 1, 1, 9, 0));
 		assertTrue(project.isFinished());
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 	}
 
 	@Test
@@ -226,10 +226,10 @@ public class ProjectTest {
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		dependencies.add(project.getTasks().get(0));
 		project.addTask(desc2, estimatedDuration2, acceptableDeviation2,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		assertEquals(2, project.getTasks().size());
 		assertTrue(project.getTasks().get(1).getDependencies()
 				.contains(project.getTasks().get(0)));
@@ -253,7 +253,7 @@ public class ProjectTest {
 		int estimatedDuration2 = 600, acceptableDeviation2 = 60;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		project.getTasks()
 				.get(0)
 				.addTimeSpan(false, new DateTime(2013, 1, 1, 8, 0),
@@ -261,7 +261,7 @@ public class ProjectTest {
 		assertTrue(project.isFinished());
 		dependencies.add(project.getTasks().get(0));
 		project.addTask(desc2, estimatedDuration2, acceptableDeviation2,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 	}
 
 	@Test
@@ -278,7 +278,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
@@ -302,7 +302,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		assertFalse(project.isFinished());
 	}
 
@@ -313,9 +313,9 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
@@ -338,7 +338,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
@@ -361,11 +361,11 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
-		project.addTask(desc, 120, 0, dependencies, null, null);
+		project.addTask(desc, 120, 0, dependencies, null, null, 1);
 		assertEquals(new DateTime(2014, 1, 1, 10, 0),
 				project.getEstimatedFinishTime());
-		project.addTask(desc, 480, 0, dependencies, null, null);
-		project.addTask(desc, 60, 0, dependencies, null, null);
+		project.addTask(desc, 480, 0, dependencies, null, null, 1);
+		project.addTask(desc, 60, 0, dependencies, null, null, 1);
 	}
 
 	@Test
@@ -373,7 +373,7 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
-		project.addTask(desc, 600, 0, dependencies, null, null);
+		project.addTask(desc, 600, 0, dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
@@ -396,7 +396,7 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
-		project.addTask(desc, 600, 0, dependencies, null, null);
+		project.addTask(desc, 600, 0, dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
@@ -419,8 +419,8 @@ public class ProjectTest {
 		assertFalse(project.isFinished());
 		String desc = "desc";
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
-		project.addTask(desc, 600, 0, dependencies, null, null);
-		project.addTask(desc, 10, 0, null, null, null);
+		project.addTask(desc, 600, 0, dependencies, null, null, 1);
+		project.addTask(desc, 10, 0, null, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2014,10,14,8,0), new DateTime(2014,10,14,16,0));
@@ -461,7 +461,7 @@ public class ProjectTest {
 	@Test
 	public void toStringTest1(){
 		Project p = new Project(name, description, creation, due, tf);
-		project.addTask(description, 600, 0, null, null, null);
+		project.addTask(description, 600, 0, null, null, null, 1);
 		assertEquals(p.toString(),name +": ONGOING");
 	} 
 	
@@ -472,7 +472,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
@@ -497,7 +497,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
@@ -521,7 +521,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
@@ -545,7 +545,7 @@ public class ProjectTest {
 		int estimatedDuration = 500, acceptableDeviation = 50;
 		List<NormalTask> dependencies = new ArrayList<NormalTask>();
 		project.addTask(desc, estimatedDuration, acceptableDeviation,
-				dependencies, null, null);
+				dependencies, null, null, 1);
 		Task t = project.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(8,0), new LocalTime(16,0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new DateTime(2015,10,12,16,0));
@@ -560,20 +560,20 @@ public class ProjectTest {
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
-		project.addTask("", 10, 1, null, null, null);
+		project.addTask("", 10, 1, null, null, null, 1);
 	}
 	
 	@Test (expected = IllegalStateException.class)
 	public void testOngoingGetTotalDelay(){
-		project.addTask(description, 600, 0, null, null, null);
+		project.addTask(description, 600, 0, null, null, null, 1);
 		project.getTotalDelay();
 	}
 	
 	@Test
 	public void testgetEstimatedFinishTime_2(){
 		Project p = new Project(name, description, creation, due,tf);
-		p.addTask("task 1", 10, 1, null, null, null);
-		p.addTask("description 2", 10, 1, null, null, null);
+		p.addTask("task 1", 10, 1, null, null, null, 1);
+		p.addTask("description 2", 10, 1, null, null, null, 1);
 		assertEquals(p.getTasks().get(1).getStatusName(), "UNAVAILABLE");
 		assertEquals(p.getTasks().get(0).getStatusName(), "UNAVAILABLE");
 		NormalTask task = p.getTasks().get(0);
@@ -595,7 +595,7 @@ public class ProjectTest {
 	public void setMementoTest_StatusONGOING(){
 		ProjectMemento pm = project.createMemento();
 		assertEquals(project.getTasks().size(),0);
-		project.addTask(description, 10, 1, null, null, null);
+		project.addTask(description, 10, 1, null, null, null, 1);
 		assertEquals(project.getTasks().size(),1);
 		
 		project.setMemento(pm);
@@ -605,7 +605,7 @@ public class ProjectTest {
 	@Test
 	public void setMementoTest_StatusFINISHED(){
 		Project p = new Project(name, description, creation, due,tf);
-		p.addTask("task 1", 10, 1, null, null, null);
+		p.addTask("task 1", 10, 1, null, null, null, 1);
 		assertEquals(p.getTasks().get(0).getStatusName(), "UNAVAILABLE");
 		NormalTask task = p.getTasks().get(0);
 		Developer d = new Developer("name", new LocalTime(10,0), new LocalTime(11,0));

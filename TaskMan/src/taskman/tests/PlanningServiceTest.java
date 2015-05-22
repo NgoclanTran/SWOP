@@ -45,9 +45,10 @@ public class PlanningServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		clock = new Clock();
-		clock.setSystemTime(new DateTime(2015,1,1,00,00));
+		clock.setSystemTime(new DateTime(2015, 1, 1, 00, 00));
 		Company company = new Company();
-		tf = new TaskFactory(new BranchOffice(company, "New York", new ArrayList<ResourceType>()), clock);
+		tf = new TaskFactory(new BranchOffice(company, "New York",
+				new ArrayList<ResourceType>()), clock);
 		ph = new ProjectHandler(tf);
 
 		planning = new PlanningService(clock);
@@ -58,21 +59,20 @@ public class PlanningServiceTest {
 				2, 1, 17, 0));
 
 		ph.getProjects()
-		.get(0)
-		.addTask("PlanningServiceTest no requirements", 60, 0, null,
-				null, null);
+				.get(0)
+				.addTask("PlanningServiceTest no requirements", 60, 0, null,
+						null, null, 1);
 
-		ResourceType t1 = new ResourceType("Car", requires, conflictsWith, false);
+		ResourceType t1 = new ResourceType("Car", requires, conflictsWith,
+				false);
 
-		t1.addResource("Car 1", new LocalTime(12, 0),
-				new LocalTime(15, 0));
+		t1.addResource("Car 1", new LocalTime(12, 0), new LocalTime(15, 0));
 
-		ResourceType t2 = new ResourceType("Server", requires, conflictsWith, false);
-		t2.addResource("Server 1", new LocalTime(12, 0),
-				new LocalTime(16, 0));
+		ResourceType t2 = new ResourceType("Server", requires, conflictsWith,
+				false);
+		t2.addResource("Server 1", new LocalTime(12, 0), new LocalTime(16, 0));
 
-		t2.addResource("Server 2", new LocalTime(12, 0),
-				new LocalTime(16, 0));
+		t2.addResource("Server 2", new LocalTime(12, 0), new LocalTime(16, 0));
 		ArrayList<ResourceType> list = new ArrayList<ResourceType>();
 		list.add(t1);
 		list.add(t2);
@@ -85,14 +85,14 @@ public class PlanningServiceTest {
 		lhm2.put(rh.getResourceTypes().get(1), 1);
 		lhm3.put(rh.getResourceTypes().get(1), 1);
 		ph.getProjects()
-		.get(0)
-		.addTask("PlanningServiceTest requirements 1", 60, 0, null,
-				null, lhm1);
+				.get(0)
+				.addTask("PlanningServiceTest requirements 1", 60, 0, null,
+						null, lhm1, 1);
 
 		ph.getProjects()
-		.get(0)
-		.addTask("PlanningServiceTest requirements 2", 60, 0, null,
-				null, lhm2);
+				.get(0)
+				.addTask("PlanningServiceTest requirements 2", 60, 0, null,
+						null, lhm2, 1);
 
 		firstTimeSpan = new TimeSpan(startTime, startTime.plusMinutes(ph
 				.getProjects().get(0).getTasks().get(2).getEstimatedDuration()));
@@ -106,9 +106,9 @@ public class PlanningServiceTest {
 		}
 
 		ph.getProjects()
-		.get(0)
-		.addTask("PlanningServiceTest requirements 3", 60, 0, null,
-				null, lhm3);
+				.get(0)
+				.addTask("PlanningServiceTest requirements 3", 60, 0, null,
+						null, lhm3, 1);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -123,10 +123,11 @@ public class PlanningServiceTest {
 	}
 
 	@Test
-	public void testGetPossibleStartTime_EarlestStartTimeBeforeSystem(){
+	public void testGetPossibleStartTime_EarlestStartTimeBeforeSystem() {
 		NormalTask task = ph.getProjects().get(0).getTasks().get(0);
-		Set<DateTime> list = planning.getPossibleStartTimes(task, 1, new DateTime(200,1,1,8,0));
-		assertTrue(list.contains(new DateTime(2015,1,1,8,0)));
+		Set<DateTime> list = planning.getPossibleStartTimes(task, 1,
+				new DateTime(200, 1, 1, 8, 0));
+		assertTrue(list.contains(new DateTime(2015, 1, 1, 8, 0)));
 	}
 
 	@Test
@@ -145,18 +146,18 @@ public class PlanningServiceTest {
 		assertEquals(expectedStartTimes, startTimes);
 	}
 
-	//	@Test
-	//	public void testGetPossibleStartTimesAfter20150115() {
-	//		int amount = 3;
-	//		Task task = ph.getProjects().get(0).getTasks().get(0);
-	//		Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
-	//		for (int i = 0; i < amount; i++) {
-	//			expectedStartTimes.add(new DateTime(2015, 1, 15, 10 + i, 0));
-	//		}
-	//		Set<DateTime> startTimes = planning.getPossibleStartTimes(task, amount,
-	//				new DateTime(2015, 1, 15, 10, 0));
-	//		//assertEquals(expectedStartTimes, startTimes);
-	//	}
+	// @Test
+	// public void testGetPossibleStartTimesAfter20150115() {
+	// int amount = 3;
+	// Task task = ph.getProjects().get(0).getTasks().get(0);
+	// Set<DateTime> expectedStartTimes = new TreeSet<DateTime>();
+	// for (int i = 0; i < amount; i++) {
+	// expectedStartTimes.add(new DateTime(2015, 1, 15, 10 + i, 0));
+	// }
+	// Set<DateTime> startTimes = planning.getPossibleStartTimes(task, amount,
+	// new DateTime(2015, 1, 15, 10, 0));
+	// //assertEquals(expectedStartTimes, startTimes);
+	// }
 
 	// @Test(expected = IllegalStateException.class)
 	// public void testGetPossibleStartTimesNotEnoughResources() {
@@ -177,13 +178,13 @@ public class PlanningServiceTest {
 		planning.isValidTimeSpan(task, null, null);
 	}
 
-	//	@Test
-	//	public void testIsValidTimeSpan() {
-	//		Task task = ph.getProjects().get(0).getTasks().get(0);
-	//		TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task
-	//				.getEstimatedDuration()));
-	//		assertTrue(planning.isValidTimeSpan(task, timeSpan, null));
-	//	}
+	// @Test
+	// public void testIsValidTimeSpan() {
+	// Task task = ph.getProjects().get(0).getTasks().get(0);
+	// TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(task
+	// .getEstimatedDuration()));
+	// assertTrue(planning.isValidTimeSpan(task, timeSpan, null));
+	// }
 
 	@Test
 	public void testIsValidTimeSpanAfter20150115() {
@@ -202,23 +203,31 @@ public class PlanningServiceTest {
 	@Test
 	public void testIsValidTimeSpanNotEnoughResources() {
 		ResourceType r1 = new ResourceType("name", null, null, false);
-		r1.addResource("resource 1", new LocalTime(10,0), new LocalTime(11,0));
-		r1.addResource("resource 2", new LocalTime(14,0), new LocalTime(15,0));
+		r1.addResource("resource 1", new LocalTime(10, 0), new LocalTime(11, 0));
+		r1.addResource("resource 2", new LocalTime(14, 0), new LocalTime(15, 0));
 
 		Map<ResourceType, Integer> resourceTypes = new HashMap<ResourceType, Integer>();
 		resourceTypes.put(r1, 2);
-		ph.getProjects().get(0).addTask("description 1", 10, 1, null, null, resourceTypes);
-		NormalTask task = ph.getProjects().get(0).getTasks().get(ph.getProjects().get(0).getTasks().size()-1);
-		assertFalse(planning.isValidTimeSpan(task, new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,10,30)), new DateTime(2015,10,12,10,0)));
+		ph.getProjects().get(0)
+				.addTask("description 1", 10, 1, null, null, resourceTypes, 1);
+		NormalTask task = ph.getProjects().get(0).getTasks()
+				.get(ph.getProjects().get(0).getTasks().size() - 1);
+		assertFalse(planning.isValidTimeSpan(task, new TimeSpan(new DateTime(
+				2015, 10, 12, 10, 0), new DateTime(2015, 10, 12, 10, 30)),
+				new DateTime(2015, 10, 12, 10, 0)));
 	}
 
 	@Test
-	public void testIsValidTimeSpan_DeveloperNotAvailable(){
+	public void testIsValidTimeSpan_DeveloperNotAvailable() {
 		NormalTask task = ph.getProjects().get(0).getTasks().get(0);
-		Developer d = new Developer("d 1", new LocalTime(14,0), new LocalTime(14,10));
+		Developer d = new Developer("d 1", new LocalTime(14, 0), new LocalTime(
+				14, 10));
 		task.addRequiredDeveloper(d);
-		assertFalse(planning.isValidTimeSpan(task, new TimeSpan(new DateTime(2015,10,12,10,30), new DateTime(2015,10,12,14,30)), new DateTime(2015,10,12,10,0)));
+		assertFalse(planning.isValidTimeSpan(task, new TimeSpan(new DateTime(
+				2015, 10, 12, 10, 30), new DateTime(2015, 10, 12, 14, 30)),
+				new DateTime(2015, 10, 12, 10, 0)));
 	}
+
 	@Test
 	public void testIsValidTimeSpanResourceFree() {
 		NormalTask task3 = ph.getProjects().get(0).getTasks().get(2);

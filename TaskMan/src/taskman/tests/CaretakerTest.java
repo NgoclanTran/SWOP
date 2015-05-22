@@ -30,21 +30,24 @@ import taskman.model.time.TimeSpan;
 public class CaretakerTest {
 	ClockMemento savedClockMemento;
 	private Clock clock = new Clock();
-	
+
 	ArrayList<ProjectMemento> savedProjectMementos = new ArrayList<ProjectMemento>();
 	ArrayList<ReservableMemento> savedDeveloperMementos = new ArrayList<ReservableMemento>();
 	ArrayList<ReservableMemento> savedResourceMementos = new ArrayList<ReservableMemento>();
 	ArrayList<NormalTaskMemento> savedTaskMementos = new ArrayList<NormalTaskMemento>();
 	Caretaker c = new Caretaker();
-	
-	
+
 	@Test
 	public void addProjectMementoTest() {
 		Company company = new Company();
 		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
-		Project p = new Project("name", "description", new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,00), new TaskFactory(new BranchOffice(company, "New York", resourceTypes ), clock));
-		
-		ProjectMemento projectMemento = new ProjectMemento(p, (ArrayList<NormalTask>) p.getTasks(), "state");
+		Project p = new Project("name", "description", new DateTime(2015, 10,
+				12, 10, 10), new DateTime(2015, 10, 12, 12, 00),
+				new TaskFactory(new BranchOffice(company, "New York",
+						resourceTypes), clock));
+
+		ProjectMemento projectMemento = new ProjectMemento(p,
+				(ArrayList<NormalTask>) p.getTasks(), "state");
 		c.addProjectMemento(projectMemento);
 		assertEquals(c.getProjectMementos().get(0), projectMemento);
 	}
@@ -66,12 +69,12 @@ public class CaretakerTest {
 
 	@Test
 	public void addTaskMementoTest() {
-		NormalTask t = new NormalTask(clock,"", 10, 10, null, null, null);
-		NormalTask t1 = new NormalTask(clock,"", 10, 10, null, null, null);
+		NormalTask t = new NormalTask(clock, "", 10, 10, null, null, null, 1);
+		NormalTask t1 = new NormalTask(clock, "", 10, 10, null, null, null, 1);
 		ArrayList<NormalTask> tasks = new ArrayList<NormalTask>();
-		NormalTaskMemento t2 = new NormalTaskMemento(t, tasks, "name", new TimeSpan(
-				new DateTime(2015, 10, 12, 10, 0), new DateTime(2015, 10, 12,
-						12, 0)), t1);
+		NormalTaskMemento t2 = new NormalTaskMemento(t, tasks, "name",
+				new TimeSpan(new DateTime(2015, 10, 12, 10, 0), new DateTime(
+						2015, 10, 12, 12, 0)), t1);
 		c.addTaskMemento(t2);
 		assertEquals(c.getNormalTaskMementos().get(0), t2);
 	}
@@ -82,19 +85,23 @@ public class CaretakerTest {
 		c.addClockMemento(clock);
 		assertEquals(c.getClockMemento(), clock);
 	}
-	
+
 	@Test
-	public void addDelegatedTaskHandlerMemento_True(){
-		DelegatedTaskHandlerMemento m = new DelegatedTaskHandlerMemento(null, null);
+	public void addDelegatedTaskHandlerMemento_True() {
+		DelegatedTaskHandlerMemento m = new DelegatedTaskHandlerMemento(null,
+				null);
 		c.addDelegatedTaskHandlerMemento(m);
 		assertEquals(c.getDelegatedTaskHandlerMemento(), m);
-		
+
 	}
-	
+
 	@Test
-	public void addDelegateTaskMemento_True(){
-		DelegatedTask delegatedTask = new DelegatedTask(clock, "description", 10, 1, null, true);
-		DelegatedTaskMemento m = new DelegatedTaskMemento(delegatedTask , true, "task 1", new TimeSpan(new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,12,10)));
+	public void addDelegateTaskMemento_True() {
+		DelegatedTask delegatedTask = new DelegatedTask(clock, "description",
+				10, 1, null, true, 1);
+		DelegatedTaskMemento m = new DelegatedTaskMemento(delegatedTask, true,
+				"task 1", new TimeSpan(new DateTime(2015, 10, 12, 10, 10),
+						new DateTime(2015, 10, 12, 12, 10)));
 		c.addDelegatedTaskMemento(m);
 		assertEquals(c.getDelegatedTaskMementos().get(0), m);
 	}

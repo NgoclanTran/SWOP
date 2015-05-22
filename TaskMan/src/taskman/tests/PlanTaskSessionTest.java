@@ -48,7 +48,7 @@ public class PlanTaskSessionTest {
 	@Before
 	public void setup() {
 		clock = new Clock();
-		tf = new TaskFactory(BranchOffice , clock);
+		tf = new TaskFactory(branchOffice , clock);
 		// Session with projects
 		cli = new View();
 		ph = new ProjectHandler(tf);
@@ -61,11 +61,11 @@ public class PlanTaskSessionTest {
 		ph.getProjects()
 				.get(0)
 				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null);
+						null, null, 1);
 		ph.getProjects()
 				.get(0)
 				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null);
+						null, null, 1);
 
 	}
 	
