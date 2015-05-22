@@ -16,6 +16,8 @@ public class BranchOffice implements Observer {
 
 	public BranchOffice(Company company, String location,
 			List<ResourceType> resourceTypes) {
+		if(company == null) throw new IllegalArgumentException("The company cannot be null.");
+		if(location == null) throw new IllegalArgumentException("The location cannot be null.");
 		this.company = company;
 		this.location = location;
 		clock = new Clock();

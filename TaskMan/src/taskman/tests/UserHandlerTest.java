@@ -78,5 +78,37 @@ public class UserHandlerTest {
 		
 		
 	}
+	
+	@Test
+	public void getProjectManagersTest(){
+		List<ProjectManager> list = u.getProjectManagers();
+		ProjectManager manager = new ProjectManager("name");
+		list.add(manager);
+		assertNotEquals(u.getProjectManagers(), list);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void addProjectManagerTest_NullName(){
+		u.addProjectManager(null);
+	}
+	
+	@Test
+	public void addProjectManagerTest_TrueCase(){
+		u.addProjectManager("name");
+		ProjectManager m = u.getProjectManagers().get(0);
+		assertEquals(m.getName(), "name");
+	}
+	
+	@Test
+	public void getUsersTest(){
+		u.addDeveloper("developer");
+		u.addProjectManager("manager");
+		
+		List<User> list = u.getUsers();
+		assertEquals(list.size(),2);
+		ProjectManager d = new ProjectManager("name");
+		list.add(d);
+		assertNotEquals(u.getUsers(), list);
+	}
 
 }

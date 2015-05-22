@@ -21,6 +21,11 @@ public class ResourceHandlerTest {
 		rl.add(rt);
 		r = new ResourceHandler(rl);
 	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void constructorTest_NullResourceTypes(){
+		new ResourceHandler(null);
+	}
 
 	@Test
 	public void test() {

@@ -8,6 +8,7 @@ import taskman.model.resource.ResourceType;
 public class ResourceHandler {
 	
 	public ResourceHandler(List<ResourceType> resourceTypes) {
+		if(resourceTypes == null) throw new IllegalArgumentException("The resourcesTypes cannot be null.");
 		this.resourceTypes = resourceTypes;
 	}
 
