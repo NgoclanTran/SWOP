@@ -13,6 +13,7 @@ import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
+import taskman.model.resource.ResourceType;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
 
@@ -26,13 +27,18 @@ public class ProjectHandlerTest {
 	@Before
 	public void setUp() throws Exception {
 		clock = new Clock();
-		BranchOffice b = new BranchOffice(new Company(), "New York", new ArrayList<ResourceType>());
-		tf = new TaskFactory(clock);
+		List<ResourceType> list = new ArrayList<ResourceType>();
+		BranchOffice b = new BranchOffice(new Company(), "New York", list);
+		tf = new TaskFactory(b,clock);
 		ph = new ProjectHandler(tf);
 		project1 = new Project("name", "description", new DateTime(),
 				new DateTime(),tf);
 	}
 
+	@Test (expected = IllegalArgumentException.class)
+	public void constructorTest_TaskFactoryNull(){
+		ProjectHandler ph = new ProjectHandler(null);
+	}
 	@Test
 	public void testGetProjects() {
 		String name = "name", description = "description";
