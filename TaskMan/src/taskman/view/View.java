@@ -144,8 +144,6 @@ public class View implements IView {
 		StringBuilder projectDetails = new StringBuilder();
 		projectDetails.append(project.getName());
 		projectDetails.append(":\n");
-		projectDetails.append("Branch office: ");
-		//TODO: Add branch office name
 		projectDetails.append("\n");
 		projectDetails.append(project.getDescription());
 		projectDetails.append("\n");
@@ -189,8 +187,9 @@ public class View implements IView {
 		taskInfo.append(": ");
 		taskInfo.append(task.getStatusName());
 		taskInfo.append("\n");
-		taskInfo.append("Branch office: ");
-		//TODO: Add branch office location
+		taskInfo.append("Responsible branch office:");
+		taskInfo.append(task.getResponsibleBranchOffice());
+		taskInfo.append("\n");
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
 			taskInfo.append("Percentage of overdueness: ");
@@ -219,6 +218,9 @@ public class View implements IView {
 		taskInfo.append("\n");
 		taskInfo.append("Status: ");
 		taskInfo.append(task.getStatusName());
+		taskInfo.append("\n");
+		taskInfo.append("Responsible branch office: ");
+		taskInfo.append(task.getResponsibleBranchOffice());
 		taskInfo.append("\n");
 		taskInfo.append("Estimated duration: ");
 		taskInfo.append(getStringMinutes(task.getEstimatedDuration()));

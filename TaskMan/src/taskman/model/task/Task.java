@@ -127,6 +127,16 @@ public abstract class Task extends TaskSubject implements Observer {
 
 	private final int requiredAmountOfDevelopers;
 
+	public String getResponsibleBranchOffice() {
+		return responsibleBranchOffice;
+	}
+
+	public void setResponsibleBranchOffice(String responsibleBranchOffice) {
+		this.responsibleBranchOffice = responsibleBranchOffice;
+	}
+
+	private String responsibleBranchOffice;
+
 	/**
 	 * Returns the status of the task
 	 * 
