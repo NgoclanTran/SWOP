@@ -32,7 +32,8 @@ public class Company {
 	/**
 	 * Adds a branch office to the list of branch offices in the company
 	 * 
-	 * @param branchOffice
+	 * @param 	branchOffice
+	 * 			The branch office that is part of the company
 	 */
 	public void addBranchOffice(BranchOffice branchOffice) {
 		if (branchOffice == null)
@@ -40,7 +41,12 @@ public class Company {
 					"The branche office cannot be null.");
 		branchOffices.add(branchOffice);
 	}
-
+	
+	/**
+	 * 	Return all branch offices of this company
+	 * 
+	 * 	@return List of branch offices of this company
+	 */
 	public List<BranchOffice> getBranchOffices() {
 		return new ArrayList<BranchOffice>(branchOffices);
 	}
@@ -49,7 +55,8 @@ public class Company {
 	 * Sets the dependencies status of the delegated task with the given id to
 	 * true.
 	 * 
-	 * @param id
+	 * @param	id
+	 * 			id of the delegated task
 	 */
 	public void setDependenciesFinished(UUID id) {
 		for (BranchOffice branchOffice : branchOffices) {
@@ -62,6 +69,12 @@ public class Company {
 		}
 	}
 
+	/**
+	 * Announce to parent task that the delegated task is completed
+	 * 
+	 * @param 	task
+	 * 			The delegated task
+	 */
 	public void announceCompletion(DelegatedTask task) {
 		if (task == null)
 			throw new IllegalArgumentException("The task cannot be null.");
@@ -82,7 +95,18 @@ public class Company {
 			}
 		}
 	}
-
+	/**
+	 * Delegate a task to another branch office
+	 * 	
+	 * @param 	task
+	 * 			The task to delegate
+	 * @param 	toBranchOffice
+	 * 			The branch office where the task is delegated to
+	 * @throws 	IllegalStateException
+	 * 			if the task is null
+	 * @throws 	IllegalStateException
+	 * 			if the branch office is null
+	 */
 	public void delegateTask(Task task, BranchOffice toBranchOffice)
 			throws IllegalStateException {
 		if (task == null)
