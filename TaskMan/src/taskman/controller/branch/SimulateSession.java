@@ -96,9 +96,11 @@ public class SimulateSession extends Session {
 	}
 
 	private void simulateDelegation() {
-		DelegateTaskSession delegateSession = new DelegateTaskSession(getUI(), ph, company);
+		DelegateTaskSession delegateSession = new DelegateTaskSession(getUI(),
+				ph, company);
 		Task task = delegateSession.getUnplannedTask();
 		BranchOffice branchOffice = delegateSession.getBranchOffice();
+		company.announceDelegate(task, branchOffice.getLocation(), true);
 		delegations.put(task, branchOffice);
 	}
 

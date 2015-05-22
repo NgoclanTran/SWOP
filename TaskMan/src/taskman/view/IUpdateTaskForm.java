@@ -38,6 +38,6 @@ public interface IUpdateTaskForm {
 	 * @throws ShouldExitException
 	 */
 	public Project getProjectWithAvailableTasks(List<Project> projects,
-			List<List<Task>> availableTasks);
+			List<List<Task>> availableTasks, List<Task> delegatedTasks);
 
 }

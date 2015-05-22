@@ -74,7 +74,7 @@ public class CaretakerTest {
 		ArrayList<NormalTask> tasks = new ArrayList<NormalTask>();
 		NormalTaskMemento t2 = new NormalTaskMemento(t, tasks, "name",
 				new TimeSpan(new DateTime(2015, 10, 12, 10, 0), new DateTime(
-						2015, 10, 12, 12, 0)), t1);
+						2015, 10, 12, 12, 0)), t1, "");
 		c.addTaskMemento(t2);
 		assertEquals(c.getNormalTaskMementos().get(0), t2);
 	}
@@ -101,7 +101,7 @@ public class CaretakerTest {
 				10, 1, null, true, 1);
 		DelegatedTaskMemento m = new DelegatedTaskMemento(delegatedTask, true,
 				"task 1", new TimeSpan(new DateTime(2015, 10, 12, 10, 10),
-						new DateTime(2015, 10, 12, 12, 10)));
+						new DateTime(2015, 10, 12, 12, 10)), "");
 		c.addDelegatedTaskMemento(m);
 		assertEquals(c.getDelegatedTaskMementos().get(0), m);
 	}

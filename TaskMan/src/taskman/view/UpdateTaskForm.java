@@ -91,7 +91,8 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 	 * @throws ShouldExitException
 	 */
 	private void displayProjectsWithAvailableTasksList(List<Project> projects,
-			List<List<Task>> availableTasks) throws ShouldExitException {
+			List<List<Task>> availableTasks, List<Task> delegatedTasks)
+			throws ShouldExitException {
 		if (projects.size() != availableTasks.size()) {
 			view.displayError("Error occured while creating the available tasks list.");
 			throw new ShouldExitException();
@@ -106,6 +107,12 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 			view.displayInfo(project);
 			view.displayTaskList(availableTasks.get(i - 1), 1, false);
 		}
+		displayDelegatedTasks(availableTasks.size(), delegatedTasks);
+	}
+
+	private void displayDelegatedTasks(int startIndex, List<Task> tasks) {
+		view.displayInfo(startIndex + ". Delegated tasks");
+		view.displayTaskList(tasks, 1, false);
 	}
 
 	/**
@@ -118,14 +125,18 @@ public class UpdateTaskForm implements IUpdateTaskForm {
 	 */
 	@Override
 	public Project getProjectWithAvailableTasks(List<Project> projects,
-			List<List<Task>> availableTasks) throws ShouldExitException {
+			List<List<Task>> availableTasks, List<Task> delegatedTasks)
+			throws ShouldExitException {
 		try {
-			displayProjectsWithAvailableTasksList(projects, availableTasks);
+			displayProjectsWithAvailableTasksList(projects, availableTasks,
+					delegatedTasks);
 			int projectId = view.getListChoice(projects, "Select a project:");
 			return projects.get(projectId - 1);
 		} catch (ShouldExitException e) {
 			view.output.displayEmptyLine();
 			throw new ShouldExitException();
+		} catch (IndexOutOfBoundsException e2) {
+			return null;
 		}
 	}
 
