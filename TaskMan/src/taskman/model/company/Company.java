@@ -19,10 +19,18 @@ public class Company {
 
 	ArrayList<BranchOffice> branchOffices;
 
+	/**
+	 * The constructor of a company
+	 */
 	public Company() {
 		branchOffices = new ArrayList<BranchOffice>();
 	}
-
+	/**
+	 * Return the name of the company
+	 * 
+	 * @return
+	 * 			return name of the company
+	 */
 	public String getName() {
 		return name;
 	}
