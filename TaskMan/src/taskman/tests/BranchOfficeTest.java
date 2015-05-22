@@ -24,66 +24,78 @@ public class BranchOfficeTest {
 
 	private Company company;
 	BranchOffice b;
+
 	@Before
-	public void setup(){
+	public void setup() {
 		company = new Company();
 		b = new BranchOffice(company, "", new ArrayList<ResourceType>());
 	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void constructorTest_NullCompany(){
-		new BranchOffice(null, "new york",null);
+
+	@Test(expected = IllegalArgumentException.class)
+	public void constructorTest_NullCompany() {
+		new BranchOffice(null, "new york", null);
 	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void constructorTest_NullLocation(){
-		new BranchOffice(company,null,null);
+
+	@Test(expected = IllegalArgumentException.class)
+	public void constructorTest_NullLocation() {
+		new BranchOffice(company, null, null);
 	}
-	
+
 	@Test
-	public void constructorTest(){
-		BranchOffice b = new BranchOffice(company, "new york",new ArrayList<ResourceType>());
+	public void constructorTest() {
+		BranchOffice b = new BranchOffice(company, "new york",
+				new ArrayList<ResourceType>());
 		assertEquals(b.getCompany(), company);
 		assertEquals(b.getLocation(), "new york");
-		assertEquals(b.getDth().getDelegatedTasks().size(),0);
-		assertEquals(b.getPh().getProjects().size(),0);
-		assertEquals(b.getRh().getResourceTypes().size(),0);
-		assertEquals(b.getUh().getUsers().size(),0);
+		assertEquals(b.getDth().getDelegatedTasks().size(), 0);
+		assertEquals(b.getPh().getProjects().size(), 0);
+		assertEquals(b.getRh().getResourceTypes().size(), 0);
+		assertEquals(b.getUh().getUsers().size(), 0);
 		assertNotNull(b.getMh());
 		assertNotNull(b.getClock());
-		
+
 	}
+
 	@Test
-	public void toStringTest(){
+	public void toStringTest() {
 		assertEquals(b.toString(), "");
 	}
+
 	@Test
-	public void getCompanyTest(){
+	public void getCompanyTest() {
 		assertEquals(b.getCompany(), company);
 	}
+
 	@Test
-	public void getLocationTest(){
+	public void getLocationTest() {
 		assertEquals(b.getLocation(), "");
 	}
-	
+
 	@Test
-	public void updateTest(){
-		b.getPh().addProject("name", "desc", new DateTime(2015,10,12,10,10), new DateTime(2015,10,12,14,10));
-		b.getPh().getProjects().get(0).addTask("description", 10, 0, null, null, null);
-		NormalTask t =b.getPh().getProjects().get(0).getTasks().get(0);
+	public void updateTest() {
+		b.getPh().addProject("name", "desc",
+				new DateTime(2015, 10, 12, 10, 10),
+				new DateTime(2015, 10, 12, 14, 10));
+		b.getPh().getProjects().get(0)
+				.addTask("description", 10, 0, null, null, null, 1);
+		NormalTask t = b.getPh().getProjects().get(0).getTasks().get(0);
 		t.delegateTask();
 		assertTrue(t.isDelegated());
-		b.getClock().advanceSystemTime(new DateTime(2015,10,12,10,0));
-		b.getDth().addDelegatedTask(new UUID(100,120), "description", 10, 0, null, true);
+		b.getClock().advanceSystemTime(new DateTime(2015, 10, 12, 10, 0));
+		b.getDth().addDelegatedTask(new UUID(100, 120), "description", 10, 0,
+				null, true, 1);
 		DelegatedTask dt = b.getDth().getDelegatedTasks().get(0);
-		Developer d = new Developer("name", new LocalTime(10,0), new LocalTime(14,0));
-		d.addReservation(dt, new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0)));
+		Developer d = new Developer("name", new LocalTime(10, 0),
+				new LocalTime(14, 0));
+		d.addReservation(dt, new TimeSpan(new DateTime(2015, 10, 12, 10, 0),
+				new DateTime(2015, 10, 12, 14, 0)));
 		dt.addRequiredDeveloper(d);
 		dt.update();
 		dt.executeTask();
-		dt.addTimeSpan(false, new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,10,30));
-	
+		dt.addTimeSpan(false, new DateTime(2015, 10, 12, 10, 0), new DateTime(
+				2015, 10, 12, 10, 30));
+
 		b.update();
-	
+
 	}
 }

@@ -21,38 +21,43 @@ import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 
 public class DelegatedTaskMementoTest {
-	
+
 	ArrayList<NormalTask> dependants = new ArrayList<NormalTask>();
 	String stateName;
-	TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 11, 0), new DateTime(2015,
-			10, 12, 15, 0));
+	TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 11, 0),
+			new DateTime(2015, 10, 12, 15, 0));
 	NormalTask alternative;
 	private NormalTaskMemento t;
 	private Clock clock = new Clock();
 	private Company company = new Company();
 	List<ResourceType> list = new ArrayList<ResourceType>();
 	private BranchOffice branchOffice = new BranchOffice(company, "", list);
+
 	@Before
 	public void setup() {
 		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null);
-		DelegatedTask delegatedTask = new DelegatedTask(clock, "description", 10, 1, null, true);
-		DelegatedTaskMemento dtm = new DelegatedTaskMemento(delegatedTask, true, "name", new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0)));
-		
+		p.addTask("", 10, 1, null, null, null, 1);
+		DelegatedTask delegatedTask = new DelegatedTask(clock, "description",
+				10, 1, null, true, 1);
+		DelegatedTaskMemento dtm = new DelegatedTaskMemento(delegatedTask,
+				true, "name", new TimeSpan(new DateTime(2015, 10, 12, 10, 0),
+						new DateTime(2015, 10, 12, 14, 0)));
+
 	}
-	
+
 	@Test
-	public void constructorTest(){
-		DelegatedTask delegatedTask = new DelegatedTask(clock, "description", 10, 1, null, true);
-		TimeSpan ts = new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0));
-		DelegatedTaskMemento dtm = new DelegatedTaskMemento(delegatedTask, true, "name", ts );
+	public void constructorTest() {
+		DelegatedTask delegatedTask = new DelegatedTask(clock, "description",
+				10, 1, null, true, 1);
+		TimeSpan ts = new TimeSpan(new DateTime(2015, 10, 12, 10, 0),
+				new DateTime(2015, 10, 12, 14, 0));
+		DelegatedTaskMemento dtm = new DelegatedTaskMemento(delegatedTask,
+				true, "name", ts);
 		assertTrue(dtm.getDependenciesFinished());
 		assertEquals(dtm.getStateName(), "name");
 		assertEquals(dtm.getTimeSpan(), ts);
 		assertEquals(dtm.getObject(), delegatedTask);
 	}
-	
-	
-}
 
+}
