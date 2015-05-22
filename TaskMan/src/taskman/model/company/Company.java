@@ -34,6 +34,7 @@ public class Company {
 	 * @param branchOffice
 	 */
 	public void addBranchOffice(BranchOffice branchOffice) {
+		if(branchOffice == null) throw new IllegalArgumentException("The branche office cannot be null.");
 		branchOffices.add(branchOffice);
 	}
 
@@ -79,6 +80,9 @@ public class Company {
 
 	public void delegateTask(NormalTask task, BranchOffice toBranchOffice)
 			throws IllegalStateException {
+		if(task == null) throw new IllegalArgumentException("The task cannot be null.");
+		if(toBranchOffice == null) throw new IllegalArgumentException("The branch office cannot be null.");
+		
 		UUID id = task.getID();
 		String description = task.getDescription();
 		int estimatedDuration = task.getEstimatedDuration();
