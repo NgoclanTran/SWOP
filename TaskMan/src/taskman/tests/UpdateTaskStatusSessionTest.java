@@ -18,6 +18,7 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import taskman.controller.branch.UpdateTaskStatusSession;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
+import taskman.model.company.DelegatedTaskHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
@@ -37,6 +38,7 @@ public class UpdateTaskStatusSessionTest {
 	private ProjectHandler ph;
 	private ResourceHandler rh;
 	private UserHandler uh;
+	private DelegatedTaskHandler dth;
 	private UpdateTaskStatusSession session;
 	private TextFromStandardInputStream systemMock;
 	private IView cli;
@@ -60,8 +62,9 @@ public class UpdateTaskStatusSessionTest {
 		ph = branchOffice.getPh();
 		rh = new ResourceHandler(new ArrayList<ResourceType>());
 		uh = new UserHandler();
+		dth = branchOffice.getDth();
 		Developer d = new Developer("", new LocalTime(), new LocalTime());
-		session = new UpdateTaskStatusSession(cli, ph, d);
+		session = new UpdateTaskStatusSession(cli, ph, dth, d);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),
@@ -94,7 +97,7 @@ public class UpdateTaskStatusSessionTest {
 		systemInMock.provideText("1\n8\n");
 		Developer d = new Developer("", new LocalTime(), new LocalTime());
 
-		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph, d);
+		UpdateTaskStatusSession session = new UpdateTaskStatusSession(cli, ph,dth, d);
 		session.run();
 		String output = "No available tasks.";
 		assertTrue(log.getLog().contains(output));
