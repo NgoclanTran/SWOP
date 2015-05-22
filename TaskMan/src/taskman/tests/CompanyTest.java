@@ -32,7 +32,7 @@ public class CompanyTest {
 	public void constructorTest() {
 		Company c = new Company();
 		assertEquals(c.getBranchOffices().size(), 0);
-		assertEquals(c.getName(), "SWOP");
+		assertEquals(c.getName(), "SWOP15");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -75,6 +75,7 @@ public class CompanyTest {
 	@Test
 	public void announceCompletionTest() {
 		Clock clock = new Clock();
+		clock.setSystemTime(new DateTime(2015, 10, 12, 8, 0));
 		DelegatedTask task = new DelegatedTask(clock, "description", 10, 0,
 				null, false, 1);
 		List<ResourceType> list = new ArrayList<ResourceType>();
@@ -87,17 +88,32 @@ public class CompanyTest {
 				.addTask("task", 10, 0, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks()
 				.get(0);
+		Developer d1 = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan1 = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 16, 0));
+		d1.addReservation(t, timeSpan1);
+		t.addRequiredDeveloper(d1);
+		t.update();
+		t.executeTask();
+		
+		
+		
+		
 		task.setParentID(t.getID());
-		Developer d = new Developer("name", new LocalTime(9, 0), new LocalTime(
-				15, 0));
-		d.addReservation(task, new TimeSpan(new DateTime(2015, 10, 12, 10, 0),
-				new DateTime(2015, 10, 12, 12, 0)));
+		
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 16, 0));
+		d.addReservation(task, timeSpan);
 		task.addRequiredDeveloper(d);
 		task.update();
-		assertEquals(task.getStatusName(), "PLANNED");
-		clock.advanceSystemTime(new DateTime(2015, 10, 12, 10, 0));
-		task.update();
+		task.executeTask();
+		assertEquals(task.getStatusName(),"EXECUTING");
+		task.addTimeSpan(false, new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0));
 		c.announceCompletion(task);
+		assertTrue(t.isFinished());
 
 	}
 

@@ -1,7 +1,7 @@
 package taskman.model.user;
 
 public class ProjectManager implements User {
-	
+
 	public ProjectManager(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");
@@ -12,17 +12,26 @@ public class ProjectManager implements User {
 	public String getName() {
 		return name;
 	}
-	
+
 	private final String name;
-	
+
 	@Override
 	public boolean isDeveloper() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isProjectManager() {
 		return true;
+	}
+
+	@Override
+	/**
+	 * Will return the name of the project manager
+	 * @returns the name of the project manager
+	 */
+	public String toString() {
+		return name;
 	}
 
 }

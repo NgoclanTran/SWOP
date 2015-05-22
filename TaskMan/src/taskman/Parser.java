@@ -58,6 +58,7 @@ public class Parser {
 		ArrayList<String> dailyAvailabilities = new ArrayList<String>();
 		ArrayList<String> resourceTypes = new ArrayList<String>();
 		ArrayList<String> resources = new ArrayList<String>();
+		ArrayList<String> projectManagers = new ArrayList<String>();
 		ArrayList<String> developers = new ArrayList<String>();
 		ArrayList<String> projects = new ArrayList<String>();
 		ArrayList<String> plannings = new ArrayList<String>();
@@ -114,7 +115,7 @@ public class Parser {
 
 			}
 			if (declaring == 4) {
-				if (line.startsWith("developers")) {
+				if (line.startsWith("projectManagers")) {
 					declaring++;
 				} else {
 					resources.add(line);
@@ -122,6 +123,14 @@ public class Parser {
 
 			}
 			if (declaring == 5) {
+				if (line.startsWith("developers")) {
+					declaring++;
+				} else {
+					projectManagers.add(line);
+				}
+
+			}
+			if (declaring == 6) {
 				if (line.startsWith("projects")) {
 					declaring++;
 				} else {
@@ -129,7 +138,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 6) {
+			if (declaring == 7) {
 				if (line.startsWith("plannings")) {
 					declaring++;
 				} else {
@@ -137,7 +146,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 7) {
+			if (declaring == 8) {
 				if (line.startsWith("tasks")) {
 					declaring++;
 				} else {
@@ -145,7 +154,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 8) {
+			if (declaring == 9) {
 				if (line.startsWith("reservations")) {
 					declaring++;
 				} else {
@@ -153,7 +162,7 @@ public class Parser {
 				}
 
 			}
-			if (declaring == 9) {
+			if (declaring == 10) {
 				reservations.add(line);
 			}
 		}
@@ -162,6 +171,7 @@ public class Parser {
 		parseBranchOffices(branchOffices);
 		parseClock(clocks);
 		parseResources(resources);
+		parseProjectManagers(projectManagers);
 		parseDevelopers(developers);
 		parseProjects(projects);
 		parsePlannings(plannings);
@@ -417,7 +427,7 @@ public class Parser {
 		List<String> description = new ArrayList<String>();
 		for (String line : resources) {
 
-			if (line.startsWith("developers")) {
+			if (line.startsWith("projectManagers")) {
 				describing = false;
 				description.clear();
 			}
@@ -472,6 +482,51 @@ public class Parser {
 				.get(type).addResource(name, startTime, endTime);
 	}
 
+	private void parseProjectManagers(ArrayList<String> projectManagers) {
+		boolean describing = false;
+		List<String> description = new ArrayList<String>();
+		for (String line : projectManagers) {
+			if (line.startsWith("developers")) {
+				describing = false;
+				description.clear();
+			}
+			if (line.startsWith("-") || line.equals("")) {
+				line = line.replace("-", "");
+				line = line.trim();
+				if (description != null && !description.isEmpty()) {
+					addProjectManager(description);
+					description.clear();
+				}
+				describing = true;
+			}
+			if (describing && !line.equals("")) {
+				description.add(line);
+			}
+		}
+	}
+
+	private void addProjectManager(List<String> description) {
+		int descriptionStart;
+		int descriptionEnd;
+		String name = null;
+		int branch = -1;
+		for (String line : description) {
+			if (line.startsWith("name")) {
+				descriptionStart = line.indexOf("\"") + 1;
+				descriptionEnd = line.length() - 1;
+				name = line.substring(descriptionStart, descriptionEnd);
+			}
+
+			else if (line.startsWith("branchOffice")) {
+				descriptionStart = line.indexOf(":") + 2;
+				descriptionEnd = line.length();
+				branch = Integer.parseInt(line.substring(descriptionStart,
+						descriptionEnd));
+			}
+		}
+		company.getBranchOffices().get(branch).getUh().addProjectManager(name);
+	}
+
 	private void parseDevelopers(ArrayList<String> developers) {
 		boolean describing = false;
 		List<String> description = new ArrayList<String>();
@@ -505,7 +560,9 @@ public class Parser {
 				descriptionStart = line.indexOf("\"") + 1;
 				descriptionEnd = line.length() - 1;
 				name = line.substring(descriptionStart, descriptionEnd);
-			} else if (line.startsWith("branchOffice")) {
+			}
+
+			else if (line.startsWith("branchOffice")) {
 				descriptionStart = line.indexOf(":") + 2;
 				descriptionEnd = line.length();
 				branch = Integer.parseInt(line.substring(descriptionStart,

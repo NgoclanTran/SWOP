@@ -26,7 +26,7 @@ public class Company {
 		return name;
 	}
 
-	private final String name = "SWOP";
+	private final String name = "SWOP15";
 
 	/**
 	 * Adds a branch office to the list of branch offices in the company
@@ -62,7 +62,8 @@ public class Company {
 	}
 
 	public void announceCompletion(DelegatedTask task) {
-		if(task == null) throw new IllegalArgumentException("The task cannot be null.");
+		if (task == null)
+			throw new IllegalArgumentException("The task cannot be null.");
 		UUID parent = task.getParentID();
 		for (BranchOffice branchOffice : branchOffices) {
 			for (Project project : branchOffice.getPh().getProjects()) {
