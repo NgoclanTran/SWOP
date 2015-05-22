@@ -567,5 +567,13 @@ public class View implements IView {
 	public ILoginForm getLoginForm() {
 		return new LoginForm(this);
 	}
+	
+	/**
+	 * This method will return a new delegate task form.
+	 */
+	@Override
+	public IDelegateTaskForm getDelegateTaskForm() {
+		return new DelegateTaskForm(this);
+	}
 
 }

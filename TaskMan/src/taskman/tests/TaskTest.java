@@ -46,6 +46,9 @@ public class TaskTest {
 		dependencies = new ArrayList<NormalTask>();
 		clock.setSystemTime(new DateTime(2015, 10, 12, 8, 0));
 		company = new Company();
+		ResourceType rt = new ResourceType("name", null, null, false);
+		rt.addResource("n", new LocalTime(8,0), new LocalTime(16,0));
+		list.add(rt);
 		branchOffice = new BranchOffice(company, "", list);
 
 	}
@@ -1743,7 +1746,22 @@ public class TaskTest {
 	}
 
 	@Test
-	public void executeTaskTest() {
+	public void isAvailableTest_StatusPlanned() {
+		clock.advanceSystemTime(new DateTime(2015,10,12,9,0));
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+		assertEquals(t.getStatusName(), "PLANNED");
+		assertFalse(t.isAvailable());
 	}
+	
 }
