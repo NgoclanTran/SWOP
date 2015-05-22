@@ -1,20 +1,17 @@
 package taskman.controller.branch;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
 import taskman.controller.Session;
-import taskman.exceptions.ShouldExitException;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.company.MementoHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
-import taskman.model.project.Project;
 import taskman.model.task.Task;
 import taskman.model.time.Clock;
 import taskman.view.IView;
@@ -99,88 +96,11 @@ public class SimulateSession extends Session {
 	}
 
 	private void simulateDelegation() {
-		Task task = getUnplannedTask();
-		BranchOffice branchOffice = getBranchOffice();
-		company.announceDelegate(task, branchOffice.getLocation(), true);
+		DelegateTaskSession delegateSession = new DelegateTaskSession(getUI(),
+				ph, company);
+		Task task = delegateSession.getUnplannedTask();
+		BranchOffice branchOffice = delegateSession.getBranchOffice();
 		delegations.put(task, branchOffice);
-	}
-
-	private Task getUnplannedTask() throws ShouldExitException {
-		List<Project> projects = ph.getProjects();
-		List<List<Task>> unplannedTasksList = getUnplannedTasksAllProjects(projects);
-
-		if (unplannedTasksList.size() == 0) {
-			getUI().displayError("No unplanned tasks.");
-			throw new ShouldExitException();
-		}
-
-		Project project;
-		try {
-			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(
-					projects, unplannedTasksList);
-		} catch (ShouldExitException e) {
-			throw new ShouldExitException();
-		}
-
-		return getUnplannedTask(project);
-	}
-
-	private Task getUnplannedTask(Project project) throws ShouldExitException {
-		List<Task> tasks = getUnplannedTasks(new ArrayList<Task>(
-				project.getTasks()));
-		getUI().displayProjectDetails(project);
-
-		if (tasks.size() == 0)
-			throw new ShouldExitException();
-
-		Task task;
-		try {
-			task = getUI().getTask(tasks);
-		} catch (ShouldExitException e) {
-			throw new ShouldExitException();
-		}
-
-		return task;
-	}
-
-	private List<List<Task>> getUnplannedTasksAllProjects(List<Project> projects) {
-		List<List<Task>> unplannedTasksList = new ArrayList<>();
-		List<Task> unplannedTasks = null;
-
-		boolean noUnplannedTasks = true;
-
-		for (Project p : projects) {
-			unplannedTasks = getUnplannedTasks(new ArrayList<Task>(p.getTasks()));
-			unplannedTasksList.add(unplannedTasks);
-
-			if (noUnplannedTasks && unplannedTasks.size() > 0)
-				noUnplannedTasks = false;
-		}
-
-		// TODO: Add the delegated tasks
-
-		if (noUnplannedTasks)
-			return new ArrayList<>();
-		else
-			return unplannedTasksList;
-	}
-
-	private List<Task> getUnplannedTasks(List<Task> tasks) {
-		ArrayList<Task> unplannedTasks = new ArrayList<Task>();
-		for (Task task : tasks) {
-			if (!task.isPlanned())
-				unplannedTasks.add(task);
-		}
-		return unplannedTasks;
-	}
-
-	private BranchOffice getBranchOffice() {
-		List<BranchOffice> branchOffices = company.getBranchOffices();
-		for (BranchOffice branchOffice : company.getBranchOffices()) {
-			if (branchOffice.getPh().equals(ph))
-				branchOffices.remove(branchOffice);
-		}
-		return null;
 	}
 
 	private void performDelegations() {

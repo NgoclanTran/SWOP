@@ -14,6 +14,16 @@ public class BranchOffice implements Observer {
 
 	private final TaskFactory factory;
 
+	/**
+	 * The constructor of the branch office
+	 * 
+	 * @param 	company
+	 * 			The company of the branch office
+	 * @param 	location	
+	 * 			The location of the branch office
+	 * @param 	resourceTypes
+	 * 			The resouceTypes of the branc office
+	 */
 	public BranchOffice(Company company, String location,
 			List<ResourceType> resourceTypes) {
 		if (company == null)
@@ -31,48 +41,89 @@ public class BranchOffice implements Observer {
 		mh = new MementoHandler(clock, ph, rh, uh, dth);
 	}
 
+	/**
+	 * Return the company of the branch office
+	 * @return
+	 * 			return the name 
+	 */
 	public Company getCompany() {
 		return company;
 	}
 
 	private final Company company;
 
+	/**
+	 * Return the location of the branch office
+	 * 
+	 * @return
+	 * 			Return the location
+	 */
 	public String getLocation() {
 		return location;
 	}
 
 	private final String location;
 
+	/**
+	 * Return the clock of the branch officce
+	 * @return	
+	 * 			Return the clock
+	 */
 	public Clock getClock() {
 		return clock;
 	}
 
 	private final Clock clock;
-
+	
+	/**
+	 * Return the projectHandler of the branch office
+	 * @return
+	 * 			Retunr the projecthandler
+	 */
 	public ProjectHandler getPh() {
 		return ph;
 	}
 
 	private final ProjectHandler ph;
-
+	
+	/**
+	 * Return the DelegatedTaksHandler of the branch office
+	 * @return
+	 * 			Return the delegatedTaskHandler
+	 */
 	public DelegatedTaskHandler getDth() {
 		return dth;
 	}
 
 	private final DelegatedTaskHandler dth;
 
+	/**
+	 * Return de ResourcheHandler of the branch office
+	 * @return
+	 * 			Return the ResourceHandler
+	 */
 	public ResourceHandler getRh() {
 		return rh;
 	}
 
 	private final ResourceHandler rh;
 
+	/**
+	 * Return de UserHandler of the branch office
+	 * @return
+	 * 			Return the UserHandler
+	 */
 	public UserHandler getUh() {
 		return uh;
 	}
 
 	private final UserHandler uh;
 
+	/**
+	 * Return the MementoHandler of the branch office
+	 * @return
+	 * 			Return MementoHandler
+	 */
 	public MementoHandler getMh() {
 		return mh;
 	}
@@ -80,6 +131,10 @@ public class BranchOffice implements Observer {
 	private final MementoHandler mh;
 
 	@Override
+	/**
+	 * Update the delegated Tasks and the tasks that belongs to
+	 * 
+	 */
 	public void update() {
 		for (Project project : ph.getProjects()) {
 			for (NormalTask task : project.getTasks()) {
