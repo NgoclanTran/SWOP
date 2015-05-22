@@ -76,6 +76,14 @@ resources:
   - name			: "Data Center Y"
     type			: 5
     branchOffice	: 0
+    
+projectManagers:
+  - name			: "Ali Baba"
+  	branchOffice	: 0
+  - name			: "Jim Carrey"
+  	branchOffice	: 1
+  - name			: "Barack Obama"
+  	branchOffice	: 2
 
 developers:
   - name 			: "John Deere"

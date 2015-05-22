@@ -1,19 +1,15 @@
 package taskman.tests;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Test;
 
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.company.DelegatedTaskHandler;
-import taskman.model.company.MementoHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
 import taskman.model.company.UserHandler;
@@ -21,7 +17,6 @@ import taskman.model.memento.Caretaker;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.TaskFactory;
 import taskman.model.time.Clock;
-import taskman.model.user.User;
 
 public class MementoHandlerTest {
 	private ProjectHandler ph;
