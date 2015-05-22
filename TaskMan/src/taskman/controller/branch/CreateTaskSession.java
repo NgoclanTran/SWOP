@@ -3,6 +3,7 @@ package taskman.controller.branch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
@@ -117,6 +118,8 @@ public class CreateTaskSession extends Session {
 			List<NormalTask> dependencies, NormalTask alternativeFor,
 			Map<ResourceType, Integer> resourceTypes, int developerAmount) {
 		try {
+			if (!isValidResourceTypes(resourceTypes))
+				return false;
 			project.addTask(description, estimatedDuration,
 					acceptableDeviation, dependencies, alternativeFor,
 					resourceTypes, developerAmount);
@@ -132,6 +135,18 @@ public class CreateTaskSession extends Session {
 			getUI().displayError(stateEx.getMessage());
 			return false;
 		}
+	}
+	
+	private boolean isValidResourceTypes(Map<ResourceType, Integer> resourceTypes) {
+		for (Entry<ResourceType, Integer> entry : resourceTypes.entrySet()) {
+			for (ResourceType resourceType : rh.getResourceTypes()) {
+				if (resourceType.equals(entry.getKey())) {
+					if (resourceType.getResources().size() < entry.getValue())
+						return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
