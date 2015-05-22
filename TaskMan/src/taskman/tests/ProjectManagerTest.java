@@ -47,4 +47,10 @@ public class ProjectManagerTest {
 		ProjectManager pm = new ProjectManager(name);
 		assertEquals(pm.getName(), name);
 	}
+	
+	@Test
+	public void toStringTest(){
+		ProjectManager pm = new ProjectManager(name);
+		assertEquals(pm.toString(), name);
+	}
 }
