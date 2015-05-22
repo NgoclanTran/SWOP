@@ -3,15 +3,22 @@ package taskman.tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.resource.ResourceType;
+import taskman.model.task.DelegatedTask;
+import taskman.model.task.NormalTask;
+import taskman.model.time.Clock;
+import taskman.model.time.TimeSpan;
+import taskman.model.user.Developer;
 
 public class CompanyTest {
 	private Company c;
@@ -40,18 +47,44 @@ public class CompanyTest {
 		assertTrue(c.getBranchOffices().contains(b));
 	}
 	
-//	@Test
-//	public void setDependenciesFinishedTest(){
-//		//TODO
-//		BranchOffice b = new BranchOffice(c, "new york", new ArrayList<ResourceType>());
-//		c.addBranchOffice(b);
-//		UUID id = new UUID(10,12);
-//		
-//		
-//		c.getBranchOffices().get(0).getDth().addDelegatedTask(id, "description", 10, 0, null, false);
-//		c.setDependenciesFinished(id);
-//		assertTrue(c.getBranchOffices().get(0).getDth().getDelegatedTasks().get(0).dependenciesAreFinished());
-//	}
+	@Test
+	public void setDependenciesFinishedTest(){
+		BranchOffice b = new BranchOffice(c, "new york", new ArrayList<ResourceType>());
+		c.addBranchOffice(b);
+		UUID id = new UUID(10,12);
+		
+		c.getBranchOffices().get(0).getDth().addDelegatedTask(new UUID(10,12), "description", 10, 0, null, false);
+		c.getBranchOffices().get(0).getDth().getDelegatedTasks().get(0).setParentID(id);
+		c.setDependenciesFinished(id);
+		assertTrue(c.getBranchOffices().get(0).getDth().getDelegatedTasks().get(0).dependenciesAreFinished());
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void announceCompletion_NullTask(){
+		c.announceCompletion(null);
+	}
+	
+	@Test
+	public void announceCompletionTest(){
+		Clock clock = new Clock();
+		DelegatedTask task = new DelegatedTask(clock,"description", 10,0,null,false);
+		List<ResourceType> list = new ArrayList<ResourceType>();
+		BranchOffice branchOffice = new BranchOffice(c, "new york", list);
+		c.addBranchOffice(branchOffice);
+		branchOffice.getPh().addProject("name", "description", new DateTime(2015,10,12,10,0),  new DateTime(2015,10,12,10,30));
+		branchOffice.getPh().getProjects().get(0).addTask("task", 10, 0, null, null, null);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		task.setParentID(t.getID());
+		Developer d = new Developer("name", new LocalTime(9,0), new LocalTime(15,0));
+		d.addReservation(task, new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,12,0)));
+		task.addRequiredDeveloper(d);
+		task.update();
+		assertEquals(task.getStatusName(), "PLANNED");
+		clock.advanceSystemTime(new DateTime(2015,10,12,10,0));
+		task.update();
+		c.announceCompletion(task);
+	
+	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void delegateTaskTest_NullTask(){
