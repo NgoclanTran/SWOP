@@ -3,6 +3,7 @@ package taskman.tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,15 @@ public class ResourceHandlerTest {
 		assertEquals(r.getResourceTypes().get(0).getName(),"name");
 		assertEquals(r.getResourceTypes().get(0).getConflictsWith().size(), 0);
 		assertEquals(r.getResourceTypes().get(0).getRequires().size(),0);
+	}
+	
+	@Test
+	public void getResourceTest(){
+		List<ResourceType> list = r.getResourceTypes();
+		ResourceType rt = new ResourceType("name", null,null, false);
+		list.add(rt);
+		
+		assertNotEquals(r.getResourceTypes(), list);
 	}
 
 }
