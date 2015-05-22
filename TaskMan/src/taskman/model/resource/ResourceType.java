@@ -185,4 +185,16 @@ public class ResourceType {
 	public String toString() {
 		return name;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof ResourceType))
+			return false;
+		if (getName().equals(((ResourceType) o).getName()))
+			return true;
+		else
+			return false;
+	}
 }

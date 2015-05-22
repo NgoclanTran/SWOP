@@ -3,10 +3,16 @@ package taskman.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import taskman.controller.branch.AdvanceTimeSession;
 import taskman.controller.branch.CreateProjectSession;
+import taskman.controller.branch.CreateTaskSession;
+import taskman.controller.branch.PlanTaskSession;
+import taskman.controller.branch.UpdateTaskStatusSession;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
+import taskman.model.user.Developer;
+import taskman.model.user.ProjectManager;
 import taskman.model.user.User;
 import taskman.view.IView;
 
@@ -15,10 +21,10 @@ public class LoginSession extends Session {
 	private final Company company;
 	private final List<String> menuMain = Arrays.asList("Login", "Exit");
 	private final List<String> menuDevelopers = Arrays.asList("Show projects",
-			"Update task status", "Advance time", "Return");
+			"Update task status", "Advance time", "Log out");
 	private final List<String> menuProjectManagers = Arrays.asList(
 			"Show projects", "Create project", "Create task", "Plan task",
-			"Delegate task", "Advance time", "Start simulation", "Return");
+			"Delegate task", "Advance time", "Start simulation", "Log out");
 
 	/**
 	 * Constructor of the login session.
@@ -98,16 +104,17 @@ public class LoginSession extends Session {
 		} catch (ShouldExitException e) {
 			return;
 		}
+		
 
 		if (user.isDeveloper())
-			showDeveloperOptions();
+			showOptions((Developer) user, branchOffice);
 		else if (user.isProjectManager())
-			showProjectManagerOptions(branchOffice);
+			showOptions((ProjectManager) user, branchOffice);
 		else
 			return;
 	}
 
-	private void showDeveloperOptions() {
+	private void showOptions(Developer user, BranchOffice branchOffice) {
 		while (true) {
 			int menuId = getUI().getMainMenuID(menuDevelopers);
 
@@ -117,8 +124,10 @@ public class LoginSession extends Session {
 				new ShowAllProjectsSession(getUI(), company).run();
 				break;
 			case 2:
+				new UpdateTaskStatusSession(getUI(), branchOffice.getPh(), user).run();
 				break;
 			case 3:
+				new AdvanceTimeSession(getUI(), branchOffice.getClock()).run();
 				break;
 			case 4:
 				return;
@@ -126,7 +135,7 @@ public class LoginSession extends Session {
 		}
 	}
 
-	private void showProjectManagerOptions(BranchOffice branchOffice) {
+	private void showOptions(ProjectManager user, BranchOffice branchOffice) {
 		while (true) {
 			int menuId = getUI().getMainMenuID(menuProjectManagers);
 
@@ -139,12 +148,15 @@ public class LoginSession extends Session {
 				new CreateProjectSession(getUI(), branchOffice.getPh(), branchOffice.getClock()).run();
 				break;
 			case 3:
+				new CreateTaskSession(getUI(), branchOffice.getPh(), branchOffice.getRh()).run();;
 				break;
 			case 4:
+				new PlanTaskSession(getUI(), branchOffice.getPh(), branchOffice.getUh(), branchOffice.getClock()).run();;
 				break;
 			case 5:
 				break;
 			case 6:
+				new AdvanceTimeSession(getUI(), branchOffice.getClock()).run();
 				break;
 			case 7:
 				break;
