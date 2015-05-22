@@ -6,6 +6,7 @@ import java.util.List;
 import taskman.controller.branch.AdvanceTimeSession;
 import taskman.controller.branch.CreateProjectSession;
 import taskman.controller.branch.CreateTaskSession;
+import taskman.controller.branch.DelegateTaskSession;
 import taskman.controller.branch.PlanTaskSession;
 import taskman.controller.branch.UpdateTaskStatusSession;
 import taskman.exceptions.ShouldExitException;
@@ -154,6 +155,7 @@ public class LoginSession extends Session {
 				new PlanTaskSession(getUI(), branchOffice.getPh(), branchOffice.getUh(), branchOffice.getClock()).run();;
 				break;
 			case 5:
+				new DelegateTaskSession(getUI(), branchOffice.getPh(), company).run();
 				break;
 			case 6:
 				new AdvanceTimeSession(getUI(), branchOffice.getClock()).run();

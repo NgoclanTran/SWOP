@@ -13,11 +13,12 @@ import taskman.model.task.Task;
 import taskman.view.IView;
 
 public class DelegateTaskSession extends Session {
-	
+
 	private ProjectHandler ph;
 	private Company company;
 
-	public DelegateTaskSession(IView cli, ProjectHandler ph, Company company) throws IllegalArgumentException {
+	public DelegateTaskSession(IView cli, ProjectHandler ph, Company company)
+			throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
 			throw new IllegalArgumentException(
@@ -35,19 +36,40 @@ public class DelegateTaskSession extends Session {
 	}
 
 	private void delegateTask() {
-		Task task = getUnplannedTask();
-		BranchOffice branchOffice = getBranchOffice();
+		try {
+			Task task = getUnplannedTask();
+			BranchOffice branchOffice = getBranchOffice();
+			
+			company.delegateTask(task, branchOffice);
+		} catch (ShouldExitException e) {
+			return;
+		}
 	}
-	
-	private BranchOffice getBranchOffice() {
+
+	private BranchOffice getBranchOffice() throws ShouldExitException {
 		List<BranchOffice> branchOffices = company.getBranchOffices();
 		for (BranchOffice branchOffice : company.getBranchOffices()) {
 			if (branchOffice.getPh().equals(ph))
 				branchOffices.remove(branchOffice);
 		}
-		
+
+		if (branchOffices.size() == 0) {
+			getUI().displayError("No other branch offices.");
+			throw new ShouldExitException();
+		}
+
+		BranchOffice branchOffice;
+
+		try {
+			branchOffice = getUI().getDelegateTaskForm().getBranchOffice(
+					branchOffices);
+		} catch (ShouldExitException e) {
+			throw new ShouldExitException();
+		}
+
+		return branchOffice;
 	}
-	
+
 	private Task getUnplannedTask() throws ShouldExitException {
 		List<Project> projects = ph.getProjects();
 		List<List<Task>> unplannedTasksList = getUnplannedTasksAllProjects(projects);
@@ -67,9 +89,10 @@ public class DelegateTaskSession extends Session {
 
 		return getUnplannedTask(project);
 	}
-	
+
 	private Task getUnplannedTask(Project project) throws ShouldExitException {
-		List<Task> tasks = getUnplannedTasks(new ArrayList<Task>(project.getTasks()));
+		List<Task> tasks = getUnplannedTasks(new ArrayList<Task>(
+				project.getTasks()));
 		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
@@ -84,7 +107,7 @@ public class DelegateTaskSession extends Session {
 
 		return task;
 	}
-	
+
 	private List<List<Task>> getUnplannedTasksAllProjects(List<Project> projects) {
 		List<List<Task>> unplannedTasksList = new ArrayList<>();
 		List<Task> unplannedTasks = null;
@@ -98,15 +121,15 @@ public class DelegateTaskSession extends Session {
 			if (noUnplannedTasks && unplannedTasks.size() > 0)
 				noUnplannedTasks = false;
 		}
-		
-		//TODO: Add the delegated tasks
+
+		// TODO: Add the delegated tasks
 
 		if (noUnplannedTasks)
 			return new ArrayList<>();
 		else
 			return unplannedTasksList;
 	}
-	
+
 	private List<Task> getUnplannedTasks(List<Task> tasks) {
 		ArrayList<Task> unplannedTasks = new ArrayList<Task>();
 		for (Task task : tasks) {
