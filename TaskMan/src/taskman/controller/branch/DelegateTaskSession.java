@@ -46,7 +46,7 @@ public class DelegateTaskSession extends Session {
 		}
 	}
 
-	private BranchOffice getBranchOffice() throws ShouldExitException {
+	public BranchOffice getBranchOffice() throws ShouldExitException {
 		List<BranchOffice> branchOffices = company.getBranchOffices();
 		for (BranchOffice branchOffice : company.getBranchOffices()) {
 			if (branchOffice.getPh().equals(ph))
@@ -70,7 +70,7 @@ public class DelegateTaskSession extends Session {
 		return branchOffice;
 	}
 
-	private Task getUnplannedTask() throws ShouldExitException {
+	public Task getUnplannedTask() throws ShouldExitException {
 		List<Project> projects = ph.getProjects();
 		List<List<Task>> unplannedTasksList = getUnplannedTasksAllProjects(projects);
 
