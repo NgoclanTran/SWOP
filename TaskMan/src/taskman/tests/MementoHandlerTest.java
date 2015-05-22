@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,6 +44,7 @@ public class MementoHandlerTest {
 						10, 30));
 
 		ResourceType type = new ResourceType("name", null, null, false);
+		type.addResource("name", new LocalTime(10,0), new LocalTime(15,0));
 		List<ResourceType> types = new ArrayList<ResourceType>();
 		types.add(type);
 		rh = new ResourceHandler(types);
@@ -68,7 +70,16 @@ public class MementoHandlerTest {
 		ph.getProjects().get(0).addTask("d", 10, 0, null, null, null, 1);
 		assertEquals(ph.getProjects().get(0).getTasks().size(), 1);
 		
+		
 		m.saveState();
+		
+		
+		ph.addProject("", "", new DateTime(2015,1,14,9,0), new DateTime(2015,1,14,15,0));
+		m.resetState();
+		assertEquals(ph.getProjects().size(),2);
+		assertEquals(uh.getDevelopers().size(),1);
+		assertEquals(ph.getProjects().get(0).getTasks().size(), 1);
+		
 		
 		
 		
