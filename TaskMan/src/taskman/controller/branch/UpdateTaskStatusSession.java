@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import taskman.controller.Session;
 import taskman.exceptions.IllegalDateException;
 import taskman.exceptions.ShouldExitException;
+import taskman.model.company.DelegatedTaskHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.task.NormalTask;
@@ -20,6 +21,7 @@ public class UpdateTaskStatusSession extends Session {
 
 	private ProjectHandler ph;
 	private Developer developer;
+	private DelegatedTaskHandler dth;
 
 	/**
 	 * Creates the update task session using the given UI, ProjectHandler and
@@ -33,7 +35,8 @@ public class UpdateTaskStatusSession extends Session {
 	 * @throws IllegalArgumentException
 	 */
 	public UpdateTaskStatusSession(IView cli, ProjectHandler ph,
-			Developer developer) throws IllegalArgumentException {
+			DelegatedTaskHandler dth, Developer developer)
+			throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
 			throw new IllegalArgumentException(
@@ -41,8 +44,12 @@ public class UpdateTaskStatusSession extends Session {
 		if (developer == null)
 			throw new IllegalArgumentException(
 					"The update task status controller needs a developer.");
+		if (dth == null)
+			throw new IllegalArgumentException(
+					"The update task status controller needs a DelegatedTaskHandler");
 		this.ph = ph;
 		this.developer = developer;
+		this.dth = dth;
 	}
 
 	/**
@@ -75,7 +82,8 @@ public class UpdateTaskStatusSession extends Session {
 		Project project;
 		try {
 			project = getUI().getUpdateTaskForm().getProjectWithAvailableTasks(
-					projects, availableTasksList);
+					projects, availableTasksList,
+					new ArrayList<Task>(dth.getDelegatedTasks()));
 		} catch (ShouldExitException e) {
 			return;
 		}
@@ -133,7 +141,6 @@ public class UpdateTaskStatusSession extends Session {
 					&& t.getRequiredDevelopers().contains(developer))
 				availableTasks.add(t);
 		}
-		//TODO: Add delegated tasks?
 		return availableTasks;
 	}
 
@@ -146,13 +153,18 @@ public class UpdateTaskStatusSession extends Session {
 	 * @param project
 	 */
 	private void showAvailableTasks(Developer developer, Project project) {
-		List<Task> tasks = getAvailableTasksProject(developer, project);
-		getUI().displayProjectDetails(project);
+		Task task;
+		List<Task> tasks;
+		if (project != null) {
+			tasks = getAvailableTasksProject(developer, project);
+			getUI().displayProjectDetails(project);
+		} else {
+			tasks = new ArrayList<Task>(dth.getDelegatedTasks());
+		}
 
 		if (tasks.size() == 0)
 			return;
 
-		Task task;
 		try {
 			task = getUI().getTask(tasks);
 		} catch (ShouldExitException e) {

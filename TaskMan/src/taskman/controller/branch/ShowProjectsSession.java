@@ -85,8 +85,6 @@ public class ShowProjectsSession extends Session {
 			return;
 		}
 
-		// TODO: Add delegated tasks
-
 		showTaskDetails(task);
 	}
 
