@@ -47,7 +47,7 @@ public class DelegatedTaskHandler {
 	public void addDelegatedTask(UUID id, String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
-			boolean dependenciesFinished, int developerAmount) {
+			boolean dependenciesFinished, int developerAmount) throws IllegalArgumentException{
 		DelegatedTask taskToAdd = factory.makeDelegatedTask(description,
 				estimatedDuration, acceptableDeviation, resourceTypes,
 				dependenciesFinished, developerAmount);

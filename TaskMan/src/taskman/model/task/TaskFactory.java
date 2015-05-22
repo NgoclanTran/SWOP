@@ -63,7 +63,7 @@ public class TaskFactory {
 	public DelegatedTask makeDelegatedTask(String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
-			boolean dependenciesFinished, int developerAmount) {
+			boolean dependenciesFinished, int developerAmount) throws IllegalArgumentException {
 		DelegatedTask task = new DelegatedTask(clock, description,
 				estimatedDuration, acceptableDeviation, resourceTypes,
 				dependenciesFinished, developerAmount);
