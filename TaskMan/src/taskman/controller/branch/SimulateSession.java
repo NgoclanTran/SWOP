@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import taskman.controller.Session;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
+import taskman.model.company.DelegatedTaskHandler;
 import taskman.model.company.MementoHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.company.ResourceHandler;
@@ -22,6 +23,7 @@ public class SimulateSession extends Session {
 	private MementoHandler mh;
 	private ResourceHandler rh;
 	private UserHandler uh;
+	private DelegatedTaskHandler dth;
 	private Clock clock;
 	private Company company;
 	private LinkedHashMap<Task, BranchOffice> delegations;
@@ -32,8 +34,8 @@ public class SimulateSession extends Session {
 			"End simulation and keep changes");
 
 	public SimulateSession(IView cli, ProjectHandler ph, MementoHandler mh,
-			ResourceHandler rh, UserHandler uh, Clock clock, Company company)
-			throws IllegalArgumentException {
+			ResourceHandler rh, UserHandler uh, DelegatedTaskHandler dth,
+			Clock clock, Company company) throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
 			throw new IllegalArgumentException(
@@ -57,6 +59,7 @@ public class SimulateSession extends Session {
 		this.mh = mh;
 		this.rh = rh;
 		this.uh = uh;
+		this.dth = dth;
 		this.clock = clock;
 		this.company = company;
 		delegations = new LinkedHashMap<Task, BranchOffice>();
@@ -97,7 +100,7 @@ public class SimulateSession extends Session {
 
 	private void simulateDelegation() {
 		DelegateTaskSession delegateSession = new DelegateTaskSession(getUI(),
-				ph, company);
+				ph, dth, company);
 		Task task = delegateSession.getUnplannedTask();
 		BranchOffice branchOffice = delegateSession.getBranchOffice();
 		company.announceDelegate(task, branchOffice.getLocation(), true);

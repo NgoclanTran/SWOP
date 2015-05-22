@@ -7,6 +7,7 @@ import taskman.controller.Session;
 import taskman.exceptions.ShouldExitException;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
+import taskman.model.company.DelegatedTaskHandler;
 import taskman.model.company.ProjectHandler;
 import taskman.model.project.Project;
 import taskman.model.task.Task;
@@ -15,9 +16,11 @@ import taskman.view.IView;
 public class DelegateTaskSession extends Session {
 
 	private ProjectHandler ph;
+	private DelegatedTaskHandler dth;
 	private Company company;
 
-	public DelegateTaskSession(IView cli, ProjectHandler ph, Company company)
+	public DelegateTaskSession(IView cli, ProjectHandler ph,
+			DelegatedTaskHandler dth, Company company)
 			throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
@@ -27,6 +30,7 @@ public class DelegateTaskSession extends Session {
 			throw new IllegalArgumentException(
 					"The delegate task controller needs a Company");
 		this.ph = ph;
+		this.dth = dth;
 		this.company = company;
 	}
 

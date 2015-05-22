@@ -161,8 +161,8 @@ public class LoginSession extends Session {
 				;
 				break;
 			case 5:
-				new DelegateTaskSession(getUI(), branchOffice.getPh(), company)
-						.run();
+				new DelegateTaskSession(getUI(), branchOffice.getPh(),
+						branchOffice.getDth(), company).run();
 				break;
 			case 6:
 				new AdvanceTimeSession(getUI(), branchOffice.getClock()).run();
@@ -170,8 +170,8 @@ public class LoginSession extends Session {
 			case 7:
 				new SimulateSession(getUI(), branchOffice.getPh(),
 						branchOffice.getMh(), branchOffice.getRh(),
-						branchOffice.getUh(), branchOffice.getClock(), company)
-						.run();
+						branchOffice.getUh(), branchOffice.getDth(),
+						branchOffice.getClock(), company).run();
 				break;
 			case 8:
 				return;
