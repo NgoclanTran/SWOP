@@ -86,8 +86,7 @@ public class DelegateTaskSession extends Session {
 		Project project;
 		try {
 			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(
-					projects, unplannedTasksList,
-					new ArrayList<Task>(dth.getDelegatedTasks()));
+					projects, unplannedTasksList);
 		} catch (ShouldExitException e) {
 			throw new ShouldExitException();
 		}
@@ -130,6 +129,12 @@ public class DelegateTaskSession extends Session {
 
 			if (noUnplannedTasks && unplannedTasks.size() > 0)
 				noUnplannedTasks = false;
+		}
+		
+		unplannedTasks = getUnplannedTasks(new ArrayList<Task>(dth.getDelegatedTasks()));
+		unplannedTasksList.add(unplannedTasks);
+		if (unplannedTasks.size() != 0) {
+			noUnplannedTasks = false;
 		}
 
 		if (noUnplannedTasks)

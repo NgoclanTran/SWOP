@@ -29,7 +29,7 @@ public interface IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	public Project getProjectWithUnplannedTasks(List<Project> projects,
-			List<List<Task>> unplannedTasks, List<Task> delegatedTasks)
+			List<List<Task>> unplannedTasks)
 			throws ShouldExitException;
 
 	/**

@@ -24,6 +24,8 @@ import taskman.model.user.Developer;
 import taskman.view.IView;
 
 public class PlanTaskSession extends Session {
+	
+	//TODO: Check for required number of developers
 
 	private ProjectHandler ph;
 	private UserHandler uh;
@@ -147,8 +149,7 @@ public class PlanTaskSession extends Session {
 		Project project;
 		try {
 			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(
-					projects, unplannedTasksList,
-					new ArrayList<Task>(dth.getDelegatedTasks()));
+					projects, unplannedTasksList);
 		} catch (ShouldExitException e) {
 			return;
 		}
@@ -159,13 +160,12 @@ public class PlanTaskSession extends Session {
 
 	private void showUnplannedTasks() {
 		List<Task> tasks;
-		if (project == null) {
+		if (project != null) {
 			tasks = getUnplannedTasks(new ArrayList<Task>(project.getTasks()));
+			getUI().displayProjectDetails(project);
 		} else {
 			tasks = new ArrayList<Task>(dth.getDelegatedTasks());
 		}
-
-		getUI().displayProjectDetails(project);
 
 		if (tasks.size() == 0)
 			return;
@@ -298,11 +298,16 @@ public class PlanTaskSession extends Session {
 			unplannedTasks = getUnplannedTasks(new ArrayList<Task>(p.getTasks()));
 			unplannedTasksList.add(unplannedTasks);
 
-			if (noUnplannedTasks && unplannedTasks.size() > 0)
+			if (unplannedTasks.size() != 0) {
 				noUnplannedTasks = false;
+			}
 		}
 
-		// TODO: Add the delegated tasks
+		unplannedTasks = getUnplannedTasks(new ArrayList<Task>(dth.getDelegatedTasks()));
+		unplannedTasksList.add(unplannedTasks);
+		if (unplannedTasks.size() != 0) {
+			noUnplannedTasks = false;
+		}
 
 		if (noUnplannedTasks)
 			return new ArrayList<>();
@@ -328,9 +333,14 @@ public class PlanTaskSession extends Session {
 	}
 
 	private DateTime getStartTime() {
-		return getUI().getPlanTaskForm().getStartTime(
+		if (project != null)
+			return getUI().getPlanTaskForm().getStartTime(
 				planning.getPossibleStartTimes(task, 3,
 						project.getCreationTime()));
+		else
+			return getUI().getPlanTaskForm().getStartTime(
+					planning.getPossibleStartTimes(task, 3,
+							clock.getSystemTime()));
 	}
 
 	private List<Resource> getSuggestedResources(TimeSpan timeSpan) {

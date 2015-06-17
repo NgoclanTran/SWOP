@@ -11,6 +11,8 @@ import taskman.model.task.Task;
 import taskman.view.IView;
 
 public class ShowProjectsSession extends Session {
+	
+	//TODO: show delegated tasks
 
 	private ProjectHandler ph;
 

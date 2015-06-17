@@ -173,18 +173,17 @@ public class View implements IView {
 
 	/**
 	 * This method will generate a string with basic information about the given
-	 * task. The index is fitted in front of the string.
+	 * task.
 	 * 
 	 * @param task
-	 * @param index
 	 * 
 	 * @return Returns a string with basic information about the given task.
 	 */
-	private String getStringTask(Task task, int index) {
+	private String getStringTask(Task task) {
 		StringBuilder taskInfo = new StringBuilder();
-		taskInfo.append("Task ");
-		taskInfo.append(index);
-		taskInfo.append(": ");
+		taskInfo.append("Task (");
+		taskInfo.append(task.getDescription());
+		taskInfo.append("): ");
 		taskInfo.append(task.getStatusName());
 		taskInfo.append("\n");
 		taskInfo.append("Responsible branch office: ");
@@ -499,7 +498,7 @@ public class View implements IView {
 			boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
-			tasksInfo.add(getStringTask(tasks.get(i - 1), i));
+			tasksInfo.add(getStringTask(tasks.get(i - 1)));
 		}
 		output.displayList(tasksInfo, tabs, printReturn);
 		output.displayEmptyLine();

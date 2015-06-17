@@ -169,6 +169,7 @@ public class Parser {
 		parsePlannings(plannings);
 		parseTasks(tasks);
 		parseReservations(reservations);
+		parseClock(clocks);
 	}
 
 	private List<String> readFile() {

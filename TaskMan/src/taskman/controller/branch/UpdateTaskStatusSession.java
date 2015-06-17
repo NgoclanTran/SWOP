@@ -82,8 +82,7 @@ public class UpdateTaskStatusSession extends Session {
 		Project project;
 		try {
 			project = getUI().getUpdateTaskForm().getProjectWithAvailableTasks(
-					projects, availableTasksList,
-					new ArrayList<Task>(dth.getDelegatedTasks()));
+					projects, availableTasksList);
 		} catch (ShouldExitException e) {
 			return;
 		}
@@ -112,14 +111,30 @@ public class UpdateTaskStatusSession extends Session {
 			availableTasks = getAvailableTasksProject(developer, project);
 			availableTasksList.add(availableTasks);
 
-			if (noAvailableTasks && availableTasks.size() > 0)
+			if (availableTasks.size() > 0)
 				noAvailableTasks = false;
+		}
+		
+		availableTasks = getAvailableTasks(developer, new ArrayList<Task>(dth.getDelegatedTasks()));
+		availableTasksList.add(availableTasks);
+		if (availableTasks.size() != 0) {
+			noAvailableTasks = false;
 		}
 
 		if (noAvailableTasks)
 			return new ArrayList<>();
 		else
 			return availableTasksList;
+	}
+	
+	private List<Task> getAvailableTasks(Developer developer, List<Task> tasks) {
+		List<Task> availableTasks = new ArrayList<Task>();
+		for (Task t : tasks) {
+			if ((t.isAvailable() || t.isExecuting())
+					&& t.getRequiredDevelopers().contains(developer))
+				availableTasks.add(t);
+		}
+		return availableTasks;
 	}
 
 	/**
