@@ -1,6 +1,7 @@
 package taskman.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
+import taskman.TaskMan;
 import taskman.controller.branch.PlanTaskSession;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
@@ -27,125 +29,52 @@ import taskman.view.View;
 
 public class PlanTaskSessionTest {
 
-	private IView cli, cli1;
-	private ProjectHandler ph;
-	private PlanTaskSession session;
-	private UserHandler uh;
-	private Clock clock;
-	private TaskFactory tf;
-
 	@Rule
 	public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
 
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
-	private Company company = new Company();
-	List<ResourceType> list = new ArrayList<ResourceType>();
-	private BranchOffice branchOffice = new BranchOffice(company, "", list);
 
-	@Before
-	public void setup() {
-		clock = new Clock();
-		tf = new TaskFactory(branchOffice, clock);
-		// Session with projects
-		cli = new View();
-		ph = new ProjectHandler(tf);
-		uh = new UserHandler();
-		session = new PlanTaskSession(cli, ph, uh, branchOffice.getDth(), clock);
-		ph.addProject("Project x", "Test project 1", new DateTime(),
-				new DateTime(2016, 4, 1, 0, 0));
-		ph.addProject("Project y", "Test project 2", new DateTime(),
-				new DateTime(2016, 4, 1, 0, 0));
-		ph.getProjects()
-				.get(0)
-				.addTask("Task description", 10, 1,
-						new ArrayList<NormalTask>(), null, null, 1);
-		ph.getProjects()
-				.get(0)
-				.addTask("Task description", 10, 1,
-						new ArrayList<NormalTask>(), null, null, 1);
 
+
+	@Test
+	public void useCaseTest_Succes() {
+
+		//Deze test plan de tweede taak van project Y
+		// - plan task
+		// - show task
+		systemInMock.provideText("1\n1\n1\n4\n2\n2\n3\n1\ny\n1\nN\n1\n1\n2\n2\n8\n2\n");
+		TaskMan tm = new TaskMan();
+		tm.main(null);
+
+
+		// Check of de taak gepland is
+		assertTrue( log.getLog().contains("Task planned."));
+
+		// Check of de status van die taak PLANNED is
+		assertTrue(log.getLog().contains("Description: yet another task description\n\tStatus: PLANNED"));
+		//TODO nog de tijd checken
 	}
 
 	@Test
-	public void useCaseTest_NoTask() {
-		PlanTaskSession s = new PlanTaskSession(cli, new ProjectHandler(tf),
-				uh, branchOffice.getDth(), clock);
-		s.run();
-		assertEquals("No unplanned tasks.\r\n\r\n", log.getLog());
+	public void useCaseTest_Succes_Input_StartTime(){
+		//Deze test plan de tweede taak van project Y
+		// - plan task
+		// - show task
+		systemInMock.provideText("1\n1\n1\n4\n2\n1\n4\n02-04-2014 09:00\n5\nN\n1\n1\n2\n1\n8\n2\n");
+		TaskMan tm = new TaskMan();
+		tm.main(null);
+
+
+		// Check of de taak gepland is
+		assertTrue( log.getLog().contains("Task planned."));
+
+		// Check of de status van die taak PLANNED is
+		assertTrue(log.getLog().contains("Description: another task description\n\tStatus: PLANNED"));
+		//TODO nog de tijd checken
 	}
 
-	// @Test
-	// public void useCaseTest_WithoutResourcTypeAndDevelopers(){
-	// systemInMock.provideText("1\n1\n1\n\1n1\n0\n1\n0");
-	// session.run();
-	// // Systemm shows that the task was planned
-	// assertEquals("Task planned.\r\n\r\n", log.getLog().substring(442));
-	// // Check if task has reservation for his resources
-	// Task t1 = ph.getProjects().get(0).getTasks().get(0);
-	// Task t2 = ph.getProjects().get(0).getTasks().get(1);
-	//
-	// assertTrue(t1.getRequiredDevelopers().get(0).getReservations().size() >
-	// 0);
-	//
-	//
-	// }
-
-	// @Test
-	// public void
-	// useCaseTest_BeforeSelectingRequirement_EnterSuggestedTime_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting tasks, selecting plan time, selectin
-	// requirements
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	// }
-	//
-	// @Test
-	// public void
-	// useCaseTest_BeforeSelectionRequirement_EnterSelfChosenTime_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting task, selection plan time, enter plan
-	// time, selecting requirements
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	// }
-	//
-	// @Test
-	// public void useCaseTest_BeforeSelectionResource_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting task, selection plan time, enter plan
-	// time, selecting requirements, selecting resource
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	// }
-	//
-	// @Test
-	// public void useCaseTest_BeforeSelectingDeveloper_cancelPlanning(){
-	// session.run();
-	// // here comes output for selecting task, selection plan time, enter plan
-	// time, selecting requirements,selection developers
-	// assertEquals("", log.getLog());
-	// //Test wrong input too
-	// // Check if reservation was not created
-	//
-	// }
-	//
-	// @Test
-	// public void useCase_SuccesScenario_NoConflict(){
-	// session.run();
-	// assertEquals("", log.getLog());
-	// // check if reservation.planning was created
-	// }
-	//
-	// @Test
-	// public void useCase_SuccesScenario_WithResolveConflict(){
-	// session.run();
-	// assertEquals("", log.getLog());
-	// // check if reservation.planning was created
-	// }
+// TODO test conflic resource
+// TODO test conflict developper
 
 }

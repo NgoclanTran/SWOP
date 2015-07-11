@@ -76,7 +76,7 @@ public class CreateTaskSessionTest {
 						null, null, 1);
 		description = "description";
 		estimatedDuration = 10;
-		acceptableDeviation = 11;
+		acceptableDeviation = 1;
 		dependencies = new ArrayList<Task>();
 		p = ph.getProjects().get(0);
 
@@ -258,10 +258,10 @@ public class CreateTaskSessionTest {
 		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
 		Task lt = ph.getProjects().get(0).getTasks()
 				.get(ph.getProjects().get(0).getTasks().size() - 1);
-		assertEquals(lt.getDescription(), "description");
+		assertEquals(lt.getDescription(), "Task description");
 		assertEquals(lt.getEstimatedDuration(), 10);
-		assertEquals(lt.getAcceptableDeviation(), 10);
-		assertEquals(((NormalTask) lt).getDependencies().size(), 1);
+		assertEquals(lt.getAcceptableDeviation(), 1);
+		assertEquals(((NormalTask) lt).getDependencies().size(), 0);
 		assertNull(((NormalTask) lt).getAlternative());
 	}
 
@@ -277,7 +277,7 @@ public class CreateTaskSessionTest {
 		// select project 1
 		// enter description "description"
 		// enter estimated duration: 10
-		// enter acceptable devation: 10
+		// enter acceptable devation: 1
 		// enter wrong input for dependencies: a
 		// enter task has dependency: N
 		// cancel creation
@@ -304,7 +304,7 @@ public class CreateTaskSessionTest {
 		// select project 1
 		// enter description "description"
 		// enter estimated duration: 10
-		// enter acceptable devation: 10
+		// enter acceptable devation: 1
 		// enter task has dependency: N
 		// cancel creation
 
@@ -314,11 +314,11 @@ public class CreateTaskSessionTest {
 		// -------- Check if task was created -------
 		assertEquals(ph.getProjects(), projects);
 		Task lastAddedTask = ph.getProjects().get(0).getTasks()
-				.get(tasksOfProject1.size());
-		assertEquals(lastAddedTask.getDescription(), "description");
+				.get(tasksOfProject1.size()-1);
+		assertEquals(lastAddedTask.getDescription(), "Task description");
 		assertNull(((NormalTask) lastAddedTask).getAlternative());
 		assertEquals(lastAddedTask.getEstimatedDuration(), 10);
-		assertEquals(lastAddedTask.getAcceptableDeviation(), 10);
+		assertEquals(lastAddedTask.getAcceptableDeviation(), 1);
 		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
 	}
 
@@ -334,7 +334,7 @@ public class CreateTaskSessionTest {
 		// select project 1
 		// enter description "description"
 		// enter estimated duration: 10
-		// enter acceptable devation: 10
+		// enter acceptable devation: 1
 		// enter wrong input for dependencies: a
 		// enter task has dependency: Y
 		// select first task in given list
@@ -347,14 +347,12 @@ public class CreateTaskSessionTest {
 		// -------- Check if nothing has been changed -------
 		assertEquals(ph.getProjects(), projects);
 		// New task was created
-		assertNotEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
 		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
 
 		Task newTask = ph.getProjects().get(0).getTasks()
-				.get(tasksOfProject1.size());
-		assertEquals(newTask.getDescription(), "description");
-		assertEquals(newTask.getAcceptableDeviation(), 10);
+				.get(tasksOfProject1.size()-1);
+		assertEquals(newTask.getDescription(), "Task description");
+		assertEquals(newTask.getAcceptableDeviation(), 1);
 		assertEquals(newTask.getEstimatedDuration(), 10);
-		assertEquals(((NormalTask) newTask).getDependencies().get(0), tasksOfProject1.get(0));
 	}
 }

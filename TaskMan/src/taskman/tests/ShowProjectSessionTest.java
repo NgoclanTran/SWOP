@@ -1,5 +1,6 @@
 package taskman.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
@@ -41,7 +42,7 @@ public class ShowProjectSessionTest {
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
 	private Company company = new Company();
 	List<ResourceType> list = new ArrayList<ResourceType>();
-	private BranchOffice branchOffice = new BranchOffice(company, "", list);
+	private BranchOffice branchOffice = new BranchOffice(company, "Leuven", list);
 
 	@Before
 	public void setup() {
@@ -53,9 +54,9 @@ public class ShowProjectSessionTest {
 		rh = branchOffice.getRh();
 		session = new ShowProjectsSession(cli, ph);
 		ArrayList<Task> dependencies = new ArrayList<Task>();
-		branchOffice.getPh().addProject("", "", new DateTime(), new DateTime());
+		branchOffice.getPh().addProject("Project test", "description", new DateTime(), new DateTime());
 		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask("", 10, 1, null, null, null, 1);
+		p.addTask("New Task", 10, 1, null, null, null, 1);
 		ph.addProject("Project x", "Test project 1", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.addProject("Project y", "Test project 2", new DateTime(),
@@ -68,37 +69,32 @@ public class ShowProjectSessionTest {
 		session1 = new ShowProjectsSession(cli1, ph1);
 
 	}
-	
-//	@Test public void useCaseTest_NoProjects(){
-//		session1.run();
-//		assertEquals("No projects.\r\n\r\n", log.getLog());
-//	}
-	
+
+	//	@Test public void useCaseTest_NoProjects(){
+	//		session1.run();
+	//		assertEquals("No projects.\r\n\r\n", log.getLog());
+	//	}
+
 	@Test
 	public void useCastTest_Projects() {
-		systemInMock.provideText("1\n");
+		systemInMock.provideText("1\n1\n");
 		session.run();
-		assertTrue(log.getLog().contains(ph.getProjects().get(0).toString()));
+
+
+		String s = log.getLog().substring(108, 230);
+
+		assertTrue(s.contains("Project test:\n\t\n\tdescription\n"));
+		assertTrue(s.contains("Status: Ongoing\n\tEstimated end time: 13-07-2015 08:10"));
+
+
+		String taskInformation = log.getLog().substring(231, log.getLog().length()-1);
+		assertTrue(taskInformation.contains("Task:\n\tDescription: New Task\n\tStatus: UNAVAILABLE\n\tResponsible branch office: Leuven\n\tEstimated duration: 0 day(s), 0 hour(s), 10 minute(s)\n\tAcceptable deviation: 1 %"));
 	}
 
-	@Test
-	public void useCastTest_ProjectsCancel() {
-		systemInMock.provideText("0\ncancel\n");
-		session.run();
-		// assertTrue(log.getLog().contains(ph.getProjects().get(0).toString()));
-	}
-
-	@Test
-	public void useCastTest_ProjectsGetTask() {
-		systemInMock.provideText("2\n1\n");
-		session.run();
-		assertTrue(log.getLog().contains("Task:"));
-	}
-
-	@Test
-	public void useCastTest_ProjectsGetTaskCancel() {
-		systemInMock.provideText("2\n0\n");
-		session.run();
-		// assertTrue(log.getLog().endsWith("Select a task:"));
+	@Test 
+	public void useCaseTest_NoProjects(){
+		systemInMock.provideText("1\n1\n");
+		session1.run();
+		assertEquals(log.getLog().substring(0, 12),"No projects.");
 	}
 }

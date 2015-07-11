@@ -76,7 +76,7 @@ public class MementoHandlerTest {
 		
 		ph.addProject("", "", new DateTime(2015,1,14,9,0), new DateTime(2015,1,14,15,0));
 		m.resetState();
-		assertEquals(ph.getProjects().size(),2);
+		assertEquals(ph.getProjects().size(),3);
 		assertEquals(uh.getDevelopers().size(),1);
 		assertEquals(ph.getProjects().get(0).getTasks().size(), 1);
 		
