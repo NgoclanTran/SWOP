@@ -123,6 +123,7 @@ public class TimeService {
 	 * @return the date time will be returned with the minutes removed
 	 */
 	public DateTime subtractMinutes(DateTime time, int minutesToSubtract) {
+		if(time == null) throw new IllegalArgumentException("The given time cannot be null.");
 		while (minutesToSubtract > 0) {
 			time = time.minusMinutes(1);
 			time = removeBreaks(time);

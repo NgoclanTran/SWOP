@@ -16,6 +16,7 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.exceptions.IllegalDateException;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.memento.NormalTaskMemento;
@@ -794,7 +795,7 @@ public class TaskTest {
 		Project p = branchOffice.getPh().getProjects().get(0);
 		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
-		
+
 		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
 				16, 0));
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
@@ -967,11 +968,11 @@ public class TaskTest {
 		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, l, 1);
 		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		rt.getResources()
-				.get(0)
-				.addReservation(
-						t1,
-						new TimeSpan(new DateTime(2015, 10, 12, 11, 11),
-								new DateTime(2015, 10, 14, 10, 0)));
+		.get(0)
+		.addReservation(
+				t1,
+				new TimeSpan(new DateTime(2015, 10, 12, 11, 11),
+						new DateTime(2015, 10, 14, 10, 0)));
 		Developer d = new Developer("name developer 1", new LocalTime(8, 0),
 				new LocalTime(23, 0));
 		d.addReservation(t1, new TimeSpan(new DateTime(2015, 10, 12, 11, 11),
@@ -1213,65 +1214,6 @@ public class TaskTest {
 		int time = t.getTotalExecutionTime();
 		assertEquals(time, 60);
 	}
-
-	// @Test (expected = IllegalStateException.class)
-	// public void calculateTotalExecutionTimeTest_StatusEXECUTING(){
-	// //TODO
-	// Task t = new Task(description, estimatedDuration, acceptableDeviation,
-	// null, null, null);
-	// Developer d = new Developer("name", new LocalTime(8,0), new
-	// LocalTime(16,0));
-	// TimeSpan timeSpan = new TimeSpan(new DateTime(2015,10,12,8,0), new
-	// DateTime(2015,10,12,16,0));
-	// d.addReservation(t, timeSpan);
-	// t.addRequiredDeveloper(d);
-	// t.updateTaskAvailability();
-	//
-	// DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
-	// DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
-	// t.addTimeSpan(false, startTime, endTime);
-	// assertEquals(t.getStatusName(),"EXECUTING");
-	// t.getTotalExecutionTime();
-	//
-	// }
-
-//	@Test
-//	public void calculateTotalExecutionTimeTest_TrueCase_Alternative() {
-//		Task t = new Task(description, estimatedDuration, acceptableDeviation,
-//				null, null, null);
-//		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
-//				16, 0));
-//		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
-//				new DateTime(2015, 10, 12, 16, 0));
-//		d.addReservation(t, timeSpan);
-//		t.addRequiredDeveloper(d);
-//		t.updateTaskAvailability();
-//
-//		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
-//		DateTime endTime = new DateTime(2015, 1, 1, 12, 1);
-//		t.executeTask();
-//		assertEquals(t.getStatusName(), "EXECUTING");
-//		t.addTimeSpan(true, startTime, endTime);
-//
-//		Task t2 = new Task(description, estimatedDuration, acceptableDeviation,
-//				null, t, null);
-//		Developer d2 = new Developer("name", new LocalTime(8, 0),
-//				new LocalTime(16, 0));
-//		TimeSpan timeSpan2 = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
-//				new DateTime(2015, 10, 12, 16, 0));
-//		d2.addReservation(t2, timeSpan2);
-//		t2.addRequiredDeveloper(d2);
-//		t2.updateTaskAvailability();
-//
-//		DateTime startTime2 = new DateTime(2015, 1, 1, 10, 1);
-//		DateTime endTime2 = new DateTime(2015, 1, 1, 12, 1);
-//		t2.executeTask();
-//		assertEquals(t2.getStatusName(), "EXECUTING");
-//		t2.addTimeSpan(false, startTime2, endTime2);
-//
-//		assertEquals(t.getTotalExecutionTime(), 120);
-//
-//	}
 
 	@Test
 	public void calculateOverduePercentageTest_TrueCase() {
@@ -1644,7 +1586,7 @@ public class TaskTest {
 		NormalTaskMemento tm = t.createMemento();
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-		
+
 		t.setMemento(tm);
 		assertEquals(t.getDependencies(), dependencies);
 		assertNull(t.getAlternative());
@@ -1763,5 +1705,752 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "PLANNED");
 		assertFalse(t.isAvailable());
 	}
-	
+
+	public void isAlternativeFinished_Status_UNAVAILABLE(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		assertEquals(t.getStatusName(), "UNAVAILABLE");
+		assertFalse(t.isAlternativeFinished());
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void isSeverelyOverdue_Status_UNAVAILABLE(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		assertEquals(t.getStatusName(), "UNAVAILABLE");
+		assertFalse(t.isSeverelyOverdue());
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void calculateOverDuePercentage_Status_UNAVAILABLE(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		assertEquals(t.getStatusName(), "UNAVAILABLE");
+		t.getOverduePercentage();
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void executeTask_Status_UNAVAILABLE(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		assertEquals(t.getStatusName(), "UNAVAILABLE");
+		t.executeTask();
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void constructor_Null_Clock(){
+		NormalTask t = new NormalTask(null, "description", 10, 1, null, null, null, 1);
+	}
+
+	@Test
+	public void isExecuting_Status_FINISHED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 9, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
+		t.executeTask();
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(), "FINISHED");
+		assertFalse(t.isExecuting());
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void addTimeSpan_Status_FINISHED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 9, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
+		t.executeTask();
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(), "FINISHED");
+		t.addTimeSpan(true, startTime, endTime);
+	} 
+
+	@Test
+	public void isAlternativeFinished_Status_FINISHED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 9, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
+		t.executeTask();
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(), "FINISHED");
+		assertFalse(t.isAlternativeFinished());
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void addAlternative_Status_FINISHED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 9, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
+		t.executeTask();
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(), "FINISHED");
+		t.addAlternative(t);
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void executeTask_Status_FINISHED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 9, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
+		t.executeTask();
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(), "FINISHED");
+		t.executeTask();
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void delegateTask_Status_FINISHED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, 0, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
+				new DateTime(2015, 10, 12, 9, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+		DateTime startTime = new DateTime(2015, 1, 1, 10, 0);
+		DateTime endTime = new DateTime(2015, 1, 1, 12, 0);
+		t.executeTask();
+		t.addTimeSpan(false, startTime, endTime);
+		assertEquals(t.getStatusName(), "FINISHED");
+		t.delegateTask();
+	}
+
+	@Test
+	public void isExecuting_Status_FAILED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
+		assertFalse(t.isExecuting());
+	}
+
+	@Test
+	public void isPlanned_Status_FAILED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
+		assertTrue(t.isPlanned());
+	}
+
+
+	@Test (expected = IllegalStateException.class)
+	public void addTimeSpan_Status_FAILED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+	}
+
+	@Test
+	public void isAlternativeFinished_Status_FAILED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
+		assertFalse(t.isAlternativeFinished());
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void executeTask_Status_FAILED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
+		t.executeTask();
+	}
+	@Test (expected = IllegalStateException.class)
+	public void delegateTask_Status_FAILED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+
+		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(
+				2015, 10, 14, 13, 0));
+		assertEquals(t.getStatusName(), "FAILED");
+		t.delegateTask();
+	}
+
+	@Test
+	public void isExecuting_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		assertTrue(t.isExecuting());
+	}
+
+	@Test
+	public void isPlanned_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		assertTrue(t.isPlanned());
+	}
+
+	@Test
+	public void isDelegated_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		assertFalse(t.isDelegated());
+	}
+	@Test 	public void updateStatus_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.update();
+		assertEquals(t.getStatusName(),"EXECUTING");
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void addTimeSpan_Status_EXECUTING_StartTime_Null(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.addTimeSpan(true, null, new DateTime(2015, 10, 13, 16, 0));
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void addTimeSpan_Status_EXECUTING_EndTime_Null(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.addTimeSpan(true,new DateTime(2015, 10, 13, 16, 0), null);
+	}
+
+	@Test (expected = IllegalDateException.class)
+	public void addTimeSpan_Status_EXECUTING_StartTimeAfterEndTime(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.addTimeSpan(true,  new DateTime(2016, 10, 13, 16, 0), new DateTime(2015, 10, 13, 16, 0));
+	}
+
+	@Test
+	public void isAlternativeFinished(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		assertFalse(t.isAlternativeFinished());
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void addAlternative_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.addAlternative(t);
+	}
+	@Test (expected = IllegalStateException.class)
+	public void isSeveralOverdue_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.isSeverelyOverdue();
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void calculateTotalExecutionTime_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.getTotalExecutionTime();
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void calculateOverduePercentage_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.getOverduePercentage();
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void executeTask_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.executeTask();
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void delegateTask_Status_EXECUTING(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.delegateTask();
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void completeTask_StartTime_Null(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.completeTask(true, null,new DateTime(2015, 10, 13, 16, 0) );
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void completeTask_EndTime_Null(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+
+		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
+				16, 0));
+		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
+				new DateTime(2015, 10, 13, 16, 0));
+		d.addReservation(t, timeSpan);
+		t.addRequiredDeveloper(d);
+		t.update();
+
+		assertEquals(t.getStatusName(), "PLANNED");
+		t.executeTask();
+		assertEquals(t.getStatusName(), "EXECUTING");
+		t.completeTask(true,new DateTime(2015, 10, 13, 16, 0), null);
+	}
+
+	@Test
+	public void isAvailable_Status_DELEGATED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+		t.delegateTask();
+		assertEquals(t.getStatusName(), "DELEGATED");
+		assertFalse(t.isAvailable());
+	}
+	@Test
+	public void isFinished_Status_DELEGATED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+		t.delegateTask();
+		assertEquals(t.getStatusName(), "DELEGATED");
+		assertFalse(t.isFinished());
+	}
+
+	@Test
+	public void isFailed_Status_DELEGATED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+		t.delegateTask();
+		assertEquals(t.getStatusName(), "DELEGATED");
+		assertFalse(t.isFailed());
+	}
+
+	@Test
+	public void isFExecuting_Status_DELEGATED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+		t.delegateTask();
+		assertEquals(t.getStatusName(), "DELEGATED");
+		assertFalse(t.isExecuting());
+	}
+
+
+	@Test
+	public void isPlanned_Status_DELEGATED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+		t.delegateTask();
+		assertEquals(t.getStatusName(), "DELEGATED");
+		assertFalse(t.isPlanned());
+	}
+	@Test
+	public void isDelegated_Status_DELEGATED(){
+		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
+		Project p = branchOffice.getPh().getProjects().get(0);
+		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
+		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
+
+		t.delegateTask();
+		assertEquals(t.getStatusName(), "DELEGATED");
+		assertTrue(t.isDelegated());
+	}
 }
