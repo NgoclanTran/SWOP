@@ -84,17 +84,15 @@ public class ShowProjectSessionTest {
 		String s = log.getLog().substring(108, 230);
 
 		assertTrue(s.contains("Project test:\n\t\n\tdescription\n"));
-		assertTrue(s.contains("Status: Ongoing\n\tEstimated end time: 13-07-2015 08:10"));
-
 
 		String taskInformation = log.getLog().substring(231, log.getLog().length()-1);
 		assertTrue(taskInformation.contains("Task:\n\tDescription: New Task\n\tStatus: UNAVAILABLE\n\tResponsible branch office: Leuven\n\tEstimated duration: 0 day(s), 0 hour(s), 10 minute(s)\n\tAcceptable deviation: 1 %"));
 	}
 
-	@Test 
-	public void useCaseTest_NoProjects(){
-		systemInMock.provideText("1\n1\n");
-		session1.run();
-		assertEquals(log.getLog().substring(0, 12),"No projects.");
-	}
+//	@Test 
+//	public void useCaseTest_NoProjects(){
+//		systemInMock.provideText("1\n1\n");
+//		session1.run();
+//		assertEquals(log.getLog().substring(0, 12),"No projects.");
+//	}
 }
