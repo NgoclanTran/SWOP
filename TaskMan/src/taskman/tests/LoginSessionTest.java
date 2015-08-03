@@ -32,7 +32,7 @@ public class LoginSessionTest {
 	@Test
 	public void succesScenarioTest(){
 		
-		systemInMock.provideText("\n\n1\n1\n1\n4\n4\n2\n");
+		systemInMock.provideText("1\n1\n1\n4\n4\n2\n");
 		TaskMan.main(null);
 		
 		assertTrue(log.getLog().contains("1. Show projects/n2. Update task status/n3. Advance time/n4. Log out/n"));
