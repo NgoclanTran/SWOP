@@ -2,6 +2,7 @@ package taskman;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -195,7 +196,7 @@ public class Parser {
 		}
 
 		try {
-			return Files.readAllLines(Paths.get(input.getAbsolutePath()));
+			return Files.readAllLines(Paths.get(input.getAbsolutePath()), Charset.defaultCharset());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
