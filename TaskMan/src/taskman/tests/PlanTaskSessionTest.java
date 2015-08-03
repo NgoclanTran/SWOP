@@ -44,8 +44,8 @@ public class PlanTaskSessionTest {
 		// - plan task
 		// - show task
 		systemInMock.provideText("1\n1\n1\n4\n2\n2\n3\n1\ny\n1\nN\n1\n1\n2\n2\n8\n2\n");
-		TaskMan tm = new TaskMan();
-		tm.main(null);
+		TaskMan.main(null);
+		
 
 
 		// Check of de taak gepland is
@@ -62,8 +62,7 @@ public class PlanTaskSessionTest {
 		// - plan task
 		// - show task
 		systemInMock.provideText("1\n1\n1\n4\n2\n1\n4\n02-04-2014 09:00\n5\nN\n1\n1\n2\n1\n8\n2\n");
-		TaskMan tm = new TaskMan();
-		tm.main(null);
+		TaskMan.main(null);
 
 
 		// Check of de taak gepland is
