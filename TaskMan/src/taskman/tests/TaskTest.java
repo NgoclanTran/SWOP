@@ -2758,53 +2758,7 @@ public class TaskTest {
 
 		t.update();
 		assertEquals(t.getStatusName(), "AVAILABLE");
-		assertFalse(t.isPlanned());
+		assertTrue(t.isPlanned());
 	}
-	//TODO
-	@Test
-	public void updateStatus_Status_AVAILABLE(){
-		//FINISHED Task
-		branchOffice .getPh().addProject("", "", new DateTime(), new DateTime());
-		Project p = branchOffice.getPh().getProjects().get(0);
-		p.addTask(description, estimatedDuration, acceptableDeviation, null, null, null,1);
-		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
-		Developer d = new Developer("name", new LocalTime(8, 0), new LocalTime(
-				16, 0));
-		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
-				new DateTime(2015, 10, 12, 16, 0));
-		d.addReservation(t, timeSpan);
-		t.addRequiredDeveloper(d);
-		t.update();
 
-		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
-		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
-		t.addTimeSpan(false, startTime, endTime);
-		assertEquals(t.getStatusName(), "EXECUTING");
-		t.addTimeSpan(false, startTime, endTime);
-		assertEquals(t.getStatusName(), "FINISHED");
-		
-		// Create task available
-		ArrayList<NormalTask> list = new ArrayList<NormalTask>();
-		list.add(t);
-		//ArrayList<ResourceType> t = new ArrayList<ResourceType>();
-		//rlist.add(branchOffice.getRh().getResourceTypes().get(0));
-		HashMap<ResourceType, Integer> rlist = new HashMap<ResourceType, Integer>();
-		rlist.put(branchOffice.getRh().getResourceTypes().get(0), 1);
-		p.addTask(description, estimatedDuration, acceptableDeviation, list,null, rlist, 1);
-		NormalTask t1 = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
-		branchOffice.getRh().getResourceTypes().get(0).getResources().get(0).addReservation(t1, new TimeSpan(new DateTime(2000,10,15,10,0), new DateTime(2000,10,15,12,0)));
-
-		Developer d1 = new Developer("name", new LocalTime(8, 0), new LocalTime(
-				16, 0));
-		TimeSpan timeSpan1 = new TimeSpan(new DateTime(2015, 10, 13, 8, 0),
-				new DateTime(2015, 10, 13, 16, 0));
-		d1.addReservation(t, timeSpan);
-		t1.addRequiredDeveloper(d);
-		t1.update();
-
-		assertEquals(t1.getStatusName(), "PLANNED");
-
-		t1.update();
-		assertEquals(t1.getStatusName(), "AVAILABLE");
-	}
 }
