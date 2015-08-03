@@ -89,10 +89,10 @@ public class ShowProjectSessionTest {
 		assertTrue(taskInformation.contains("Task:\n\tDescription: New Task\n\tStatus: UNAVAILABLE\n\tResponsible branch office: Leuven\n\tEstimated duration: 0 day(s), 0 hour(s), 10 minute(s)\n\tAcceptable deviation: 1 %"));
 	}
 
-//	@Test 
-//	public void useCaseTest_NoProjects(){
-//		systemInMock.provideText("1\n1\n");
-//		session1.run();
-//		assertEquals(log.getLog().substring(0, 12),"No projects.");
-//	}
+	@Test 
+	public void useCaseTest_NoProjects(){
+		systemInMock.provideText("1\n1\n");
+		session1.run();
+		assertEquals(log.getLog().substring(0, 12),"No projects.");
+	}
 }
