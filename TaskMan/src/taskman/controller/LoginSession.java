@@ -97,6 +97,7 @@ public class LoginSession extends Session {
 
 		if (users.size() == 0) {
 			getUI().displayError("No users.");
+			showBranches();
 			return;
 		}
 
@@ -104,6 +105,7 @@ public class LoginSession extends Session {
 		try {
 			user = getUI().getLoginForm().getUser(users);
 		} catch (ShouldExitException e) {
+			showBranches();
 			return;
 		}
 
