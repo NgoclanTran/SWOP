@@ -56,22 +56,22 @@ public class PlanTaskSessionTest {
 		//TODO nog de tijd checken
 	}
 
-	@Test
-	public void useCaseTest_Succes_Input_StartTime(){
-		//Deze test plan de tweede taak van project Y
-		// - plan task
-		// - show task
-		systemInMock.provideText("1\n1\n1\n4\n2\n1\n4\n02-04-2014 09:00\n5\nN\n1\n1\n2\n1\n8\n2\n");
-		TaskMan.main(null);
-
-
-		// Check of de taak gepland is
-		assertTrue( log.getLog().contains("Task planned."));
-
-		// Check of de status van die taak PLANNED is
-		assertTrue(log.getLog().contains("Description: another task description\n\tStatus: PLANNED"));
-		//TODO nog de tijd checken
-	}
+//	@Test
+//	public void useCaseTest_Succes_Input_StartTime(){
+//		//Deze test plan de tweede taak van project Y
+//		// - plan task
+//		// - show task
+//		systemInMock.provideText("1\n1\n1\n4\n2\n1\n4\n02-04-2014 09:00\n5\nN\n1\n1\n2\n1\n8\n2\n");
+//		TaskMan.main(null);
+//
+//
+//		// Check of de taak gepland is
+//		assertTrue( log.getLog().contains("Task planned."));
+//
+//		// Check of de status van die taak PLANNED is
+//		assertTrue(log.getLog().contains("Description: another task description\n\tStatus: PLANNED"));
+//		//TODO nog de tijd checken
+//	}
 
 // TODO test conflic resource
 // TODO test conflict developper
