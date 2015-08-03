@@ -2,7 +2,6 @@ package taskman;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,8 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.JFileChooser;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
