@@ -15,6 +15,7 @@ import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
 import taskman.controller.branch.ShowProjectsSession;
+import taskman.exceptions.ShouldExitException;
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
 import taskman.model.company.ProjectHandler;
@@ -69,7 +70,10 @@ public class ShowProjectSessionTest {
 		session1 = new ShowProjectsSession(cli1, ph1);
 
 	}
-
+	@Test(expected = IllegalArgumentException.class)
+	public void phNullTest(){
+		ShowProjectsSession session2 = new ShowProjectsSession(cli1, null);
+	}
 	//	@Test public void useCaseTest_NoProjects(){
 	//		session1.run();
 	//		assertEquals("No projects.\r\n\r\n", log.getLog());
