@@ -88,7 +88,21 @@ public class UpdateTaskStatusSessionTest {
 				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
 						null, null, 1);
 	}
-
+	@Test(expected = IllegalArgumentException.class)
+	public void useCase_nullPh(){
+		Developer d = new Developer("", new LocalTime(), new LocalTime());
+		UpdateTaskStatusSession session1 = new UpdateTaskStatusSession(cli, null, dth, d);
+	}
+	@Test(expected = IllegalArgumentException.class)
+	public void useCase_nullDth(){
+		Developer d = new Developer("", new LocalTime(), new LocalTime());
+		UpdateTaskStatusSession session1 = new UpdateTaskStatusSession(cli, ph, null, d);
+	}
+	@Test(expected = IllegalArgumentException.class)
+	public void useCase_nullD(){
+		Developer d = new Developer("", new LocalTime(), new LocalTime());
+		UpdateTaskStatusSession session1 = new UpdateTaskStatusSession(cli, ph, dth, null);
+	}
 	@Test
 	public void useCase_NoTask() {
 		IView cli = new View();
