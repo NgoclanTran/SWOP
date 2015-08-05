@@ -56,7 +56,14 @@ public class CreateProjectSessionTest {
 		session = new CreateProjectSession(cli, ph, clock);
 
 	}
-
+	@Test(expected = IllegalArgumentException.class)
+	public void phNullTest(){
+		CreateProjectSession session1 = new CreateProjectSession(cli, null, clock);
+	}
+	@Test(expected = IllegalArgumentException.class)
+	public void clockNullTest(){
+		CreateProjectSession session1 = new CreateProjectSession(cli, ph, null);
+	}
 	@Test
 	public void useCaseTest_Name_Cancelcreation() {
 		// -------- Before running ----------
