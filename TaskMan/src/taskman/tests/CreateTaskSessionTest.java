@@ -81,7 +81,10 @@ public class CreateTaskSessionTest {
 		p = ph.getProjects().get(0);
 
 	}
-
+	@Test(expected = IllegalArgumentException.class)
+	public void nullPhTest(){
+		CreateTaskSession session2 = new CreateTaskSession(cli, null, rh);
+	}
 	@Test(expected = IllegalArgumentException.class)
 	public void useCaseTest_nullRh() {
 		CreateTaskSession session2 = new CreateTaskSession(cli, ph, null);
