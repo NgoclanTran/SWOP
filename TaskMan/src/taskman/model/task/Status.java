@@ -148,8 +148,20 @@ interface Status {
 	 */
 	public int calculateOverDuePercentage(Task task)
 			throws IllegalStateException;
-
+	/**
+	 * Will execute the given task
+	 * @param task
+	 * 			The task to be executed
+	 * @throws IllegalStateException
+	 * 			Will throw an exception if the given task is currently in the wrong state
+	 */
 	public void executeTask(Task task) throws IllegalStateException;
-	
+	/**
+	 * Will delegate the given task
+	 * @param task
+	 * 			The task to be delegated
+	 * @throws IllegalStateException
+	 * 			Will throw an exception if the given task is in the wrong state for this operation
+	 */
 	public void delegateTask(Task task) throws IllegalStateException;
 }

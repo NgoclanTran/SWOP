@@ -24,12 +24,18 @@ public class Project implements Observer {
 	 * Creates a new project.
 	 * 
 	 * @param name
+	 * 			The name for the project to be created
 	 * @param description
+	 * 			The description for the project
 	 * @param creationTime
+	 * 			The creation time for the project
 	 * @param dueTime
+	 * 			The due time for the project
 	 * 
 	 * @throws IllegalArgumentException
+	 * 			Will throw an exception if one of the parameters is illegal
 	 * @throws IllegalDateException
+	 * 			Will throw an exception if the dates are invalid
 	 */
 	public Project(String name, String description, DateTime creationTime,
 			DateTime dueTime, TaskFactory taskFactory)
@@ -112,11 +118,16 @@ public class Project implements Observer {
 	 * Creates a task with dependencies and adds it to the project.
 	 * 
 	 * @param description
+	 * 			The description for the task to be added to this project
 	 * @param estimatedDuration
+	 * 			The estimated duration for the task to be added to this project
 	 * @param acceptableDeviation
+	 * 			The acceptable deviation for the task to be added to this project
 	 * @param dependencies
+	 * 			The dependencies for the task to be added to this project
 	 * 
 	 * @throws IllegalStateException
+	 * 			Will throw an exception if the project is in an illegal state
 	 */
 	public void addTask(String description, int estimatedDuration,
 			int acceptableDeviation, List<NormalTask> dependencies,

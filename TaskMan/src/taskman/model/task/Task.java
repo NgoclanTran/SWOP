@@ -22,7 +22,23 @@ public abstract class Task extends TaskSubject implements Observer {
 
 	private final Clock clock;
 	private TimeService timeService = new TimeService();
-
+	/**
+	 * The creator of task
+	 * @param clock
+	 * 			The clock to be used for this task
+	 * @param description
+	 * 			The description for the task
+	 * @param estimatedDuration
+	 * 			The estimated duration for the task
+	 * @param acceptableDeviation
+	 * 			The acceptable deviation for the task
+	 * @param resourceTypes
+	 * 			The resource types for the task
+	 * @param requiredAmountOfDevelopers
+	 * 			The required amount of developers for the task
+	 * @throws IllegalArgumentException
+	 * 			Will throw an exception if one of the parameters is illegal
+	 */
 	public Task(Clock clock, String description, int estimatedDuration,
 			int acceptableDeviation, Map<ResourceType, Integer> resourceTypes,
 			int requiredAmountOfDevelopers) throws IllegalArgumentException {
@@ -120,17 +136,29 @@ public abstract class Task extends TaskSubject implements Observer {
 	}
 
 	private final int acceptableDeviation;
-
+	/**
+	 * Will return the required amount of developers for the task
+	 * @return
+	 * 			Returns an integer indicating the amount of developers needed for this task
+	 */
 	public int getRequiredAmountOfDevelopers() {
 		return requiredAmountOfDevelopers;
 	}
 
 	private final int requiredAmountOfDevelopers;
-
+	/**
+	 * Will return the responsible branch office for this task
+	 * @return
+	 * 			Returns the responsible branch office for this task
+	 */
 	public String getResponsibleBranchOffice() {
 		return responsibleBranchOffice;
 	}
-
+	/**
+	 * Sets the responsible branch office for this task to the given parameter
+	 * @param responsibleBranchOffice
+	 * 			The branch office that will be set responsible for this task
+	 */
 	public void setResponsibleBranchOffice(String responsibleBranchOffice) {
 		this.responsibleBranchOffice = responsibleBranchOffice;
 	}
@@ -232,7 +260,9 @@ public abstract class Task extends TaskSubject implements Observer {
 		else
 			return false;
 	}
-
+	/**
+	 * Will execute this task
+	 */
 	public void executeTask() {
 		status.executeTask(this);
 	}
@@ -274,7 +304,9 @@ public abstract class Task extends TaskSubject implements Observer {
 		}
 		setStatus(status);
 	}
-
+	/**
+	 * Will delegate this task
+	 */
 	public void delegateTask() {
 		status.delegateTask(this);
 	}
@@ -282,7 +314,12 @@ public abstract class Task extends TaskSubject implements Observer {
 	protected void performDelegateTask(Status status) {
 		setStatus(status);
 	}
-
+	/**
+	 * Will complete this task
+	 * @param failed
+	 * @param startTime
+	 * @param endTime
+	 */
 	public abstract void completeTask(boolean failed, DateTime startTime,
 			DateTime endTime);
 
@@ -634,6 +671,11 @@ public abstract class Task extends TaskSubject implements Observer {
 	public abstract boolean isAlternativeFinished();
 
 	@Override
+	/**
+	 * Will update the status of this task
+	 * @throws IllegalStateException
+	 * 			Will throw an exception if the task is in an illegal state for this method
+	 */
 	public void update() {
 		try {
 			status.updateStatus(this, clock.getSystemTime());

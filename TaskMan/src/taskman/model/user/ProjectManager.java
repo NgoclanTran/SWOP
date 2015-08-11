@@ -1,7 +1,11 @@
 package taskman.model.user;
 
 public class ProjectManager implements User {
-
+	/**
+	 * The constructor for a project manager
+	 * @param name
+	 * 			The name of the project manager to be created
+	 */
 	public ProjectManager(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Name can not be null.");

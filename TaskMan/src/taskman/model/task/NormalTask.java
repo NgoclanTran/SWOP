@@ -11,7 +11,29 @@ import taskman.model.resource.ResourceType;
 import taskman.model.time.Clock;
 
 public class NormalTask extends Task {
-
+	/**
+	 * The creator for the normal task
+	 * @param clock
+	 * 			The clock for this normal task
+	 * @param description
+	 * 			The description for this normal task
+	 * @param estimatedDuration
+	 * 			The estimated duration for this normal task
+	 * @param acceptableDeviation
+	 * 			The acceptable deviation for this normal task
+	 * @param dependencies
+	 * 			The dependencies for this normal task
+	 * @param alternativeFor
+	 * 			The normal task for which this is an alternative for
+	 * @param resourceTypes
+	 * 			The resource types needed for this normal task
+	 * @param developerAmount
+	 * 			An integer indicating the developers needed for this normal task
+	 * @throws IllegalStateException
+	 * 			Throws an exception if the state is illegal
+	 * @throws IllegalArgumentException
+	 * 			Throws an exception if one of the parameters is illegal
+	 */
 	public NormalTask(Clock clock, String description, int estimatedDuration,
 			int acceptableDeviation, List<NormalTask> dependencies,
 			NormalTask alternativeFor,
@@ -106,6 +128,9 @@ public class NormalTask extends Task {
 	private NormalTask alternative = null;
 
 	@Override
+	/**
+	 * Will complete the normal task
+	 */
 	public void completeTask(boolean failed, DateTime startTime,
 			DateTime endTime) {
 		if (startTime == null)
@@ -118,6 +143,11 @@ public class NormalTask extends Task {
 	}
 
 	@Override
+	/**
+	 * Will return a boolean indicating whether the dependencies are finished or not
+	 * @Returns
+	 * 			returns a boolean indicating whether the dependencies are finished or not
+	 */
 	public boolean dependenciesAreFinished() {
 		for (NormalTask task : dependencies) {
 			try {
@@ -133,6 +163,11 @@ public class NormalTask extends Task {
 	}
 
 	@Override
+	/**
+	 * Returns a boolean indicating whether the alternative for this normal task is finished or not
+	 * @Returns
+	 * 			returns the boolean indicating whether the alternative for this normal task is finished or not
+	 */
 	public boolean isAlternativeFinished() {
 		if (alternative == null)
 			return false;
@@ -142,7 +177,11 @@ public class NormalTask extends Task {
 			return alternative.getStatus().isAlternativeFinished(alternative);
 		return false;
 	}
-
+	/**
+	 * Creates the memento for this normal task
+	 * @return
+	 * 			Returns the normal task memento with the correct information of this normal task
+	 */
 	public NormalTaskMemento createMemento() {
 		try {
 			return new NormalTaskMemento(this, dependants, getStatus()
@@ -153,7 +192,11 @@ public class NormalTask extends Task {
 					.getName(), null, alternative, getResponsibleBranchOffice());
 		}
 	}
-
+	/**
+	 * Sets the attributes of the normal tasks to the attributes of the given parameter
+	 * @param m
+	 * 			The normal task memento which attributes will be used
+	 */
 	public void setMemento(NormalTaskMemento m) {
 		dependants = m.getDependants();
 		alternative = m.getAlternative();

@@ -13,8 +13,15 @@ public class Resource extends Reservable {
 	 * Creates a new resource with the given name.
 	 * 
 	 * @param name
-	 * 
+	 * 			The name for the resource
+	 * @param startTime
+	 * 			The start time for the resource
+	 * @param endTime
+	 * 			The end time for the resource
 	 * @throws IllegalArgumentException
+	 * 			Will throw an exception if one of the parameters is illegal
+	 * @throws IllegalTimeException
+	 * 			Will throw an exception if the startTime and endTime parameters are conflicting
 	 */
 	public Resource(String name, LocalTime startTime, LocalTime endTime)
 			throws IllegalTimeException, IllegalTimeException {

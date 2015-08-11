@@ -60,7 +60,25 @@ public class TaskFactory {
 		task.setResponsibleBranchOffice(branchOffice.getLocation());
 		return task;
 	}
-
+	/**
+	 * Will make a delegated task with the given parameters
+	 * @param description
+	 * 			The description for the delegated task to be made
+	 * @param estimatedDuration
+	 * 			The estimated duration for the delegated task to be made
+	 * @param acceptableDeviation
+	 * 			The acceptable deviation for the delegated task to be made
+	 * @param resourceTypes
+	 * 			The resource types for the delegated task to be made
+	 * @param dependenciesFinished
+	 * 			A boolean indicating whether the dependencies are finished for the delegated task to be made
+	 * @param developerAmount
+	 * 			An integer indicating the amount of developers needed for the delegated task to be made
+	 * @return
+	 * 			returns the constructed delegated task
+	 * @throws IllegalArgumentException
+	 * 			Will throw an exception incase one of the given parameters is illegal
+	 */
 	public DelegatedTask makeDelegatedTask(String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
