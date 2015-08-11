@@ -64,7 +64,11 @@ public class DelegatedTaskMemento {
 	public TimeSpan getTimeSpan() {
 		return timeSpan;
 	}
-
+	/**
+	 * Returns the responsible branch office for the delegated task
+	 * @return
+	 * 			Returns the responsible branch office for the delegated task
+	 */
 	public String getResponsibleBranch() {
 		return responsibleBranch;
 	}

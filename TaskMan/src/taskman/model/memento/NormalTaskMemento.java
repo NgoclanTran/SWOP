@@ -84,7 +84,11 @@ public class NormalTaskMemento {
 	public NormalTask getAlternative() {
 		return alternative;
 	}
-
+	/**
+	 * Returns the responsible branch office for this task
+	 * @return
+	 * 			Returns the responsible branch office for this task
+	 */
 	public String getResponsibleBranch() {
 		return responsibleBranch;
 	}
