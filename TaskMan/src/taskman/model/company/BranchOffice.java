@@ -150,6 +150,11 @@ public class BranchOffice implements Observer {
 	}
 
 	@Override
+	/**
+	 * The toString method for BranchOffice instances.
+	 * @Return
+	 * 			returns the location of the BranchOffice
+	 */
 	public String toString() {
 		return location;
 	}

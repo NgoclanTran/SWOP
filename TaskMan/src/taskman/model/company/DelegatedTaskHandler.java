@@ -39,11 +39,33 @@ public class DelegatedTaskHandler {
 	public List<DelegatedTask> getDelegatedTasks() {
 		return new ArrayList<DelegatedTask>(delegatedTasks);
 	}
-
+	/**
+	 * Adds a delegated task to the list in this handler
+	 * @param task
+	 * 			The task to be added to the list of delegated tasks
+	 */
 	private void addDelegatedTask(DelegatedTask task) {
 		delegatedTasks.add(task);
 	}
-
+	/**
+	 * Makes a new delegated task
+	 * @param id
+	 * 			The UUID to be used for this task
+	 * @param description
+	 * 			The description of the task
+	 * @param estimatedDuration
+	 * 			The estimated duration for this task
+	 * @param acceptableDeviation
+	 * 			The acceptable deviation for this task
+	 * @param resourceTypes
+	 * 			The needed resource types for this task
+	 * @param dependenciesFinished
+	 * 			The boolean indicating whether the dependencies are finished or not
+	 * @param developerAmount
+	 * 			An integer indicating the amount of developers needed
+	 * @throws IllegalArgumentException
+	 * 			Throws an exception if one of the params are an illegal argument
+	 */
 	public void addDelegatedTask(UUID id, String description,
 			int estimatedDuration, int acceptableDeviation,
 			Map<ResourceType, Integer> resourceTypes,
@@ -53,7 +75,11 @@ public class DelegatedTaskHandler {
 				dependenciesFinished, developerAmount);
 		addDelegatedTask(taskToAdd);
 	}
-
+	/**
+	 * Creates the delegated task handler memento
+	 * @return
+	 * 			A new arraylist containing all the delegated tasks
+	 */
 	public DelegatedTaskHandlerMemento createMemento() {
 		return new DelegatedTaskHandlerMemento(this,
 				new ArrayList<DelegatedTask>(delegatedTasks));

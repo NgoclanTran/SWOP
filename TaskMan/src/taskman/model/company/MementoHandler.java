@@ -21,7 +21,19 @@ public class MementoHandler {
 	private DelegatedTaskHandler dth;
 	private Caretaker caretaker;
 	private Clock clock;
-
+	/**
+	 * Starts up the memento pattern.
+	 * @param clock
+	 * 			The clock to be used
+	 * @param ph
+	 * 			The project handler to be used
+	 * @param rh
+	 * 			The resource handler to be used
+	 * @param uh
+	 * 			The user handler to be used
+	 * @param dth
+	 * 			The delegated task handler to be used
+	 */
 	public MementoHandler(Clock clock, ProjectHandler ph, ResourceHandler rh,
 			UserHandler uh, DelegatedTaskHandler dth) {
 		this.ph = ph;
@@ -31,7 +43,9 @@ public class MementoHandler {
 		this.clock = clock;
 		caretaker = new Caretaker();
 	}
-
+	/**
+	 * This will save the state of the current model in a memento.
+	 */
 	public void saveState() {
 		caretaker.addClockMemento(clock.createMemento());
 
@@ -58,7 +72,9 @@ public class MementoHandler {
 			caretaker.addDelegatedTaskMemento(delegatedTask.createMemento());
 		}
 	}
-
+	/**
+	 * This will reset the state of the current model to the previous saved state.
+	 */
 	public void resetState() {
 		caretaker.getClockMemento().getObject()
 				.setMemento(caretaker.getClockMemento());

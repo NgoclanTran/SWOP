@@ -152,7 +152,15 @@ public class Company {
 		task.delegateTask();
 		announceDelegate(task, toBranchOffice.toString(), false);
 	}
-
+	/**
+	 * Will announce the delegation to the branch office
+	 * @param task
+	 * 			The task that is being delegated
+	 * @param toBranchOffice
+	 * 			The branch office that will now be responsible for the task
+	 * @param simulation
+	 * 			A boolean indicating whether this is a simulation or reality
+	 */
 	public void announceDelegate(Task task, String toBranchOffice,
 			boolean simulation) {
 		task.setResponsibleBranchOffice(toBranchOffice);
@@ -161,7 +169,13 @@ public class Company {
 			announceDelegate(toUpdate, toBranchOffice, false);
 		}
 	}
-
+	/**
+	 * Finds the task with the given UUID parameter
+	 * @param id
+	 * 			The UUID to search for the task
+	 * @return
+	 * 			Returns the task corresponding with the UUID
+	 */
 	private Task findTask(UUID id) {
 		for (BranchOffice branchOffice : branchOffices) {
 			for (Project project : branchOffice.getPh().getProjects()) {
