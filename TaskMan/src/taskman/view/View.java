@@ -17,8 +17,7 @@ public class View implements IView {
 
 	protected final Input input;
 	protected final Output output;
-	protected final DateTimeFormatter formatter = DateTimeFormat
-			.forPattern("dd-MM-yyyy HH:mm");
+	protected final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm");
 
 	/**
 	 * The constructor of the view object. This object will communicate with the
@@ -27,6 +26,15 @@ public class View implements IView {
 	public View() {
 		input = new Input();
 		output = new Output();
+	}
+
+	/**
+	 * This method will return the input object used.
+	 * 
+	 * @return Returns the input object.
+	 */
+	public Input getInput() {
+		return input;
 	}
 
 	/**
@@ -73,8 +81,7 @@ public class View implements IView {
 	 *         insensitive), else it returns false.
 	 */
 	protected boolean isValidYesAnswer(String answer) {
-		if (answer.toLowerCase().equals("y")
-				|| answer.toLowerCase().equals("yes"))
+		if (answer.toLowerCase().equals("y") || answer.toLowerCase().equals("yes"))
 			return true;
 		else
 			return false;
@@ -90,8 +97,7 @@ public class View implements IView {
 	 *         insensitive), else it returns false.
 	 */
 	protected boolean isValidNoAnswer(String answer) {
-		if (answer.toLowerCase().equals("n")
-				|| answer.toLowerCase().equals("no"))
+		if (answer.toLowerCase().equals("n") || answer.toLowerCase().equals("no"))
 			return true;
 		else
 			return false;
@@ -126,8 +132,7 @@ public class View implements IView {
 		minutes = minutes % 60;
 		int days = hours / 8;
 		hours = hours % 8;
-		return days + " day(s), " + hours + " hour(s), " + minutes
-				+ " minute(s)";
+		return days + " day(s), " + hours + " hour(s), " + minutes + " minute(s)";
 	}
 
 	/**
@@ -165,8 +170,7 @@ public class View implements IView {
 			projectDetails.append("Status: Ongoing");
 			projectDetails.append("\n");
 			projectDetails.append("Estimated end time: ");
-			projectDetails.append(getStringDate(project
-					.getEstimatedFinishTime()));
+			projectDetails.append(getStringDate(project.getEstimatedFinishTime()));
 		}
 		return projectDetails.toString();
 	}
@@ -240,12 +244,12 @@ public class View implements IView {
 		if (task.isPlanned()) {
 			taskInfo.append("\n");
 			taskInfo.append("Planned start time: ");
-			taskInfo.append(getStringDate(task.getRequiredDevelopers().get(0)
-					.getReservations().get(0).getTimeSpan().getStartTime()));
+			taskInfo.append(getStringDate(
+					task.getRequiredDevelopers().get(0).getReservations().get(0).getTimeSpan().getStartTime()));
 			taskInfo.append("\n");
 			taskInfo.append("Planned end time: ");
-			taskInfo.append(getStringDate(task.getRequiredDevelopers().get(0)
-					.getReservations().get(0).getTimeSpan().getEndTime()));
+			taskInfo.append(getStringDate(
+					task.getRequiredDevelopers().get(0).getReservations().get(0).getTimeSpan().getEndTime()));
 		}
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
@@ -357,8 +361,7 @@ public class View implements IView {
 	 * @throws IllegalArgumentException
 	 *             The menu needs to be a list with at least 1 item.
 	 */
-	private void displayMainMenu(List<String> menu)
-			throws IllegalArgumentException {
+	private void displayMainMenu(List<String> menu) throws IllegalArgumentException {
 		output.displayList(menu, 0, false);
 		output.displayEmptyLine();
 	}
@@ -376,8 +379,7 @@ public class View implements IView {
 	 * @throws ShouldExitException
 	 *             The choice of the user is to stop.
 	 */
-	protected int getListChoice(List<?> list, String question)
-			throws ShouldExitException {
+	protected int getListChoice(List<?> list, String question) throws ShouldExitException {
 		displayInfo(question);
 		int choice = input.getNumberInput();
 		output.displayEmptyLine();
@@ -418,8 +420,7 @@ public class View implements IView {
 	 *             The choice of the user is to stop.
 	 */
 	@Override
-	public Project getProject(List<Project> projects)
-			throws ShouldExitException {
+	public Project getProject(List<Project> projects) throws ShouldExitException {
 		displayProjectList(projects, 0, true);
 		int projectId = getListChoice(projects, "Select a project:");
 		return projects.get(projectId - 1);
@@ -434,8 +435,7 @@ public class View implements IView {
 	 */
 	@Override
 	public void displayProjectDetails(Project project) {
-		displayInfo(output.indentStringWithNewLines(
-				getStringProjectDetails(project), 1));
+		displayInfo(output.indentStringWithNewLines(getStringProjectDetails(project), 1));
 		output.displayEmptyLine();
 	}
 
@@ -448,8 +448,7 @@ public class View implements IView {
 	 * @param tabs
 	 * @param printReturn
 	 */
-	protected void displayProjectList(List<Project> projects, int tabs,
-			boolean printReturn) {
+	protected void displayProjectList(List<Project> projects, int tabs, boolean printReturn) {
 		output.displayList(projects, tabs, printReturn);
 		output.displayEmptyLine();
 	}
@@ -480,8 +479,7 @@ public class View implements IView {
 	 */
 	@Override
 	public void displayTaskDetails(Task task) {
-		displayInfo(output.indentStringWithNewLines(getStringTaskDetails(task),
-				1));
+		displayInfo(output.indentStringWithNewLines(getStringTaskDetails(task), 1));
 		output.displayEmptyLine();
 	}
 
@@ -494,8 +492,7 @@ public class View implements IView {
 	 * @param tabs
 	 * @param printReturn
 	 */
-	protected void displayTaskList(List<Task> tasks, int tabs,
-			boolean printReturn) {
+	protected void displayTaskList(List<Task> tasks, int tabs, boolean printReturn) {
 		ArrayList<String> tasksInfo = new ArrayList<String>();
 		for (int i = 1; i <= tasks.size(); i++) {
 			tasksInfo.add(getStringTask(tasks.get(i - 1)));
@@ -566,7 +563,7 @@ public class View implements IView {
 	public ILoginForm getLoginForm() {
 		return new LoginForm(this);
 	}
-	
+
 	/**
 	 * This method will return a new delegate task form.
 	 */

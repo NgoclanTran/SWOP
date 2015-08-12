@@ -2,7 +2,6 @@ package taskman;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,6 +38,7 @@ public class Parser {
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private TimeService timeService = new TimeService();
 	private Company company;
+	private Input input;
 
 	private List<DailyAvailability> dailyAvailability = new ArrayList<DailyAvailability>();
 	private List<ResourceType> resourceTypeList = new ArrayList<ResourceType>();
@@ -46,8 +46,9 @@ public class Parser {
 	private Map<Integer, DailyAvailability> rtda = new HashMap<Integer, DailyAvailability>();
 	private int resourceTypeNumber = 0;
 
-	public Parser(Company company) {
+	public Parser(Company company, Input input) {
 		this.company = company;
+		this.input = input;
 	}
 
 	public void parse() {
@@ -196,7 +197,7 @@ public class Parser {
 		}
 
 		try {
-			return Files.readAllLines(Paths.get(input.getAbsolutePath()), Charset.defaultCharset());
+			return Files.readAllLines(Paths.get(input.getAbsolutePath()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -204,7 +205,6 @@ public class Parser {
 	}
 
 	private File readInput(File[] inputFiles) {
-		Input input = new Input();
 		try {
 			int selection = input.getNumberInput();
 			return inputFiles[selection - 1];
