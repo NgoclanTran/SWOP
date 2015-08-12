@@ -107,13 +107,13 @@ public class PlanTaskSession extends Session {
 		if (ph == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a ProjectHandler");
-		if (uh != null)
+		if (uh == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a UserHandler");
 		if (dth == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a DelegatedTaskHandler");
-		if (clock != null)
+		if (clock == null)
 			throw new IllegalArgumentException(
 					"The plan task controller needs a clock");
 		this.ph = ph;
