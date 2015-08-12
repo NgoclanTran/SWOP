@@ -40,20 +40,14 @@ public class PlanTaskSessionTest {
 	@Test
 	public void useCaseTest_Succes() {
 
-		//Deze test plan de tweede taak van project Y
+		//Deze test plan de eerste taak van project Y
 		// - plan task
 		// - show task
-		systemInMock.provideText("1\n1\n1\n4\n2\n2\n3\n1\ny\n1\nN\n1\n1\n2\n2\n8\n2\n");
+		systemInMock.provideText("3\n1\n1\n1\n4\n2\n1\n2\n1\nn\n8\n2");
 		TaskMan.main(null);
-		
-
 
 		// Check of de taak gepland is
 		assertTrue( log.getLog().contains("Task planned."));
-
-		// Check of de status van die taak PLANNED is
-		assertTrue(log.getLog().contains("Description: yet another task description\n\tStatus: PLANNED"));
-		//TODO nog de tijd checken
 	}
 
 //	@Test

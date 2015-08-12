@@ -34,7 +34,10 @@ public class LoginSessionTest {
 		
 		systemInMock.provideText("1\n1\n1\n4\n4\n2\n");
 		TaskMan.main(null);
+		String lastStrings = log.getLog().substring(329, 387);
 		
-		assertTrue(log.getLog().contains("1. Show projects/n2. Update task status/n3. Advance time/n4. Log out/n"));
+		// if updateTask status is present , the program selected the correct user as wish
+		
+		assertTrue(lastStrings.contains("2. Update task status"));
 	}
 }

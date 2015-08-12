@@ -1,5 +1,6 @@
 package taskman.tests;
 
+import static org.junit.Assert.*;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import org.junit.Before;
@@ -39,6 +40,11 @@ public class AdvanceTimeSessionTest {
 		systemInMock.provideText("21-04-2020 11:11\n");
 
 		session.run();
+		
+		//If the system time has been updated, then it should be present
+		// in the buffer for printing the current time
+		assertTrue(log.getLog().contains("21-04-2020 11:11"));
+		
 	}
 	@Test
 	public void runSessionTest_cancel(){
@@ -51,5 +57,8 @@ public class AdvanceTimeSessionTest {
 		systemInMock.provideText("21-04-1950 11:11\n");
 
 		session.run();
+		// Invalid time, the system time was not updated and the new time is not 
+		// in the buffer for printing new time
+		assertFalse(log.getLog().contains("21-04-1950 11:11"));
 	}
 }
