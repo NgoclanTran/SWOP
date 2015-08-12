@@ -9,6 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import taskman.exceptions.ShouldExitException;
 import taskman.model.project.Project;
+import taskman.model.task.Reservation;
 import taskman.model.task.Task;
 import taskman.view.commandline.Input;
 import taskman.view.commandline.Output;
@@ -244,12 +245,18 @@ public class View implements IView {
 		if (task.isPlanned()) {
 			taskInfo.append("\n");
 			taskInfo.append("Planned start time: ");
-			taskInfo.append(getStringDate(
-					task.getRequiredDevelopers().get(0).getReservations().get(0).getTimeSpan().getStartTime()));
+			for (Reservation reservation : task.getRequiredDevelopers().get(0).getReservations()) {
+				if (reservation.getTask().equals(task)) {
+					taskInfo.append(getStringDate(reservation.getTimeSpan().getStartTime()));
+				}
+			}
 			taskInfo.append("\n");
 			taskInfo.append("Planned end time: ");
-			taskInfo.append(getStringDate(
-					task.getRequiredDevelopers().get(0).getReservations().get(0).getTimeSpan().getEndTime()));
+			for (Reservation reservation : task.getRequiredDevelopers().get(0).getReservations()) {
+				if (reservation.getTask().equals(task)) {
+					taskInfo.append(getStringDate(reservation.getTimeSpan().getEndTime()));
+				}
+			}
 		}
 		if (task.isCompleted()) {
 			taskInfo.append("\n");
