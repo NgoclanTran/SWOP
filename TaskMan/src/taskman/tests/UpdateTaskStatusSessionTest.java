@@ -70,23 +70,23 @@ public class UpdateTaskStatusSessionTest {
 		ph.addProject("Project y", "Test project 2", new DateTime(),
 				new DateTime(2016, 4, 1, 0, 0));
 		ph.getProjects()
-				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null, 1);
+		.get(0)
+		.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
+				null, null, 1);
 		uh.addDeveloper("developer");
 		TimeSpan timeSpan = new TimeSpan(new DateTime(2015, 10, 12, 8, 0),
 				new DateTime(2015, 10, 12, 16, 0));
 		uh.getDevelopers()
-				.get(0)
-				.addReservation(ph.getProjects().get(0).getTasks().get(0),
-						timeSpan);
+		.get(0)
+		.addReservation(ph.getProjects().get(0).getTasks().get(0),
+				timeSpan);
 		ph.getProjects().get(0).getTasks().get(0)
-				.addRequiredDeveloper(uh.getDevelopers().get(0));
+		.addRequiredDeveloper(uh.getDevelopers().get(0));
 		ph.getProjects().get(0).getTasks().get(0).update();
 		ph.getProjects()
-				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null, 1);
+		.get(0)
+		.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
+				null, null, 1);
 	}
 	@Test(expected = IllegalArgumentException.class)
 	public void useCase_nullPh(){
@@ -258,7 +258,7 @@ public class UpdateTaskStatusSessionTest {
 		// Enter cancal creation
 
 		systemInMock
-				.provideText("1\n1\nN\n21-04-2015 10:10\n14-10-2055-10:10\n30-02-2015 10:10\n21-04-2015 22:10\ncancel\n0");
+		.provideText("1\n1\nN\n21-04-2015 10:10\n14-10-2055-10:10\n30-02-2015 10:10\n21-04-2015 22:10\ncancel\n0");
 		session.run();
 
 		// -------------- Check if nothing has changed or created ---------
@@ -274,7 +274,24 @@ public class UpdateTaskStatusSessionTest {
 
 	@Test
 	public void useCaseTest_StatusExecution_Creation() {
-		// TODO
+		// ------------- Before running ---------------
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) ph.getProjects()
+				.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) ph.getProjects()
+				.get(1).getTasks();
+
+		// System has one task
+		// Selection task
+		// Select first task: 1
+		// Enter task has failed: N
+		// Enter correct startTime: 21-04-2015 10:10
+		// Enter correct endTime: 21-04-2015 12:10
+		// System restart updateTaskStatusSession
+		// Enter cancal creation
+		systemInMock
+		.provideText("1\n1\nN\n21-04-2015 10:10\n21-04-2015 22:10\ncancel\n0");
+		session.run();
+		assertEquals(log.getLog(), " hi");
 	}
 
 }
