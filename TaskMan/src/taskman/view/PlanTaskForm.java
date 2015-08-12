@@ -42,8 +42,8 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	@Override
-	public Project getProjectWithUnplannedTasks(List<Project> projects,
-			List<List<Task>> unplannedTasks) throws ShouldExitException {
+	public Project getProjectWithUnplannedTasks(List<Project> projects, List<List<Task>> unplannedTasks)
+			throws ShouldExitException {
 		try {
 			displayProjectsWithUnplannedTasksList(projects, unplannedTasks);
 			projects.add(null);
@@ -66,8 +66,8 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the planning of the task.
 	 */
-	private void displayProjectsWithUnplannedTasksList(List<Project> projects,
-			List<List<Task>> unplannedTasks) throws ShouldExitException {
+	private void displayProjectsWithUnplannedTasksList(List<Project> projects, List<List<Task>> unplannedTasks)
+			throws ShouldExitException {
 		if (projects.size() + 1 != unplannedTasks.size()) {
 			view.displayError("Error occured while creating the available tasks list.");
 			throw new ShouldExitException();
@@ -77,13 +77,11 @@ public class PlanTaskForm implements IPlanTaskForm {
 		for (int i = 1; i <= unplannedTasks.size() - 1; i++) {
 			if (unplannedTasks.get(i - 1).size() == 0)
 				continue;
-			String project = i + ". "
-					+ projects.get(i - 1).getName().toString();
+			String project = i + ". " + projects.get(i - 1).getName().toString();
 			view.displayInfo(project);
 			view.displayTaskList(unplannedTasks.get(i - 1), 1, false);
 		}
-		displayDelegatedTasks(unplannedTasks.size(),
-				unplannedTasks.get(unplannedTasks.size() - 1));
+		displayDelegatedTasks(unplannedTasks.size(), unplannedTasks.get(unplannedTasks.size() - 1));
 	}
 
 	private void displayDelegatedTasks(int startIndex, List<Task> tasks) {
@@ -104,8 +102,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	@Override
-	public DateTime getStartTime(Set<DateTime> startTimes)
-			throws ShouldExitException {
+	public DateTime getStartTime(Set<DateTime> startTimes) throws ShouldExitException {
 		List<DateTime> startTimesList = new ArrayList<DateTime>();
 		List<String> startTimesStringList = new ArrayList<String>();
 		for (DateTime startTime : startTimes) {
@@ -115,11 +112,11 @@ public class PlanTaskForm implements IPlanTaskForm {
 		startTimesStringList.add("Enter custom start time");
 		view.output.displayList(startTimesStringList, 0, true);
 		view.output.displayEmptyLine();
-		int startTimeId = view.getListChoice(startTimesStringList,
-				"Select a start time:");
-		if (startTimeId == startTimesStringList.size())
+		int startTimeId = view.getListChoice(startTimesStringList, "Select a start time:");
+		if (startTimeId == startTimesStringList.size()) {
 			return getCustomStartTime();
-		else
+
+		} else
 			return (DateTime) startTimesList.get(startTimeId - 1);
 	}
 
@@ -170,22 +167,19 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	@Override
-	public List<Resource> getResources(TimeSpan timeSpan,
-			List<ResourceType> resourceTypes, List<Integer> amounts,
+	public List<Resource> getResources(TimeSpan timeSpan, List<ResourceType> resourceTypes, List<Integer> amounts,
 			List<List<Resource>> suggestedResources) throws ShouldExitException {
 		try {
 			String changeResource = "Y";
 			while (!view.isValidNoAnswer(changeResource)) {
 				view.displayInfo("Suggested resources for each resource type:");
-				displayResourceTypesWithSuggestedResources(false,
-						resourceTypes, amounts, suggestedResources);
+				displayResourceTypesWithSuggestedResources(false, resourceTypes, amounts, suggestedResources);
 				view.displayInfo("Do you want to change a(nother) resource? (Y/N or cancel):");
 				changeResource = view.input.getInput();
 				view.output.displayEmptyLine();
 
 				if (view.isValidYesAnswer(changeResource)) {
-					suggestedResources = changeResource(timeSpan,
-							resourceTypes, amounts, suggestedResources);
+					suggestedResources = changeResource(timeSpan, resourceTypes, amounts, suggestedResources);
 				}
 			}
 
@@ -213,10 +207,8 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the planning of the task.
 	 */
-	private void displayResourceTypesWithSuggestedResources(
-			boolean printReturn, List<ResourceType> resourceTypes,
-			List<Integer> amounts, List<List<Resource>> suggestedResources)
-			throws ShouldExitException {
+	private void displayResourceTypesWithSuggestedResources(boolean printReturn, List<ResourceType> resourceTypes,
+			List<Integer> amounts, List<List<Resource>> suggestedResources) throws ShouldExitException {
 		if (resourceTypes.size() != suggestedResources.size()) {
 			view.displayError("Error occured while creating the suggested resources list.");
 			throw new ShouldExitException();
@@ -227,8 +219,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 		for (int i = 1; i <= suggestedResources.size(); i++) {
 			if (suggestedResources.get(i - 1).size() == 0)
 				continue;
-			String resourceType = i + ". "
-					+ resourceTypes.get(i - 1).getName().toString() + ": "
+			String resourceType = i + ". " + resourceTypes.get(i - 1).getName().toString() + ": "
 					+ amounts.get(i - 1).toString() + " resource(s)";
 			view.displayInfo(resourceType);
 			view.output.displayList(suggestedResources.get(i - 1), 1, false);
@@ -253,34 +244,25 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the planning of the task.
 	 */
-	private List<List<Resource>> changeResource(TimeSpan timeSpan,
-			List<ResourceType> resourceTypes, List<Integer> amounts,
-			List<List<Resource>> suggestedResources) throws ShouldExitException {
-		displayResourceTypesWithSuggestedResources(true, resourceTypes,
-				amounts, suggestedResources);
-		int resourceTypeId = view.getListChoice(resourceTypes,
-				"Select a resource type:");
+	private List<List<Resource>> changeResource(TimeSpan timeSpan, List<ResourceType> resourceTypes,
+			List<Integer> amounts, List<List<Resource>> suggestedResources) throws ShouldExitException {
+		displayResourceTypesWithSuggestedResources(true, resourceTypes, amounts, suggestedResources);
+		int resourceTypeId = view.getListChoice(resourceTypes, "Select a resource type:");
 
-		view.output.displayList(suggestedResources.get(resourceTypeId - 1), 0,
-				true);
+		view.output.displayList(suggestedResources.get(resourceTypeId - 1), 0, true);
 		view.output.displayEmptyLine();
-		int resourceId = view.getListChoice(
-				suggestedResources.get(resourceTypeId - 1),
+		int resourceId = view.getListChoice(suggestedResources.get(resourceTypeId - 1),
 				"Select the resource you want to change:");
 
 		view.displayInfo("You want to change resource ("
-				+ suggestedResources.get(resourceTypeId - 1)
-						.get(resourceId - 1) + ") with:");
+				+ suggestedResources.get(resourceTypeId - 1).get(resourceId - 1) + ") with:");
 
-		List<Resource> availableResources = resourceTypes.get(
-				resourceTypeId - 1).getAvailableResources(timeSpan);
+		List<Resource> availableResources = resourceTypes.get(resourceTypeId - 1).getAvailableResources(timeSpan);
 		view.output.displayList(availableResources, 0, true);
 		view.output.displayEmptyLine();
-		int newResourceId = view.getListChoice(availableResources,
-				"Select the new resource:");
+		int newResourceId = view.getListChoice(availableResources, "Select the new resource:");
 
-		suggestedResources.get(resourceTypeId - 1).set(resourceId - 1,
-				availableResources.get(newResourceId - 1));
+		suggestedResources.get(resourceTypeId - 1).set(resourceId - 1, availableResources.get(newResourceId - 1));
 
 		return suggestedResources;
 	}
@@ -297,8 +279,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 *             The user cancelled the planning of the task.
 	 */
 	@Override
-	public List<Developer> getDevelopers(List<Developer> developers)
-			throws ShouldExitException {
+	public List<Developer> getDevelopers(List<Developer> developers) throws ShouldExitException {
 		try {
 			List<Developer> assignedDevelopers = new ArrayList<Developer>();
 			String addDeveloper = "Y";
@@ -336,8 +317,7 @@ public class PlanTaskForm implements IPlanTaskForm {
 	 * @throws ShouldExitException
 	 *             The user cancelled the planning of the task.
 	 */
-	private Developer addDeveloper(List<Developer> developers)
-			throws ShouldExitException {
+	private Developer addDeveloper(List<Developer> developers) throws ShouldExitException {
 		view.displayInfo("List of developers:");
 		view.output.displayList(developers, 0, true);
 		view.output.displayEmptyLine();

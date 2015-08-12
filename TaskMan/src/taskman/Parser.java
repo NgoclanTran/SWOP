@@ -207,6 +207,9 @@ public class Parser {
 	private File readInput(File[] inputFiles) {
 		try {
 			int selection = input.getNumberInput();
+			while (selection > inputFiles.length || selection == Integer.MIN_VALUE) {
+				selection = input.getNumberInput();
+			}
 			return inputFiles[selection - 1];
 		} catch (ShouldExitException e) {
 			System.exit(0);
