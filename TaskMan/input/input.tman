@@ -117,15 +117,15 @@ projects:
     branchOffice : 0
 
 plannings:
-  - plannedStartTime	: "2014-01-01 09:00"
-    developers      	: [0, 1]
+  - plannedStartTime	: "2014-04-01 09:00"
+    developers      	: [0]
     resources        	: [{type: 0,  quantity: 2}, {type: 2,  quantity: 1}]
     branchOffice 	 	: 0
-  - plannedStartTime 	: "2014-01-02 17:00"
-    developers       	: [1]
+  - plannedStartTime 	: "2014-04-02 17:00"
+    developers       	: [0]
     resources        	: []
     branchOffice 		: 0
-  - plannedStartTime 	: "2014-03-01 09:00"
+  - plannedStartTime 	: "2014-05-01 09:00"
     developers       	: [2]
     resources        	: [{type: 5,  quantity: 1}]
     branchOffice 		: 0

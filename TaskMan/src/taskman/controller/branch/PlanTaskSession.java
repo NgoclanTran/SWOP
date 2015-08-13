@@ -24,8 +24,8 @@ import taskman.model.user.Developer;
 import taskman.view.IView;
 
 public class PlanTaskSession extends Session {
-	
-	//TODO: Check for required number of developers
+
+	// TODO: Check for required number of developers
 
 	private ProjectHandler ph;
 	private UserHandler uh;
@@ -55,22 +55,17 @@ public class PlanTaskSession extends Session {
 	 * @throws IllegalArgumentException
 	 *             The project handler, user handler and clock need to be valid.
 	 */
-	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
-			DelegatedTaskHandler dth, Clock clock)
+	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh, DelegatedTaskHandler dth, Clock clock)
 			throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a ProjectHandler");
+			throw new IllegalArgumentException("The plan task controller needs a ProjectHandler");
 		if (uh == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a UserHandler");
+			throw new IllegalArgumentException("The plan task controller needs a UserHandler");
 		if (dth == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a DelegatedTaskHandler");
+			throw new IllegalArgumentException("The plan task controller needs a DelegatedTaskHandler");
 		if (clock == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a clock");
+			throw new IllegalArgumentException("The plan task controller needs a clock");
 		this.ph = ph;
 		this.uh = uh;
 		this.dth = dth;
@@ -100,22 +95,17 @@ public class PlanTaskSession extends Session {
 	 * @throws IllegalArgumentException
 	 *             The project handler, user handler and clock need to be valid.
 	 */
-	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh,
-			DelegatedTaskHandler dth, Clock clock, Task task)
-			throws IllegalArgumentException {
+	public PlanTaskSession(IView cli, ProjectHandler ph, UserHandler uh, DelegatedTaskHandler dth, Clock clock,
+			Task task) throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a ProjectHandler");
+			throw new IllegalArgumentException("The plan task controller needs a ProjectHandler");
 		if (uh == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a UserHandler");
+			throw new IllegalArgumentException("The plan task controller needs a UserHandler");
 		if (dth == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a DelegatedTaskHandler");
+			throw new IllegalArgumentException("The plan task controller needs a DelegatedTaskHandler");
 		if (clock == null)
-			throw new IllegalArgumentException(
-					"The plan task controller needs a clock");
+			throw new IllegalArgumentException("The plan task controller needs a clock");
 		this.ph = ph;
 		this.uh = uh;
 		this.dth = dth;
@@ -148,8 +138,7 @@ public class PlanTaskSession extends Session {
 
 		Project project;
 		try {
-			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(
-					projects, unplannedTasksList);
+			project = getUI().getPlanTaskForm().getProjectWithUnplannedTasks(projects, unplannedTasksList);
 		} catch (ShouldExitException e) {
 			return;
 		}
@@ -183,24 +172,19 @@ public class PlanTaskSession extends Session {
 
 	private void planTask() throws IllegalStateException {
 		if (task == null)
-			throw new IllegalStateException(
-					"Plan task should have a task by now.");
+			throw new IllegalStateException("Plan task should have a task by now.");
 		if (task.isPlanned())
-			throw new IllegalStateException(
-					"Plan task can't plan a task that is already planned.");
+			throw new IllegalStateException("Plan task can't plan a task that is already planned.");
 		while (true) {
 			try {
 				List<Reservable> reservables = null;
 				DateTime startTime = getStartTime();
 				TimeSpan timeSpan = new TimeSpan(startTime,
-						timeService.addMinutes(startTime,
-								task.getEstimatedDuration()));
+						timeService.addMinutes(startTime, task.getEstimatedDuration()));
 
 				if (!isValidStartTime(timeSpan)) {
-					reservables = new ArrayList<Reservable>(
-							getSuggestedResources(timeSpan));
-					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task,
-							timeSpan, reservables).run();
+					reservables = new ArrayList<Reservable>(getSuggestedResources(timeSpan));
+					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -215,8 +199,7 @@ public class PlanTaskSession extends Session {
 
 				if (!isValidResource(resources, timeSpan)) {
 					reservables = new ArrayList<Reservable>(resources);
-					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task,
-							timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -231,8 +214,7 @@ public class PlanTaskSession extends Session {
 
 				if (!isvalidDeveloper(developers, timeSpan)) {
 					reservables = new ArrayList<Reservable>(developers);
-					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task,
-							timeSpan, reservables).run();
+					new ResolveConflictSession(getUI(), ph, uh, dth, clock, task, timeSpan, reservables).run();
 					// TODO: Print some info to user to make sure he/she knows
 					// the original task is getting planned all over again.
 					if (task.isPlanned())
@@ -261,8 +243,7 @@ public class PlanTaskSession extends Session {
 		return true;
 	}
 
-	private boolean isvalidDeveloper(List<Developer> developers,
-			TimeSpan timeSpan) {
+	private boolean isvalidDeveloper(List<Developer> developers, TimeSpan timeSpan) {
 		for (Developer developer : developers) {
 			if (!developer.isAvailableAt(timeSpan))
 				return false;
@@ -270,8 +251,7 @@ public class PlanTaskSession extends Session {
 		return true;
 	}
 
-	private boolean isValidPlanning(TimeSpan timeSpan,
-			List<Resource> resources, List<Developer> developers) {
+	private boolean isValidPlanning(TimeSpan timeSpan, List<Resource> resources, List<Developer> developers) {
 		try {
 			for (Developer developer : developers) {
 				task.addRequiredDeveloper(developer);
@@ -334,40 +314,32 @@ public class PlanTaskSession extends Session {
 
 	private DateTime getStartTime() {
 		if (project != null)
-			return getUI().getPlanTaskForm().getStartTime(
-				planning.getPossibleStartTimes(task, 3,
-						project.getCreationTime()));
+			return getUI().getPlanTaskForm()
+					.getStartTime(planning.getPossibleStartTimes(task, 3, project.getCreationTime()));
 		else
-			return getUI().getPlanTaskForm().getStartTime(
-					planning.getPossibleStartTimes(task, 3,
-							clock.getSystemTime()));
+			return getUI().getPlanTaskForm()
+					.getStartTime(planning.getPossibleStartTimes(task, 3, clock.getSystemTime()));
 	}
 
 	private List<Resource> getSuggestedResources(TimeSpan timeSpan) {
 		List<Resource> suggestedResources = new ArrayList<>();
-		for (Entry<ResourceType, Integer> entry : task
-				.getRequiredResourceTypes().entrySet()) {
-			suggestedResources.addAll(entry.getKey().getSuggestedResources(
-					timeSpan, entry.getValue()));
+		for (Entry<ResourceType, Integer> entry : task.getRequiredResourceTypes().entrySet()) {
+			suggestedResources.addAll(entry.getKey().getSuggestedResources(timeSpan, entry.getValue()));
 		}
 		return suggestedResources;
 	}
 
-	private List<Resource> getResources(TimeSpan timeSpan)
-			throws ShouldExitException, IllegalStateException {
+	private List<Resource> getResources(TimeSpan timeSpan) throws ShouldExitException, IllegalStateException {
 		List<ResourceType> resourceTypes = new ArrayList<ResourceType>();
 		List<Integer> amounts = new ArrayList<Integer>();
 		List<List<Resource>> suggestedResources = new ArrayList<>();
-		for (Entry<ResourceType, Integer> entry : task
-				.getRequiredResourceTypes().entrySet()) {
+		for (Entry<ResourceType, Integer> entry : task.getRequiredResourceTypes().entrySet()) {
 			resourceTypes.add(entry.getKey());
 			amounts.add(entry.getValue());
-			suggestedResources.add(entry.getKey().getSuggestedResources(
-					timeSpan, entry.getValue()));
+			suggestedResources.add(entry.getKey().getSuggestedResources(timeSpan, entry.getValue()));
 		}
 
-		return getUI().getPlanTaskForm().getResources(timeSpan, resourceTypes,
-				amounts, suggestedResources);
+		return getUI().getPlanTaskForm().getResources(timeSpan, resourceTypes, amounts, suggestedResources);
 	}
 
 	private List<Developer> getDevelopers() throws ShouldExitException {

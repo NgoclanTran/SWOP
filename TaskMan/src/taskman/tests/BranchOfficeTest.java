@@ -1,6 +1,8 @@
 package taskman.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -12,11 +14,9 @@ import org.junit.Test;
 
 import taskman.model.company.BranchOffice;
 import taskman.model.company.Company;
-import taskman.model.project.Project;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
-import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 

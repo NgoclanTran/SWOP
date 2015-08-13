@@ -1,14 +1,12 @@
 package taskman.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import taskman.model.memento.ClockMemento;
-import taskman.model.memento.ReservableMemento;
-import taskman.model.task.Reservable;
 import taskman.model.time.Clock;
 
 public class ClockMementoTest {

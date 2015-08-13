@@ -48,20 +48,21 @@ class Unavailable implements Status {
 		if (task == null)
 			throw new NullPointerException("The task is null.");
 
-		if (!task.getReservations().isEmpty())
+		if (!task.getReservations().isEmpty()) {
 			task.performUpdateStatus(new Planned());
+			task.update();
+		}
 	}
 
 	@Override
 	public TimeSpan getTimeSpan(Task task) {
-		throw new IllegalStateException(
-				"Unavailable Task doesn't have timeSpan.");
+		throw new IllegalStateException("Unavailable Task doesn't have timeSpan.");
 
 	}
 
 	@Override
-	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
-			DateTime endTime) throws IllegalStateException {
+	public void addTimeSpan(Task task, boolean failed, DateTime startTime, DateTime endTime)
+			throws IllegalStateException {
 		throw new IllegalStateException("This task is unavailable");
 
 	}
@@ -72,8 +73,7 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public void addAlternative(NormalTask task, NormalTask alternative)
-			throws IllegalStateException {
+	public void addAlternative(NormalTask task, NormalTask alternative) throws IllegalStateException {
 		throw new IllegalStateException("This task is unavailable");
 
 	}
@@ -84,14 +84,12 @@ class Unavailable implements Status {
 	}
 
 	@Override
-	public int calculateTotalExecutedTime(Task task)
-			throws IllegalStateException {
+	public int calculateTotalExecutedTime(Task task) throws IllegalStateException {
 		throw new IllegalStateException("The task is unavailable");
 	}
 
 	@Override
-	public int calculateOverDuePercentage(Task task)
-			throws IllegalStateException {
+	public int calculateOverDuePercentage(Task task) throws IllegalStateException {
 		throw new IllegalStateException("The task is unavailable");
 	}
 

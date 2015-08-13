@@ -1,8 +1,6 @@
 package taskman.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 import java.util.ArrayList;
@@ -60,20 +58,12 @@ public class CreateTaskSessionTest {
 		cli = new View();
 		ph = new ProjectHandler(tf);
 		rh = new ResourceHandler(new ArrayList<ResourceType>());
-		//rh = new ResourceHandler(null);
+		// rh = new ResourceHandler(null);
 		session = new CreateTaskSession(cli, ph, rh);
-		ph.addProject("Project x", "Test project 1", new DateTime(),
-				new DateTime(2016, 4, 1, 0, 0));
-		ph.addProject("Project y", "Test project 2", new DateTime(),
-				new DateTime(2016, 4, 1, 0, 0));
-		ph.getProjects()
-				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null, 1);
-		ph.getProjects()
-				.get(0)
-				.addTask("Task description", 10, 1, new ArrayList<NormalTask>(),
-						null, null, 1);
+		ph.addProject("Project x", "Test project 1", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
+		ph.addProject("Project y", "Test project 2", new DateTime(), new DateTime(2016, 4, 1, 0, 0));
+		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<NormalTask>(), null, null, 1);
+		ph.getProjects().get(0).addTask("Task description", 10, 1, new ArrayList<NormalTask>(), null, null, 1);
 		description = "description";
 		estimatedDuration = 10;
 		acceptableDeviation = 1;
@@ -81,10 +71,12 @@ public class CreateTaskSessionTest {
 		p = ph.getProjects().get(0);
 
 	}
+
 	@Test(expected = IllegalArgumentException.class)
-	public void nullPhTest(){
+	public void nullPhTest() {
 		CreateTaskSession session2 = new CreateTaskSession(cli, null, rh);
 	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void useCaseTest_nullRh() {
 		CreateTaskSession session2 = new CreateTaskSession(cli, ph, null);
@@ -107,10 +99,8 @@ public class CreateTaskSessionTest {
 
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		systemInMock.provideText("-1\n0");
 		session.run();
@@ -126,10 +116,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_WithProjects_InputExit_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		systemInMock.provideText("0");
 		session.run();
@@ -145,10 +133,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_WithProjects_InputOutOfBound_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		systemInMock.provideText("3\n0");
 		session.run();
@@ -164,10 +150,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_NoDescription_Stop_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		systemInMock.provideText("1\ncancel\n");
 		session.run();
@@ -183,10 +167,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_Description_Stop_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		systemInMock.provideText("1\ndescription\ncancel\n0");
 		session.run();
@@ -202,10 +184,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_EnterEstimatedDurationUntilCorrectInput_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		systemInMock.provideText("1\ndescription\n-1\n0\n10\ncancel\n0");
 		session.run();
@@ -220,10 +200,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_EnterAcceptableDeviationUntilCorrectInput_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		systemInMock.provideText("1\ndescription\n10\n-1\na\n10\ncancel\n0");
 		session.run();
@@ -238,10 +216,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_InputDependenciesYes_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		// select project 1
 		// enter description "description"
@@ -259,8 +235,7 @@ public class CreateTaskSessionTest {
 		assertEquals(ph.getProjects(), projects);
 		// assertEquals(ph.getProjects().get(0).getTasks(), tasksOfProject1);
 		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
-		Task lt = ph.getProjects().get(0).getTasks()
-				.get(ph.getProjects().get(0).getTasks().size() - 1);
+		Task lt = ph.getProjects().get(0).getTasks().get(ph.getProjects().get(0).getTasks().size() - 1);
 		assertEquals(lt.getDescription(), "Task description");
 		assertEquals(lt.getEstimatedDuration(), 10);
 		assertEquals(lt.getAcceptableDeviation(), 1);
@@ -272,10 +247,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_InputDependenciesNo_CancelCreation() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		// select project 1
 		// enter description "description"
@@ -299,10 +272,8 @@ public class CreateTaskSessionTest {
 
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		// select project 1
 		// enter description "description"
@@ -316,8 +287,7 @@ public class CreateTaskSessionTest {
 
 		// -------- Check if task was created -------
 		assertEquals(ph.getProjects(), projects);
-		Task lastAddedTask = ph.getProjects().get(0).getTasks()
-				.get(tasksOfProject1.size()-1);
+		Task lastAddedTask = ph.getProjects().get(0).getTasks().get(tasksOfProject1.size() - 1);
 		assertEquals(lastAddedTask.getDescription(), "Task description");
 		assertNull(((NormalTask) lastAddedTask).getAlternative());
 		assertEquals(lastAddedTask.getEstimatedDuration(), 10);
@@ -329,10 +299,8 @@ public class CreateTaskSessionTest {
 	public void useCaseTest_SuccesScenario_WithoutDependencies_WithoutAlternative() {
 		// ---------- Before running ----------
 		ArrayList<Project> projects = (ArrayList<Project>) ph.getProjects();
-		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0)
-				.getTasks();
-		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1)
-				.getTasks();
+		ArrayList<NormalTask> tasksOfProject1 = (ArrayList<NormalTask>) projects.get(0).getTasks();
+		ArrayList<NormalTask> tasksOfProject2 = (ArrayList<NormalTask>) projects.get(1).getTasks();
 
 		// select project 1
 		// enter description "description"
@@ -343,8 +311,7 @@ public class CreateTaskSessionTest {
 		// select first task in given list
 		// cancel creation
 
-		systemInMock
-				.provideText("1\ndescription\n10\n10\na\nY\n1\nN\ncancel\n0");
+		systemInMock.provideText("1\ndescription\n10\n10\na\nY\n1\nN\ncancel\n0");
 		session.run();
 
 		// -------- Check if nothing has been changed -------
@@ -352,10 +319,17 @@ public class CreateTaskSessionTest {
 		// New task was created
 		assertEquals(ph.getProjects().get(1).getTasks(), tasksOfProject2);
 
-		Task newTask = ph.getProjects().get(0).getTasks()
-				.get(tasksOfProject1.size()-1);
+		Task newTask = ph.getProjects().get(0).getTasks().get(tasksOfProject1.size() - 1);
 		assertEquals(newTask.getDescription(), "Task description");
 		assertEquals(newTask.getAcceptableDeviation(), 1);
 		assertEquals(newTask.getEstimatedDuration(), 10);
+	}
+
+	@Test
+	public void useCaseTest_NoProjects() {
+		ph = new ProjectHandler(tf);
+		session = new CreateTaskSession(cli, ph, rh);
+		session.run();
+		assertTrue(log.getLog().contains("No projects."));
 	}
 }

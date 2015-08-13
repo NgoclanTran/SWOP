@@ -39,6 +39,7 @@ public class ParserTest {
 
 	@Test
 	public void parseTestNoException() {
+		systemInMock.provideText("1\n");
 		Parser parser = new Parser(company, input);
 		parser.parse();
 	}
