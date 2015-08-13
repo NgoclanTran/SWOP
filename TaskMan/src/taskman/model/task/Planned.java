@@ -44,14 +44,21 @@ public class Planned implements Status {
 	}
 
 	@Override
-	public void updateStatus(Task task, DateTime currentTime) throws IllegalStateException {
-		if (task.dependenciesAreFinished()) {
-			for (Reservation reservation : task.getReservations()) {
-				if (reservation.getTimeSpan().isDuringTimeSpan(timeService.getFirstPossibleStartTime(currentTime))) {
-					task.performUpdateStatus(new Available());
-				} else
-					if (task.developersAndResourceTypesAvailable(timeService.getFirstPossibleStartTime(currentTime))) {
-					task.performUpdateStatus(new Available());
+	public void updateStatus(Task task, DateTime currentTime)
+			throws IllegalStateException {
+		if (task.getReservations().isEmpty()) {
+			task.performUpdateStatus(new Unavailable());
+		} else {
+			if (task.dependenciesAreFinished()) {
+				for (Reservation reservation : task.getReservations()) {
+					if (reservation.getTimeSpan().isDuringTimeSpan(
+							timeService.getFirstPossibleStartTime(currentTime))) {
+						task.performUpdateStatus(new Available());
+					} else if (task
+							.developersAndResourceTypesAvailable(timeService
+									.getFirstPossibleStartTime(currentTime))) {
+						task.performUpdateStatus(new Available());
+					}
 				}
 			}
 		}
@@ -63,8 +70,8 @@ public class Planned implements Status {
 	}
 
 	@Override
-	public void addTimeSpan(Task task, boolean failed, DateTime startTime, DateTime endTime)
-			throws IllegalStateException {
+	public void addTimeSpan(Task task, boolean failed, DateTime startTime,
+			DateTime endTime) throws IllegalStateException {
 		throw new IllegalStateException("Planned task can not have a timespan.");
 	}
 
@@ -74,7 +81,8 @@ public class Planned implements Status {
 	}
 
 	@Override
-	public void addAlternative(NormalTask task, NormalTask alternative) throws IllegalStateException {
+	public void addAlternative(NormalTask task, NormalTask alternative)
+			throws IllegalStateException {
 		throw new IllegalStateException("The task has not failed.");
 	}
 
@@ -84,12 +92,14 @@ public class Planned implements Status {
 	}
 
 	@Override
-	public int calculateTotalExecutedTime(Task task) throws IllegalStateException {
+	public int calculateTotalExecutedTime(Task task)
+			throws IllegalStateException {
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
 
 	@Override
-	public int calculateOverDuePercentage(Task task) throws IllegalStateException {
+	public int calculateOverDuePercentage(Task task)
+			throws IllegalStateException {
 		throw new IllegalStateException("The task hasn't been completed.");
 	}
 

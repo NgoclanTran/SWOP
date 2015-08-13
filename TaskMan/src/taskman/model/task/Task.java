@@ -405,6 +405,8 @@ public abstract class Task extends TaskSubject implements Observer {
 			throw new IllegalArgumentException("The startTime is null.");
 		if (endTime == null)
 			throw new IllegalArgumentException("The endTime is null.");
+		if (endTime.isAfter(clock.getSystemTime()))
+			throw new IllegalDateException("The endTime can not be in the future.");
 
 		status.addTimeSpan(this, failed, startTime, endTime);
 	}
@@ -556,6 +558,21 @@ public abstract class Task extends TaskSubject implements Observer {
 			throw new IllegalArgumentException(
 					"The developer is already in the list of developpers.");
 		requiredDevelopers.add(developer);
+	}
+	
+	/**
+	 * Removes the given developer to the list of required developers.
+	 * 
+	 * @param developer
+	 *            The developer to remove
+	 */
+	public void removeDeveloper(Developer developer) {
+		if (developer == null)
+			throw new IllegalArgumentException("The developer cannot be null.");
+		if (!requiredDevelopers.contains(developer))
+			throw new IllegalArgumentException(
+					"The developer is not in the list of developpers.");
+		requiredDevelopers.remove(developer);
 	}
 
 	private List<Developer> requiredDevelopers = new ArrayList<Developer>();

@@ -50,9 +50,10 @@ public class ResolveConflictSession extends Session {
 	 * @throws IllegalArgumentException
 	 *             The project handler, user handler and clock need to be valid.
 	 */
-	public ResolveConflictSession(IView cli, ProjectHandler ph, UserHandler uh, DelegatedTaskHandler dth,
-			Clock clock, Task task, TimeSpan timeSpan,
-			List<Reservable> reservables) throws IllegalArgumentException {
+	public ResolveConflictSession(IView cli, ProjectHandler ph, UserHandler uh,
+			DelegatedTaskHandler dth, Clock clock, Task task,
+			TimeSpan timeSpan, List<Reservable> reservables)
+			throws IllegalArgumentException {
 		super(cli);
 		if (ph == null)
 			throw new IllegalArgumentException(
@@ -88,9 +89,11 @@ public class ResolveConflictSession extends Session {
 					"A conflict cannot have an empty reservable list.");
 
 		Task taskToReschedule = getTaskToReschedule(getConflictingTasks());
-		removeAllReservations(taskToReschedule);
-		new PlanTaskSession(getUI(), ph, uh, dth, clock, taskToReschedule)
-				.run();
+		if (taskToReschedule != null) {
+			removeAllReservations(taskToReschedule);
+			new PlanTaskSession(getUI(), ph, uh, dth, clock, taskToReschedule)
+					.run();
+		}
 	}
 
 	private List<Task> getConflictingTasks() {
@@ -120,8 +123,10 @@ public class ResolveConflictSession extends Session {
 	private void removeAllReservations(Task task) {
 		for (Developer developer : task.getRequiredDevelopers()) {
 			for (Reservation reservation : developer.getReservations()) {
-				if (reservation.getTask().equals(task))
+				if (reservation.getTask().equals(task)){
 					developer.removeReservation(reservation);
+					task.removeDeveloper(developer);
+				}
 			}
 		}
 

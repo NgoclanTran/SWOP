@@ -261,7 +261,6 @@ public class UpdateTaskStatusSession extends Session {
 			DateTime startTime, DateTime endTime) {
 		try {
 			task.addTimeSpan(isFailed, startTime, endTime);
-			;
 			getUI().displayInfo("Task updated.");
 			return true;
 		} catch (IllegalArgumentException argEx) {

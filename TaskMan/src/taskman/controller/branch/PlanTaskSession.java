@@ -263,7 +263,7 @@ public class PlanTaskSession extends Session {
 			getUI().displayInfo("Task planned.");
 			return true;
 		} catch (Exception Ex) {
-			getUI().displayError(Ex.getStackTrace().toString());
+			getUI().displayError(Ex.getMessage().toString());
 			return false;
 		}
 	}

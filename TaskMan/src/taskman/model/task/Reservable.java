@@ -101,6 +101,7 @@ public class Reservable {
 	 */
 	public void removeReservation(Reservation r) {
 		reservations.remove(r);
+		r.getTask().update();
 	}
 
 	/**

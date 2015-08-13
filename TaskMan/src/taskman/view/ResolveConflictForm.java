@@ -49,7 +49,7 @@ public class ResolveConflictForm implements IResolveConflictForm {
 			else
 				return getConflictingTaskToReschedule(conflictingTasks);
 		} catch (ShouldExitException e) {
-			return getTaskToRechedule(task, conflictingTasks);
+			return null;
 		}
 	}
 
