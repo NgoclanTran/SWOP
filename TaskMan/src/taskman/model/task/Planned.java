@@ -49,11 +49,9 @@ public class Planned implements Status {
 			for (Reservation reservation : task.getReservations()) {
 				if (reservation.getTimeSpan().isDuringTimeSpan(timeService.getFirstPossibleStartTime(currentTime))) {
 					task.performUpdateStatus(new Available());
-					task.update();
 				} else
 					if (task.developersAndResourceTypesAvailable(timeService.getFirstPossibleStartTime(currentTime))) {
 					task.performUpdateStatus(new Available());
-					task.update();
 				}
 			}
 		}
