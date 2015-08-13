@@ -27,8 +27,8 @@ public class taskAvailableTest {
 	private int acceptableDeviation;
 	private List<NormalTask> dependencies;
 	private TimeSpan timespan;
-	private Clock clock = new Clock();
-	private Company company;
+	private Clock clock;
+	private Company company = new Company();
 	List<ResourceType> list =  new ArrayList<ResourceType>();
 	private BranchOffice branchOffice;
 	TimeService timeService = new TimeService();
@@ -36,16 +36,17 @@ public class taskAvailableTest {
 	
 	@Before
 	public void setup(){
+		branchOffice = new BranchOffice(company, "", list);
 		description = "description";
 		estimatedDuration = 10;
 		acceptableDeviation = 1;
 		dependencies = new ArrayList<NormalTask>();
+		clock = branchOffice.getClock();
 		clock.setSystemTime(new DateTime(2015, 10, 12, 10, 0));
 		company = new Company();
 		ResourceType rt = new ResourceType("name", null, null, false);
 		rt.addResource("n", new LocalTime(9,0), new LocalTime(16,0));
 		list.add(rt);
-		branchOffice = new BranchOffice(company, "", list);
 		branchOffice.getPh().addProject("", "", new DateTime(2015, 10, 11, 9, 0), new DateTime(2015, 10, 22, 16, 0));
 		Project p = branchOffice.getPh().getProjects().get(0);
 		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);

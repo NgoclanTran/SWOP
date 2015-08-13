@@ -441,7 +441,7 @@ public class ProjectTest {
 		d2.addReservation(t2, timeSpan2);
 		t2.addRequiredDeveloper(d2);
 		t2.update();
-		assertEquals(t2.getStatusName(),"PLANNED");
+		assertEquals(t2.getStatusName(),"AVAILABLE");
 		DateTime startTime2 = new DateTime(2014, 1, 1, 8, 1);
 		DateTime endTime2 = new DateTime(2014, 1, 1, 10, 30);
 		t2.executeTask();

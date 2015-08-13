@@ -92,43 +92,43 @@ projects:
   - name         : "project x"
     description  : "a project description"
     creationTime : "2014-01-01 09:00" # YYYY-MM-DD HH:MM
-    dueTime      : "2014-02-01 18:00"
+    dueTime      : "2014-02-01 17:00"
     branchOffice : 0
 
   - name         : "project y"
     description  : "another project description"
     creationTime : "2014-01-01 09:00"
-    dueTime      : "2016-01-01 18:00"
+    dueTime      : "2016-01-01 17:00"
     branchOffice : 0
 
   - name         : "project z"
     description  : "yet another project description"
     creationTime : "2015-04-25 09:00"
-    dueTime      : "2015-04-30 18:00"
+    dueTime      : "2015-04-30 17:00"
     branchOffice : 1
     
   - name         : "project a"
     description  : "yet another project description"
     creationTime : "2015-04-25 09:00"
-    dueTime      : "2015-04-30 18:00"
+    dueTime      : "2015-04-30 17:00"
     branchOffice : 2
     
   - name         : "project b"
     description  : "yet another project description"
     creationTime : "2015-04-25 09:00"
-    dueTime      : "2015-04-30 18:00"
+    dueTime      : "2015-04-30 17:00"
     branchOffice : 2
   
   - name         : "project c"
     description  : "yet another project description"
     creationTime : "2015-04-25 09:00"
-    dueTime      : "2015-04-30 18:00"
+    dueTime      : "2015-04-30 17:00"
     branchOffice : 2
     
   - name         : "project d"
     description  : "yet another project description"
     creationTime : "2015-04-25 09:00"
-    dueTime      : "2015-04-30 18:00"
+    dueTime      : "2015-04-30 17:00"
     branchOffice : 2
 
 plannings:
@@ -136,7 +136,7 @@ plannings:
     developers      	: [0, 1]
     resources        	: [{type: 0,  quantity: 2}, {type: 2,  quantity: 1}]
     branchOffice 	 	: 0
-  - plannedStartTime 	: "2014-01-02 17:00"
+  - plannedStartTime 	: "2014-01-02 12:00"
     developers       	: [1]
     resources        	: []
     branchOffice 		: 0
@@ -193,7 +193,7 @@ tasks:
     planning           : 1
     status             : failed
     startTime          : "2014-01-02 09:00"
-    endTime            : "2014-03-25 18:00"
+    endTime            : "2014-03-25 17:00"
     developers		   : 1
     branchOffice 	   : 0
 
@@ -205,6 +205,8 @@ tasks:
     prerequisiteTasks  :
     planning           : 2
     status             : executing
+    startTime          : "2014-03-04 09:00"
+    endTime            : "2014-05-27 17:00"
     developers		   : 1
     branchOffice 	   : 0
 

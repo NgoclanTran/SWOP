@@ -74,12 +74,12 @@ public class CompanyTest {
 
 	@Test
 	public void announceCompletionTest() {
-		Clock clock = new Clock();
+		List<ResourceType> list = new ArrayList<ResourceType>();
+		BranchOffice branchOffice = new BranchOffice(c, "new york", list);
+		Clock clock = branchOffice.getClock();
 		clock.setSystemTime(new DateTime(2015, 10, 12, 8, 0));
 		DelegatedTask task = new DelegatedTask(clock, "description", 10, 0,
 				null, false, 1);
-		List<ResourceType> list = new ArrayList<ResourceType>();
-		BranchOffice branchOffice = new BranchOffice(c, "new york", list);
 		c.addBranchOffice(branchOffice);
 		branchOffice.getPh().addProject("name", "description",
 				new DateTime(2015, 10, 12, 10, 0),
