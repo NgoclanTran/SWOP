@@ -18,12 +18,10 @@ public class TaskManTest {
 	@Rule
 	public final StandardOutputStreamLog log = new StandardOutputStreamLog();
 
-//	@Test
-//	public void testMain() {
-//		systemInMock.provideText("5");
-//		TaskMan.main(null);
-//		assertEquals(
-//				"TaskMan V2.0\r\n\r\n\r\n1. Show projects\r\n2. Create project\r\n3. Create task\r\n4. Update task\r\n5. Quit\r\n\r\nSelect an option:\r\n\r\n\r\n",
-//				log.getLog());
-//	}
+	@Test
+	public void testMain() {
+		systemInMock.provideText("3\n1\n1\n1\n8\n2\n");
+		TaskMan.main(null);
+		assertTrue(log.getLog().contains("Main menu"));
+	}
 }
