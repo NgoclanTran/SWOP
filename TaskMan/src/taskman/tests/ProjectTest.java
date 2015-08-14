@@ -290,6 +290,7 @@ public class ProjectTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
@@ -350,6 +351,7 @@ public class ProjectTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
@@ -484,6 +486,7 @@ public class ProjectTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
@@ -509,6 +512,7 @@ public class ProjectTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
@@ -533,6 +537,7 @@ public class ProjectTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
@@ -557,6 +562,7 @@ public class ProjectTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(),"EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(),"FINISHED");
 		assertTrue(project.isFinished());
@@ -580,7 +586,7 @@ public class ProjectTest {
 		Developer d = new Developer("name", new LocalTime(10,0), new LocalTime(11,0));
 		d.addReservation(task, new TimeSpan(new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0)));
 		task.addRequiredDeveloper(d);
-		clock.advanceSystemTime(new DateTime(2015,10,12,10,1));
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		task.update();
 		assertEquals(task.getStatusName(), "AVAILABLE");
 		task.executeTask();
@@ -616,6 +622,7 @@ public class ProjectTest {
 		assertEquals(task.getStatusName(), "AVAILABLE");
 		task.executeTask();
 		assertEquals(task.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		task.addTimeSpan(false, new DateTime(2015,10,12,11,0), new DateTime(2015,10,12,12,0));
 		assertEquals(task.getStatusName(), "FINISHED");
 		

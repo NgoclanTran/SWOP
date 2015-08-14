@@ -205,8 +205,8 @@ tasks:
     prerequisiteTasks  :
     planning           : 2
     status             : executing
-    startTime          : "2014-03-04 09:00"
-    endTime            : "2014-05-27 17:00"
+    startTime          : "2014-01-01 09:00"
+    endTime            : "2014-03-27 17:00"
     developers		   : 1
     branchOffice 	   : 0
 

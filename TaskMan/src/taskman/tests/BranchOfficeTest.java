@@ -17,18 +17,21 @@ import taskman.model.company.Company;
 import taskman.model.resource.ResourceType;
 import taskman.model.task.DelegatedTask;
 import taskman.model.task.NormalTask;
+import taskman.model.time.Clock;
 import taskman.model.time.TimeSpan;
 import taskman.model.user.Developer;
 
 public class BranchOfficeTest {
 
 	private Company company;
-	BranchOffice b;
+	private BranchOffice b;
+	private Clock clock;
 
 	@Before
 	public void setup() {
 		company = new Company();
 		b = new BranchOffice(company, "", new ArrayList<ResourceType>());
+		clock = b.getClock();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -92,6 +95,7 @@ public class BranchOfficeTest {
 		dt.addRequiredDeveloper(d);
 		dt.update();
 		dt.executeTask();
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		dt.addTimeSpan(false, new DateTime(2015, 10, 12, 10, 0), new DateTime(
 				2015, 10, 12, 10, 30));
 

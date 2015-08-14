@@ -173,7 +173,7 @@ public class PlanTaskSession extends Session {
 	private void planTask() throws IllegalStateException {
 		if (task == null)
 			throw new IllegalStateException("Plan task should have a task by now.");
-		if (task.isPlanned())
+		if (task.isPlanned() && !task.isAvailable())
 			throw new IllegalStateException("Plan task can't plan a task that is already planned.");
 		while (true) {
 			try {

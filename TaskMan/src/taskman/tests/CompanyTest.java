@@ -111,6 +111,7 @@ public class CompanyTest {
 		task.update();
 		task.executeTask();
 		assertEquals(task.getStatusName(),"EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		task.addTimeSpan(false, new DateTime(2015,10,12,10,0), new DateTime(2015,10,12,14,0));
 		c.announceCompletion(task);
 		assertTrue(t.isFinished());

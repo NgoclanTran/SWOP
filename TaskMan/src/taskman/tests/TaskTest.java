@@ -174,6 +174,7 @@ public class TaskTest {
 
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
 		p.addTask(description, estimatedDuration, acceptableDeviation, null, t, null, 1);
@@ -245,7 +246,7 @@ public class TaskTest {
 		NormalTask t = branchOffice.getPh().getProjects().get(0).getTasks().get(0);
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 10, 1);
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
 		ArrayList<NormalTask> dep = new ArrayList<NormalTask>();
@@ -290,6 +291,7 @@ public class TaskTest {
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(true, startTime, endTime);
@@ -312,6 +314,7 @@ public class TaskTest {
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
@@ -335,6 +338,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 		t.addAlternative(null);
 	}
@@ -384,6 +388,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
 		p.addTask(description, estimatedDuration, acceptableDeviation, dependencies, null, null, 1);
@@ -408,6 +413,7 @@ public class TaskTest {
 
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
@@ -462,6 +468,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "FINISHED");
 		assertFalse(t.isAvailable());
@@ -484,6 +491,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 		assertEquals(t.getStatusName(), "FAILED");
 		assertFalse(t.isAvailable());
@@ -553,6 +561,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 
 		assertTrue(t.isFinished());
@@ -576,6 +585,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 		assertFalse(t.isFinished());
 		assertEquals(t.getStatusName(), "FAILED");
@@ -647,6 +657,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "FINISHED");
 		assertFalse(t.isFailed());
@@ -670,6 +681,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 
 		assertTrue(t.isFailed());
@@ -737,6 +749,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, startTime, endTime);
 		assertTrue(t.isCompleted());
 	}
@@ -758,6 +771,7 @@ public class TaskTest {
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertTrue(t.isCompleted());
 	}
@@ -790,9 +804,10 @@ public class TaskTest {
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
 		t.update();
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, startTime, endTime);
 		assertEquals(t.getStatusName(), "EXECUTING");
 		t.addTimeSpan(false, startTime, endTime);
@@ -811,7 +826,7 @@ public class TaskTest {
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
 		t.update();
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.addTimeSpan(false, startTime, endTime);
@@ -832,7 +847,7 @@ public class TaskTest {
 		d.addReservation(t, timeSpan);
 		t.addRequiredDeveloper(d);
 		t.update();
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		DateTime startTime = new DateTime(2015, 1, 1, 10, 1);
 		DateTime endTime = new DateTime(2016, 1, 1, 12, 1);
 		t.addTimeSpan(false, startTime, endTime);
@@ -921,6 +936,7 @@ public class TaskTest {
 
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
 		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null, 1);
@@ -957,6 +973,7 @@ public class TaskTest {
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
 
@@ -981,6 +998,7 @@ public class TaskTest {
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
 		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null, 1);
@@ -1016,6 +1034,7 @@ public class TaskTest {
 		assertEquals(t1.getStatusName(), "AVAILABLE");
 		t1.executeTask();
 		assertEquals(t1.getStatusName(), "EXECUTING");
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t1.addTimeSpan(true, new DateTime(2015, 10, 12, 8, 0), new DateTime(2015, 10, 12, 16, 0));
 		assertEquals(t1.getStatusName(), "FAILED");
 		p.addTask(description, estimatedDuration, acceptableDeviation, null, t1, null, 1);
@@ -1480,7 +1499,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(false, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FINISHED");
 		NormalTaskMemento tm = t.createMemento();
@@ -1507,7 +1526,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		NormalTaskMemento tm = t.createMemento();
@@ -1536,6 +1555,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "EXECUTING");
 
 		NormalTaskMemento tm = t.createMemento();
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		t.setMemento(tm);
@@ -1719,7 +1739,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		assertFalse(t.isExecuting());
@@ -1741,7 +1761,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		assertTrue(t.isPlanned());
@@ -1763,7 +1783,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
@@ -1785,7 +1805,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		assertFalse(t.isAlternativeFinished());
@@ -1807,7 +1827,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		t.executeTask();
@@ -1829,7 +1849,7 @@ public class TaskTest {
 		assertEquals(t.getStatusName(), "AVAILABLE");
 		t.executeTask();
 		assertEquals(t.getStatusName(), "EXECUTING");
-
+		clock.setSystemTime(new DateTime(2020, 10, 12, 10, 30));
 		t.addTimeSpan(true, new DateTime(2015, 10, 14, 10, 0), new DateTime(2015, 10, 14, 13, 0));
 		assertEquals(t.getStatusName(), "FAILED");
 		t.delegateTask();
