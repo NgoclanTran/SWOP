@@ -96,6 +96,8 @@ developers:
   	branchOffice	: 1
   - name			: "Michael Bay"
   	branchOffice	: 1
+  - name			: "Pim Pam"
+  	branchOffice	: 2
 
 projects:
   - name         : "project x"
