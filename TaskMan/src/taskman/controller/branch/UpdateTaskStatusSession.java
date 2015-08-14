@@ -260,7 +260,7 @@ public class UpdateTaskStatusSession extends Session {
 	private boolean isValidUpdateTask(Task task, boolean isFailed,
 			DateTime startTime, DateTime endTime) {
 		try {
-			task.addTimeSpan(isFailed, startTime, endTime);
+			task.completeTask(isFailed, startTime, endTime);
 			getUI().displayInfo("Task updated.");
 			return true;
 		} catch (IllegalArgumentException argEx) {

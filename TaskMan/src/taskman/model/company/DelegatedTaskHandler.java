@@ -73,6 +73,7 @@ public class DelegatedTaskHandler {
 		DelegatedTask taskToAdd = factory.makeDelegatedTask(description,
 				estimatedDuration, acceptableDeviation, resourceTypes,
 				dependenciesFinished, developerAmount);
+		taskToAdd.setParentID(id);
 		addDelegatedTask(taskToAdd);
 	}
 	/**

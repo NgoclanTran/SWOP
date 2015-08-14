@@ -242,7 +242,7 @@ public class View implements IView {
 			taskInfo.append("Required resource types: ");
 			taskInfo.append(task.getRequiredResourceTypes().toString());
 		}
-		if (task.isPlanned()) {
+		if (!task.isCompleted() && task.isPlanned()) {
 			taskInfo.append("\n");
 			taskInfo.append("Planned start time: ");
 			for (Reservation reservation : task.getRequiredDevelopers().get(0).getReservations()) {
