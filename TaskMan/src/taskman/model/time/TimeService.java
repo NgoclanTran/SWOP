@@ -117,7 +117,7 @@ public class TimeService {
 	 * 
 	 * @param time
 	 *            The datetime from which these minutes will be removed
-	 * @param minutesToAdd
+	 * @param minutesToSubtract
 	 *            The amount of minutes to be removed from the date time
 	 * 
 	 * @return the date time will be returned with the minutes removed
