@@ -437,7 +437,6 @@ public class View implements IView {
 	 * This method will print the project details of a given project to the
 	 * command line.
 	 * 
-	 * @param branchOffice
 	 * @param project
 	 */
 	@Override

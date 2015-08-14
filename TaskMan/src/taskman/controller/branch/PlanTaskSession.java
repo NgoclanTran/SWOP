@@ -83,10 +83,10 @@ public class PlanTaskSession extends Session {
 	 *            The project handler.
 	 * @param uh
 	 *            The user handler.
+	 * @param dth
+	 *            The delegated task handler.
 	 * @param clock
 	 *            The system clock.
-	 * @param project
-	 *            The project.
 	 * @param task
 	 *            The task.
 	 * 
