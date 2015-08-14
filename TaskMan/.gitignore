@@ -1,5 +1,3 @@
-/bin/
-/group15/
-*.vpp~*
+/bin/*.vpp~*
 *.vpp.working
 /group15-first iteration/
